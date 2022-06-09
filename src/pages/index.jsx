@@ -1,6 +1,4 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import Link from "next/link";
+import toast from "react-hot-toast";
 import Loader from "../components/Navbar";
 
 export default function Home() {

@@ -3,5 +3,5 @@ export default function AdminPostEdit({}) {
     <main>
       <h1>Edit Post</h1>
     </main>
-  );
+  )
 }

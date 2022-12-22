@@ -1,8 +1,8 @@
-import { PC, Mobile } from "utils/MediaQuery";
-import React, { useEffect } from "react";
-import styled from "@emotion/styled";
+import { PC, Mobile } from 'utils/MediaQuery'
+import React, { useEffect } from 'react'
+import styled from '@emotion/styled'
 
-export const MainContainer = styled.div``;
+export const MainContainer = styled.div``
 
 const AppLayout = ({ children }) => {
   return (
@@ -20,6 +20,6 @@ const AppLayout = ({ children }) => {
         </MainContainer>
       </Mobile>
     </>
-  );
-};
-export default AppLayout;
+  )
+}
+export default AppLayout

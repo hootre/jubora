@@ -1,8 +1,8 @@
-import '../styles/globals.css'
-import Navbar from '../components/Navbar'
-import { Toaster } from 'react-hot-toast'
-import Head from 'next/head'
-import AppLayout from '../layouts/AppLayout'
+import "../styles/globals.css";
+import Navbar from "../components/Navbar";
+import { Toaster } from "react-hot-toast";
+import Head from "next/head";
+import AppLayout from "../layouts/AppLayout";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
       </AppLayout>
       <Toaster />
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

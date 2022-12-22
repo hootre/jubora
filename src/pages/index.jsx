@@ -3,10 +3,10 @@ import Loader from 'components/Navbar';
 import Link from 'next/link';
 
 import withFirebaseAuth from 'react-with-firebase-auth';
-import { firebaseAppAuth, providers } from 'lib/firebase';
 import SignIn from './SignIn';
 import Dashboard from 'components/Dashboard';
 import { useEffect, useState } from 'react';
+import { firebaseAppAuth, providers } from 'lib/firebase';
 const createComponentWithAuth = withFirebaseAuth({
   providers,
   firebaseAppAuth,

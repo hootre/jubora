@@ -43,6 +43,7 @@ const deleteFile = async (userId, fileId) => {
 const Dashboard = ({ user, userId }) => {
   const [nameValue, setNameValue] = useState('');
   const { data, error } = useSWR(userId, getUserFiles);
+  console.log('data');
   console.log(data);
   const router = useRouter();
   useEffect(() => {

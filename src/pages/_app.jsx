@@ -1,13 +1,13 @@
-import "../styles/globals.css";
-import Navbar from "../components/Navbar";
-import { Toaster } from "react-hot-toast";
-import Head from "next/head";
-import AppLayout from "../layouts/AppLayout";
+import { Toaster } from 'react-hot-toast';
+import Head from 'next/head';
+import AppLayout from '../layouts/AppLayout/AppLayout';
+import GlobalStyle from 'styles/GlobalStyle';
 
-function MyApp({ Component, pageProps }) {
+
+export default function MyApp({ Component, pageProps }) {
   return (
     <>
-      <Navbar />
+      <GlobalStyle />
       <Head>
         <title>JUBORA</title>
         <meta name="MainPage" content="JUBORA 홈페이지 입니다" />
@@ -23,5 +23,3 @@ function MyApp({ Component, pageProps }) {
     </>
   );
 }
-
-export default MyApp;

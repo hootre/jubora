@@ -1,5 +1,4 @@
 import toast from 'react-hot-toast';
-
 import withFirebaseAuth from 'react-with-firebase-auth';
 import { useEffect, useState } from 'react';
 import { firebaseAppAuth, providers } from 'lib/firebase';
@@ -60,5 +59,4 @@ const Home = ({ signInWithGoogle, signInWithGithub, signOut, user }) => {
       <button onClick={() => toast.success('hello toast!')}>Toast Me</button>
     </>
   );
-};
-export default createComponentWithAuth(Home);
+}

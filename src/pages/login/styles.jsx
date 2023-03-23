@@ -5,7 +5,6 @@ export const LoginBox = styled.section`
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 289px);
-  background: #f7f7f7;
   > div {
     max-width: 400px;
     width: 100%;
@@ -13,9 +12,9 @@ export const LoginBox = styled.section`
     > div {
       width: 100%;
       padding: 25px;
-      background: #fff;
+      background: var(--base-white);
       border-radius: 5px;
-      border: 1px solid #e1e2e3;
+      border: 1px solid var(--bd-100);
       .title {
         display: flex;
         justify-content: center;
@@ -25,7 +24,7 @@ export const LoginBox = styled.section`
         .emailLabel {
           margin: 17px 0 7px;
           label {
-            color: #888;
+            color: var(--text-100);
           }
         }
         input.emailInput {
@@ -34,8 +33,8 @@ export const LoginBox = styled.section`
           min-height: 50px;
           padding: 0px 12px;
           outline: none;
-          border: 1px solid #e1e2e3;
-          color: #333;
+          border: 1px solid var(--bd-100);
+          color: var(--text-100);
           border-radius: 5px;
           font-size: 14px;
           font-weight: 400;
@@ -49,15 +48,15 @@ export const LoginBox = styled.section`
           font-size: 14px;
           margin-bottom: 10px;
           cursor: pointer;
-          color: #ccc;
-          background: #f2f4f7;
+          color: var(--text-200);
+          background: var(--bg-100);
           border: none;
           margin-top: 30px;
           span {
           }
         }
         .or {
-          color: #bbb;
+          color: var(--text-200);
           font-size: 10px;
           text-align: center;
           margin: 5px 0 15px;
@@ -83,7 +82,7 @@ export const LoginBox = styled.section`
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
-                border: 1px solid #e1e2e3;
+                border: 1px solid var(--bd-100);
                 box-sizing: border-box;
               }
               svg {
@@ -93,7 +92,7 @@ export const LoginBox = styled.section`
             }
             p {
               margin-top: 8px;
-              color: #888;
+              color: var(--text-200);
             }
           }
         }
@@ -104,7 +103,7 @@ export const LoginBox = styled.section`
           > p {
             display: inline-flex;
             align-items: center;
-            color: #767676;
+            color: var(--text-200);
             font-size: 12px;
             font-weight: bold;
             margin-top: 30px;

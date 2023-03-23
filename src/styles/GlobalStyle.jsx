@@ -6,13 +6,6 @@ const GlobalStyle = createGlobalStyle`
     *{
         box-sizing: border-box;
     }
-    :root {
-        --base-color-back : #181823;
-        --base-color-Btext : #181823;
-        --base-color-blue :#537FE7;
-        --base-color-skyblue : #C0EEF2;
-        --base-color-Wtext : #E9F8F9;
-    }
     html{
         padding: 0;
         margin: 0;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const NoticeBox = styled.section`
   padding: 50px 0 50px;
-  background: #f4f5f5;
+  background: var(--bg-100);
   > div {
     padding: 0 70px;
     position: relative;
@@ -16,7 +16,7 @@ export const NoticeBox = styled.section`
         font-stretch: normal;
         font-style: normal;
         letter-spacing: normal;
-        color: #262630;
+        color: var(--text-100);
         position: relative;
         display: inline-block;
         &:after {
@@ -26,7 +26,7 @@ export const NoticeBox = styled.section`
           left: 0;
           width: 100%;
           height: 6px;
-          background-color: #ffb838;
+          background-color: var(--primary-300);
         }
       }
     }
@@ -38,13 +38,13 @@ export const NoticeBox = styled.section`
     ul {
       width: 360px;
       flex: 0 0 360px;
-      background: #ffffff;
-      box-shadow: 0 0 12px #0000001a;
+      background: var(--bg-300);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
       border-radius: 4px;
       padding: 8px 30px;
       margin-right: 30px;
       li {
-        border-bottom: 1px solid #dcdcdc;
+        border-bottom: 1px solid var(--bg-200);
         &:last-child {
           border-bottom: none;
         }
@@ -56,8 +56,7 @@ export const NoticeBox = styled.section`
           font-size: 14px;
           font-weight: 500;
           line-height: 24px;
-          color: #262630;
-          color: #555;
+          color: var(--text-200);
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

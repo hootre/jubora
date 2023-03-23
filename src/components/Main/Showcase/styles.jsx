@@ -19,7 +19,7 @@ export const ShowcaseBox = styled.section`
           transition: all 0.2s ease;
           width: 100%;
           height: 100%;
-          background: #000;
+          background: var(--base-black);
           z-index: -1;
           border-radius: 0.375rem;
         }
@@ -27,12 +27,12 @@ export const ShowcaseBox = styled.section`
           cursor: pointer;
           z-index: -1;
           border-radius: 5px;
-          color: #666;
+          color: var(--text-200);
           &:hover {
-            color: #000;
+            color: var(--base-black);
           }
           &.active {
-            color: #fff;
+            color: var(--base-white);
           }
         }
       }
@@ -53,7 +53,7 @@ export const ShowcaseBox = styled.section`
         position: relative;
         overflow: hidden;
         display: flex;
-        border: 1px solid rgb(244, 247, 250);
+        border: 1px solid var(--bg-100);
         border-radius: 8px;
         height: 80px;
         &:hover {
@@ -72,7 +72,7 @@ export const ShowcaseBox = styled.section`
             width: 100%;
             height: 100%;
             object-fit: contain;
-            background-color: rgb(244, 247, 250);
+            background-color: var(--bg-100);
             transition: opacity 1s ease-out 0s;
           }
         }

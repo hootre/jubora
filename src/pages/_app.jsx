@@ -2,12 +2,13 @@ import { Toaster } from 'react-hot-toast';
 import Head from 'next/head';
 import AppLayout from '../layouts/AppLayout/AppLayout';
 import GlobalStyle from 'styles/GlobalStyle';
-
+import Color from 'styles/Color';
 
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalStyle />
+      <Color />
       <Head>
         <title>JUBORA</title>
         <meta name="MainPage" content="JUBORA 홈페이지 입니다" />

@@ -7,7 +7,6 @@ import Link from 'next/link';
 export const Header = () => {
   return (
     <HeaderBox className="">
-      <div className="topHeader ">dddd</div>
       <div id="header" className="container">
         <div id="navBox">
           <Link href="/">
@@ -15,7 +14,7 @@ export const Header = () => {
           </Link>
           <ul className="nav">
             <li>
-              <a href="#showcase">현수막/배너</a>
+              <Link href="/templates">현수막/배너</Link>
             </li>
             <li>
               <a href="#">접수확인</a>

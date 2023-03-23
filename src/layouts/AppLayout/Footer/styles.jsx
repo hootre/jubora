@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const FooterBox = styled.footer`
-  background-color: var(--base-color-back);
-  color: var(--base-color-Wtext);
+  background-color: var(--base-black);
+  color: var(--text-200);
   font-size: 12px;
   .footer {
     padding: 40px 70px;
@@ -23,7 +23,7 @@ export const FooterBox = styled.footer`
               display: block;
               width: 1px;
               height: 14px;
-              background-color: #b9b9b9;
+              background-color: var(--bg-200);
               margin: 0 20px;
             }
           }
@@ -41,7 +41,7 @@ export const FooterBox = styled.footer`
         p {
           line-height: 1.67;
           b {
-            color: #fff;
+            color: var(--base-white);
             font-weight: 800;
           }
         }
@@ -50,7 +50,7 @@ export const FooterBox = styled.footer`
     .footerCs {
       p {
         &.footerTitle {
-          color: #aaa;
+          color: var(--base-white);
           font-size: 12px;
           span {
             font-size: 16px;

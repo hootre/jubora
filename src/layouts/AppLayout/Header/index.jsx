@@ -1,34 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { HeaderBox } from './styles';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
+import { GoSearch } from 'react-icons/go';
+import { useRouter } from 'next/router';
 
 export const Header = () => {
+  // path 관련
+  const { pathname, isReady } = useRouter();
+  const [pathName, setPathName] = useState('');
+  let navCutLine =
+    pathName == 'templates'
+      ? 0
+      : pathName == 'order'
+      ? 1
+      : pathName == 'sian'
+      ? 2
+      : pathName == 'price'
+      ? 3
+      : '';
+  useEffect(() => {
+    if (isReady) {
+      setPathName(pathname.replace('/', ''));
+    }
+  }, [isReady, pathname]);
   return (
     <HeaderBox className="">
-      <div id="header" className="container">
+      <div id="header">
         <div id="navBox">
           <Link href="/">
             <Image src={logo} alt="img" />
           </Link>
           <ul className="nav">
             <li>
-              <Link href="/templates">현수막/배너</Link>
+              <Link href="/templates" className={pathName == 'templates' ? 'active' : ''}>
+                현수막/배너
+              </Link>
             </li>
             <li>
-              <a href="#">접수확인</a>
+              <Link href="/order" className={pathName == 'order' ? 'active' : ''}>
+                접수확인
+              </Link>
             </li>
             <li>
-              <a href="#">시안보기</a>
+              <Link href="/sian" className={pathName == 'sian' ? 'active' : ''}>
+                시안보기
+              </Link>
             </li>
             <li>
-              <a href="#">가격안내</a>
+              <Link href="/price" className={pathName == 'price' ? 'active' : ''}>
+                가격안내
+              </Link>
             </li>
+            <div className="lineBox" style={{ left: `${navCutLine * 110}px` }}></div>
           </ul>
         </div>
         <div id="subBox">
           <div className="search">
+            <GoSearch />
             <input type="text" placeholder="검색" />
           </div>
           <div className="login">

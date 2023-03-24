@@ -23,6 +23,9 @@ const GlobalStyle = createGlobalStyle`
     a{
         text-decoration:none ;
     }
+    input {
+        outline: none ;
+    }
     /* custom */
     .container{
         width: 1200px;

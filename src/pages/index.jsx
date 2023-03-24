@@ -1,15 +1,10 @@
 import toast from 'react-hot-toast';
-import withFirebaseAuth from 'react-with-firebase-auth';
 import { useEffect, useState } from 'react';
 import { firebaseAppAuth, providers } from 'lib/firebase';
 import { Slide } from 'components/Main/Slide';
 import { Showcase } from 'components/Main/Showcase';
 import { Notice } from 'components/Main/Notice';
 import { DEFAULT_SANS_SERIF_FONT } from 'next/dist/shared/lib/constants';
-const createComponentWithAuth = withFirebaseAuth({
-  providers,
-  firebaseAppAuth,
-});
 
 const slides = [
   'https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fbanners%2F1981%2Fce5ff60a.jpg&w=1060&q=100',

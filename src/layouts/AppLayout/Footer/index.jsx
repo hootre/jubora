@@ -6,7 +6,7 @@ import Image from 'next/image';
 export const Footer = () => {
   return (
     <FooterBox>
-      <div className="footer container">
+      <div className="footer">
         <div className="footerContent">
           <nav>
             <ul>
@@ -32,7 +32,8 @@ export const Footer = () => {
                 <b>상호</b> : JK주보라 <b>사업자등록번호</b> : 593-56-00232
               </p>
               <p>
-                <b>주소</b> : 하남시 미사강변한강로 135 미사스카이폴리스 다동 716호 <b>정보관리자</b> : 전동준
+                <b>주소</b> : 하남시 미사강변한강로 135 미사스카이폴리스 다동 716호{' '}
+                <b>정보관리자</b> : 전동준
               </p>
               <p>
                 <b>대표번호</b> : 070-4700-1895 <b>팩스번호</b> : 02-494-4199

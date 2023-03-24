@@ -1,6 +1,7 @@
 import React from 'react';
 import { OrderBox } from './styles';
 
-export const order = () => {
+const order = () => {
   return <OrderBox>order</OrderBox>;
 };
+export default order;

@@ -1,5 +1,40 @@
 # NEW Jubora
 
+
+
+## 기술스택
+<img src="https://img.shields.io/badge/javascript-F7DF1E?style=flat-square&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/react-61DAFB?style=flat-square&logo=react&logoColor=black">
+<img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=Redux&logoColor=white"/>
+<img src="https://img.shields.io/badge/styled_components-DB7093?style=flat-square&logo=styled-components&logoColor=white"/>
+
+<br>
+
+## 디렉토리 구조
+
+```
+src
+|
++---layouts
++---api
++---assets
++---components
+|   +---Main
++---hooks
++---pages
+|   +---login
+|   +---order
+|   +---price
+|   +---sian
+|   \---index
++---style
+\---utils
+    \---helpers
+```
+
+<br>
+
+
 > [커밋 타입] 리스트
 > 
 > feat : 기능 (새로운 기능)

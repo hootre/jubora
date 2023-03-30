@@ -1,7 +1,40 @@
 import styled from 'styled-components';
 
 export const ShowcaseBox = styled.section`
-  padding: 50px 0;
+  margin-top: 30px;
+  .topNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      color: var(--text-100);
+      position: relative;
+      display: inline-block;
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background-color: var(--primary-300);
+      }
+    }
+    // Category 수정 css
+    .selectTextBox {
+      flex: none;
+      color: var(--base-black);
+      background-color: transparent;
+      .dropDown {
+      }
+    }
+  }
   .nav {
     display: flex;
     align-items: center;
@@ -47,7 +80,7 @@ export const ShowcaseBox = styled.section`
       -webkit-box-align: center;
       align-items: center;
       list-style: none;
-      margin: 24px;
+      margin: 24px 0px;
       padding: 0px;
       li {
         position: relative;

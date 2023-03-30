@@ -71,6 +71,7 @@ export const LoginBox = styled.section`
             align-items: center;
             justify-content: flex-start;
             border: none;
+            cursor: pointer;
             span {
               position: relative;
               display: flex;

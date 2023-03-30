@@ -1,29 +1,13 @@
-// import React from 'react';
-// import { useRouter } from 'next/router';
-// const login = ({ user, signIns: { signInWithGoogle, signInWithGithub } }) => {
-//   const router = useRouter();
-//   if (user) {
-//     // router.push(`/${user.uid}`)
-//     return null;
-//   } else {
-//     return (
-//       <div className="sign-in-page">
-//         <div className="sign-in-buttons">
-//           <button onClick={signInWithGoogle}>Sign in with Google</button>
-//           <button onClick={signInWithGithub}>Sign in with GitHub</button>
-//         </div>
-//       </div>
-//     );
-//   }
-// };
-
-// export default login;
-
 import Image from 'next/image';
 import logo from 'assets/MainPage/logo.png';
-import React from 'react';
+import React, { useState } from 'react';
 import { LoginBox } from './styles';
+import { GoogleLogin } from 'api/firebase';
 const login = () => {
+  const [user, setUser] = useState();
+  const handleLogin = () => {
+    GoogleLogin().then(setUser);
+  };
   return (
     <LoginBox>
       <div>
@@ -43,7 +27,7 @@ const login = () => {
             </button>
             <p className="or">또는</p>
             <div className="webLogin">
-              <button type="button" className="googleBtn">
+              <button type="button" className="googleBtn" onClick={handleLogin}>
                 <span>
                   <svg viewBox="0 0 57 56" class="css-1h47l4s">
                     <path

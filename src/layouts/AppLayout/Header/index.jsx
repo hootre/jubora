@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { GoSearch } from 'react-icons/go';
 import { useRouter } from 'next/router';
+import { onUserStateChange } from 'api/firebase';
 
 export const Header = () => {
   // path 관련
@@ -19,12 +20,20 @@ export const Header = () => {
       ? 2
       : pathName == 'price'
       ? 3
-      : '';
+      : -4;
+  console.log(pathName);
   useEffect(() => {
     if (isReady) {
-      setPathName(pathname.replace('/', ''));
+      setPathName(pathname.split('/')[1]);
     }
   }, [isReady, pathname]);
+  // user상태관리
+  const [isUser, setIsUser] = useState();
+  useEffect(() => {
+    onUserStateChange((user) => {
+      setIsUser(user);
+    });
+  }, []);
   return (
     <HeaderBox className="">
       <div id="header">

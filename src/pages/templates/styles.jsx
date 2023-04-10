@@ -2,8 +2,10 @@ import styled from 'styled-components';
 
 export const TemplatesBox = styled.section`
   display: flex;
-  flex-direction: column;
-  justify-content: first baseline;
+  justify-content: space-between;
   min-height: calc(100vh - 249px);
-  padding: 0 50px;
+  main {
+    padding: 0 50px;
+    flex: 7 1 0;
+  }
 `;

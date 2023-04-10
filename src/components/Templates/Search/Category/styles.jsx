@@ -44,9 +44,14 @@ export const CategoryBox = styled.ul`
         }
         background-color: var(--base-black);
         width: 100%;
-        padding: 10px;
-        span {
+        a {
+          padding: 10px;
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          color: var(--base-wite);
           text-align: left;
+          text-decoration: none;
         }
       }
     }

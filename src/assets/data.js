@@ -12,6 +12,11 @@ export const filterList = [
   [1, '조회순'],
   [2, '판매순'],
 ];
+export const filterItemList = [
+  { title: '분류', items: ['절기', '예배', '행사'] },
+  { title: '특성', items: ['에이스', '이건', '재밌다'] },
+  { title: '그냥', items: ['우와', '필터', '볼링'] },
+];
 export const slides = [
   'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F1857626894ca14340ddcf.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-08.jpg?alt=media&token=8f638804-4fd7-4acf-aaec-e004c5360d20',
   'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F1857625ab044559ac3675.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-07.jpg?alt=media&token=ef3390ff-8b91-4ed4-ab89-3fad6c15b99c',

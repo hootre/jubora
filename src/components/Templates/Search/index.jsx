@@ -3,25 +3,35 @@ import { GoSearch } from 'react-icons/go';
 import { Category } from './Category';
 import { categoryList } from 'assets/data';
 import { useRecoilState } from 'recoil';
-import { curCategoryState } from 'states';
+import { curCategoryState, isCurFilterState } from 'states';
+import { useRouter } from 'next/router';
 
 export const Search = () => {
-  const [category, setCategory] = useRecoilState(curCategoryState);
-  const hendleCategoryNum = (num) => {
-    setCategory(num);
+  const router = useRouter();
+  const { category } = router.query;
+  const [isCurFilter, setIsCurFilter] = useRecoilState(isCurFilterState);
+
+  const hendleFilterState = () => {
+    setIsCurFilter((prev) => !prev);
   };
+
   return (
     <SearchBox>
-      <div className="filterBtn">
+      <div className={isCurFilter ? 'filterBtn open' : 'filterBtn'}>
         <div>
-          <button className="openFilter">
+          <button className="openFilter" onClick={hendleFilterState}>
             <img src="https://weenidy.com/assets/icons/icn-fillter-navy-d.png" alt="" />
           </button>
         </div>
       </div>
       <div className="searchBox">
         <div className="search">
-          <Category categoryList={categoryList} state={category} hendle={hendleCategoryNum} />
+          <Category
+            categoryList={categoryList}
+            router={router}
+            state={category}
+            queryName={'category'}
+          />
           <div className="searchInputBox">
             <div className="searchInput">
               <GoSearch className="icon" />

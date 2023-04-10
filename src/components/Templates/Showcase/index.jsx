@@ -1,23 +1,31 @@
 import { filterList } from 'assets/data';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { curCategoryState, detailFilterState } from 'states';
+import { detailFilterState } from 'states';
 import { Category } from '../Search/Category';
 import { ShowcaseBox } from './styles';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { AwesomeButton } from 'react-awesome-button';
+import 'react-awesome-button/dist/styles.css';
 
 export const Showcase = ({ showCaseList }) => {
-  const [category, setCategory] = useRecoilState(curCategoryState);
+  const router = useRouter();
+  let { category } = router.query;
+  category = category === undefined ? 0 : category;
   const [detailFilter, setDetailFilter] = useRecoilState(detailFilterState);
   let listLength = showCaseList.filter((v) => v.class == category);
-  const hendleCategoryNum = (num) => {
-    setDetailFilter(num);
-  };
 
   return (
     <ShowcaseBox>
       <div className="topNav">
         <h2 className="title">{listLength.length}개의 디자인이 있습니다.</h2>
-        <Category categoryList={filterList} state={detailFilter} hendle={hendleCategoryNum} />
+        <Category
+          categoryList={filterList}
+          router={router}
+          category={category}
+          queryName={'sort'}
+        />
       </div>
       <div className="showcase">
         <ul>
@@ -37,12 +45,10 @@ export const Showcase = ({ showCaseList }) => {
                 return (
                   <li key={item.id} className={item.class}>
                     <div>
-                      <h2>날짜 - {item.date}</h2>
-
-                      <h2>조회수 - {item.views}</h2>
-
-                      <h2>판매수 - {item.sales}</h2>
                       <img src={item.img} alt="현수막이미지" />
+                      <AwesomeButton type="primary" className="choice">
+                        <Link href={`detail/${item.id}`}>선택</Link>
+                      </AwesomeButton>
                     </div>
                   </li>
                 );

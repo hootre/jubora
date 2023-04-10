@@ -24,6 +24,10 @@ export const SearchBox = styled.section`
         }
       }
     }
+
+    &.open {
+      display: none;
+    }
   }
   .searchBox {
     flex: auto;

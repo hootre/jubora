@@ -21,7 +21,6 @@ export const Header = () => {
       : pathName == 'price'
       ? 3
       : -4;
-  console.log(pathName);
   useEffect(() => {
     if (isReady) {
       setPathName(pathname.split('/')[1]);

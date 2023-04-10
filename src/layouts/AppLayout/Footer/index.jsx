@@ -26,7 +26,7 @@ export const Footer = () => {
             </ul>
           </nav>
           <div className="footerInfo">
-            <Image src={logo} />
+            <Image src={logo} alt="footer" />
             <div>
               <p>
                 <b>상호</b> : JK주보라 <b>사업자등록번호</b> : 593-56-00232

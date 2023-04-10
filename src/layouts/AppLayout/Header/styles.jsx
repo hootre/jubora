@@ -27,8 +27,20 @@ export const HeaderBox = styled.div`
       .nav {
         display: flex;
         align-items: center;
+        position: relative;
+        .lineBox {
+          position: absolute;
+          bottom: -4px;
+          width: 110px;
+          opacity: 1;
+          border-bottom: 4px solid #ffb838;
+          transition-duration: 0.4s;
+          transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
         li {
-          margin-right: 30px;
+          padding: 0 15px;
+          width: 110px;
+          text-align: center;
           a {
             color: var(--text-200);
             font-size: 14px;
@@ -38,6 +50,13 @@ export const HeaderBox = styled.div`
             font-style: normal;
             letter-spacing: normal;
             &:hover {
+              font-weight: bold;
+              color: var(--text-100);
+            }
+            &:after {
+              opacity: 0;
+            }
+            &.active {
               font-weight: bold;
               color: var(--text-100);
             }
@@ -58,9 +77,16 @@ export const HeaderBox = styled.div`
         border-radius: 17px;
         height: 34px;
         margin-right: 25px;
-        transition: all 0.5s;
+        transition: all 0.3s;
         &:hover {
           border-color: var(--primary-300);
+        }
+        &:focus-within {
+          background-color: var(--base-white);
+          box-shadow: 0px 9px 11px 5px rgba(0, 0, 0, 0.05);
+        }
+        svg {
+          color: var(--text-200);
         }
         input {
           font-size: 14px;
@@ -75,6 +101,7 @@ export const HeaderBox = styled.div`
           border: none;
           background: inherit;
           height: 22px;
+          margin-left: 5px;
         }
       }
       .login {

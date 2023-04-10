@@ -22,6 +22,11 @@ const GlobalStyle = createGlobalStyle`
     };
     a{
         text-decoration:none ;
+        color : var(--base-white);
+
+    }
+    input {
+        outline: none ;
     }
     /* custom */
     .container{

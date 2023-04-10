@@ -28,7 +28,7 @@ export const Slide = ({ slides }) => {
   const slideList = createSlides(slides, addSlide);
   const [currentIndex, setCurrentIndex] = useState(addSlide);
   const transitionTime = 700;
-  const transitionStyle = `transform ${transitionTime}ms ease 0s`;
+  const transitionStyle = `all ${transitionTime}ms ease 0s`;
   const [isSwiping, setIsSwiping] = useState(false);
   const [prevSlideX, setPrevSlideX] = useState(false);
   const [slideTransition, setTransition] = useState(transitionStyle);
@@ -48,22 +48,22 @@ export const Slide = ({ slides }) => {
     () => {
       handleSlide(currentIndex + 1);
     },
-    !isSwiping && !prevSlideX ? 3000 : null,
+    !isSwiping && !prevSlideX ? 3000 : null
   );
 
-  const handleSwipe = direction => {
+  const handleSwipe = (direction) => {
     setIsSwiping(true);
     handleSlide(currentIndex + direction);
   };
   // 무한 슬라이드용 함수
-  const replaceSlide = index => {
+  const replaceSlide = (index) => {
     setTimeout(() => {
       setTransition('');
       setCurrentIndex(index);
     }, transitionTime - 100);
   };
   // 슬라이드 이동 함수
-  const handleSlide = index => {
+  const handleSlide = (index) => {
     setCurrentIndex(index);
     // left
     if (index - addSlide < 0) {
@@ -77,9 +77,9 @@ export const Slide = ({ slides }) => {
   };
 
   return (
-    <SlideBox className="container">
+    <SlideBox>
       <div className="slide">
-        <button className="prev" onClick={() => handleSwipe(-1)}>
+        {/* <button className="prev" onClick={() => handleSwipe(-1)}>
           <svg class="SvgIcon_SvgIcon__root__svg__DKYBi" viewBox="0 0 18 18">
             <path d="m6.045 9 5.978-5.977a.563.563 0 1 0-.796-.796L4.852 8.602a.562.562 0 0 0 0 .796l6.375 6.375a.563.563 0 0 0 .796-.796L6.045 9z"></path>
           </svg>
@@ -88,21 +88,34 @@ export const Slide = ({ slides }) => {
           <svg class="SvgIcon_SvgIcon__root__svg__DKYBi" viewBox="0 0 18 18">
             <path d="m11.955 9-5.978 5.977a.563.563 0 0 0 .796.796l6.375-6.375a.563.563 0 0 0 0-.796L6.773 2.227a.562.562 0 1 0-.796.796L11.955 9z"></path>
           </svg>
-        </button>
+        </button> */}
         <div className="slideList">
+          <div className="title">
+            <ul className="iconList">
+              <li>
+                <div>NEW</div>
+              </li>
+            </ul>
+            <h1>오랫동안 변하지 않는</h1>
+            <h2>레이저 각인 머그컵</h2>
+            <p>10부터 제작가능한 머그컵에 우리 브랜드를 새켜보세요.</p>
+            <p> 대량 주문시 더욱 커지는할인혜택까지!(1개 3,100원~)</p>
+          </div>
           <div
             className="slideTrack"
             onMouseOver={() => setIsSwiping(true)}
             onMouseOut={() => setIsSwiping(false)}
-            style={{
-              transform: `translateX(calc(${-1230 * currentIndex}px))`,
-              transition: slideTransition,
-            }}
           >
             {slides &&
               slideList.map((src, index) => {
                 return (
-                  <div key={index} className={`slideItem ${currentIndex === index ? 'currentSlide' : ''}`}>
+                  <div
+                    key={index}
+                    className={`slideItem ${currentIndex === index ? 'currentSlide' : ''}`}
+                    style={{
+                      transition: slideTransition,
+                    }}
+                  >
                     <a>
                       <img src={src} alt="" />
                     </a>

@@ -4,7 +4,9 @@ import { firebaseAppAuth, providers } from 'api/firebase';
 import { Slide } from 'components/Main/Slide';
 import { Showcase } from 'components/Templates/Showcase';
 import { Notice } from 'components/Main/Notice';
-import { categoryList, noticeList, showCaseList, slides } from 'assets/data';
+import { noticeList, showCaseList, slides } from 'assets/data';
+import { MainBox } from './styles';
+import { TemplatesContents } from 'components/Main/TemplatesContents';
 
 export default function Home({ signInWithGoogle, signInWithGithub, signOut, user }) {
   const [userId, setUserId] = useState('');
@@ -14,13 +16,15 @@ export default function Home({ signInWithGoogle, signInWithGithub, signOut, user
     }
   }, [user]);
   return (
-    <>
+    <MainBox>
       <Slide slides={slides} />
-      <Showcase showCaseList={showCaseList} />
+      <div className="mainShowcase">
+        <TemplatesContents />
+      </div>
       <Notice noticeList={noticeList} />
       {/* <Dashboard user={user} userId={userId} /> */}
 
       <button onClick={() => toast.success('hello toast!')}>Toast Me</button>
-    </>
+    </MainBox>
   );
 }

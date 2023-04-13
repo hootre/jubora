@@ -19,11 +19,12 @@ const login = () => {
           </div>
           <form action="">
             <div className="emailLabel">
-              <label htmlFor="email">이메일</label>
+              <label htmlFor="email">로그인</label>
             </div>
-            <input type="email" className="emailInput" placeholder="이메일을 입력해주세요." />
+            <input type="email" className="Input" placeholder="이메일" />
+            <input type="email" className="Input" placeholder="비밀번호" />
             <button type="submit" className="submit">
-              <span>이메일로 계속하기</span>
+              <span>로그인</span>
             </button>
             <p className="or">또는</p>
             <div className="webLogin">

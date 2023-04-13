@@ -26,12 +26,7 @@ export const Search = () => {
       </div>
       <div className="searchBox">
         <div className="search">
-          <Category
-            categoryList={categoryList}
-            router={router}
-            state={category}
-            queryName={'category'}
-          />
+          <Category list={categoryList} router={router} state={category} queryName={'category'} />
           <div className="searchInputBox">
             <div className="searchInput">
               <GoSearch className="icon" />

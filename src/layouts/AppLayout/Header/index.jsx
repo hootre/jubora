@@ -20,7 +20,9 @@ export const Header = () => {
       ? 2
       : pathName == 'price'
       ? 3
-      : -4;
+      : pathName == 'notify'
+      ? 4
+      : -5;
   useEffect(() => {
     if (isReady) {
       setPathName(pathname.split('/')[1]);
@@ -59,6 +61,11 @@ export const Header = () => {
             <li>
               <Link href="/price" className={pathName == 'price' ? 'active' : ''}>
                 가격안내
+              </Link>
+            </li>
+            <li>
+              <Link href="/notify" className={pathName == 'notify' ? 'active' : ''}>
+                공지사항
               </Link>
             </li>
             <div className="lineBox" style={{ left: `${navCutLine * 110}px` }}></div>

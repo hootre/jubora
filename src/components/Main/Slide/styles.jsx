@@ -6,81 +6,11 @@ export const SlideBox = styled.section`
   height: 400px;
   .slide {
     user-select: none;
-    > button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 30px;
-      height: 60px;
-      opacity: 0.5;
-      border: 0px;
-      border-radius: 15px;
-      background-color: #fff;
-      font-size: 16px;
-      z-index: 10;
-      &.prev {
-        left: calc((100% - 1350px) / 2);
-      }
-      &.next {
-        right: calc((100% - 1350px) / 2);
-      }
-    }
     .slideList {
       overflow: hidden;
       margin: 0;
       height: auto;
-      .title {
-        position: absolute;
-        left: 15%;
-        width: 20%;
-        top: 72px;
-        z-index: 11;
-        .iconList {
-          margin: 0px 0px 8px;
-          padding: 0px;
-          border: 0px;
-          display: flex;
-          align-items: center;
-          div {
-            font-size: 13px;
-            font-weight: bold;
-            line-height: 15px;
-            padding: 4px;
-            padding-top: 6px;
-            border-radius: 8px;
-            color: var(--base-white);
-            background: var(--primary-200);
-          }
-        }
-        h1 {
-          letter-spacing: -0.02em;
-          line-height: 140%;
-          font-weight: bold;
-          font-size: 30px;
-          color: rgba(0, 0, 0, 0.85);
-          margin: 0px;
-        }
-        h2 {
-          letter-spacing: -0.02em;
-          line-height: 140%;
-          font-weight: bold;
-          font-size: 30px;
-          color: rgba(0, 0, 0, 0.85);
-          margin: 0px 0px 16px;
-        }
-        p {
-          letter-spacing: -0.02em;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 19px;
-          white-space: pre-wrap;
-          color: rgba(0, 0, 0, 0.7);
-          margin: 0px;
-        }
-      }
+
       .slideTrack {
         .slideItem {
           position: absolute;
@@ -90,11 +20,76 @@ export const SlideBox = styled.section`
           &.currentSlide {
             opacity: 1;
           }
+
+          img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+          }
+          .title {
+            position: absolute;
+            left: 15%;
+            top: 72px;
+            z-index: 11;
+            .iconList {
+              margin: 0px 0px 8px;
+              padding: 0px;
+              border: 0px;
+              display: flex;
+              align-items: center;
+              div {
+                font-size: 13px;
+                font-weight: bold;
+                line-height: 15px;
+                padding: 4px;
+                padding-top: 6px;
+                border-radius: 8px;
+                color: var(--base-white);
+                background: var(--primary-200);
+              }
+            }
+            h1 {
+              letter-spacing: -0.02em;
+              line-height: 140%;
+              font-weight: bold;
+              font-size: 30px;
+              color: rgba(0, 0, 0, 0.85);
+              margin: 0px;
+            }
+            p {
+              letter-spacing: -0.02em;
+              font-size: 14px;
+              font-weight: 500;
+              line-height: 19px;
+              white-space: pre-wrap;
+              color: rgba(0, 0, 0, 0.7);
+              margin: 0px;
+            }
+          }
         }
-        img {
-          width: 100%;
-          max-height: 400px;
-          object-fit: cover;
+      }
+      .navBtn {
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        > ul {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          > li {
+            cursor: pointer;
+            height: 10px;
+            width: 30px;
+            border: 1px solid var(--bd-100);
+            background-color: var(--primary-300);
+            opacity: 0.5;
+            transition: all 0.5s;
+            &.currentSlide {
+              width: 70px;
+              opacity: 1;
+            }
+          }
         }
       }
     }

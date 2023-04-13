@@ -22,12 +22,13 @@ export const LoginBox = styled.section`
       }
       form {
         .emailLabel {
-          margin: 17px 0 7px;
+          margin: 17px 0 7px 10px;
           label {
             color: var(--text-100);
+            font-size: 16px;
           }
         }
-        input.emailInput {
+        input.Input {
           width: 100%;
           height: 50px;
           min-height: 50px;

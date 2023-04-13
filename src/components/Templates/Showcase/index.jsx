@@ -11,27 +11,22 @@ import 'react-awesome-button/dist/styles.css';
 
 export const Showcase = ({ showCaseList }) => {
   const router = useRouter();
-  let { category } = router.query;
-  category = category === undefined ? 0 : category;
+  let { sort } = router.query;
+  sort = sort === undefined ? 0 : sort;
   const [detailFilter, setDetailFilter] = useRecoilState(detailFilterState);
-  let listLength = showCaseList.filter((v) => v.class == category);
+  let listLength = showCaseList.filter((v) => v.class == sort);
 
   return (
     <ShowcaseBox>
       <div className="topNav">
         <h2 className="title">{listLength.length}개의 디자인이 있습니다.</h2>
-        <Category
-          categoryList={filterList}
-          router={router}
-          category={category}
-          queryName={'sort'}
-        />
+        <Category list={filterList} router={router} category={sort} queryName={'sort'} />
       </div>
       <div className="showcase">
         <ul>
           {showCaseList &&
             showCaseList
-              .filter((v) => v.class == category)
+              .filter((v) => v.class == sort)
               .sort((a, b) => {
                 if (detailFilter == 0) {
                   return new Date(b.date) - new Date(a.date);

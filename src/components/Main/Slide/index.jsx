@@ -8,7 +8,6 @@ export const Slide = ({ slides }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   // 자동 슬라이드
-  console.log('wogkfekd');
   const slideTimer = useInterval(
     () => {
       handleSlide(currentIndex + 1);

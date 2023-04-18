@@ -16,3 +16,15 @@ export const detailFilterkeywordState = atom({
   key: 'detailFilterkeywordState',
   default: { keyword: { state: false } },
 });
+
+// Auth
+export const authState = atom({
+  key: 'authState',
+  default: null,
+  dangerouslyAllowMutability: true,
+});
+
+export const isLoggedInState = atom({
+  key: 'isLoggedInState',
+  default: false,
+});

@@ -2,11 +2,9 @@ import styled from 'styled-components';
 
 export const HeaderBox = styled.div`
   box-shadow: 0px 9px 11px 5px rgba(0, 0, 0, 0.05);
-
   position: sticky;
   top: 0;
-  z-index: 100;
-  opacity: 0.9;
+  z-index: 5;
   backdrop-filter: blur(30px);
   background-color: var(--bg-300);
   #header {
@@ -51,6 +49,7 @@ export const HeaderBox = styled.div`
             letter-spacing: normal;
             &:hover {
               font-weight: bold;
+              text-decoration: none;
               color: var(--text-100);
             }
             &:after {
@@ -105,10 +104,11 @@ export const HeaderBox = styled.div`
         }
       }
       .login {
-        ul {
+        > ul {
           display: flex;
           align-items: center;
-          li {
+          .item {
+            position: relative;
             span {
               display: block;
               width: 1px;
@@ -117,6 +117,7 @@ export const HeaderBox = styled.div`
               margin: 0 20px;
             }
             a {
+              cursor: pointer;
               display: flex;
               align-items: center;
               font-size: 12px;

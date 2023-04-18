@@ -9,6 +9,7 @@ const Color = createGlobalStyle`
         --accent-200:#B38600;
         --text-100:#333333;
         --text-200:#737373;
+        --text-300 : #c3c3c3;
         --bg-100:#F5F5F5;
         --bg-200:#E9E9E9;
         --bg-300:#FFFFFF;

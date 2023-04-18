@@ -1,83 +1,35 @@
 import Image from 'next/image';
 import logo from 'assets/MainPage/logo.png';
-import React, { useEffect, useState } from 'react';
-import { LoginBox } from './styles';
-import { BasicLogin, GoogleLogin, onUserStateChange } from 'api/firebase';
+import React, { useState } from 'react';
+import { FindPasswordBox } from './styles';
+import { GoogleLogin } from 'api/firebase';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import { authState } from 'states';
-import { useRecoilState } from 'recoil';
-const login = () => {
-  const [auth, setAuth] = useRecoilState(authState);
-  const router = useRouter();
-  useEffect(() => {
-    if (auth) {
-      router.push('/');
-    }
-  }, []);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-  async function onhandleSubmit(data) {
-    try {
-      let users;
-      users = await BasicLogin(data.email, data.password);
-      if (users.user) {
-        setAuth(users.user);
-        toast.apply('로그인성공');
-        router.push('/');
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('로그인실패');
-    }
-  }
-
-  console.log(watch('email'));
+const findPassword = () => {
+  const [user, setUser] = useState();
+  const handleLogin = () => {
+    GoogleLogin().then(setUser);
+  };
   return (
-    <LoginBox>
+    <FindPasswordBox>
       <div>
         <div>
           <div className="title">
             <a href="#">
-              <Image src={logo} alt="" />
+              <Image src={logo} alt="img" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(onhandleSubmit)}>
+          <form action="">
             <div className="emailLabel">
               <label htmlFor="email">로그인</label>
             </div>
-            <input
-              type="email"
-              {...register('email', {
-                pattern: {
-                  value:
-                    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                  message: '이메일 형식에 맞지 않습니다.',
-                },
-              })}
-              id="email"
-              className="Input"
-              placeholder="이메일"
-            />
-            <input
-              type="password"
-              {...register('password')}
-              id="password"
-              className="Input"
-              placeholder="비밀번호"
-            />
+            <input type="email" className="Input" placeholder="이메일" />
+            <input type="email" className="Input" placeholder="비밀번호" />
             <button type="submit" className="submit">
               <span>로그인</span>
             </button>
             <p className="or">또는</p>
             <div className="webLogin">
-              <button type="button" className="googleBtn" onClick={GoogleLogin}>
+              <button type="button" className="googleBtn" onClick={handleLogin}>
                 <span>
                   <svg viewBox="0 0 57 56" className="css-1h47l4s">
                     <path
@@ -126,15 +78,11 @@ const login = () => {
                 <p>Kakao</p>
               </button>
             </div>
-            <div className="footerBtn">
-              <Link href="/join">회원가입</Link>
-              <Link href="login/findPassword">비밀번호찾기</Link>
-            </div>
           </form>
         </div>
       </div>
-    </LoginBox>
+    </FindPasswordBox>
   );
 };
 
-export default login;
+export default findPassword;

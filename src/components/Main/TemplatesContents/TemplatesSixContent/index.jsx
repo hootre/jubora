@@ -11,7 +11,6 @@ export const TemplatesSixContent = ({
   hendleCurrentItem,
 }) => {
   const { bannerType, bannerList } = templatesList;
-  console.log(currentItemNum);
   return (
     <TemplatesSixContentBox className="contentBox">
       <div className="content">

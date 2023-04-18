@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { HeaderBox } from './styles';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GoSearch } from 'react-icons/go';
 import { useRouter } from 'next/router';
-import { onUserStateChange } from 'api/firebase';
+import { PaymentModal } from 'components/common/Modal/PaymentModal';
+import { MypageModal } from 'components/common/Modal/MypageModal';
+import { useRecoilState } from 'recoil';
+import { authState } from 'states';
 
 export const Header = () => {
   // path 관련
@@ -23,18 +26,26 @@ export const Header = () => {
       : pathName == 'notify'
       ? 4
       : -5;
+  // user상태관리
+  const [auth, setAuth] = useRecoilState(authState);
+  // 로그인on상태에서 toggle Nav
+  const [isPayment, setIsPayment] = useState(false);
+  const [isMypage, setIsMypage] = useState(false);
+  const paymentRef = useRef();
+  const mypagetRef = useRef();
+  const toggleIsPayment = () => {
+    setIsMypage(false);
+    setIsPayment((prev) => !prev);
+  };
+  const toggleIsMypage = () => {
+    setIsPayment(false);
+    setIsMypage((prev) => !prev);
+  };
   useEffect(() => {
     if (isReady) {
       setPathName(pathname.split('/')[1]);
     }
   }, [isReady, pathname]);
-  // user상태관리
-  const [isUser, setIsUser] = useState();
-  useEffect(() => {
-    onUserStateChange((user) => {
-      setIsUser(user);
-    });
-  }, []);
   return (
     <HeaderBox className="">
       <div id="header">
@@ -77,17 +88,41 @@ export const Header = () => {
             <input type="text" placeholder="검색" />
           </div>
           <div className="login">
-            <ul>
-              <li className="loginItem">
-                <Link href="/login">로그인</Link>
-              </li>
-              <li>
-                <span></span>
-              </li>
-              <li className="loginItem">
-                <Link href="/login">회원가입</Link>
-              </li>
-            </ul>
+            {auth && auth.isAdmin && (
+              <ul>
+                <li className="item">
+                  <Link href="/admin">관리자페이지</Link>
+                </li>
+              </ul>
+            )}
+            {auth && (
+              <ul>
+                <li className="item">
+                  <a onClick={toggleIsPayment}>결제하기</a>
+                  {isPayment && <PaymentModal ref={paymentRef} toggleIsPayment={toggleIsPayment} />}
+                </li>
+                <li className="item">
+                  <span></span>
+                </li>
+                <li className="item">
+                  <a onClick={toggleIsMypage}>마이페이지</a>
+                  {isMypage && <MypageModal user={auth} ref={mypagetRef} />}
+                </li>
+              </ul>
+            )}
+            {!auth && (
+              <ul>
+                <li className="item">
+                  <Link href="/login">로그인</Link>
+                </li>
+                <li className="item">
+                  <span></span>
+                </li>
+                <li className="item">
+                  <Link href="/join">회원가입</Link>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </div>

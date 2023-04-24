@@ -1,11 +1,11 @@
-import { useIsClient } from "hooks/useIsClient";
-import React from "react";
-import { useMediaQuery } from "react-responsive";
+import { useIsClient } from 'hooks/useIsClient';
+import React from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 const Mobile = ({ children }) => {
   const isClient = useIsClient();
   const isMobile = useMediaQuery({
-    query: "(max-width:767px)",
+    query: '(max-width:767px)',
   });
   return isClient && isMobile ? children : null;
 };
@@ -17,7 +17,7 @@ const Tablet = ({ children }) => {
 const PC = ({ children }) => {
   const isClient = useIsClient();
   const isPc = useMediaQuery({
-    query: "(min-width:768px) ",
+    query: '(min-width:768px) ',
   });
   return isClient && isPc ? children : null;
 };

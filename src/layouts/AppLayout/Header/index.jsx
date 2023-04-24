@@ -27,7 +27,6 @@ export const Header = () => {
       ? 4
       : -5;
   // user상태관리
-  const [auth, setAuth] = useRecoilState(authState);
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
@@ -88,7 +87,7 @@ export const Header = () => {
             <input type="text" placeholder="검색" />
           </div>
           <div className="login">
-            {auth && auth.isAdmin && (
+            {/* {auth && auth.isAdmin && (
               <ul>
                 <li className="item">
                   <Link href="/admin">관리자페이지</Link>
@@ -109,20 +108,18 @@ export const Header = () => {
                   {isMypage && <MypageModal user={auth} ref={mypagetRef} />}
                 </li>
               </ul>
-            )}
-            {!auth && (
-              <ul>
-                <li className="item">
-                  <Link href="/login">로그인</Link>
-                </li>
-                <li className="item">
-                  <span></span>
-                </li>
-                <li className="item">
-                  <Link href="/join">회원가입</Link>
-                </li>
-              </ul>
-            )}
+            )} */}
+            <ul>
+              <li className="item">
+                <Link href="/login">로그인</Link>
+              </li>
+              <li className="item">
+                <span></span>
+              </li>
+              <li className="item">
+                <Link href="/join">회원가입</Link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

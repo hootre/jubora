@@ -3,12 +3,17 @@ import Head from 'next/head';
 import AppLayout from '../layouts/AppLayout/AppLayout';
 import GlobalStyle from 'styles/GlobalStyle';
 import Color from 'styles/Color';
-import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { RecoilRoot } from 'recoil';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { useState } from 'react';
 export default function MyApp({ Component, pageProps }) {
+  const [supabase] = useState(() => createBrowserSupabaseClient());
   return (
     <>
       <GlobalStyle />
       <Color />
+
       <Head>
         <title>JUBORA</title>
         <meta name="MainPage" content="JUBORA 홈페이지 입니다" />
@@ -18,9 +23,11 @@ export default function MyApp({ Component, pageProps }) {
         />
       </Head>
       <RecoilRoot>
-        <AppLayout>
-          <Component {...pageProps} />
-        </AppLayout>
+        <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
+          <AppLayout>
+            <Component {...pageProps} />
+          </AppLayout>
+        </SessionContextProvider>
       </RecoilRoot>
       <Toaster />
     </>

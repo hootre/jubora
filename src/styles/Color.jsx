@@ -16,6 +16,7 @@ const Color = createGlobalStyle`
         --bd-100:#e1e2e3;
         --base-black : #181823;
         --base-white : #fff;
+        --base-red : #f03c32;
       
     }
 `;

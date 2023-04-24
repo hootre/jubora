@@ -66,6 +66,7 @@ const GlobalStyle = createGlobalStyle`
          url('https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.ttf') format("truetype");
     font-display: swap;
 } 
+
 `;
 
 export default GlobalStyle;

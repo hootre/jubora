@@ -1,16 +1,14 @@
 import Image from 'next/image';
 import logo from 'assets/MainPage/logo.png';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { RegisterBox } from './styles';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
-import { useMessage } from 'hooks/useMessage';
-import { supabase } from 'api/supabase';
-import classNames from 'classnames';
+import { VIEWS, useAuth } from '../AuthProvider';
+import { toast } from 'react-hot-toast';
+import supabase from 'lib/supabase-browser';
 const join = () => {
-  const router = useRouter();
   const {
     handleSubmit,
     formState: { isValid, errors },
@@ -18,46 +16,20 @@ const join = () => {
     register,
     watch,
   } = useForm();
+  const { setView } = useAuth();
 
-  const [loading, setLoading] = useState(false);
-  const MESSAGE_VALUES = {
-    type: 'default',
-    payload: '',
-  };
-  const [message, handleMessage] = useMessage(MESSAGE_VALUES);
+  async function signUp(formData) {
+    const { error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
 
-  const onhandleSubmit = useCallback(async (item) => {
-    try {
-      setLoading(true);
-      const { error } = await supabase.auth.signUp({
-        email: item.email,
-        password: item.password,
-        options: {
-          data: {
-            name: item.name,
-            adress: '',
-          },
-        },
-      });
-      if (error) {
-        console.log(error);
-        handleMessage({ payload: error.message, type: 'error' });
-      } else {
-        handleMessage({
-          payload: 'Signup successful. Please check your inbox for a confirmation email!',
-          type: 'success',
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      handleMessage({
-        payload: error.error_description || error,
-        type: 'error',
-      });
-    } finally {
-      setLoading(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('가입 성공하였습니다!');
     }
-  }, []);
+  }
   return (
     <RegisterBox>
       <div>
@@ -67,25 +39,10 @@ const join = () => {
               <Image src={logo} alt="img" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(onhandleSubmit)}>
+          <form onSubmit={handleSubmit(signUp)}>
             <div className="emailLabel">
               <label htmlFor="email">회원가입</label>
             </div>
-            {message.payload && (
-              <div
-                className={classNames(
-                  'topMessage',
-                  message.type === 'error'
-                    ? 'error'
-                    : message.type === 'success'
-                    ? 'success'
-                    : 'basic'
-                )}
-              >
-                {message?.payload}
-                text
-              </div>
-            )}
             <p className={`pointText ${errors.name && 'active'}`}>이름/회사명은 필수입니다.</p>
             <input
               name="name"
@@ -205,6 +162,9 @@ const join = () => {
               className={`submit ${isValid && 'possible'}`}
             >
               <span>회원가입</span>
+            </button>
+            <button className="link w-full" type="button" onClick={() => setView(VIEWS.SIGN_IN)}>
+              Already have an account? Sign In.
             </button>
           </form>
         </div>

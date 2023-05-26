@@ -24,7 +24,7 @@ export const authState = atom({
   dangerouslyAllowMutability: true,
 });
 
-export const isLoggedInState = atom({
-  key: 'isLoggedInState',
+export const isAuthLoding = atom({
+  key: 'isAuthLoding',
   default: false,
 });

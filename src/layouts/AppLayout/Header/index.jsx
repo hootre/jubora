@@ -9,6 +9,7 @@ import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
 import { useRecoilState } from 'recoil';
 import { authState } from 'states';
+import { VIEWS, useAuth } from 'components/Auth/AuthProvider';
 
 export const Header = () => {
   // path 관련
@@ -45,6 +46,8 @@ export const Header = () => {
       setPathName(pathname.split('/')[1]);
     }
   }, [isReady, pathname]);
+
+  const { setView } = useAuth();
   return (
     <HeaderBox className="">
       <div id="header">
@@ -111,13 +114,17 @@ export const Header = () => {
             )} */}
             <ul>
               <li className="item">
-                <Link href="/login">로그인</Link>
+                <Link href="/auth" onClick={() => setView(VIEWS.SIGN_IN)}>
+                  로그인
+                </Link>
               </li>
               <li className="item">
                 <span></span>
               </li>
               <li className="item">
-                <Link href="/join">회원가입</Link>
+                <Link href="/auth" onClick={() => setView(VIEWS.SIGN_UP)}>
+                  회원가입
+                </Link>
               </li>
             </ul>
           </div>

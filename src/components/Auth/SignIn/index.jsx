@@ -1,61 +1,40 @@
-import Image from 'next/image';
-import logo from 'assets/MainPage/logo.png';
-import React, { useEffect, useState } from 'react';
-import { LoginBox } from './styles';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import { authState } from 'states';
-import { useRecoilState } from 'recoil';
-import { supabase } from 'api/supabase';
-import { useMessage } from 'hooks/useMessage';
-import classNames from 'classnames';
-const MESSAGE_VALUES = {
-  type: 'default',
-  payload: '',
-};
-const login = () => {
-  const [loading, setLoading] = useState(false);
-  const [message, handleMessage] = useMessage(MESSAGE_VALUES);
+'use client';
 
+import { useState } from 'react';
+import logo from 'assets/MainPage/logo.png';
+import { LoginBox } from './styles';
+import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import { VIEWS, useAuth } from '../AuthProvider';
+import supabase from 'lib/supabase-browser';
+import { toast } from 'react-hot-toast';
+
+const SignIn = () => {
+  const { setView } = useAuth();
+
+  async function signIn(formData) {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('로그인 성공하였습니다!');
+    }
+  }
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-
-  async function onhandleSubmit(item) {
-    console.log(item);
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: item.email,
-        password: item.password,
-      });
-      if (error) {
-        toast.error('로그인 실패');
-        handleMessage({ payload: error.message, type: 'error' });
-      } else {
-        toast.apply('로그인 성공');
-        handleMessage({
-          payload: '로그인이 성공적으로 완료되었습니다.',
-          type: 'success',
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      handleMessage({
-        payload: error.error_description || error,
-        type: 'error',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  const handleSumbit = (formData) => {
+    signIn(formData);
+  };
   console.log(watch('email'));
+
   return (
     <LoginBox>
       <div>
@@ -65,24 +44,10 @@ const login = () => {
               <Image src={logo} alt="" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(onhandleSubmit)}>
+          <form onSubmit={handleSubmit(handleSumbit)}>
             <div className="emailLabel">
               <label htmlFor="email">로그인</label>
             </div>
-            {message.payload && (
-              <div
-                className={classNames(
-                  'topMessage',
-                  message.type === 'error'
-                    ? 'bg-red-500 text-white'
-                    : message.type === 'success'
-                    ? 'bg-green-300 text-gray-800'
-                    : 'bg-gray-100 text-gray-800'
-                )}
-              >
-                {message?.payload}
-              </div>
-            )}
             <input
               type="email"
               {...register('email', {
@@ -158,9 +123,16 @@ const login = () => {
               </button>
             </div>
             <div className="footerBtn">
-              <Link href="/join">회원가입</Link>
-              <Link href="login/findPassword">비밀번호찾기</Link>
-              <h2 onClick={() => supabase.auth.signOut()}>로그아웃</h2>
+              <button
+                className="link w-full"
+                type="button"
+                onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}
+              >
+                Forgot your password?
+              </button>
+              <button className="link w-full" type="button" onClick={() => setView(VIEWS.SIGN_UP)}>
+                Don&apos;t have an account? Sign Up.
+              </button>
             </div>
           </form>
         </div>
@@ -169,4 +141,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default SignIn;

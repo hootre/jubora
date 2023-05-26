@@ -4,11 +4,10 @@ import AppLayout from '../layouts/AppLayout/AppLayout';
 import GlobalStyle from 'styles/GlobalStyle';
 import Color from 'styles/Color';
 import { RecoilRoot } from 'recoil';
-import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
-import { SessionContextProvider } from '@supabase/auth-helpers-react';
-import { useState } from 'react';
+import { AuthProvider } from 'components/Auth/AuthProvider';
+import supabase from 'lib/supabase-browser';
+
 export default function MyApp({ Component, pageProps }) {
-  const [supabase] = useState(() => createBrowserSupabaseClient());
   return (
     <>
       <GlobalStyle />
@@ -23,11 +22,11 @@ export default function MyApp({ Component, pageProps }) {
         />
       </Head>
       <RecoilRoot>
-        <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
+        <AuthProvider supabase={supabase}>
           <AppLayout>
             <Component {...pageProps} />
           </AppLayout>
-        </SessionContextProvider>
+        </AuthProvider>
       </RecoilRoot>
       <Toaster />
     </>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { HeaderBox } from './styles';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
@@ -7,8 +7,6 @@ import { GoSearch } from 'react-icons/go';
 import { useRouter } from 'next/router';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
-import { useRecoilState } from 'recoil';
-import { authState } from 'states';
 import { VIEWS, useAuth } from 'components/Auth/AuthProvider';
 
 export const Header = () => {
@@ -28,11 +26,11 @@ export const Header = () => {
       ? 4
       : -5;
   // user상태관리
+  const { setView, user, signOut } = useAuth();
+  console.log(user);
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
-  const paymentRef = useRef();
-  const mypagetRef = useRef();
   const toggleIsPayment = () => {
     setIsMypage(false);
     setIsPayment((prev) => !prev);
@@ -47,7 +45,6 @@ export const Header = () => {
     }
   }, [isReady, pathname]);
 
-  const { setView } = useAuth();
   return (
     <HeaderBox className="">
       <div id="header">
@@ -90,43 +87,45 @@ export const Header = () => {
             <input type="text" placeholder="검색" />
           </div>
           <div className="login">
-            {/* {auth && auth.isAdmin && (
+            {user === 'admin' && (
               <ul>
                 <li className="item">
                   <Link href="/admin">관리자페이지</Link>
                 </li>
               </ul>
             )}
-            {auth && (
+            {user && (
               <ul>
                 <li className="item">
                   <a onClick={toggleIsPayment}>결제하기</a>
-                  {isPayment && <PaymentModal ref={paymentRef} toggleIsPayment={toggleIsPayment} />}
+                  {isPayment && <PaymentModal toggleIsPayment={toggleIsPayment} />}
                 </li>
                 <li className="item">
                   <span></span>
                 </li>
                 <li className="item">
                   <a onClick={toggleIsMypage}>마이페이지</a>
-                  {isMypage && <MypageModal user={auth} ref={mypagetRef} />}
+                  {isMypage && <MypageModal user={user} signOut={signOut} />}
                 </li>
               </ul>
-            )} */}
-            <ul>
-              <li className="item">
-                <Link href="/auth" onClick={() => setView(VIEWS.SIGN_IN)}>
-                  로그인
-                </Link>
-              </li>
-              <li className="item">
-                <span></span>
-              </li>
-              <li className="item">
-                <Link href="/auth" onClick={() => setView(VIEWS.SIGN_UP)}>
-                  회원가입
-                </Link>
-              </li>
-            </ul>
+            )}
+            {!user && (
+              <ul>
+                <li className="item">
+                  <Link href="/auth" onClick={() => setView(VIEWS.SIGN_IN)}>
+                    로그인
+                  </Link>
+                </li>
+                <li className="item">
+                  <span></span>
+                </li>
+                <li className="item">
+                  <Link href="/auth" onClick={() => setView(VIEWS.SIGN_UP)}>
+                    회원가입
+                  </Link>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </div>

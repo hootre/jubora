@@ -1,79 +1,105 @@
 'use client';
 
-import { useState } from 'react';
 import logo from 'assets/MainPage/logo.png';
-import { LoginBox } from './styles';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { VIEWS, useAuth } from '../AuthProvider';
-import supabase from 'lib/supabase-browser';
-import { toast } from 'react-hot-toast';
+import { AuthBox } from '../styles';
 
 const SignIn = () => {
-  const { setView } = useAuth();
-
-  async function signIn(formData) {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: formData.email,
-      password: formData.password,
-    });
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('로그인 성공하였습니다!');
-    }
-  }
+  // form
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    trigger,
+    formState: { isValid, errors },
   } = useForm();
   const handleSumbit = (formData) => {
     signIn(formData);
   };
-  console.log(watch('email'));
+  //auth
+  const { setView, signIn, googleSignIn } = useAuth();
 
   return (
-    <LoginBox>
+    <AuthBox>
       <div>
         <div>
-          <div className="title">
+          <div className="titleLogo">
             <a href="#">
               <Image src={logo} alt="" />
             </a>
           </div>
           <form onSubmit={handleSubmit(handleSumbit)}>
-            <div className="emailLabel">
-              <label htmlFor="email">로그인</label>
+            <div className="titleLabel">
+              <label htmlFor="titleLabel">로그인</label>
             </div>
+            <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
             <input
+              id="email"
+              placeholder="이메일"
+              className={`input ${errors.email && 'invalid'}`}
+              name="email"
               type="email"
+              required={true}
               {...register('email', {
+                required: '이메일은 필수입니다',
                 pattern: {
-                  value:
-                    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                  message: '이메일 형식에 맞지 않습니다.',
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: '이메일 형식을 지켜주세요',
                 },
               })}
-              id="email"
-              className="Input"
-              placeholder="이메일"
-            />
+              onKeyUp={() => {
+                trigger('email');
+              }}
+            ></input>
+            <p className={`pointText ${errors.password && 'active'}`}>
+              {errors.password?.message}{' '}
+            </p>
             <input
-              type="password"
-              {...register('password')}
-              id="password"
-              className="Input"
+              name="password"
               placeholder="비밀번호"
-            />
-            <button type="submit" className="submit">
+              id="password"
+              type="password"
+              autoComplete="off"
+              className={`input form-control ${errors.password && 'invalid'}`}
+              required={true}
+              {...register('password', {
+                required: '비밀번호는 필수입니다.',
+                pattern: {
+                  value: /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+                  message: '6~20 자의 영문대소문자, 숫자 및 특수문자 입력해 주세요',
+                },
+                minLength: {
+                  value: 6,
+                  message: '비밀번호는 최소 8글자 이상입니다.',
+                },
+                maxLength: {
+                  value: 20,
+                  message: '비밀번호는 최소 20글자 이하입니다.',
+                },
+              })}
+              onKeyUp={() => {
+                trigger('password');
+              }}
+            ></input>
+            <button
+              type={isValid ? 'submit' : 'button'}
+              className={`submit ${isValid && 'possible'}`}
+            >
               <span>로그인</span>
             </button>
-            <p className="or">또는</p>
+            <ul className="login_util">
+              <div className="util_btn">아이디 찾기</div>
+              <div className="util_btn" onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}>
+                비밀번호 찾기
+              </div>
+              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_UP)}>
+                회원가입
+              </div>
+            </ul>
             <div className="webLogin">
-              <button type="button" className="googleBtn">
+              <button type="button" className="googleBtn" onClick={googleSignIn}>
                 <span>
                   <svg viewBox="0 0 57 56" className="css-1h47l4s">
                     <path
@@ -104,40 +130,11 @@ const SignIn = () => {
                 </span>
                 <p>Google</p>
               </button>
-              <button type="button" className="kakaoBtn">
-                <span>
-                  <svg viewBox="0 0 57 56">
-                    <path
-                      d="M0.5 28C0.5 12.536 13.036 0 28.5 0C43.964 0 56.5 12.536 56.5 28C56.5 43.464 43.964 56 28.5 56C13.036 56 0.5 43.464 0.5 28Z"
-                      fill="#FEE500"
-                    ></path>
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M28.5 16.2063C21.5606 16.2063 15.9286 20.5812 15.9286 25.9617C15.9286 29.3183 18.1034 32.2474 21.4223 34.0326L20.0269 39.1492C20.0005 39.2509 20.006 39.3583 20.0424 39.4569C20.0788 39.5555 20.1446 39.6406 20.2307 39.7008C20.3169 39.761 20.4195 39.7934 20.5246 39.7937C20.6297 39.7939 20.7324 39.7621 20.8189 39.7023L26.9286 35.6417C27.444 35.6417 27.972 35.7297 28.5 35.7297C35.4394 35.7297 41.0714 31.3549 41.0714 25.9617C41.0714 20.5686 35.4394 16.2063 28.5 16.2063Z"
-                      fill="#181600"
-                    ></path>
-                  </svg>
-                </span>
-                <p>Kakao</p>
-              </button>
-            </div>
-            <div className="footerBtn">
-              <button
-                className="link w-full"
-                type="button"
-                onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}
-              >
-                Forgot your password?
-              </button>
-              <button className="link w-full" type="button" onClick={() => setView(VIEWS.SIGN_UP)}>
-                Don&apos;t have an account? Sign Up.
-              </button>
             </div>
           </form>
         </div>
       </div>
-    </LoginBox>
+    </AuthBox>
   );
 };
 

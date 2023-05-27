@@ -1,13 +1,11 @@
 import Image from 'next/image';
 import logo from 'assets/MainPage/logo.png';
 import React from 'react';
-import { RegisterBox } from './styles';
 import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
 import { VIEWS, useAuth } from '../AuthProvider';
-import { toast } from 'react-hot-toast';
-import supabase from 'lib/supabase-browser';
+import { AuthBox } from '../styles';
 const join = () => {
   const {
     handleSubmit,
@@ -16,34 +14,22 @@ const join = () => {
     register,
     watch,
   } = useForm();
-  const { setView } = useAuth();
+  const { setView, signUp } = useAuth();
 
-  async function signUp(formData) {
-    const { error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    });
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('가입 성공하였습니다!');
-    }
-  }
   return (
-    <RegisterBox>
+    <AuthBox>
       <div>
         <div>
-          <div className="title">
+          <div className="titleLogo">
             <a href="#">
               <Image src={logo} alt="img" />
             </a>
           </div>
           <form onSubmit={handleSubmit(signUp)}>
-            <div className="emailLabel">
-              <label htmlFor="email">회원가입</label>
+            <div className="titleLabel">
+              <label htmlFor="titleLabel">회원가입</label>
             </div>
-            <p className={`pointText ${errors.name && 'active'}`}>이름/회사명은 필수입니다.</p>
+            <p className={`pointText ${errors.name && 'active'}`}>이름/회사명을 입력해주세요.</p>
             <input
               name="name"
               type="name"
@@ -51,11 +37,24 @@ const join = () => {
               className={`input form-control ${errors.name && 'invalid'}`}
               required={true}
               defaultValue=""
-              {...register('name', { required: '이름/회사명은 필수입니다.' })}
+              {...register('name', { required: '이름/회사명을 입력해주세요.' })}
               onKeyUp={() => {
                 trigger('name');
               }}
-            />{' '}
+            />
+            <p className={`pointText ${errors.text && 'active'}`}>휴대폰 번호를 입력해주세요.</p>
+            <input
+              name="phone"
+              type="text"
+              placeholder="ex) 01012345678"
+              className={`input form-control ${errors.name && 'invalid'}`}
+              required={true}
+              defaultValue=""
+              {...register('phone', { required: '휴대폰 번호를 입력해주세요.' })}
+              onKeyUp={() => {
+                trigger('phone');
+              }}
+            />
             <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
             <input
               id="email"
@@ -163,13 +162,19 @@ const join = () => {
             >
               <span>회원가입</span>
             </button>
-            <button className="link w-full" type="button" onClick={() => setView(VIEWS.SIGN_IN)}>
-              Already have an account? Sign In.
-            </button>
+            <ul className="login_util">
+              <div className="util_btn">아이디 찾기</div>
+              <div className="util_btn" onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}>
+                비밀번호 찾기
+              </div>
+              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_IN)}>
+                로그인
+              </div>
+            </ul>
           </form>
         </div>
       </div>
-    </RegisterBox>
+    </AuthBox>
   );
 };
 

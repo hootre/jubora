@@ -1,27 +1,29 @@
 import styled from 'styled-components';
 
-export const RegisterBox = styled.section`
+export const AuthBox = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 249px);
+  padding: 50px;
   .pointText {
     height: 0;
+    display: flex;
+    align-items: center;
     overflow: hidden;
     color: var(--base-red);
     font-size: 13px;
     opacity: 0.2;
     transition: all 0.5s ease;
     &.active {
-      display: block;
-      height: auto;
+      height: 30px;
       opacity: 1;
       padding: 10px;
     }
     &.checkActive {
-      display: block;
-      height: auto;
+      height: 30px;
       opacity: 1;
+      padding: 10px;
     }
   }
   input.invalid {
@@ -30,29 +32,27 @@ export const RegisterBox = styled.section`
   }
   > div {
     max-width: 400px;
-    width: 100%;
-    margin: 0 auto;
+    min-height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    background: var(--base-white);
+    border-radius: 5px;
+    border: 1px solid var(--bd-100);
     > div {
-      width: 100%;
-      padding: 25px;
-      background: var(--base-white);
-      border-radius: 5px;
-      border: 1px solid var(--bd-100);
-      .title {
+      .titleLogo {
         display: flex;
         justify-content: center;
-        margin: 50px 0 70px;
+        padding: 30px 0;
       }
       form {
-        .emailLabel {
+        .titleLabel {
           margin: 17px 0 7px 10px;
           label {
             color: var(--text-100);
             font-size: 16px;
           }
-        }
-        .topMessage {
-          padding: 10px;
         }
         input.input {
           width: 100%;
@@ -67,7 +67,46 @@ export const RegisterBox = styled.section`
           font-weight: 400;
           margin-bottom: 8px;
         }
-        // 체크박스 영역
+        // SignIn 웹 로그인
+        .webLogin {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          button {
+            border: none;
+            cursor: pointer;
+            &:hover {
+              p {
+                color: var(--primary-100);
+              }
+            }
+            span {
+              position: relative;
+              display: flex;
+              &:after {
+                position: absolute;
+                content: '';
+                left: 0px;
+                top: 0px;
+                width: 100%;
+                height: 100%;
+                border-radius: 15px;
+                border: 1px solid var(--bd-100);
+                box-sizing: border-box;
+              }
+              svg {
+                width: 56px;
+                height: 56px;
+              }
+            }
+            p {
+              margin-top: 8px;
+              transition: all 0.2s ease;
+              color: var(--text-200);
+            }
+          }
+        }
+        // SignUp 체크박스 영역
         .checkBox {
           > div {
             display: flex;
@@ -182,80 +221,57 @@ export const RegisterBox = styled.section`
             }
           }
         }
+
         // 회원가입 영역
         .submit {
           width: 100%;
           height: 50px;
           min-height: 50px;
-          border-radius: 25px;
-          font-size: 14px;
+          border-radius: 5px;
+          font-size: 16px;
+          font-weight: bold;
           margin-bottom: 10px;
           cursor: pointer;
           color: var(--text-200);
-          background: var(--bg-100);
-          border: none;
-          margin-top: 30px;
+          border: 1px solid rgba(0, 0, 0, 0.3);
+          background: #fff;
           &.possible {
             color: var(--base-white);
             background: var(--primary-100);
           }
         }
-        .or {
-          color: var(--text-200);
-          font-size: 10px;
-          text-align: center;
-          margin: 5px 0 15px;
-        }
-        .webLogin {
+        .login_util {
           display: flex;
-          justify-content: center;
-          button {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            border: none;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 20px;
+          > div {
+            font-size: 14px;
+            letter-spacing: -0.01em;
+            padding: 0 16px;
+            color: var(--text-200);
+            position: relative;
             cursor: pointer;
-            span {
-              position: relative;
-              display: flex;
-              &:after {
-                position: absolute;
+            &:nth-child(2) {
+              margin: 20px 0px;
+              &:before {
                 content: '';
-                left: 0px;
-                top: 0px;
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                border: 1px solid var(--bd-100);
-                box-sizing: border-box;
+                position: absolute;
+                left: 0;
+                display: inline-block;
+                width: 1px;
+                height: 12px;
+                background: var(--text-200);
               }
-              svg {
-                width: 56px;
-                height: 56px;
+              &:after {
+                content: '';
+                position: absolute;
+                right: 0;
+                display: inline-block;
+                width: 1px;
+                height: 12px;
+                background: var(--text-200);
               }
-            }
-            p {
-              margin-top: 8px;
-              color: var(--text-200);
-            }
-          }
-        }
-
-        .footerBtn {
-          display: flex;
-          justify-content: center;
-          margin-top: 30px;
-          .forgetEmail {
-            &:nth-child(1) {
-              border-right: 1px solid var(--bd-100);
-            }
-            cursor: pointer;
-            > p {
-              color: var(--text-200);
-              font-size: 12px;
-              font-weight: bold;
             }
           }
         }

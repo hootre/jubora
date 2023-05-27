@@ -1,73 +1,71 @@
 'use client';
 import logo from 'assets/MainPage/logo.png';
-import { LoginBox } from './styles';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { VIEWS, useAuth } from '../AuthProvider';
-import supabase from 'lib/supabase-browser';
-import { toast } from 'react-hot-toast';
+import { AuthBox } from '../styles';
 
 const ResetPassword = () => {
-  const { setView } = useAuth();
-  async function onResetPassword(formData) {
-    const { error } = await supabase.auth.resetPasswordForEmail(formData?.email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}`,
-    });
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('비밀번호 초기화 성공!');
-    }
-  }
+  const { setView, onResetPassword } = useAuth();
 
   const {
     register,
     handleSubmit,
     watch,
+    trigger,
     formState: { errors },
   } = useForm();
 
   console.log(watch('email'));
 
   return (
-    <LoginBox>
+    <AuthBox>
       <div>
         <div>
-          <div className="title">
+          <div className="titleLogo">
             <a href="#">
               <Image src={logo} alt="" />
             </a>
           </div>
           <form onSubmit={handleSubmit(onResetPassword)}>
-            <div className="emailLabel">
-              <label htmlFor="email">로그인</label>
+            <div className="titleLabel">
+              <label htmlFor="titleLabel">비밀번호 초기화</label>
             </div>
+            <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
             <input
+              id="email"
+              placeholder="이메일"
+              className={`input ${errors.email && 'invalid'}`}
+              name="email"
               type="email"
+              required={true}
               {...register('email', {
+                required: '이메일은 필수입니다',
                 pattern: {
-                  value:
-                    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                  message: '이메일 형식에 맞지 않습니다.',
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: '이메일 형식을 지켜주세요',
                 },
               })}
-              id="email"
-              className="Input"
-              placeholder="이메일"
-            />
+              onKeyUp={() => {
+                trigger('email');
+              }}
+            ></input>
             <button className="button-inverse w-full submit" type="submit">
               비밀번호 초기화
             </button>
-            <div className="footerBtn">
-              <button className="link" type="button" onClick={() => setView(VIEWS.SIGN_IN)}>
-                Remember your password? Sign In.
-              </button>
-            </div>
+            <ul className="login_util">
+              <div className="util_btn">아이디 찾기</div>
+              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_IN)}>
+                로그인
+              </div>
+              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_UP)}>
+                회원가입
+              </div>
+            </ul>
           </form>
         </div>
       </div>
-    </LoginBox>
+    </AuthBox>
   );
 };
 

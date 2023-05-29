@@ -76,7 +76,6 @@ export const AuthProvider = (props) => {
       options: {
         data: {
           name: formData.name,
-          phone: formData.phone,
           privacy_check: formData.check,
           address: '',
         },

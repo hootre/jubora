@@ -42,19 +42,6 @@ const join = () => {
                 trigger('name');
               }}
             />
-            <p className={`pointText ${errors.text && 'active'}`}>휴대폰 번호를 입력해주세요.</p>
-            <input
-              name="phone"
-              type="text"
-              placeholder="ex) 01012345678"
-              className={`input form-control ${errors.name && 'invalid'}`}
-              required={true}
-              defaultValue=""
-              {...register('phone', { required: '휴대폰 번호를 입력해주세요.' })}
-              onKeyUp={() => {
-                trigger('phone');
-              }}
-            />
             <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
             <input
               id="email"

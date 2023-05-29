@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { VIEWS, useAuth } from '../AuthProvider';
 import { AuthBox } from '../styles';
+import useLogin from 'hooks/useLogin';
 
 const SignIn = () => {
   // form
@@ -30,7 +31,7 @@ const SignIn = () => {
               <Image src={logo} alt="" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(handleSumbit)}>
+          <form onSubmit={handleSubmit(useLogin)}>
             <div className="titleLabel">
               <label htmlFor="titleLabel">로그인</label>
             </div>

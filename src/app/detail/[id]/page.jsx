@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
-import { DetailBox } from './styles';
-import { useRouter } from 'next/router';
-import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+'use client';
+import React, { useRef } from 'react';
+import { DetailBox } from '../styles';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { AwesomeButton } from 'react-awesome-button';
 import 'react-awesome-button/dist/styles.css';
 import dynamic from 'next/dynamic';
@@ -10,10 +10,9 @@ import { Option } from 'components/Detail/Option';
 const NoSsrEditor = dynamic(() => import('components/Detail/Editor'), {
   ssr: false,
 });
-const detail = () => {
-  const router = useRouter();
-  const { id } = router.query;
+const detail = ({ id }) => {
   const ref = useRef(null);
+  console.log(id);
 
   return (
     <DetailBox>
@@ -44,7 +43,7 @@ const detail = () => {
           <div className="priceBox">
             <div className="count">
               <AiOutlineMinus className="icon" />
-              <input type="text" value={1} />
+              <input type="text" defaultValue={1} />
               <AiOutlinePlus className="icon" />
             </div>
             <div className="price">

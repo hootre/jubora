@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useId, useLayoutEffect, useState, useTransition } from 'react';
 import { SianBox } from './styles';
 import { Board } from 'components/Board';

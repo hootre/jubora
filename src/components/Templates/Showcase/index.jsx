@@ -4,14 +4,13 @@ import { useRecoilState } from 'recoil';
 import { detailFilterState } from 'states';
 import { Category } from '../Search/Category';
 import { ShowcaseBox } from './styles';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { AwesomeButton } from 'react-awesome-button';
 import 'react-awesome-button/dist/styles.css';
 
 export const Showcase = ({ showCaseList }) => {
-  const router = useRouter();
-  let { sort } = router.query;
+  let sort = usePathname().substring(1);
   sort = sort === undefined ? 0 : sort;
   const [detailFilter, setDetailFilter] = useRecoilState(detailFilterState);
   let listLength = showCaseList.filter((v) => v.class == sort);
@@ -20,7 +19,7 @@ export const Showcase = ({ showCaseList }) => {
     <ShowcaseBox>
       <div className="topNav">
         <h2 className="title">{listLength.length}개의 디자인이 있습니다.</h2>
-        <Category list={filterList} router={router} category={sort} queryName={'sort'} />
+        <Category list={filterList} category={sort} queryName={'sort'} />
       </div>
       <div className="showcase">
         <ul>

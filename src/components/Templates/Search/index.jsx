@@ -3,12 +3,11 @@ import { GoSearch } from 'react-icons/go';
 import { Category } from './Category';
 import { categoryList } from 'assets/data';
 import { useRecoilState } from 'recoil';
-import { curCategoryState, isCurFilterState } from 'states';
-import { useRouter } from 'next/router';
+import { isCurFilterState } from 'states';
+import { usePathname } from 'next/navigation';
 
 export const Search = () => {
-  const router = useRouter();
-  const { category } = router.query;
+  const category = usePathname().substring(1);
   const [isCurFilter, setIsCurFilter] = useRecoilState(isCurFilterState);
 
   const hendleFilterState = () => {
@@ -26,7 +25,7 @@ export const Search = () => {
       </div>
       <div className="searchBox">
         <div className="search">
-          <Category list={categoryList} router={router} state={category} queryName={'category'} />
+          <Category list={categoryList} state={category} queryName={'category'} />
           <div className="searchInputBox">
             <div className="searchInput">
               <GoSearch className="icon" />

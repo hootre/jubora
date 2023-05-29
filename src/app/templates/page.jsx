@@ -1,3 +1,4 @@
+'use client';
 import { filterItemList, showCaseList } from 'assets/data';
 import { Search } from 'components/Templates/Search';
 import { FilterAside } from 'components/Templates/Search/FilterAside';

@@ -4,10 +4,10 @@ import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GoSearch } from 'react-icons/go';
-import { useRouter } from 'next/router';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
 import { VIEWS, useAuth } from 'components/Auth/AuthProvider';
+import { useRouter } from 'next/navigation';
 
 export const Header = () => {
   // path 관련

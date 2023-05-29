@@ -1,15 +1,18 @@
-import toast from 'react-hot-toast';
+'use client';
 import { Slide } from 'components/Main/Slide';
 import { Notice } from 'components/Main/Notice';
 import { noticeList, slides } from 'assets/data';
-import { MainBox } from './styles';
 import { TemplatesContents } from 'components/Main/TemplatesContents';
-import useMovies from 'hooks/useMovies';
+import styled from 'styled-components';
+
+const MainBox = styled.main`
+  min-height: calc(100vh - 249px);
+  .mainShowcase {
+    padding: 50px 0;
+  }
+`;
 
 export default function Home() {
-  const data = useMovies();
-  console.log(`profiles`);
-  console.log(data);
   return (
     <MainBox>
       <Slide slides={slides} />

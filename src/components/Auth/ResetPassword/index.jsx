@@ -16,8 +16,6 @@ const ResetPassword = () => {
     formState: { errors },
   } = useForm();
 
-  console.log(watch('email'));
-
   return (
     <AuthBox>
       <div>

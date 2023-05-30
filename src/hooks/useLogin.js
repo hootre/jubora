@@ -1,6 +1,6 @@
-import { useMutation } from 'react-query';
 import { toast } from 'react-hot-toast';
 import supabase from 'lib/supabase-browser';
+import { useMutation } from '@tanstack/react-query';
 
 const login = async (formData) => {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -22,6 +22,6 @@ const login = async (formData) => {
   return data;
 };
 
-export default function useLogin(formData) {
-  return useMutation('login', () => login(formData));
-}
+export const useLogin = () => {
+  return useMutation(login);
+};

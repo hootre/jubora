@@ -4,6 +4,7 @@ import { Notice } from 'components/Main/Notice';
 import { noticeList, slides } from 'assets/data';
 import { TemplatesContents } from 'components/Main/TemplatesContents';
 import styled from 'styled-components';
+import { useUser } from 'hooks/useUser';
 
 const MainBox = styled.main`
   min-height: calc(100vh - 249px);

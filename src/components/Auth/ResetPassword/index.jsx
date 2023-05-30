@@ -2,12 +2,17 @@
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import { VIEWS, useAuth } from '../AuthProvider';
 import { AuthBox } from '../styles';
+import useResetPassword from 'hooks/useResetPassword';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const ResetPassword = () => {
-  const { setView, onResetPassword } = useAuth();
-
+  const router = useRouter();
+  const { mutate: resetPassword, isLoading, isSuccess } = useResetPassword();
+  if (isSuccess) {
+    router.push('/');
+  }
   const {
     register,
     handleSubmit,
@@ -25,7 +30,7 @@ const ResetPassword = () => {
               <Image src={logo} alt="" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(onResetPassword)}>
+          <form onSubmit={handleSubmit(resetPassword)}>
             <div className="titleLabel">
               <label htmlFor="titleLabel">비밀번호 초기화</label>
             </div>
@@ -48,17 +53,19 @@ const ResetPassword = () => {
                 trigger('email');
               }}
             ></input>
-            <button className="button-inverse w-full submit" type="submit">
+            <button className="button-inverse w-full submit" type="submit" disabled={isLoading}>
               비밀번호 초기화
             </button>
             <ul className="login_util">
-              <div className="util_btn">아이디 찾기</div>
-              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_IN)}>
+              <Link className="util_btn" href="/auth/join">
+                아이디 찾기
+              </Link>
+              <Link className="util_btn" href="/auth/login">
                 로그인
-              </div>
-              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_UP)}>
+              </Link>
+              <Link className="util_btn" href="/auth/join">
                 회원가입
-              </div>
+              </Link>
             </ul>
           </form>
         </div>

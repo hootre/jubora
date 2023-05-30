@@ -1,21 +1,19 @@
+import { useQuery } from '@tanstack/react-query';
 import supabase from 'lib/supabase-browser';
-import { useQuery } from 'react-query';
+import { toast } from 'react-hot-toast';
 
-const getUser = async (userId) => {
-  const { data, error } = await supabase.from('profiles').select().eq('id', userId).single();
-  console.log(data);
+const getUser = async () => {
+  console.log('getUser');
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
   if (error) {
-    throw new Error(error.message);
+    toast.error('session search error');
   }
-
-  if (!data) {
-    throw new Error('User not found');
-  }
-
-  return data;
+  return session?.user;
 };
 
-export default function useUser() {
-  const user = supabase.auth.getSession();
-  return useQuery('user', user);
-}
+export const useUser = () => {
+  return useQuery(['user'], () => getUser());
+};

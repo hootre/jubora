@@ -6,13 +6,14 @@ import Link from 'next/link';
 import { GoSearch } from 'react-icons/go';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
-import { VIEWS, useAuth } from 'components/Auth/AuthProvider';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { useUser } from 'hooks/useUser';
+import useLogOut from 'hooks/useLogOut';
 
 export const Header = () => {
   // path 관련
-  const { pathname, isReady } = useRouter();
-  const [pathName, setPathName] = useState('');
+  const router = useRouter();
+  const pathName = usePathname().substring(1);
   let navCutLine =
     pathName == 'templates'
       ? 0
@@ -26,8 +27,8 @@ export const Header = () => {
       ? 4
       : -5;
   // user상태관리
-  const { setView, user, signOut } = useAuth();
-  console.log(user);
+  const { data: user, isLoading, isError } = useUser();
+  const logoutMutation = useLogOut();
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
@@ -39,11 +40,6 @@ export const Header = () => {
     setIsPayment(false);
     setIsMypage((prev) => !prev);
   };
-  useEffect(() => {
-    if (isReady) {
-      setPathName(pathname.split('/')[1]);
-    }
-  }, [isReady, pathname]);
 
   return (
     <HeaderBox className="">
@@ -105,24 +101,20 @@ export const Header = () => {
                 </li>
                 <li className="item">
                   <a onClick={toggleIsMypage}>마이페이지</a>
-                  {isMypage && <MypageModal user={user} signOut={signOut} />}
+                  {isMypage && <MypageModal user={user} signOut={() => logoutMutation.mutate()} />}
                 </li>
               </ul>
             )}
             {!user && (
               <ul>
                 <li className="item">
-                  <Link href="/auth" onClick={() => setView(VIEWS.SIGN_IN)}>
-                    로그인
-                  </Link>
+                  <Link href="/auth/login">로그인</Link>
                 </li>
                 <li className="item">
                   <span></span>
                 </li>
                 <li className="item">
-                  <Link href="/auth" onClick={() => setView(VIEWS.SIGN_UP)}>
-                    회원가입
-                  </Link>
+                  <Link href="/auth/join">회원가입</Link>
                 </li>
               </ul>
             )}

@@ -24,3 +24,13 @@ import { useRouter } from 'next/router';
 //after
 import { useRouter } from 'next/navigation';
 ```
+
+또한 useRouter에서 query가 분리되어서 URI param을 가져올 때는아래와 같이 해야한다.
+
+```javascript
+//before
+const query = useRouter.query;
+
+//after
+import { usePathname } from 'next/navigation';
+```

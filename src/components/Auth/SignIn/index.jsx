@@ -3,11 +3,14 @@
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import { VIEWS, useAuth } from '../AuthProvider';
 import { AuthBox } from '../styles';
-import useLogin from 'hooks/useLogin';
+import { useLogin } from 'hooks/useLogin';
+import { useRouter } from 'next/navigation';
+import { useGoogleLogin } from 'hooks/useGoogleLogin';
+import Link from 'next/link';
 
 const SignIn = () => {
+  const router = useRouter();
   // form
   const {
     register,
@@ -16,12 +19,12 @@ const SignIn = () => {
     trigger,
     formState: { isValid, errors },
   } = useForm();
-  const handleSumbit = (formData) => {
-    signIn(formData);
-  };
   //auth
-  const { setView, signIn, googleSignIn } = useAuth();
-
+  const { mutate: basicLogin, isLoading, isSuccess } = useLogin();
+  const { mutate: googleLogin } = useGoogleLogin();
+  if (isSuccess) {
+    router.push('/');
+  }
   return (
     <AuthBox>
       <div>
@@ -31,7 +34,7 @@ const SignIn = () => {
               <Image src={logo} alt="" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(useLogin)}>
+          <form onSubmit={handleSubmit(basicLogin)}>
             <div className="titleLabel">
               <label htmlFor="titleLabel">로그인</label>
             </div>
@@ -87,20 +90,23 @@ const SignIn = () => {
             <button
               type={isValid ? 'submit' : 'button'}
               className={`submit ${isValid && 'possible'}`}
+              disabled={isLoading}
             >
               <span>로그인</span>
             </button>
             <ul className="login_util">
-              <div className="util_btn">아이디 찾기</div>
-              <div className="util_btn" onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}>
+              <Link className="util_btn" href="/auth/join">
+                아이디 찾기
+              </Link>
+              <Link className="util_btn" href="/auth/reset">
                 비밀번호 찾기
-              </div>
-              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_UP)}>
+              </Link>
+              <Link className="util_btn" href="/auth/join">
                 회원가입
-              </div>
+              </Link>
             </ul>
             <div className="webLogin">
-              <button type="button" className="googleBtn" onClick={googleSignIn}>
+              <button type="button" className="googleBtn" onClick={googleLogin}>
                 <span>
                   <svg viewBox="0 0 57 56" className="css-1h47l4s">
                     <path

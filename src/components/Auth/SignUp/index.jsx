@@ -4,9 +4,15 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
-import { VIEWS, useAuth } from '../AuthProvider';
 import { AuthBox } from '../styles';
-const join = () => {
+import { useCreateUser } from 'hooks/useCreateUser';
+import { useRouter } from 'next/navigation';
+const SignUp = () => {
+  const router = useRouter();
+  const { mutate: createUser, isLoading, isSuccess } = useCreateUser();
+  if (isSuccess) {
+    router.push('/');
+  }
   const {
     handleSubmit,
     formState: { isValid, errors },
@@ -14,8 +20,6 @@ const join = () => {
     register,
     watch,
   } = useForm();
-  const { setView, signUp } = useAuth();
-
   return (
     <AuthBox>
       <div>
@@ -25,7 +29,7 @@ const join = () => {
               <Image src={logo} alt="img" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(signUp)}>
+          <form onSubmit={handleSubmit(createUser)}>
             <div className="titleLabel">
               <label htmlFor="titleLabel">회원가입</label>
             </div>
@@ -146,17 +150,20 @@ const join = () => {
             <button
               type={isValid ? 'submit' : 'button'}
               className={`submit ${isValid && 'possible'}`}
+              disabled={isLoading}
             >
               <span>회원가입</span>
             </button>
             <ul className="login_util">
-              <div className="util_btn">아이디 찾기</div>
-              <div className="util_btn" onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}>
+              <Link className="util_btn" href="/auth/join">
+                아이디 찾기
+              </Link>
+              <Link className="util_btn" href="/auth/reset">
                 비밀번호 찾기
-              </div>
-              <div className="util_btn" onClick={() => setView(VIEWS.SIGN_IN)}>
+              </Link>
+              <Link className="util_btn" href="/auth/login">
                 로그인
-              </div>
+              </Link>
             </ul>
           </form>
         </div>
@@ -165,4 +172,4 @@ const join = () => {
   );
 };
 
-export default join;
+export default SignUp;

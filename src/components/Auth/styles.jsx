@@ -245,7 +245,7 @@ export const AuthBox = styled.section`
           justify-content: space-between;
           align-items: center;
           padding: 0 20px;
-          > div {
+          .util_btn {
             font-size: 14px;
             letter-spacing: -0.01em;
             padding: 0 16px;

@@ -1,30 +1,21 @@
 'use client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AppLayout from 'components/AppLayout/AppLayout';
 import { Toaster } from 'react-hot-toast';
 import { RecoilRoot } from 'recoil';
 import GlobalStyle from 'styles/GlobalStyle';
+import Providers from 'utils/provider';
 
-export default async function RootLayout({ children }) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 0,
-      },
-    },
-  });
+export default function RootLayout({ children }) {
   return (
     <html lang="kr">
       <body>
         <GlobalStyle />
         <Toaster />
-        <QueryClientProvider client={queryClient}>
+        <Providers>
           <RecoilRoot>
             <AppLayout>{children}</AppLayout>
           </RecoilRoot>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+        </Providers>
       </body>
     </html>
   );

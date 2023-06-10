@@ -1,3 +1,4 @@
+'use client';
 import useInterval from 'hooks/useInterval';
 import React, { useState } from 'react';
 import { SlideBox } from './styles';

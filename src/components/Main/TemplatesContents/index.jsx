@@ -1,3 +1,4 @@
+'use client';
 import React, { useCallback, useState } from 'react';
 import { TemplatesContentsBox } from './styles';
 import 'react-tabs/style/react-tabs.css';

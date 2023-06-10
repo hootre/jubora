@@ -31,8 +31,8 @@ export const AuthBox = styled.section`
     box-shadow: 0 0 0 3px #f03c3226;
   }
   > div {
-    max-width: 400px;
-    min-height: 600px;
+    min-width: 420px;
+    min-height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;

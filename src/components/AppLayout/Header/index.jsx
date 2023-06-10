@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { HeaderBox } from './styles';
 import logo from 'assets/MainPage/logo.png';
@@ -6,13 +7,13 @@ import Link from 'next/link';
 import { GoSearch } from 'react-icons/go';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
-import { useRouter, usePathname } from 'next/navigation';
-import { useUser } from 'hooks/useUser';
+import { usePathname } from 'next/navigation';
 import useLogOut from 'hooks/useLogOut';
+import { useQueryClient } from '@tanstack/react-query';
+import { userKeys } from 'utils/queryKeys';
 
 export const Header = () => {
   // path 관련
-  const router = useRouter();
   const pathName = usePathname().substring(1);
   let navCutLine =
     pathName == 'templates'
@@ -27,8 +28,12 @@ export const Header = () => {
       ? 4
       : -5;
   // user상태관리
-  const { data: user, isLoading, isError } = useUser();
-  const logoutMutation = useLogOut();
+  const client = useQueryClient();
+  const user = client.getQueryData(userKeys.current_user);
+
+  console.log('header');
+  console.log(user);
+  const { mutate } = useLogOut();
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
@@ -40,7 +45,6 @@ export const Header = () => {
     setIsPayment(false);
     setIsMypage((prev) => !prev);
   };
-
   return (
     <HeaderBox className="">
       <div id="header">
@@ -83,14 +87,14 @@ export const Header = () => {
             <input type="text" placeholder="검색" />
           </div>
           <div className="login">
-            {user === 'admin' && (
+            {user?.role === 'admin' && (
               <ul>
                 <li className="item">
                   <Link href="/admin">관리자페이지</Link>
                 </li>
               </ul>
             )}
-            {user && (
+            {user?.id && (
               <ul>
                 <li className="item">
                   <a onClick={toggleIsPayment}>결제하기</a>
@@ -101,11 +105,11 @@ export const Header = () => {
                 </li>
                 <li className="item">
                   <a onClick={toggleIsMypage}>마이페이지</a>
-                  {isMypage && <MypageModal user={user} signOut={() => logoutMutation.mutate()} />}
+                  {isMypage && <MypageModal user={user} signOut={mutate} />}
                 </li>
               </ul>
             )}
-            {!user && (
+            {!user?.id && (
               <ul>
                 <li className="item">
                   <Link href="/auth/login">로그인</Link>

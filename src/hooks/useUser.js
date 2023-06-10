@@ -1,19 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
-import supabase from 'lib/supabase-browser';
-import { toast } from 'react-hot-toast';
+import supabase_client from 'lib/supabase-browser';
+import { userKeys } from 'utils/queryKeys';
 
-const getUser = async () => {
+export const getUser = async () => {
   console.log('getUser');
   const {
     data: { session },
-    error,
-  } = await supabase.auth.getSession();
-  if (error) {
-    toast.error('session search error');
+  } = await supabase_client.auth.getSession();
+  if (session) {
+    let { data: profiles, error } = await supabase_client
+      .from('profiles')
+      .select('*')
+      .eq('id', session?.user.id)
+      .single();
+
+    if (error) {
+      throw console.log(`getUser Error : ${error.message}`);
+    }
+    return profiles;
+  } else {
+    return [];
   }
-  return session?.user;
 };
 
 export const useUser = () => {
-  return useQuery(['user'], () => getUser());
+  return useQuery(userKeys.current_user, () => getUser());
 };

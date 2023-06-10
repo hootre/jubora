@@ -1,40 +1,56 @@
-import { useMutation } from '@tanstack/react-query';
-import supabase from 'lib/supabase-browser';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
+import { useUser } from './useUser';
+import { userKeys } from 'utils/queryKeys';
 
 const createUser = async (formData) => {
-  const signUpPromise = await supabase.auth.signUp({
+  const { data, error } = await supabase_client.auth.signUp({
     email: formData.email,
     password: formData.password,
   });
-  const { data } = signUpPromise;
-  toast
-    .promise(signUpPromise, {
-      loading: 'Saving...',
-      success: <b>Settings saved!</b>,
-      error: <b>Could not save.</b>,
-    })
-    .then((r) => r)
-    .catch((error) => error);
+  if (error) {
+    switch (error.message) {
+      case 'Invalid login credentials':
+        toast.error('이미 사용중인 이메일입니다.');
+        throw console.log(`유저 회원가입 오류 : ${error.message}`);
+        break;
+      case 'User already registered':
+        toast.error('이미 사용중인 이메일입니다.');
+        throw console.log(`유저 회원가입 오류 : ${error.message}`);
+        break;
+      default:
+        toast.error(error.message);
+        throw console.log(`유저 회원가입 오류 : ${error.message}`);
+        break;
+    }
+  } else {
+    toast.success('회원가입에 성공하였습니다!');
+  }
 
   return { data, formData };
 };
 
 export const useCreateUser = () => {
-  return useMutation((formData) => createUser(formData), {
+  const client = useQueryClient();
+  return useMutation((user) => createUser(user), {
     onSuccess: async ({ data, formData }) => {
       console.log('createUser');
-      const { data: insertData, error: insertError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        name: formData.name,
-        privacy_check: formData.check,
-      });
-
+      const { data: insertData, error: insertError } = await supabase_client
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          email: formData.email,
+          name: formData.name,
+          role: 'member',
+          privacy_check: formData.check,
+        });
       if (insertError) {
-        throw insertError;
+        throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
+      } else {
+        client.setQueryData(userKeys.current_user, getUser(data?.user.id));
+        return insertData;
       }
-
-      return insertData;
     },
   });
 };

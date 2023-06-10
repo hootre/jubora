@@ -5,12 +5,11 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { AuthBox } from '../styles';
 import { useLogin } from 'hooks/useLogin';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useGoogleLogin } from 'hooks/useGoogleLogin';
 import Link from 'next/link';
 
 const SignIn = () => {
-  const router = useRouter();
   // form
   const {
     register,
@@ -23,7 +22,7 @@ const SignIn = () => {
   const { mutate: basicLogin, isLoading, isSuccess } = useLogin();
   const { mutate: googleLogin } = useGoogleLogin();
   if (isSuccess) {
-    router.push('/');
+    redirect('/');
   }
   return (
     <AuthBox>

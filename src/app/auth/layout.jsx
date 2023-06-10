@@ -1,19 +1,12 @@
-'use client';
-import { useUser } from 'hooks/useUser';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { toast } from 'react-hot-toast';
+import supabase_server from 'lib/supabase-server';
+import { redirect } from 'next/navigation';
 
-export default function AuthLayout({ children }) {
-  const { data } = useUser();
-  const router = useRouter();
-  useEffect(() => {
-    if (data) {
-      toast('이미 로그인 되어있습니다.', {
-        icon: '👏',
-      });
-      router.push('/');
-    }
-  }, [data]);
+export default async function AuthLayout({ children }) {
+  const {
+    data: { session },
+  } = await supabase_server.auth.getSession();
+  if (session?.user) {
+    redirect('/');
+  }
   return <section>{children}</section>;
 }

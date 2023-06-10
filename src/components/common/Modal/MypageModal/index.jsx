@@ -5,7 +5,7 @@ export const MypageModal = ({ user, signOut }) => {
   return (
     <MypageModalBox>
       <div className="head">
-        <h1 className="name">{user.user_metadata.name}</h1>
+        <h1 className="name">{user.name}</h1>
         <h2 className="email">{user.email}</h2>
       </div>
       <div className="content">

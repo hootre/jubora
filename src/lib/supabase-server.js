@@ -1,8 +1,5 @@
-import { headers, cookies } from 'next/headers';
-import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+const supabase_server = createServerComponentClient({ cookies });
 
-export const createServerClient = () =>
-  createServerComponentSupabaseClient({
-    headers,
-    cookies,
-  });
+export default supabase_server;

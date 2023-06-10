@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import logo from 'assets/MainPage/logo.png';
 import React from 'react';
@@ -7,10 +8,11 @@ import Link from 'next/link';
 import { AuthBox } from '../styles';
 import { useCreateUser } from 'hooks/useCreateUser';
 import { useRouter } from 'next/navigation';
+
 const SignUp = () => {
   const router = useRouter();
   const { mutate: createUser, isLoading, isSuccess } = useCreateUser();
-  if (isSuccess) {
+  if (true) {
     router.push('/');
   }
   const {

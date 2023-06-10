@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { FooterBox } from './styles';
 import logo from 'assets/MainPage/logo.png';

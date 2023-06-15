@@ -9,6 +9,8 @@ function Providers({ children }) {
       defaultOptions: {
         queries: {
           retry: 0,
+          staleTime: 1000 * 40,
+          cacheTime: 1000 * 40,
         },
       },
     })

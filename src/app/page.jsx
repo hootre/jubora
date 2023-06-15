@@ -13,6 +13,7 @@ const MainBox = styled.main`
 `;
 
 export default function Home() {
+  console.log('main');
   return (
     <MainBox>
       <Slide slides={slides} />

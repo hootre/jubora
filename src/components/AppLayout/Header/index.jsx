@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation';
 import useLogOut from 'hooks/useLogOut';
 import { useQueryClient } from '@tanstack/react-query';
 import { userKeys } from 'utils/queryKeys';
+import { useUser } from 'hooks/useUser';
 
 export const Header = () => {
   // path 관련
@@ -29,10 +30,10 @@ export const Header = () => {
       : -5;
   // user상태관리
   const client = useQueryClient();
-  const user = client.getQueryData(userKeys.current_user);
-
+  const user = useUser();
   console.log('header');
   console.log(user);
+
   const { mutate } = useLogOut();
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
@@ -120,6 +121,7 @@ export const Header = () => {
                 <li className="item">
                   <Link href="/auth/join">회원가입</Link>
                 </li>
+                <button onClick={mutate}>로그아웃</button>
               </ul>
             )}
           </div>

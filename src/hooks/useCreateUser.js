@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
-import { useUser } from './useUser';
 import { userKeys } from 'utils/queryKeys';
 
 const createUser = async (formData) => {
@@ -48,7 +47,7 @@ export const useCreateUser = () => {
       if (insertError) {
         throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
       } else {
-        client.setQueryData(userKeys.current_user, getUser(data?.user.id));
+        client.invalidateQueries(userKeys.current_user);
         return insertData;
       }
     },

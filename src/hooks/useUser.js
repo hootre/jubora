@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase-browser';
 import { userKeys } from 'utils/queryKeys';
 
-export const getUser = async () => {
+// 유저 데이터
+const getUser = async () => {
   console.log('getUser');
   const {
     data: { session },

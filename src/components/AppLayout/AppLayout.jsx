@@ -3,10 +3,8 @@ import { PC, Mobile } from 'utils/MediaQuery';
 import React from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { useUser } from 'hooks/useUser';
 
 const AppLayout = ({ children }) => {
-  useUser();
   return (
     <>
       <PC>

@@ -12,9 +12,6 @@ import { useRouter } from 'next/navigation';
 const SignUp = () => {
   const router = useRouter();
   const { mutate: createUser, isLoading, isSuccess } = useCreateUser();
-  if (true) {
-    router.push('/');
-  }
   const {
     handleSubmit,
     formState: { isValid, errors },

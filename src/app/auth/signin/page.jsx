@@ -1,8 +1,7 @@
-'use client';
 import SignIn from 'components/Auth/SignIn';
 
-const login = () => {
+const signin = () => {
   return <SignIn />;
 };
 
-export default login;
+export default signin;

@@ -1,12 +1,11 @@
 'use client';
-import useInterval from 'hooks/useInterval';
+import useInterval from 'hooks/custom/useInterval';
 import React, { useState } from 'react';
 import { SlideBox } from './styles';
 import Image from 'next/image';
 // 메인
 export const Slide = ({ slides }) => {
   // 기본 변수
-  console.log('slide');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   // 자동 슬라이드

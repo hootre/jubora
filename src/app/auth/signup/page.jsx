@@ -1,8 +1,8 @@
 'use client';
 import SignUp from 'components/Auth/SignUp';
 
-const join = () => {
+const signup = () => {
   return <SignUp />;
 };
 
-export default join;
+export default signup;

@@ -4,10 +4,10 @@ import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { AuthBox } from '../styles';
-import { useLogin } from 'hooks/useLogin';
-import { redirect } from 'next/navigation';
-import { useGoogleLogin } from 'hooks/useGoogleLogin';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useUser } from 'hooks/auth/useUser';
+import { useEffect } from 'react';
 
 const SignIn = () => {
   // form
@@ -19,10 +19,18 @@ const SignIn = () => {
     formState: { isValid, errors },
   } = useForm();
   //auth
-  const { mutate: basicLogin, isLoading, isSuccess } = useLogin();
-  const { mutate: googleLogin } = useGoogleLogin();
-  if (isSuccess) {
-    redirect('/');
+  const { useSignIn, useSignInGoogle } = useUser();
+  const { mutate: basicLogin, isLoading, isSuccess } = useSignIn();
+  const { mutate: googleLogin, isSuccess: googleSuccess } = useSignInGoogle();
+  const router = useRouter();
+  useEffect(() => {
+    if (isSuccess) {
+      router.push('/');
+    }
+  }, [isSuccess]);
+
+  if (googleSuccess) {
+    console.log('구글 로그인 완료');
   }
   return (
     <AuthBox>

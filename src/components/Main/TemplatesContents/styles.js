@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const TemplatesContentsBox = styled.section`
   position: relative;
+  padding: 50px 0;
   .nav {
     display: flex;
     justify-content: center;

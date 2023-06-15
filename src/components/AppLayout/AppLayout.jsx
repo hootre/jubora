@@ -1,15 +1,16 @@
 'use client';
-import { PC, Mobile } from 'utils/MediaQuery';
+import { PC, Mobile } from 'hooks/custom/useMediaQuery';
 import React from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { MainContainer } from './MainContainer';
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children, session }) => {
   return (
     <>
       <PC>
-        <Header />
-        {children}
+        <Header session={session} />
+        <MainContainer>{children}</MainContainer>
         <Footer />
       </PC>
       <Mobile>

@@ -1,26 +1,21 @@
-'use client';
 import { Slide } from 'components/Main/Slide';
 import { Notice } from 'components/Main/Notice';
 import { noticeList, slides } from 'assets/data';
 import { TemplatesContents } from 'components/Main/TemplatesContents';
-import styled from 'styled-components';
-
-const MainBox = styled.main`
-  min-height: calc(100vh - 249px);
-  .mainShowcase {
-    padding: 50px 0;
-  }
-`;
+import { Suspense } from 'react';
 
 export default function Home() {
-  console.log('main');
   return (
-    <MainBox>
-      <Slide slides={slides} />
-      <div className="mainShowcase">
+    <>
+      <Suspense fallback={<div style={{ height: '600px', width: '100%' }} />}>
+        <Slide slides={slides} />
+      </Suspense>
+      <Suspense fallback={<div style={{ height: '600px', width: '100%' }} />}>
         <TemplatesContents />
-      </div>
-      <Notice noticeList={noticeList} />
-    </MainBox>
+      </Suspense>
+      <Suspense fallback={<div style={{ height: '600px', width: '100%' }} />}>
+        <Notice noticeList={noticeList} />
+      </Suspense>
+    </>
   );
 }

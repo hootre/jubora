@@ -1,7 +1,7 @@
 'use client';
-import { useIsClient } from 'hooks/useIsClient';
-import React from 'react';
+
 import { useMediaQuery } from 'react-responsive';
+import { useIsClient } from './useIsClient';
 
 const Mobile = ({ children }) => {
   const isClient = useIsClient();

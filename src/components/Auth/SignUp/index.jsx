@@ -6,12 +6,15 @@ import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
 import { AuthBox } from '../styles';
-import { useCreateUser } from 'hooks/useCreateUser';
-import { useRouter } from 'next/navigation';
+import { useUser } from 'hooks/auth/useUser';
+import { redirect } from 'next/navigation';
 
 const SignUp = () => {
-  const router = useRouter();
+  const { useCreateUser } = useUser();
   const { mutate: createUser, isLoading, isSuccess } = useCreateUser();
+  if (isSuccess) {
+    redirect('/auth/signin');
+  }
   const {
     handleSubmit,
     formState: { isValid, errors },

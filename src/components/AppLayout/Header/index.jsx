@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { HeaderBox } from './styles';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
@@ -8,12 +8,14 @@ import { GoSearch } from 'react-icons/go';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
 import { usePathname } from 'next/navigation';
-import useLogOut from 'hooks/useLogOut';
-import { useQueryClient } from '@tanstack/react-query';
-import { userKeys } from 'utils/queryKeys';
-import { useUser } from 'hooks/useUser';
+import { useUser } from 'hooks/auth/useUser';
 
-export const Header = () => {
+export const Header = ({ session }) => {
+  // user상태관리
+  const { useIsUser, useGetUserInfo, useLogOut } = useUser();
+  const { data: user } = useGetUserInfo();
+  const isUser = useIsUser();
+  const { mutate } = useLogOut();
   // path 관련
   const pathName = usePathname().substring(1);
   let navCutLine =
@@ -28,13 +30,6 @@ export const Header = () => {
       : pathName == 'notify'
       ? 4
       : -5;
-  // user상태관리
-  const client = useQueryClient();
-  const user = useUser();
-  console.log('header');
-  console.log(user);
-
-  const { mutate } = useLogOut();
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
@@ -95,7 +90,7 @@ export const Header = () => {
                 </li>
               </ul>
             )}
-            {user?.id && (
+            {isUser && (
               <ul>
                 <li className="item">
                   <a onClick={toggleIsPayment}>결제하기</a>
@@ -110,16 +105,16 @@ export const Header = () => {
                 </li>
               </ul>
             )}
-            {!user?.id && (
+            {!isUser && (
               <ul>
                 <li className="item">
-                  <Link href="/auth/login">로그인</Link>
+                  <Link href="/auth/signin">로그인</Link>
                 </li>
                 <li className="item">
                   <span></span>
                 </li>
                 <li className="item">
-                  <Link href="/auth/join">회원가입</Link>
+                  <Link href="/auth/signup">회원가입</Link>
                 </li>
                 <button onClick={mutate}>로그아웃</button>
               </ul>

@@ -249,7 +249,7 @@ export const slides = [
 export const showCaseList = [
   {
     id: 1,
-    class: 0,
+    category: 0,
     date: '2023-03-30',
     views: 3,
     sales: 6,

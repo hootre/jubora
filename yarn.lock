@@ -2222,11 +2222,6 @@
   dependencies:
     "duplexer" "^0.1.2"
 
-"hamt_plus@1.0.2":
-  "integrity" "sha512-t2JXKaehnMb9paaYA7J0BX8QQAY8lwfQ9Gjf4pg/mk4krt+cmwmU652HOoWonf+7+EQV97ARPMhhVgU1ra2GhA=="
-  "resolved" "https://registry.npmjs.org/hamt_plus/-/hamt_plus-1.0.2.tgz"
-  "version" "1.0.2"
-
 "has-bigints@^1.0.1", "has-bigints@^1.0.2":
   "integrity" "sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ=="
   "resolved" "https://registry.npmjs.org/has-bigints/-/has-bigints-1.0.2.tgz"
@@ -3665,7 +3660,7 @@
     "@babel/runtime" "^7.0.0"
     "memoize-one" ">=3.1.1 <6"
 
-"react@*", "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.1", "react@^18.0.0", "react@^18.2.0", "react@>= 16.8.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=16", "react@>=16.13.1", "react@>=16.8.0":
+"react@*", "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.1", "react@^18.0.0", "react@^18.2.0", "react@>= 16.8.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=16", "react@>=16.8", "react@>=16.8.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"
@@ -3708,13 +3703,6 @@
     "buffer" "^6.0.3"
     "events" "^3.3.0"
     "process" "^0.11.10"
-
-"recoil@^0.7.7":
-  "integrity" "sha512-8Og5KPQW9LwC577Vc7Ug2P0vQshkv1y3zG3tSSkWMqkWSwHmE+by06L8JtnGocjW6gcCvfwB3YtrJG6/tWivNQ=="
-  "resolved" "https://registry.npmjs.org/recoil/-/recoil-0.7.7.tgz"
-  "version" "0.7.7"
-  dependencies:
-    "hamt_plus" "1.0.2"
 
 "regenerator-runtime@^0.13.11":
   "integrity" "sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg=="
@@ -4350,7 +4338,7 @@
   dependencies:
     "punycode" "^2.1.0"
 
-"use-sync-external-store@^1.2.0":
+"use-sync-external-store@^1.2.0", "use-sync-external-store@1.2.0":
   "integrity" "sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA=="
   "resolved" "https://registry.npmjs.org/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz"
   "version" "1.2.0"
@@ -4524,3 +4512,10 @@
   "integrity" "sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw=="
   "resolved" "https://registry.npmjs.org/zod/-/zod-3.21.4.tgz"
   "version" "3.21.4"
+
+"zustand@^4.3.8":
+  "integrity" "sha512-4h28KCkHg5ii/wcFFJ5Fp+k1J3gJoasaIbppdgZFO4BPJnsNxL0mQXBSFgOgAdCdBj35aDTPvdAJReTMntFPGg=="
+  "resolved" "https://registry.npmjs.org/zustand/-/zustand-4.3.8.tgz"
+  "version" "4.3.8"
+  dependencies:
+    "use-sync-external-store" "1.2.0"

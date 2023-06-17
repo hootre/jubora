@@ -15,9 +15,14 @@ export const SearchBox = styled.section`
         justify-content: center;
         width: 54px;
         height: 50px;
+        cursor: pointer;
         background: var(--base-white);
         border: 1px solid var(--bd-100);
         border-radius: 4px;
+        transition: 0.2s all ease;
+        &:hover {
+          border: 1px solid #999;
+        }
         img {
           width: 40px;
           height: 40px;

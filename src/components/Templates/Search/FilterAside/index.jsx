@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
+'use client';
+import React from 'react';
 import { FilterAsideBox } from './styles';
 import { HiOutlineChevronDoubleLeft } from 'react-icons/hi';
 import { AsideListItem } from './AsideListItem';
-import { useRecoilState } from 'recoil';
-import { isCurFilterState } from 'states';
+import { useTemplatesActions } from 'store';
+import { useIsCurrentFilter } from 'store';
 
 export const FilterAside = ({ filterItemList }) => {
-  const [isCurFilter, setIsCurFilter] = useRecoilState(isCurFilterState);
-
-  const hendleFilterState = () => {
-    setIsCurFilter((prev) => !prev);
-  };
+  const isCurrentFilter = useIsCurrentFilter();
+  const { setIsCurrentFilter } = useTemplatesActions();
   return (
-    <FilterAsideBox className={isCurFilter ? 'filterOpen' : ''}>
+    <FilterAsideBox className={isCurrentFilter ? 'filterOpen' : ''}>
       <div className="filterBox">
         <div className="fiterTitle">
           <div className="title">
             <img src="https://weenidy.com/assets/icons/icn-fillter-navy-d.png" alt="" />
             <h2>필터</h2>
           </div>
-          <HiOutlineChevronDoubleLeft className="icon" onClick={hendleFilterState} />
+          <HiOutlineChevronDoubleLeft className="icon" onClick={setIsCurrentFilter} />
         </div>
         <ul>
           {filterItemList &&

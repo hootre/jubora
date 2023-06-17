@@ -5,11 +5,11 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { MainContainer } from './MainContainer';
 
-const AppLayout = ({ children, session }) => {
+const AppLayout = ({ children }) => {
   return (
     <>
       <PC>
-        <Header session={session} />
+        <Header />
         <MainContainer>{children}</MainContainer>
         <Footer />
       </PC>

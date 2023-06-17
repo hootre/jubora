@@ -2,11 +2,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from 'lib/supabase';
 import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
-import { userKeys } from 'utils/queryKeys';
+import { gatherKeys } from 'utils/gatherKeys';
 
 const useIsUser = () => {
   const client = useQueryClient();
-  const user = client.getQueryData(userKeys.current_user);
+  const user = client.getQueryData(gatherKeys.current_user);
   return user ? true : false;
 };
 
@@ -40,7 +40,7 @@ const useGetUserInfo = () => {
       return null;
     }
   };
-  return useQuery(userKeys.current_user, () => getUser());
+  return useQuery(gatherKeys.current_user, () => getUser());
 };
 // 로그아웃
 const useLogOut = () => {
@@ -61,10 +61,10 @@ const useLogOut = () => {
 };
 // 회원가입
 const useCreateUser = () => {
-  const createUser = async (formData) => {
+  const createUser = async ({ email, password }) => {
     const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
+      email,
+      password,
       // options: {
       //   emailRedirectTo: `${location.origin}/auth/callback`,
       // },
@@ -87,7 +87,6 @@ const useCreateUser = () => {
 
     return { data, formData };
   };
-  const client = useQueryClient();
   return useMutation(createUser, {
     onSuccess: async ({ data, formData }) => {
       const { data: insertData, error: insertError } = await supabase_client
@@ -107,10 +106,10 @@ const useCreateUser = () => {
 };
 // 유저 로그인
 const useSignIn = () => {
-  const login = async (formData) => {
+  const login = async ({ email, password }) => {
     const { error } = await supabase_client.auth.signInWithPassword({
-      email: formData.email,
-      password: formData.password,
+      email,
+      password,
     });
     if (error) {
       switch (error.message) {
@@ -127,7 +126,7 @@ const useSignIn = () => {
   const client = useQueryClient();
   return useMutation(login, {
     onSuccess: async () => {
-      await client.invalidateQueries(userKeys.current_user);
+      await client.invalidateQueries(gatherKeys.current_user);
     },
   });
 };
@@ -150,7 +149,7 @@ const useSignInGoogle = () => {
     //   if (insertError) {
     //     throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
     //   } else {
-    //     client.setQueryData(userKeys.current_user, getUser(data?.user.id));
+    //     client.setQueryData(gatherKeys.current_user, getUser(data?.user.id));
     //     return insertData;
     //   }
     // }

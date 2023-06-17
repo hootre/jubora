@@ -1,3 +1,4 @@
+'use client';
 import React, { useCallback, useState } from 'react';
 import { CategoryBox } from './styles';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
@@ -12,7 +13,7 @@ export const Category = ({ list, category, queryName }) => {
   return (
     <CategoryBox className="selectTextBox" onClick={toggleCategotyState}>
       <div>
-        <span>{list[category ? category : 0]?.title}</span>
+        <span>{list[category > 0 ? category : 0]?.title}</span>
         {isCategotyState ? (
           <AiFillCaretUp className="icon" />
         ) : (

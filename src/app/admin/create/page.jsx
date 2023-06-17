@@ -1,149 +1,77 @@
 'use client';
+import React, { useState } from 'react';
+import { Templates } from 'hooks/templates/useTemplates';
 
-import { useForm } from 'react-hook-form';
-
-const create = () => {
-  const {
-    handleSubmit,
-    formState: { isValid, errors },
-    trigger,
-    register,
-    watch,
-  } = useForm();
+const Create = async () => {
+  const [formData, setFormData] = useState({ category: 'banner_row', type: 'square' });
+  const [isUploading, setIsUploading] = useState(false);
+  const { createTemplates } = Templates();
+  const handleReset = (e) => {
+    setFormData({});
+    setFile();
+  };
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'file') {
+      setFormData((formData) => ({ ...formData, [name]: files[0] }));
+      return;
+    }
+    setFormData((formData) => ({ ...formData, [name]: value }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+    await createTemplates(formData);
+    setIsUploading(false);
+  };
   return (
-    <form onSubmit={handleSubmit(createUser)}>
-      <div className="titleLabel">
-        <label htmlFor="titleLabel">제품등록</label>
-      </div>
-      <p className={`pointText ${errors.title && 'active'}`}>제목을 입력해주세요.</p>
-      <input
-        name="title"
-        type="text"
-        placeholder="제목"
-        className={`input form-control ${errors.title && 'invalid'}`}
-        required={true}
-        defaultValue=""
-        {...register('title', { required: '제목을 입력해주세요.' })}
-        onKeyUp={() => {
-          trigger('title');
-        }}
-      />
-      <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
-      <input
-        id="email"
-        placeholder="이메일"
-        className={`input ${errors.email && 'invalid'}`}
-        name="email"
-        type="email"
-        required={true}
-        {...register('email', {
-          required: '이메일은 필수입니다',
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: '이메일 형식을 지켜주세요',
-          },
-        })}
-        onKeyUp={() => {
-          trigger('email');
-        }}
-      ></input>
-      <p className={`pointText ${errors.password && 'active'}`}>{errors.password?.message} </p>
-      <input
-        name="password"
-        placeholder="비밀번호"
-        id="password"
-        type="password"
-        autoComplete="off"
-        className={`input form-control ${errors.password && 'invalid'}`}
-        required={true}
-        {...register('password', {
-          required: '비밀번호는 필수입니다.',
-          pattern: {
-            value: /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
-            message: '6~20 자의 영문대소문자, 숫자 및 특수문자 입력해 주세요',
-          },
-          minLength: {
-            value: 6,
-            message: '비밀번호는 최소 8글자 이상입니다.',
-          },
-          maxLength: {
-            value: 20,
-            message: '비밀번호는 최소 20글자 이하입니다.',
-          },
-        })}
-        onKeyUp={() => {
-          trigger('password');
-        }}
-      ></input>
-      <p className={`pointText ${errors.confirmPassword && 'active'}`}>
-        {errors.confirmPassword?.message}
-      </p>
-      <input
-        id="confirmPassword"
-        placeholder="비밀번호 확인"
-        name="confirmPassword"
-        type="password"
-        {...register('confirmPassword', {
-          validate: (value) => value === watch('password', '') || '비밀번호가 일치하지 않습니다.',
-        })}
-        autoComplete="off"
-        onPaste={(e) => {
-          e.preventDefault();
-          return false;
-        }}
-        className={`input form-control ${errors.confirmPassword && 'invalid'}`}
-        required={true}
-        onKeyUp={() => {
-          trigger('confirmPassowrd');
-        }}
-      />
-      <div className="checkBox">
-        <p className={`pointText ${errors.check && 'checkActive'}`}>{errors.check?.message}</p>
-        <div className="all">
-          <label className="label check">
-            <input
-              className={`label__checkbox ${errors.check && 'invalid'}`}
-              {...register('check', {
-                required: '약관에 동의 해주세요',
-              })}
-              required={true}
-              type="checkbox"
-              onKeyUp={() => {
-                trigger('check');
-              }}
-            />
-            <span className="label__icon">
-              <span className="label__check">
-                <ImCheckmark2 className="icon" />
-              </span>
-            </span>
-            <span className="text">
-              <Link href="privacy/terms">이용약관</Link> 및{' '}
-              <Link href="privacy/terms">개인정보 취급방침</Link>에 동의합니다. (필수)
-            </span>
-          </label>
-        </div>
-      </div>
-      <button
-        type={isValid ? 'submit' : 'button'}
-        className={`submit ${isValid && 'possible'}`}
-        disabled={isLoading}
-      >
-        <span>회원가입</span>
-      </button>
-      <ul className="login_util">
-        <Link className="util_btn" href="/auth/join">
-          아이디 찾기
-        </Link>
-        <Link className="util_btn" href="/auth/reset">
-          비밀번호 찾기
-        </Link>
-        <Link className="util_btn" href="/auth/login">
-          로그인
-        </Link>
-      </ul>
-    </form>
+    <section className="w-full text-center">
+      <h2 className="text-2xl font-bold my-4">새로운 제품 등록</h2>
+      {/* {product.file && (
+        <img
+          className="w-96 mx-auto mb-2"
+          src={URL.createObjectURL(product.file)}
+          alt="local file"
+        />
+      )} */}
+      <form className="flex flex-col px-12" onSubmit={handleSubmit}>
+        <input type="file" accept="image/*" name="file" required onChange={handleChange} />
+        <input
+          type="text"
+          name="title"
+          value={formData.title ?? ''}
+          placeholder="제품명"
+          required
+          onChange={handleChange}
+        />
+        <select name="category" onChange={handleChange} value={formData.category ?? 'banner_row'}>
+          <option value="banner_row">현수막</option>
+          <option value="banner_col">배너</option>
+          <option value="poster">스티커/포스터</option>
+          <option value="flag">어깨띠/깃발</option>
+          <option value="church_item">교회용품</option>
+          <option value="business_card">명함</option>
+        </select>
+        <select name="type" onChange={handleChange} value={formData.type ?? 'square'}>
+          <option value="square">정사각형</option>
+          <option value="row">가로형</option>
+          <option value="col">세로형</option>
+        </select>
+        <input
+          type="text"
+          name="tag"
+          value={formData.tag ?? ''}
+          placeholder="태그 (절기, 부활절)"
+          required
+          onChange={handleChange}
+        />
+        <button disabled={isUploading}>{isUploading ? '업로드중...' : '제품 등록하기'}</button>
+        <button disabled={isUploading} onClick={handleReset}>
+          초기화
+        </button>
+      </form>
+    </section>
   );
 };
 
-export default create;
+export default Create;

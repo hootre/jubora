@@ -10,12 +10,10 @@ import { MypageModal } from 'components/common/Modal/MypageModal';
 import { usePathname } from 'next/navigation';
 import { useUser } from 'hooks/auth/useUser';
 
-export const Header = ({ session }) => {
+export const Header = () => {
   // user상태관리
-  const { useIsUser, useGetUserInfo, useLogOut } = useUser();
+  const { useGetUserInfo, useLogOut } = useUser();
   const { data: user } = useGetUserInfo();
-  const isUser = useIsUser();
-  const { mutate } = useLogOut();
   // path 관련
   const pathName = usePathname().substring(1);
   let navCutLine =
@@ -90,7 +88,7 @@ export const Header = ({ session }) => {
                 </li>
               </ul>
             )}
-            {isUser && (
+            {user && (
               <ul>
                 <li className="item">
                   <a onClick={toggleIsPayment}>결제하기</a>
@@ -105,7 +103,7 @@ export const Header = ({ session }) => {
                 </li>
               </ul>
             )}
-            {!isUser && (
+            {!user && (
               <ul>
                 <li className="item">
                   <Link href="/auth/signin">로그인</Link>
@@ -116,7 +114,7 @@ export const Header = ({ session }) => {
                 <li className="item">
                   <Link href="/auth/signup">회원가입</Link>
                 </li>
-                <button onClick={mutate}>로그아웃</button>
+                <button onClick={useLogOut.mutate}>로그아웃</button>
               </ul>
             )}
           </div>

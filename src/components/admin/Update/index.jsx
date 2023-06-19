@@ -1,11 +1,14 @@
 'use client';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Templates } from 'hooks/templates/useTemplates';
 
-const Create = async () => {
-  const [formData, setFormData] = useState({ category: 'banner_row', type: 'square' });
+const Update = ({ hasFormData, isUpdate, setIsUpdate }) => {
+  const [formData, setFormData] = useState(hasFormData);
   const [isUploading, setIsUploading] = useState(false);
-  const { createTemplates } = Templates();
+  console.log(formData);
+  const { useUpdateTemplates, useDeleteTemplates } = Templates();
+  const { mutate: useUpdateTemplate } = useUpdateTemplates();
+  const { mutate: useDeleteTemplate } = useDeleteTemplates();
   const handleReset = (e) => {
     setFormData({});
     setFile();
@@ -18,24 +21,21 @@ const Create = async () => {
     }
     setFormData((formData) => ({ ...formData, [name]: value }));
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsUploading(true);
-    await createTemplates(formData);
+    useUpdateTemplate(formData);
+    setFormData({});
     setIsUploading(false);
   };
   return (
-    <section className="w-full text-center">
-      <h2 className="text-2xl font-bold my-4">새로운 제품 등록</h2>
-      {/* {product.file && (
-        <img
-          className="w-96 mx-auto mb-2"
-          src={URL.createObjectURL(product.file)}
-          alt="local file"
-        />
-      )} */}
-      <form className="flex flex-col px-12" onSubmit={handleSubmit}>
-        <input type="file" accept="image/*" name="file" required onChange={handleChange} />
+    <section className="">
+      <h2 className="">새로운 제품 등록</h2>
+      {hasFormData.file && (
+        <img className="w-96 mx-auto mb-2" src={hasFormData.file} alt="local file" />
+      )}
+      <form className="" onSubmit={handleSubmit}>
+        <input type="file" accept="image/*" name="file" onChange={handleChange} />
         <input
           type="text"
           name="title"
@@ -65,13 +65,14 @@ const Create = async () => {
           required
           onChange={handleChange}
         />
-        <button disabled={isUploading}>{isUploading ? '업로드중...' : '제품 등록하기'}</button>
+        <button disabled={isUploading}>{isUploading ? '업로드중...' : '제품 수정하기'}</button>
         <button disabled={isUploading} onClick={handleReset}>
           초기화
         </button>
       </form>
+      <button onClick={() => setIsUpdate((prev) => !prev)}>{isUpdate ? '취소' : '수정'}</button>
     </section>
   );
 };
 
-export default Create;
+export default memo(Update);

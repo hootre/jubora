@@ -35,14 +35,14 @@ const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
         overflow-x:hidden ;
     };
-    body{
-        position: relative;
-    }
     button{
         border : none;
         background : none;
         outline: none;
-    };
+    }
+    body{
+        position: relative;
+    }
     a{
         text-decoration:none ;
         color : var(--base-white);

@@ -1,8 +1,10 @@
+import { sha1 } from 'crypto-hash';
+
 export const uploadImage = async (file) => {
   const data = new FormData();
   data.append('file', file);
   data.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_PRESET);
-  return fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/upload', {
+  return await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/upload', {
     method: 'POST',
     body: data,
   })
@@ -12,11 +14,19 @@ export const uploadImage = async (file) => {
 
 export const deleteImage = async (public_id) => {
   const data = new FormData();
-  data.append('file', file);
-  data.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_PRESET);
+  const timestamp = new Date().getTime();
+  const string = `public_id=${public_id}&timestamp=${timestamp}rZXzClApnlqbZhVaj17j9uEEYEk`;
+  const signature = await sha1(string);
   data.append('public_id', public_id);
-  return fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/destroy', {
+  data.append('signature', signature);
+  data.append('api_key', 218955996179453);
+  data.append('timestamp', timestamp);
+  return await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/destroy', {
     method: 'POST',
     body: data,
-  }).then((data) => console.log('이미지 삭제 성공'));
+  })
+    .then((data) => console.log(data))
+    .catch((error) => {
+      throw console.log(`deleteImage Error : ${error.message}`);
+    });
 };

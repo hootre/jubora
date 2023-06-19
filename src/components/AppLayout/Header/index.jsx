@@ -14,6 +14,7 @@ export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
   const { data: user } = useGetUserInfo();
+  const { mutate } = useLogOut();
   // path 관련
   const pathName = usePathname().substring(1);
   let navCutLine =
@@ -114,7 +115,7 @@ export const Header = () => {
                 <li className="item">
                   <Link href="/auth/signup">회원가입</Link>
                 </li>
-                <button onClick={useLogOut.mutate}>로그아웃</button>
+                <button onClick={mutate}>로그아웃</button>
               </ul>
             )}
           </div>

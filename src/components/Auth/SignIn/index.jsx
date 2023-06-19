@@ -102,13 +102,13 @@ const SignIn = () => {
               <span>로그인</span>
             </button>
             <ul className="login_util">
-              <Link className="util_btn" href="/auth/join">
+              <Link className="util_btn" href="/auth/signup">
                 아이디 찾기
               </Link>
               <Link className="util_btn" href="/auth/reset">
                 비밀번호 찾기
               </Link>
-              <Link className="util_btn" href="/auth/join">
+              <Link className="util_btn" href="/auth/signup">
                 회원가입
               </Link>
             </ul>

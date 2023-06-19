@@ -1,7 +1,7 @@
-import { GetTemplateAll } from './Create/GetTemplateAll';
-import Create from './Create/page';
+import Create from 'components/admin/Create';
+import { GetTemplateAll } from 'components/admin/Rede/GetTemplateAll';
 
-export default function Home() {
+export default function admin() {
   return (
     <>
       <Create />

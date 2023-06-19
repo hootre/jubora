@@ -23,7 +23,7 @@ const useGetSession = async () => {
 };
 // session 확인하여 유저정보 출력
 const useGetUserInfo = () => {
-  const getUser = async () => {
+  const handleGetUser = async () => {
     const session = await useGetSession();
     if (session) {
       let { data: profiles, error } = await supabase_client
@@ -40,11 +40,11 @@ const useGetUserInfo = () => {
       return null;
     }
   };
-  return useQuery(gatherKeys.current_user, () => getUser());
+  return useQuery(gatherKeys.current_user, handleGetUser);
 };
 // 로그아웃
 const useLogOut = () => {
-  const logout = async () => {
+  const handleLogout = async () => {
     const { error } = await supabase_client.auth.signOut();
     if (error) {
       throw console.log(`유저 로그아웃 오류 : ${error.message}`);
@@ -53,22 +53,41 @@ const useLogOut = () => {
     }
   };
   const client = useQueryClient();
-  return useMutation(() => logout(), {
+  return useMutation(handleLogout, {
     onSuccess: () => {
-      client.removeQueries();
+      client.removeQueries(gatherKeys.current_user);
     },
   });
 };
 // 회원가입
 const useCreateUser = () => {
-  const createUser = async ({ email, password }) => {
+  const handleCreateUser = async ({ name, email, password, privacy_check }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      // options: {
-      //   emailRedirectTo: `${location.origin}/auth/callback`,
-      // },
     });
+    if (data) {
+      const { data: insertData, error: insertError } = await supabase_client
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          email,
+          name,
+          role: 'member',
+          privacy_check,
+        });
+      if (insertError) {
+        const { data, error } = await supabase_client.auth.admin.deleteUser(data.user.id);
+        if (error) {
+          throw console.log(`유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`);
+        }
+        throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
+      } else {
+        toast.success('회원가입에 성공하였습니다!');
+      }
+
+      return insertData;
+    }
     if (error) {
       switch (error.message) {
         case 'Invalid login credentials':
@@ -81,32 +100,13 @@ const useCreateUser = () => {
           toast.error(error.message);
           throw console.log(`유저 회원가입 오류 : ${error.message}`);
       }
-    } else {
-      toast.success('회원가입에 성공하였습니다!');
     }
-
-    return { data, formData };
   };
-  return useMutation(createUser, {
-    onSuccess: async ({ data, formData }) => {
-      const { data: insertData, error: insertError } = await supabase_client
-        .from('profiles')
-        .insert({
-          id: data.user.id,
-          email: formData.email,
-          name: formData.name,
-          role: 'member',
-          privacy_check: formData.check,
-        });
-      if (insertError) {
-        throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
-      }
-    },
-  });
+  return useMutation(handleCreateUser);
 };
 // 유저 로그인
 const useSignIn = () => {
-  const login = async ({ email, password }) => {
+  const handleLogin = async ({ email, password }) => {
     const { error } = await supabase_client.auth.signInWithPassword({
       email,
       password,
@@ -124,7 +124,7 @@ const useSignIn = () => {
   };
 
   const client = useQueryClient();
-  return useMutation(login, {
+  return useMutation(handleLogin, {
     onSuccess: async () => {
       await client.invalidateQueries(gatherKeys.current_user);
     },
@@ -132,7 +132,7 @@ const useSignIn = () => {
 };
 // 구글 로그인
 const useSignInGoogle = () => {
-  const googleLogin = async () => {
+  const handleGoogleLogin = async () => {
     const { data, error } = await supabase_client.auth.signInWithOAuth({
       provider: 'google',
     });
@@ -158,7 +158,7 @@ const useSignInGoogle = () => {
     // }
     return data;
   };
-  return useMutation(googleLogin);
+  return useMutation(handleGoogleLogin);
 };
 
 export const useUser = () => {

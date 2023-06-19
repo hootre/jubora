@@ -1,5 +1,4 @@
 'use client';
-import { filterList } from 'assets/data';
 import React from 'react';
 import { Category } from '../Search/Category';
 import { ShowcaseBox } from './styles';
@@ -11,10 +10,10 @@ import { useDetailFilterState } from 'store';
 
 export const Showcase = ({ showCaseList }) => {
   let sort = usePathname().substring(1);
-  console.log(sort);
+  console.log(showCaseList);
   sort = sort === undefined ? 0 : sort;
   const { detailFilterState } = useDetailFilterState();
-  let filterList = showCaseList.filter((v) => v.class === sort);
+  let filterList = new Array(showCaseList).filter((v) => v.type === sort);
 
   return (
     <ShowcaseBox>

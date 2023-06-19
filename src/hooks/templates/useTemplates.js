@@ -1,46 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
-import { uploadImage } from 'hooks/imageUpload/uploader';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { deleteImage, uploadImage } from 'hooks/imageUpload/uploader';
 import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 
-// Templates 불러오기
-const useGetTemplates = async () => {
-  const getTemplates = async () => {
-    const { data } = await supabase_client.from('templates_category_list').select('category_table');
-    if (data) {
-      const text = `category_table,${data.map((item) => {
-        return `${item.category_table}(*)`;
-      })}`;
-      console.log(text);
-
-      const { data: templatesList, error } = await supabase_client
-        .from('templates_category_list')
-        .select(text);
-      if (error) {
-        throw console.log(`Templates 불러오기 : ${error.message}`);
-      }
-      console.log(templatesList);
-      return templatesList;
-    }
-    if (!data) {
-      return [];
-    }
-  };
-  return useQuery(gatherKeys.template_all, () => getTemplates());
-};
-// Templates 생성
-const createTemplates = async ({ file, title, category, type, tag }) => {
-  await uploadImage(file) //
-    .then(async ({ url, public_id }) => {
+// Templates CREATE
+const useCreateTemplates = () => {
+  const handleCreateTemplate = async ({ file, title, category, type, tag }) => {
+    await uploadImage(file).then(async ({ url, public_id }) => {
       if (!url) {
-        throw console.log(`Cloudinary 업로드 오류`);
+        throw console.log(`Cloudinary UPLOAD ERROR`);
       }
       const { data, error } = await supabase_client.from(category).insert({
         title,
         type,
         tag,
-        image: url,
+        file: url,
         type,
         public_id,
         category,
@@ -49,38 +24,114 @@ const createTemplates = async ({ file, title, category, type, tag }) => {
         switch (error.message) {
           default:
             toast.error(error.message);
-            throw console.log(`Templates 생성 오류 : ${error.message}`);
+            throw console.log(`Templates CREATE ERROR : ${error.message}`);
         }
       } else {
-        toast.success('Templates 등록 완료');
+        toast.success('Templates CREATE SUCCESS');
       }
       return data;
     });
+  };
+
+  const client = useQueryClient();
+  return useMutation(handleCreateTemplate, {
+    onSuccess: async () => {
+      await client.invalidateQueries(gatherKeys.template_all);
+    },
+  });
 };
-// Templates 삭제
-const deleteTemplates = async (templateId) => {
-  await uploadImage(file) //
-    .then(async ({ url, public_id }) => {
-      const { data, error } = await supabase_client.from(category).insert({
+// Templates REDE
+const useGetTemplates = () => {
+  const handleGetTemplates = async () => {
+    const { data } = await supabase_client.from('templates_category_list').select('category_table');
+    if (data) {
+      const text = `${data.map((item) => {
+        return `${item.category_table}(*)`;
+      })}`;
+
+      const { data: templatesList, error } = await supabase_client
+        .from('templates_category_list')
+        .select(text);
+      if (error) {
+        throw console.log(`Templates REDE ERROR : ${error.message}`);
+      }
+      const tableAllList = [];
+      templatesList.map((table) => {
+        Object.values(table).map((item) => {
+          if (item.length != 0) {
+            tableAllList.push(...item);
+          }
+        });
+      });
+      return tableAllList.sort((a, b) => b.id - a.id);
+    }
+    if (!data) {
+      return [];
+    }
+  };
+  return useQuery(gatherKeys.template_all, handleGetTemplates);
+};
+// Templates UPDATE
+const useUpdateTemplates = () => {
+  const handleUpdateTemplate = async ({ file, title, category, type, tag }) => {
+    await uploadImage(file).then(async ({ url, public_id }) => {
+      if (!url) {
+        throw console.log(`Cloudinary UPLOAD ERROR`);
+      }
+      const { data, error } = await supabase_client.from(category).update({
         title,
         type,
         tag,
-        image: url,
+        file: url,
         type,
         public_id,
+        category,
       });
       if (error) {
         switch (error.message) {
           default:
             toast.error(error.message);
-            throw console.log(`Templates 생성 오류 : ${error.message}`);
+            throw console.log(`Templates UPDATE ERROR : ${error.message}`);
         }
       } else {
-        toast.success('Templates 등록 완료');
+        toast.success('Templates UPDATE SUCCESS');
       }
       return data;
     });
+  };
+
+  const client = useQueryClient();
+  return useMutation(handleUpdateTemplate, {
+    onSuccess: async () => {
+      await client.invalidateQueries(gatherKeys.template_all);
+    },
+  });
+};
+// Templates DELETE
+const useDeleteTemplates = () => {
+  const handleDeleteTemplate = async ({ id, category, public_id }) => {
+    await deleteImage(public_id).then(async () => {
+      const { data, error } = await supabase_client.from(category).delete().eq('id', id);
+
+      if (error) {
+        switch (error.message) {
+          default:
+            toast.error(error.message);
+            throw console.log(`Templates DELETE ERROR : ${error.message}`);
+        }
+      } else {
+        toast.success('Templates DELETE SUCCESS');
+      }
+      return data;
+    });
+  };
+  const client = useQueryClient();
+  return useMutation(handleDeleteTemplate, {
+    onSuccess: () => {
+      client.removeQueries(gatherKeys.template_all);
+    },
+  });
 };
 export const Templates = () => {
-  return { useGetTemplates, createTemplates, deleteTemplates };
+  return { useCreateTemplates, useGetTemplates, useUpdateTemplates, useDeleteTemplates };
 };

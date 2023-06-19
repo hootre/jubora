@@ -128,13 +128,13 @@ const SignUp = () => {
                 <label className="label check">
                   <input
                     className={`label__checkbox ${errors.check && 'invalid'}`}
-                    {...register('check', {
+                    {...register('privacy_check', {
                       required: '약관에 동의 해주세요',
                     })}
                     required={true}
                     type="checkbox"
                     onKeyUp={() => {
-                      trigger('check');
+                      trigger('privacy_check');
                     }}
                   />
                   <span className="label__icon">
@@ -157,13 +157,13 @@ const SignUp = () => {
               <span>회원가입</span>
             </button>
             <ul className="login_util">
-              <Link className="util_btn" href="/auth/join">
+              <Link className="util_btn" href="/auth/signup">
                 아이디 찾기
               </Link>
               <Link className="util_btn" href="/auth/reset">
                 비밀번호 찾기
               </Link>
-              <Link className="util_btn" href="/auth/login">
+              <Link className="util_btn" href="/auth/signin">
                 로그인
               </Link>
             </ul>

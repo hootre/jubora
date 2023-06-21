@@ -15,11 +15,11 @@ export const uploadImage = async (file) => {
 export const deleteImage = async (public_id) => {
   const data = new FormData();
   const timestamp = new Date().getTime();
-  const string = `public_id=${public_id}&timestamp=${timestamp}rZXzClApnlqbZhVaj17j9uEEYEk`;
+  const string = `public_id=${public_id}&timestamp=${timestamp}${process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET}`;
   const signature = await sha1(string);
   data.append('public_id', public_id);
   data.append('signature', signature);
-  data.append('api_key', 218955996179453);
+  data.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
   data.append('timestamp', timestamp);
   return await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/destroy', {
     method: 'POST',

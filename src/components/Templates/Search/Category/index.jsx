@@ -3,17 +3,22 @@ import React, { useCallback, useState } from 'react';
 import { CategoryBox } from './styles';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export const Category = ({ list, category, queryName }) => {
+export const Category = ({ categoryList }) => {
+  let pathName = usePathname().split('/')[2];
+  if (!pathName) {
+    pathName = 'banner_row';
+  }
   const [isCategotyState, setIsCategotyState] = useState(false);
-  const toggleCategotyState = useCallback(() => {
+  const toggleCategotyState = () => {
     setIsCategotyState((prev) => !prev);
-  }, [isCategotyState]);
-
+  };
+  const title = categoryList.filter((item) => pathName === item.category_table)[0].category_name;
   return (
     <CategoryBox className="selectTextBox" onClick={toggleCategotyState}>
       <div>
-        <span>{list[category > 0 ? category : 0]?.title}</span>
+        <span>{title}</span>
         {isCategotyState ? (
           <AiFillCaretUp className="icon" />
         ) : (
@@ -22,10 +27,10 @@ export const Category = ({ list, category, queryName }) => {
       </div>
       <div className={isCategotyState ? 'dropDown active' : 'dropDown'}>
         <ul>
-          {list &&
-            list.map((item, idx) => (
-              <li key={idx} className={category === idx ? 'curCategory' : ''}>
-                <Link href={`${category}?${queryName}=${item.id}`}>{item.title}</Link>
+          {categoryList &&
+            categoryList.map((item, idx) => (
+              <li key={item.id} className={pathName === item.category_table ? 'curCategory' : ''}>
+                <Link href={item.url}>{item.category_name}</Link>
               </li>
             ))}
         </ul>

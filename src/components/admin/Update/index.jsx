@@ -1,12 +1,12 @@
 'use client';
 import React, { memo, useState } from 'react';
-import { Templates } from 'hooks/templates/useTemplates';
+import { useTemplates } from 'hooks/templates/useTemplates';
 
 const Update = ({ hasFormData, isUpdate, setIsUpdate }) => {
   const [formData, setFormData] = useState(hasFormData);
   const [isUploading, setIsUploading] = useState(false);
   console.log(formData);
-  const { useUpdateTemplates, useDeleteTemplates } = Templates();
+  const { useUpdateTemplates, useDeleteTemplates } = useTemplates();
   const { mutate: useUpdateTemplate } = useUpdateTemplates();
   const { mutate: useDeleteTemplate } = useDeleteTemplates();
   const handleReset = (e) => {

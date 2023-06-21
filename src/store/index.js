@@ -16,4 +16,5 @@ const useTemplatesStore = create((set) => ({
 
 export const useIsCurrentFilter = () => useTemplatesStore((state) => state.isCurrentFilter);
 export const useDetailFilterState = () => useTemplatesStore((state) => state.detailFilterState);
+
 export const useTemplatesActions = () => useTemplatesStore((state) => state.actions);

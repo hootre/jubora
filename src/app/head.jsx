@@ -1,3 +1,4 @@
+import 'tailwindcss/tailwind.css';
 export default function Head() {
   return (
     <>

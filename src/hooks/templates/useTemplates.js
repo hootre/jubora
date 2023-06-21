@@ -4,6 +4,32 @@ import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 
+// 카테고리 목록
+const useGetCategory = () => {
+  const handleGetCategory = async () => {
+    let { data, error } = await supabase_client.from('templates_category_list').select('*');
+    if (error) {
+      throw console.log(`category get error : ${error.message}`);
+    }
+    return data;
+  };
+  return useQuery(gatherKeys.categoryList, handleGetCategory);
+};
+// 특정 제품 목록
+const useGetTemplates = (category) => {
+  const handleGetTemplates = async () => {
+    const { data, error } = await supabase_client.from(category).select('*');
+
+    if (error) {
+      throw console.log(`server get category template ${error.message}`);
+    }
+    if (data) {
+      return data;
+    }
+  };
+  return useQuery([category], handleGetTemplates);
+};
+
 // Templates CREATE
 const useCreateTemplates = () => {
   const handleCreateTemplate = async ({ file, title, category, type, tag }) => {
@@ -36,12 +62,12 @@ const useCreateTemplates = () => {
   const client = useQueryClient();
   return useMutation(handleCreateTemplate, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.template_all);
+      await client.invalidateQueries(gatherKeys.template);
     },
   });
 };
-// Templates REDE
-const useGetTemplates = () => {
+// Templates ALL REDE
+const useGetALLTemplates = () => {
   const handleGetTemplates = async () => {
     const { data } = await supabase_client.from('templates_category_list').select('category_table');
     if (data) {
@@ -69,7 +95,7 @@ const useGetTemplates = () => {
       return [];
     }
   };
-  return useQuery(gatherKeys.template_all, handleGetTemplates);
+  return useQuery(gatherKeys.template, handleGetTemplates);
 };
 // Templates UPDATE
 const useUpdateTemplates = () => {
@@ -103,7 +129,7 @@ const useUpdateTemplates = () => {
   const client = useQueryClient();
   return useMutation(handleUpdateTemplate, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.template_all);
+      await client.invalidateQueries(gatherKeys.template);
     },
   });
 };
@@ -128,10 +154,17 @@ const useDeleteTemplates = () => {
   const client = useQueryClient();
   return useMutation(handleDeleteTemplate, {
     onSuccess: () => {
-      client.removeQueries(gatherKeys.template_all);
+      client.removeQueries(gatherKeys.template);
     },
   });
 };
-export const Templates = () => {
-  return { useCreateTemplates, useGetTemplates, useUpdateTemplates, useDeleteTemplates };
+export const useTemplates = () => {
+  return {
+    useGetCategory,
+    useGetTemplates,
+    useCreateTemplates,
+    useGetALLTemplates,
+    useUpdateTemplates,
+    useDeleteTemplates,
+  };
 };

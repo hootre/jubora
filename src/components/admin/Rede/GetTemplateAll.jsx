@@ -1,10 +1,10 @@
 'use client';
-import { Templates } from 'hooks/templates/useTemplates';
+import { useTemplates } from 'hooks/templates/useTemplates';
 import React, { useState } from 'react';
 import Update from '../Update';
 
 export const GetTemplateAll = () => {
-  const { useGetTemplates, useDeleteTemplate } = Templates();
+  const { useGetTemplates, useDeleteTemplate } = useTemplates();
   const { data } = useGetTemplates();
   const [isUpdate, setIsUpdate] = useState(false);
   return (

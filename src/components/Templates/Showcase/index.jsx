@@ -1,45 +1,39 @@
 'use client';
 import React from 'react';
-import { Category } from '../Search/Category';
 import { ShowcaseBox } from './styles';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { AwesomeButton } from 'react-awesome-button';
 import 'react-awesome-button/dist/styles.css';
 import { useDetailFilterState } from 'store';
+import { Button } from '@material-tailwind/react';
 
-export const Showcase = ({ showCaseList }) => {
-  let sort = usePathname().substring(1);
-  console.log(showCaseList);
-  sort = sort === undefined ? 0 : sort;
+export const Showcase = ({ templatesList }) => {
   const { detailFilterState } = useDetailFilterState();
-  let filterList = new Array(showCaseList).filter((v) => v.type === sort);
-
   return (
     <ShowcaseBox>
       <div className="topNav">
-        <h2 className="title">{filterList.length}개의 디자인이 있습니다.</h2>
-        <Category list={filterList} category={sort} queryName={'sort'} />
+        <h2 className="title">{templatesList?.length}개의 디자인이 있습니다.</h2>
+        {/* <SortFilter categoryList={categoryList} /> */}
+        <Button>Button</Button>
       </div>
       <div className="showcase">
         <ul>
-          {showCaseList &&
-            showCaseList
-              .filter((v) => v.class === sort)
+          {templatesList &&
+            templatesList
               .sort((a, b) => {
                 if (detailFilterState === 0) {
-                  return new Date(b.date) - new Date(a.date);
+                  return new Date(b.created_at) - new Date(a.created_at);
                 } else if (detailFilterState === 1) {
                   return new Date(b.views) - new Date(a.views);
                 } else {
                   return new Date(b.sales) - new Date(a.sales);
                 }
               })
-              .map((item, idx) => {
+              .map((item) => {
                 return (
-                  <li key={item.id} className={item.class}>
+                  <li key={item.id} className={item.type}>
                     <div>
-                      <img src={item.img} alt="현수막이미지" />
+                      <img src={item.file} alt="현수막이미지" />
                       <AwesomeButton type="primary" className="choice">
                         <Link href={`detail/${item.id}`}>선택</Link>
                       </AwesomeButton>

@@ -1,14 +1,15 @@
-// tailwind.config.js 📂
+const withMT = require('@material-tailwind/react/utils/withMT');
 
-module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+module.exports = withMT({
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}', // Note the addition of the `app` directory.
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+
+    // Or if using `src` directory:
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
   theme: {
     extend: {},
-    screens: {
-      sm: '465px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1640px',
-    },
   },
-};
+  plugins: [],
+});

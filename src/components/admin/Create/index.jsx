@@ -1,12 +1,12 @@
 'use client';
 import React, { memo, useState } from 'react';
-import { Templates } from 'hooks/templates/useTemplates';
+import { useTemplates } from 'hooks/templates/useTemplates';
 
 const Create = () => {
   const [formData, setFormData] = useState({ category: 'banner_row', type: 'square' });
   const [isUploading, setIsUploading] = useState(false);
 
-  const { useCreateTemplates } = Templates();
+  const { useCreateTemplates } = useTemplates();
   const { mutate: createTemplate } = useCreateTemplates();
   const handleReset = (e) => {
     setFormData({});

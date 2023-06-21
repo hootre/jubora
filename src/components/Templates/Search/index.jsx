@@ -2,17 +2,12 @@
 import { SearchBox } from './styles';
 import { GoSearch } from 'react-icons/go';
 import { Category } from './Category';
-import { categoryList } from 'assets/data';
-import { usePathname } from 'next/navigation';
 import { useTemplatesActions } from 'store';
 import { useIsCurrentFilter } from 'store';
 
-export const Search = () => {
-  const category = usePathname().substring(1);
+export const Search = ({ categoryList }) => {
   const isCurrentFilter = useIsCurrentFilter();
   const { setIsCurrentFilter } = useTemplatesActions();
-  console.log('search');
-  console.log(category);
   return (
     <SearchBox>
       <div className={isCurrentFilter ? 'filterBtn open' : 'filterBtn'}>
@@ -24,7 +19,7 @@ export const Search = () => {
       </div>
       <div className="searchBox">
         <div className="search">
-          <Category list={categoryList} category={category} queryName={'category'} />
+          <Category categoryList={categoryList} />
           <div className="searchInputBox">
             <div className="searchInput">
               <GoSearch className="icon" />

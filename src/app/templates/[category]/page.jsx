@@ -6,11 +6,11 @@ import { Showcase } from 'components/Templates/Showcase';
 import React from 'react';
 import styles from './templates.module.scss';
 import { useTemplates } from 'hooks/templates/useTemplates';
-const templates = () => {
+const templates_category = ({ params: { category } }) => {
   const { useGetTemplates, useGetCategory } = useTemplates();
 
-  const { data: templatesList, isInitialLoading } = useGetTemplates('banner_row');
-  const { data: categoryList, isInitialLoading: isCategory } = useGetCategory();
+  const { data: templatesList, isInitialLoading } = useGetTemplates(category);
+  const { data: categoryList } = useGetCategory();
   // if (isInitialLoading) {
   //   return <h1>Loading...</h1>;
   // }
@@ -22,9 +22,10 @@ const templates = () => {
       <FilterAside filterItemList={filterItemList} />
       <main>
         <Search categoryList={categoryList} />
+        <h1>이건 </h1>
         <Showcase templatesList={templatesList} categoryList={categoryList} />
       </main>
     </section>
   );
 };
-export default templates;
+export default templates_category;

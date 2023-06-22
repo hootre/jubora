@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import { HeaderBox } from './styles';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +8,7 @@ import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
 import { usePathname } from 'next/navigation';
 import { useUser } from 'hooks/auth/useUser';
-
+import './Header.scss';
 export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
@@ -41,7 +40,7 @@ export const Header = () => {
     setIsMypage((prev) => !prev);
   };
   return (
-    <HeaderBox className="">
+    <header className="header_container">
       <div id="header">
         <div id="navBox">
           <Link href="/">
@@ -121,6 +120,6 @@ export const Header = () => {
           </div>
         </div>
       </div>
-    </HeaderBox>
+    </header>
   );
 };

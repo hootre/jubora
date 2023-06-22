@@ -3,12 +3,11 @@
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import { AuthBox } from '../styles';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from 'hooks/auth/useUser';
 import { useEffect } from 'react';
-
+import '.././Auth.scss';
 const SignIn = () => {
   // form
   const {
@@ -33,7 +32,7 @@ const SignIn = () => {
     console.log('구글 로그인 완료');
   }
   return (
-    <AuthBox>
+    <section className="auth_container">
       <div>
         <div>
           <div className="titleLogo">
@@ -148,7 +147,7 @@ const SignIn = () => {
           </form>
         </div>
       </div>
-    </AuthBox>
+    </section>
   );
 };
 

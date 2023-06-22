@@ -1,9 +1,9 @@
 'use client';
 import React, { useCallback, useState } from 'react';
-import { TemplatesContentsBox } from './styles';
 import 'react-tabs/style/react-tabs.css';
 import { categoryList, mainShowTemplatesList } from 'assets/data';
 import { TemplatesSixContent } from './TemplatesSixContent';
+import './TemplatesContents.scss';
 
 export const TemplatesContents = () => {
   const [currentTabNum, setCurrentTabNum] = useState(0);
@@ -19,7 +19,7 @@ export const TemplatesContents = () => {
     [currentItemNum, currentTabNum]
   );
   return (
-    <TemplatesContentsBox>
+    <section className="templatesContents_container">
       <ul className="nav">
         {categoryList.map((item, idx) => {
           return (
@@ -41,6 +41,6 @@ export const TemplatesContents = () => {
           hendleCurrentItem={hendleCurrentItem}
         />
       }
-    </TemplatesContentsBox>
+    </section>
   );
 };

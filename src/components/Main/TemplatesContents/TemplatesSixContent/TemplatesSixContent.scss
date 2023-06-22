@@ -1,6 +1,4 @@
-import styled from 'styled-components';
-
-export const TemplatesSixContentBox = styled.div`
+.templatesSixContent_container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,7 +7,7 @@ export const TemplatesSixContentBox = styled.div`
     justify-content: space-between;
     height: 550px;
     max-width: 1400px;
-    .imgBox {
+    .img_box {
       display: flex;
       align-items: center;
       padding: 20px;
@@ -94,7 +92,7 @@ export const TemplatesSixContentBox = styled.div`
           }
           li {
             position: relative;
-            &.currentContent {
+            &.current_content {
               cursor: pointer;
               border: 1px solid var(--primary-100);
               &:before {
@@ -137,4 +135,4 @@ export const TemplatesSixContentBox = styled.div`
       }
     }
   }
-`;
+}

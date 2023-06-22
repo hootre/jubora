@@ -1,18 +1,20 @@
 'use client';
 import React from 'react';
-import { FilterAsideBox } from './styles';
 import { HiOutlineChevronDoubleLeft } from 'react-icons/hi';
 import { AsideListItem } from './AsideListItem';
 import { useTemplatesActions } from 'store';
 import { useIsCurrentFilter } from 'store';
+import './FilterAside.scss';
 
 export const FilterAside = ({ filterItemList }) => {
   const isCurrentFilter = useIsCurrentFilter();
   const { setIsCurrentFilter } = useTemplatesActions();
   return (
-    <FilterAsideBox className={isCurrentFilter ? 'filterOpen' : ''}>
-      <div className="filterBox">
-        <div className="fiterTitle">
+    <aside
+      className={isCurrentFilter ? 'filter_open filterAside_container' : 'filterAside_container'}
+    >
+      <div className="filter_box">
+        <div className="fiter_title">
           <div className="title">
             <img src="https://weenidy.com/assets/icons/icn-fillter-navy-d.png" alt="" />
             <h2>필터</h2>
@@ -26,6 +28,6 @@ export const FilterAside = ({ filterItemList }) => {
             })}
         </ul>
       </div>
-    </FilterAsideBox>
+    </aside>
   );
 };

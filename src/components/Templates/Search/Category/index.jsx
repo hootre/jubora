@@ -1,10 +1,9 @@
 'use client';
 import React, { useCallback, useState } from 'react';
-import { CategoryBox } from './styles';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
+import './Category.scss';
 export const Category = ({ categoryList }) => {
   let pathName = usePathname().split('/')[2];
   if (!pathName) {
@@ -16,7 +15,7 @@ export const Category = ({ categoryList }) => {
   };
   const title = categoryList.filter((item) => pathName === item.category_table)[0].category_name;
   return (
-    <CategoryBox className="selectTextBox" onClick={toggleCategotyState}>
+    <ul className="selectTextBox_container" onClick={toggleCategotyState}>
       <div>
         <span>{title}</span>
         {isCategotyState ? (
@@ -25,16 +24,16 @@ export const Category = ({ categoryList }) => {
           <AiFillCaretDown className="icon" />
         )}
       </div>
-      <div className={isCategotyState ? 'dropDown active' : 'dropDown'}>
+      <div className={isCategotyState ? 'drop_down active' : 'drop_down'}>
         <ul>
           {categoryList &&
             categoryList.map((item, idx) => (
-              <li key={item.id} className={pathName === item.category_table ? 'curCategory' : ''}>
+              <li key={item.id} className={pathName === item.category_table ? 'cur_category' : ''}>
                 <Link href={item.url}>{item.category_name}</Link>
               </li>
             ))}
         </ul>
       </div>
-    </CategoryBox>
+    </ul>
   );
 };

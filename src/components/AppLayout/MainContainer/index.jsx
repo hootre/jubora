@@ -1,6 +1,5 @@
 import React from 'react';
-import { MainContainerBox } from './styles';
-
+import './MainContainer.scss';
 export const MainContainer = ({ children }) => {
-  return <MainContainerBox>{children}</MainContainerBox>;
+  return <main className="mainContainer_container">{children}</main>;
 };

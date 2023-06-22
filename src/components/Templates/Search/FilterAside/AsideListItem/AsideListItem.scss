@@ -1,6 +1,4 @@
-import styled from 'styled-components';
-
-export const AsideListItemBox = styled.li`
+.asideListItem_container {
   position: relative;
   border-bottom: 1px solid #dcdcdc;
   .title {
@@ -18,11 +16,11 @@ export const AsideListItemBox = styled.li`
       font-size: 18px;
     }
   }
-  .dropFilter {
+  .drop_filter {
     transition: height 0.5s ease-in-out;
     display: flex;
     justify-content: center;
-    .filterItem {
+    .filter_item {
       display: inline-block;
       transition: background 0.2s ease-in-out;
       cursor: pointer;
@@ -44,9 +42,9 @@ export const AsideListItemBox = styled.li`
         transform: rotate(-45reg);
       }
     }
-    .dropFilter {
+    .drop_filter {
       visibility: hidden;
       height: 0;
     }
   }
-`;
+}

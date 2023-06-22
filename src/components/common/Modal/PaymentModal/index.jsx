@@ -1,15 +1,13 @@
 import React from 'react';
-import { PaymentModalBox } from './styles';
-import { MdOutlineRemoveShoppingCart } from 'react-icons/md';
-
+import './PaymentModal.scss';
 export const PaymentModal = ({ toggleIsPayment }) => {
   return (
-    <PaymentModalBox>
+    <article className="paymentModal_container">
       <div className="back" onClick={toggleIsPayment}></div>
-      <div className="container">
-        <div className="payList">
+      <div className="content_box">
+        <div className="pay_list">
           <h1>결제요청</h1>
-          <ul className="cartList">
+          <ul className="cart_list">
             <li>
               <img
                 src="http://jubora.co.kr/data/file/sp01_04/3554112016_6SwQDHbC_EAB3A0EB829C23.jpg"
@@ -41,10 +39,10 @@ export const PaymentModal = ({ toggleIsPayment }) => {
             <h3>시안보기 완료후에 결제 진행이 가능합니다</h3>
           </div> */}
         </div>
-        <div className="orderInfo">
+        <div className="order_info">
           <h1>내 정보</h1>
         </div>
       </div>
-    </PaymentModalBox>
+    </article>
   );
 };

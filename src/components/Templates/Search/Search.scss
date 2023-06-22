@@ -1,10 +1,8 @@
-import styled from 'styled-components';
-
-export const SearchBox = styled.section`
+.search_container {
   display: flex;
   align-items: center;
   padding: 15px 0;
-  .filterBtn {
+  .filter_btn {
     display: block;
     margin-right: 15px;
     > div {
@@ -34,16 +32,16 @@ export const SearchBox = styled.section`
       display: none;
     }
   }
-  .searchBox {
+  .search_box {
     flex: auto;
     .search {
       display: flex;
       align-items: center;
 
-      .searchInputBox {
+      .search_input_box {
         flex: auto;
         height: 100%;
-        .searchInput {
+        .search_input {
           position: relative;
           width: 100%;
           .icon {
@@ -68,4 +66,4 @@ export const SearchBox = styled.section`
       }
     }
   }
-`;
+}

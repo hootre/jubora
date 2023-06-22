@@ -1,16 +1,14 @@
-import styled from 'styled-components';
-
-export const FilterAsideBox = styled.aside`
+.filterAside_container {
   transition: all 0.5s ease-in-out;
   border-right: 1px solid var(--bd-100);
   transform: translateX(-350px);
   overflow: hidden;
   flex: 0;
-  &.filterOpen {
+  &.filter_open {
     flex: 1 1 0;
     transform: translateX(0);
   }
-  .fiterTitle {
+  .fiter_title {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -37,4 +35,4 @@ export const FilterAsideBox = styled.aside`
   ul {
     width: 100%;
   }
-`;
+}

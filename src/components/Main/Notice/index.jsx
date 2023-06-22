@@ -1,16 +1,15 @@
 'use client';
 import React from 'react';
-import { NoticeBox } from './styles';
-
+import styles from './Notice.scss';
 export const Notice = ({ noticeList }) => {
   return (
-    <NoticeBox>
+    <section className="notice_container">
       <div>
         <div className="title">
           <h1>Notice</h1>
         </div>
         <div className="notice">
-          <ul className="noticeList">
+          <ul className="notice_list">
             {noticeList &&
               noticeList.map((item, idx) => {
                 return (
@@ -23,7 +22,7 @@ export const Notice = ({ noticeList }) => {
                 );
               })}
           </ul>
-          <a href="#" className="bottomBanner">
+          <a href="#" className="bottom_banner">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-bottom-banner%2F17e47a5fb3a0cc6b0ee93.jpg?alt=media&token=888ffbef-3445-4a01-a389-3913bd02f456"
               alt=""
@@ -31,6 +30,6 @@ export const Notice = ({ noticeList }) => {
           </a>
         </div>
       </div>
-    </NoticeBox>
+    </section>
   );
 };

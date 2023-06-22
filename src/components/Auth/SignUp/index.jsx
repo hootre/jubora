@@ -5,9 +5,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
-import { AuthBox } from '../styles';
 import { useUser } from 'hooks/auth/useUser';
 import { redirect } from 'next/navigation';
+import '.././Auth.scss';
 
 const SignUp = () => {
   const { useCreateUser } = useUser();
@@ -23,7 +23,7 @@ const SignUp = () => {
     watch,
   } = useForm();
   return (
-    <AuthBox>
+    <section className="auth_container">
       <div>
         <div>
           <div className="titleLogo">
@@ -170,7 +170,7 @@ const SignUp = () => {
           </form>
         </div>
       </div>
-    </AuthBox>
+    </section>
   );
 };
 

@@ -1,6 +1,4 @@
-import styled from 'styled-components';
-
-export const FooterBox = styled.footer`
+.footer_container {
   background-color: var(--base-black);
   color: var(--text-200);
   font-size: 12px;
@@ -60,4 +58,4 @@ export const FooterBox = styled.footer`
       }
     }
   }
-`;
+}

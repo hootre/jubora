@@ -2,8 +2,7 @@ import React, { useCallback, useState } from 'react';
 import show from 'assets/MainPage/show.jpg';
 import Image from 'next/image';
 import Link from 'next/link';
-import { TemplatesSixContentBox } from './styles';
-
+import './TemplatesSixContent.scss';
 export const TemplatesSixContent = ({
   templatesList,
   category,
@@ -12,9 +11,9 @@ export const TemplatesSixContent = ({
 }) => {
   const { bannerType, bannerList } = templatesList;
   return (
-    <TemplatesSixContentBox className="contentBox">
+    <div className="templatesSixContent_container">
       <div className="content">
-        <div className="imgBox">
+        <div className="img_box">
           <Image src={bannerList[currentItemNum].img} width={1200} height={1200} alt="img" />
         </div>
         <div className="side">
@@ -38,7 +37,7 @@ export const TemplatesSixContent = ({
                   <li
                     key={item.id}
                     onClick={() => hendleCurrentItem(idx)}
-                    className={currentItemNum === idx ? 'currentContent' : ''}
+                    className={currentItemNum === idx ? 'current_content' : ''}
                   >
                     <Image src={item.img} width={1200} height={1200} alt="img" />
                   </li>
@@ -48,6 +47,6 @@ export const TemplatesSixContent = ({
           </section>
         </div>
       </div>
-    </TemplatesSixContentBox>
+    </div>
   );
 };

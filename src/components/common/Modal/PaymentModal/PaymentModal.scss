@@ -1,6 +1,4 @@
-import styled from 'styled-components';
-
-export const PaymentModalBox = styled.article`
+.paymentModal_container {
   .back {
     position: fixed;
     top: 0;
@@ -11,7 +9,7 @@ export const PaymentModalBox = styled.article`
     z-index: 1;
     background: rgba(0, 0, 0, 0.15);
   }
-  .container {
+  .content_box {
     position: absolute;
     top: 25px;
     right: 0;
@@ -26,7 +24,7 @@ export const PaymentModalBox = styled.article`
       text-align: left;
       flex: 1;
     }
-    .payList {
+    .pay_list {
       background-color: var(--bg-100);
       display: flex;
       flex-direction: column;
@@ -34,7 +32,7 @@ export const PaymentModalBox = styled.article`
       h1 {
         margin-bottom: 20px;
       }
-      .cartList {
+      .cart_list {
         display: flex;
         flex-direction: column;
         li {
@@ -71,7 +69,7 @@ export const PaymentModalBox = styled.article`
           }
         }
       }
-      .noCart {
+      .no_cart {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -93,8 +91,8 @@ export const PaymentModalBox = styled.article`
       }
     }
     /* 알아서 결제할 때 해라 동준아 */
-    .orderInfo {
+    .order_info {
       padding: 30px;
     }
   }
-`;
+}

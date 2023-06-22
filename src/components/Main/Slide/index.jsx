@@ -1,8 +1,8 @@
 'use client';
 import useInterval from 'hooks/custom/useInterval';
 import React, { useState } from 'react';
-import { SlideBox } from './styles';
 import Image from 'next/image';
+import './Slide.scss';
 // 메인
 export const Slide = ({ slides }) => {
   // 기본 변수
@@ -34,22 +34,22 @@ export const Slide = ({ slides }) => {
   };
 
   return (
-    <SlideBox>
+    <section className="slide_container">
       <div className="slide">
-        <div className="slideList">
-          <div className="slideTrack">
+        <div className="slide_list">
+          <div className="slide_track">
             {slides &&
               slides.map((item, index) => {
                 return (
                   <div
                     key={index}
-                    className={`slideItem ${currentIndex === index ? 'currentSlide' : ''}`}
+                    className={`slide_item ${currentIndex === index ? 'current_slide' : ''}`}
                     style={{
                       transition: 'all 0.5s',
                     }}
                   >
                     <div className="title">
-                      <ul className="iconList">
+                      <ul className="icon_list">
                         <li>
                           <div>{item.state}</div>
                         </li>
@@ -66,14 +66,14 @@ export const Slide = ({ slides }) => {
                 );
               })}
           </div>
-          <div className="navBtn">
+          <div className="nav_btn">
             <ul>
               {slides &&
                 slides.map((item, idx) => {
                   return (
                     <li
                       key={idx}
-                      className={`${currentIndex === idx ? 'currentSlide' : ''}`}
+                      className={`${currentIndex === idx ? 'current_slide' : ''}`}
                       onClick={() => handleSwipe(idx)}
                     ></li>
                   );
@@ -82,6 +82,6 @@ export const Slide = ({ slides }) => {
           </div>
         </div>
       </div>
-    </SlideBox>
+    </section>
   );
 };

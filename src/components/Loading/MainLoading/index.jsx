@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import { MainLoadingBox } from './styles';
+import './MainLoading.scss';
 
 export const MainLoading = () => {
-  return <MainLoadingBox></MainLoadingBox>;
+  return <div className="mainLoading_container"></div>;
 };

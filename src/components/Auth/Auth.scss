@@ -1,12 +1,10 @@
-import styled from 'styled-components';
-
-export const AuthBox = styled.section`
+.auth_container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 249px);
   padding: 50px;
-  .pointText {
+  .pointext {
     height: 0;
     display: flex;
     align-items: center;
@@ -278,4 +276,4 @@ export const AuthBox = styled.section`
       }
     }
   }
-`;
+}

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ThemeProvider } from '@material-tailwind/react';
+
 function Providers({ children }) {
   const [client] = useState(
     new QueryClient({
@@ -19,11 +19,9 @@ function Providers({ children }) {
 
   return (
     <QueryClientProvider client={client}>
-      <ThemeProvider>
-        <Toaster />
-        {children}client
-        <ReactQueryDevtools initialIsOpen={false} />
-      </ThemeProvider>
+      <Toaster />
+      {children}client
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

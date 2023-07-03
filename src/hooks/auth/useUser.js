@@ -12,14 +12,14 @@ const useIsUser = () => {
 
 // cookie에서 jwt 가져오기
 const useGetSession = async () => {
-  try {
     const {
-      data: { session },
+      data: { session },error
     } = await supabase_client.auth.getSession();
+    if(error){
+      console.error(`session Error : ${error.message}`);
+      return;
+    }
     return session;
-  } catch (error) {
-    throw console.log(`session Error : ${error.message}`);
-  }
 };
 // session 확인하여 유저정보 출력
 const useGetUserInfo = () => {
@@ -33,11 +33,12 @@ const useGetUserInfo = () => {
         .single();
 
       if (error) {
-        throw console.log(`getUser Error : ${error.message}`);
+        console.error(`getUser Error : ${error.message}`);
+        return;
       }
       return profiles;
     } else {
-      return null;
+      return;
     }
   };
   return useQuery(gatherKeys.current_user, handleGetUser);
@@ -47,7 +48,7 @@ const useLogOut = () => {
   const handleLogout = async () => {
     const { error } = await supabase_client.auth.signOut();
     if (error) {
-      throw console.log(`유저 로그아웃 오류 : ${error.message}`);
+      console.error(`유저 로그아웃 오류 : ${error.message}`);
     } else {
       toast.success('로그아웃');
     }
@@ -62,26 +63,28 @@ const useLogOut = () => {
 // 회원가입
 const useCreateUser = () => {
   const handleCreateUser = async ({ name, email, password, privacy_check }) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { data:auth, error } = await supabase.auth.signUp({
       email,
       password,
     });
-    if (data) {
+    if (auth) {
       const { data: insertData, error: insertError } = await supabase_client
         .from('profiles')
         .insert({
-          id: data.user.id,
+          id: auth.user.id,
           email,
           name,
           role: 'member',
           privacy_check,
         });
       if (insertError) {
-        const { data, error } = await supabase_client.auth.admin.deleteUser(data.user.id);
+        const { error } = await supabase_client.auth.admin.deleteUser(auth.user.id);
         if (error) {
-          throw console.log(`유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`);
+           console.error(`유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`);
+           return;
         }
-        throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
+         console.error(`유저 정보 기입 오류 : ${insertError.message}`);
+         return;
       } else {
         toast.success('회원가입에 성공하였습니다!');
       }
@@ -92,13 +95,16 @@ const useCreateUser = () => {
       switch (error.message) {
         case 'Invalid login credentials':
           toast.error('이미 사용중인 이메일입니다.');
-          throw console.log(`유저 회원가입 오류 : ${error.message}`);
+           console.error(`유저 회원가입 오류 : ${error.message}`);
+           break;
         case 'User already registered':
           toast.error('이미 사용중인 이메일입니다.');
-          throw console.log(`유저 회원가입 오류 : ${error.message}`);
+           console.error(`유저 회원가입 오류 : ${error.message}`);
+           break;
         default:
           toast.error(error.message);
-          throw console.log(`유저 회원가입 오류 : ${error.message}`);
+           console.error(`유저 회원가입 오류 : ${error.message}`);
+           break;
       }
     }
   };
@@ -114,9 +120,12 @@ const useSignIn = () => {
     if (error) {
       switch (error.message) {
         case 'Invalid login credentials':
-          throw toast.error('로그인정보가 올바르지 않습니다.');
+          toast.error('로그인정보가 올바르지 않습니다.');
+           console.error('로그인정보가 올바르지 않습니다.');
+           break;
         default:
-          throw toast.error(`로그인 오류 : ${error.message}`);
+        toast.error('로그인 오류입니다');
+           console.error(`로그인 오류 : ${error.message}`);
       }
     } else {
       toast.success('로그인 성공하였습니다!');
@@ -147,14 +156,14 @@ const useSignInGoogle = () => {
     //       privacy_check: 'true',
     //     });
     //   if (insertError) {
-    //     throw console.log(`유저 정보 기입 오류 : ${insertError.message}`);
+    //      console.error(`유저 정보 기입 오류 : ${insertError.message}`);
     //   } else {
     //     client.setQueryData(gatherKeys.current_user, getUser(data?.user.id));
     //     return insertData;
     //   }
     // }
     // if (error) {
-    //   throw toast.error(`GoogleLogin : ${error.message}`);
+    //    toast.econsole.error(`GoogleLogin : ${error.message}`);
     // }
     return data;
   };

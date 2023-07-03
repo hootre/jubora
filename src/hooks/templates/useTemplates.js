@@ -7,9 +7,10 @@ import { gatherKeys } from 'utils/gatherKeys';
 // 카테고리 목록
 const useGetCategory = () => {
   const handleGetCategory = async () => {
-    let { data, error } = await supabase_client.from('templates_category_list').select('*');
+    const { data, error } = await supabase_client.from('templates_category_list').select('*');
     if (error) {
-      throw console.log(`category get error : ${error.message}`);
+      console.error(`category get error : ${error.message}`);
+      return;
     }
     return data;
   };
@@ -18,10 +19,14 @@ const useGetCategory = () => {
 // 특정 제품 목록
 const useGetTemplates = (category) => {
   const handleGetTemplates = async () => {
-    const { data, error } = await supabase_client.from(category).select('*');
+    const { data, error } = await supabase_client
+      .from('products')
+      .select('*')
+      .eq('category', category);
 
     if (error) {
-      throw console.log(`server get category template ${error.message}`);
+      console.error(`get category template ${error.message}`);
+      return;
     }
     if (data) {
       return data;
@@ -35,9 +40,9 @@ const useCreateTemplates = () => {
   const handleCreateTemplate = async ({ file, title, category, type, tag }) => {
     await uploadImage(file).then(async ({ url, public_id }) => {
       if (!url) {
-        throw console.log(`Cloudinary UPLOAD ERROR`);
+        console.error(`Cloudinary UPLOAD ERROR`);
       }
-      const { data, error } = await supabase_client.from(category).insert({
+      const { data, error } = await supabase_client.from('products').insert({
         title,
         type,
         tag,
@@ -47,13 +52,11 @@ const useCreateTemplates = () => {
         category,
       });
       if (error) {
-        switch (error.message) {
-          default:
-            toast.error(error.message);
-            throw console.log(`Templates CREATE ERROR : ${error.message}`);
-        }
+        toast.error(error.message);
+        console.error(`products CREATE ERROR : ${error.message}`);
+        return;
       } else {
-        toast.success('Templates CREATE SUCCESS');
+        toast.success('products CREATE SUCCESS');
       }
       return data;
     });
@@ -69,42 +72,25 @@ const useCreateTemplates = () => {
 // Templates ALL REDE
 const useGetALLTemplates = () => {
   const handleGetTemplates = async () => {
-    const { data } = await supabase_client.from('templates_category_list').select('category_table');
-    if (data) {
-      const text = `${data.map((item) => {
-        return `${item.category_table}(*)`;
-      })}`;
-
-      const { data: templatesList, error } = await supabase_client
-        .from('templates_category_list')
-        .select(text);
-      if (error) {
-        throw console.log(`Templates REDE ERROR : ${error.message}`);
-      }
-      const tableAllList = [];
-      templatesList.map((table) => {
-        Object.values(table).map((item) => {
-          if (item.length != 0) {
-            tableAllList.push(...item);
-          }
-        });
-      });
-      return tableAllList.sort((a, b) => b.id - a.id);
+    const { data, error } = await supabase_client.from('products').select('*');
+    if (error) {
+      toast.error(error.message);
+      console.error(`products REDE ERROR : ${error.message}`);
+      return;
     }
-    if (!data) {
-      return [];
-    }
+    return data;
   };
   return useQuery(gatherKeys.template, handleGetTemplates);
 };
 // Templates UPDATE
 const useUpdateTemplates = () => {
-  const handleUpdateTemplate = async ({ file, title, category, type, tag }) => {
+  const handleUpdateTemplate = async ({ file, title, category, type, tag, public_id }) => {
+    await deleteImage(public_id).then();
     await uploadImage(file).then(async ({ url, public_id }) => {
       if (!url) {
-        throw console.log(`Cloudinary UPLOAD ERROR`);
+        console.error(`Cloudinary UPLOAD ERROR`);
       }
-      const { data, error } = await supabase_client.from(category).update({
+      const { data, error } = await supabase_client.from('products').update({
         title,
         type,
         tag,
@@ -114,11 +100,9 @@ const useUpdateTemplates = () => {
         category,
       });
       if (error) {
-        switch (error.message) {
-          default:
-            toast.error(error.message);
-            throw console.log(`Templates UPDATE ERROR : ${error.message}`);
-        }
+        toast.error(error.message);
+        console.error(`Templates UPDATE ERROR : ${error.message}`);
+        return;
       } else {
         toast.success('Templates UPDATE SUCCESS');
       }
@@ -140,11 +124,9 @@ const useDeleteTemplates = () => {
       const { data, error } = await supabase_client.from(category).delete().eq('id', id);
 
       if (error) {
-        switch (error.message) {
-          default:
-            toast.error(error.message);
-            throw console.log(`Templates DELETE ERROR : ${error.message}`);
-        }
+        toast.error(error.message);
+        console.error(`Templates DELETE ERROR : ${error.message}`);
+        return;
       } else {
         toast.success('Templates DELETE SUCCESS');
       }

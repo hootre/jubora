@@ -6,15 +6,15 @@
   backdrop-filter: blur(30px);
   background-color: var(--bg-300);
   #header {
+    width: 1400px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 60px;
-    padding: 0 70px;
     #navBox {
       display: flex;
-      img {
+      > a > img {
         width: 120px;
         height: auto;
         margin-right: 60px;
@@ -33,11 +33,11 @@
           transition-duration: 0.4s;
           transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        li {
+        > li {
           padding: 0 15px;
           width: 110px;
           text-align: center;
-          a {
+          > a {
             color: var(--text-200);
             font-size: 14px;
             font-weight: 500;
@@ -82,10 +82,10 @@
           background-color: var(--base-white);
           box-shadow: 0px 9px 11px 5px rgba(0, 0, 0, 0.05);
         }
-        svg {
+        > svg {
           color: var(--text-200);
         }
-        input {
+        > input {
           font-size: 14px;
           font-weight: 500;
           line-height: 1.64;
@@ -107,14 +107,14 @@
           align-items: center;
           .item {
             position: relative;
-            span {
+            > span {
               display: block;
               width: 1px;
               height: 14px;
               background-color: var(--bg-200);
               margin: 0 20px;
             }
-            a {
+            > a {
               cursor: pointer;
               display: flex;
               align-items: center;

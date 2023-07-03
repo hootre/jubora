@@ -1,8 +1,7 @@
 'use client';
 import React from 'react';
-import { PriceBox } from './styles';
 
 const price = () => {
-  return <PriceBox>price</PriceBox>;
+  return <section className="page_container">price</section>;
 };
 export default price;

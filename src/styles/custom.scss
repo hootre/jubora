@@ -1,0 +1,18 @@
+.basic_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 5px;
+  transition: all 0.2s;
+  background: var(--primary-100);
+  color: var(--base-white);
+  font-weight: bold;
+  &:hover {
+    background: var(--primary-300);
+    transform: translateY(-2px);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  }
+}

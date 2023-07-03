@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Update from '../Update';
 
 export const GetTemplateAll = () => {
-  const { useGetTemplates, useDeleteTemplate } = useTemplates();
-  const { data } = useGetTemplates();
+  const { useGetALLTemplates, useDeleteTemplate } = useTemplates();
+  const { data } = useGetALLTemplates();
   const [isUpdate, setIsUpdate] = useState(false);
   return (
     <>

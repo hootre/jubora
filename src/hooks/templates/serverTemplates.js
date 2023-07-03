@@ -12,7 +12,7 @@ const serverGetAllTemplates = async () => {
       .from('templates_category_list')
       .select(text);
     if (error) {
-      throw console.log(`Templates REDE ERROR : ${error.message}`);
+       console.error(`Templates REDE ERROR : ${error.message}`);
     }
     const tableAllList = [];
     templatesList.map((table) => {
@@ -23,8 +23,7 @@ const serverGetAllTemplates = async () => {
       });
     });
     return tableAllList.sort((a, b) => b.id - a.id);
-  }
-  if (!data) {
+  }else{
     return [];
   }
 };
@@ -34,17 +33,18 @@ const serverGetTemplates = async (category) => {
   const { data, error } = await supabase_server.from(category).select('*');
 
   if (error) {
-    throw console.log(`server get category template ${error}`);
+     console.error(`server get category template ${error}`);
   }
   if (data) {
     return data;
   }
 };
+
 // 카테고리 목록
 const serverGetCategory = async () => {
   let { data, error } = await supabase_server.from('templates_category_list').select('*');
   if (error) {
-    throw console.log(`category get error : ${error.message}`);
+     console.error(`category get error : ${error.message}`);
   }
   return data;
 };

@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@egjs/react-flicking": "^4.10.8",
-    "@material-tailwind/react": "^2.0.4",
     "@next/bundle-analyzer": "^13.3.0",
     "@supabase/auth-helpers-nextjs": "^0.7.2",
     "@supabase/auth-helpers-react": "^0.3.1",
@@ -21,6 +20,7 @@
     "@toast-ui/editor": "^3.2.2",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
     "@toast-ui/react-editor": "^3.1.1",
+    "@tosspayments/payment-widget-sdk": "^0.8.2",
     "babel-eslint": "^10.1.0",
     "crypto-hash": "^2.0.1",
     "dayjs": "^1.11.7",
@@ -28,6 +28,7 @@
     "npm": "^9.6.4",
     "react": "^18.2.0",
     "react-awesome-button": "^7.0.5",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-hot-toast": "^2.2.0",
@@ -37,13 +38,12 @@
     "react-toastify": "^9.0.4",
     "rsuite": "^5.31.0",
     "rsuite-table": "^5.10.3",
-    "styled-components": "^5.3.8",
     "tui-color-picker": "^2.2.8",
+    "uuid": "^9.0.0",
     "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.29.9",
-    "autoprefixer": "^10.4.14",
     "encoding": "^0.1.13",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -51,10 +51,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
-    "postcss": "^8.4.24",
-    "postcss-loader": "^7.3.3",
     "prettier": "^2.6.2",
-    "sass": "^1.63.4",
-    "tailwindcss": "^3.3.2"
+    "sass": "^1.63.4"
   }
 }

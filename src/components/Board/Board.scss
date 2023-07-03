@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-export const BoardBox = styled.div`
+.board_container {
   > h2 {
     font-weight: bold;
     padding: 10px;
@@ -9,4 +8,4 @@ export const BoardBox = styled.div`
     align-content: center;
     justify-content: center;
   }
-`;
+}

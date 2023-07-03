@@ -35,7 +35,7 @@ const SignUp = () => {
             <div className="titleLabel">
               <label htmlFor="titleLabel">회원가입</label>
             </div>
-            <p className={`pointText ${errors.name && 'active'}`}>이름/회사명을 입력해주세요.</p>
+            <p className={`point_text ${errors.name && 'active'}`}>이름/회사명을 입력해주세요.</p>
             <input
               name="name"
               type="name"
@@ -48,7 +48,7 @@ const SignUp = () => {
                 trigger('name');
               }}
             />
-            <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
+            <p className={`point_text ${errors.email && 'active'}`}>{errors.email?.message} </p>
             <input
               id="email"
               placeholder="이메일"
@@ -67,7 +67,7 @@ const SignUp = () => {
                 trigger('email');
               }}
             ></input>
-            <p className={`pointText ${errors.password && 'active'}`}>
+            <p className={`point_text ${errors.password && 'active'}`}>
               {errors.password?.message}{' '}
             </p>
             <input
@@ -97,7 +97,7 @@ const SignUp = () => {
                 trigger('password');
               }}
             ></input>
-            <p className={`pointText ${errors.confirmPassword && 'active'}`}>
+            <p className={`point_text ${errors.confirmPassword && 'active'}`}>
               {errors.confirmPassword?.message}
             </p>
             <input
@@ -121,7 +121,7 @@ const SignUp = () => {
               }}
             />
             <div className="checkBox">
-              <p className={`pointText ${errors.check && 'checkActive'}`}>
+              <p className={`point_text ${errors.check && 'checkActive'}`}>
                 {errors.check?.message}
               </p>
               <div className="all">

@@ -15,6 +15,7 @@
           left: 0;
           top: 0;
           opacity: 0;
+          width: 100%;
           &.current_slide {
             opacity: 1;
           }
@@ -24,44 +25,52 @@
             max-height: 400px;
             object-fit: cover;
           }
-          .title {
+          .frame {
             position: absolute;
-            left: 15%;
-            top: 72px;
-            z-index: 11;
-            .icon_list {
-              margin: 0px 0px 8px;
-              padding: 0px;
-              border: 0px;
-              display: flex;
-              align-items: center;
-              div {
-                font-size: 13px;
-                font-weight: bold;
-                line-height: 15px;
-                padding: 4px;
-                padding-top: 6px;
-                border-radius: 8px;
-                color: var(--base-white);
-                background: var(--primary-200);
+            width: 1400px;
+            height: 400px;
+            margin: 0 auto;
+            left: 50%;
+            transform: translateX(-50%);
+            .title {
+              position: absolute;
+              left: 0;
+              top: 72px;
+              z-index: 11;
+              .icon_list {
+                margin: 0px 0px 8px;
+                padding: 0px;
+                border: 0px;
+                display: flex;
+                align-items: center;
+                div {
+                  font-size: 13px;
+                  font-weight: bold;
+                  line-height: 15px;
+                  padding: 4px;
+                  padding-top: 6px;
+                  border-radius: 8px;
+                  color: var(--base-white);
+                  background: var(--primary-200);
+                }
               }
-            }
-            h1 {
-              letter-spacing: -0.02em;
-              line-height: 140%;
-              font-weight: bold;
-              font-size: 30px;
-              color: rgba(0, 0, 0, 0.85);
-              margin: 0px;
-            }
-            p {
-              letter-spacing: -0.02em;
-              font-size: 14px;
-              font-weight: 500;
-              line-height: 19px;
-              white-space: pre-wrap;
-              color: rgba(0, 0, 0, 0.7);
-              margin: 0px;
+              h1 {
+                letter-spacing: -0.02em;
+                line-height: 140%;
+                font-weight: bold;
+                font-size: 30px;
+                color: rgba(0, 0, 0, 0.85);
+                margin: 0px;
+              }
+              p {
+                letter-spacing: -0.02em;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 19px;
+                white-space: pre-wrap;
+                color: rgba(0, 0, 0, 0.7);
+                margin: 0px;
+              }
             }
           }
         }

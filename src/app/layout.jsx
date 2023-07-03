@@ -1,6 +1,5 @@
 import AppLayout from 'components/AppLayout/AppLayout';
 import Providers from 'utils/provider';
-import './globals.css';
 import './globals.scss';
 export default async function RootLayout({ children }) {
   return (

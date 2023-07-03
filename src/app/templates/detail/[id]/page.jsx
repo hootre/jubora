@@ -1,11 +1,11 @@
 'use client';
 import React, { useRef } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { AwesomeButton } from 'react-awesome-button';
 import 'react-awesome-button/dist/styles.css';
 import dynamic from 'next/dynamic';
 import { Option } from 'components/Detail/Option';
 import './Detail.scss';
+import Link from 'next/link';
 const NoSsrEditor = dynamic(() => import('components/Detail/Editor'), {
   ssr: false,
 });
@@ -49,7 +49,9 @@ const detail = ({ id }) => {
               <h2>17,900원</h2>
             </div>
           </div>
-          <AwesomeButton type="primary">주문하기</AwesomeButton>
+          <Link href="/" className="basic_button">
+            주문하기
+          </Link>
         </div>
       </div>
     </section>

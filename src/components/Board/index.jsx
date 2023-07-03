@@ -1,14 +1,12 @@
 import React from 'react';
-import { BoardBox } from './styles';
 import { Column, HeaderCell, Cell, Table } from 'rsuite-table';
 import Pagination from 'rsuite/Pagination';
-import 'rsuite/dist/rsuite.min.css';
-
+import './Board.scss';
 export const Board = ({ boardDataList, headerList }) => {
   const [activePage, setActivePage] = React.useState(5);
   const tableRef = React.useRef();
   return (
-    <BoardBox>
+    <div className="board_container">
       <h2>Total 448건 1페이지</h2>
       <Table
         virtualized
@@ -57,6 +55,6 @@ export const Board = ({ boardDataList, headerList }) => {
         activePage={activePage}
         onChangePage={setActivePage}
       />
-    </BoardBox>
+    </div>
   );
 };

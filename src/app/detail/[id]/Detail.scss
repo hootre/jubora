@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-export const DetailBox = styled.section`
+.datail_contaniner {
   display: flex;
   align-items: center;
   gap: 56px;
@@ -122,4 +121,4 @@ export const DetailBox = styled.section`
       }
     }
   }
-`;
+}

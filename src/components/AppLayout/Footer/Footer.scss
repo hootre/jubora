@@ -3,6 +3,8 @@
   color: var(--text-200);
   font-size: 12px;
   .footer {
+    width: 1400px;
+    margin: 0 auto;
     padding: 40px 70px;
     display: flex;
     align-items: center;
@@ -10,7 +12,7 @@
     .footerContent {
       display: flex;
       flex-direction: column;
-      nav {
+      > nav {
         margin-bottom: 15px;
         ul {
           display: flex;

@@ -44,7 +44,7 @@ const SignIn = () => {
             <div className="titleLabel">
               <label htmlFor="titleLabel">로그인</label>
             </div>
-            <p className={`pointText ${errors.email && 'active'}`}>{errors.email?.message} </p>
+            <p className={`point_text ${errors.email && 'active'}`}>{errors.email?.message} </p>
             <input
               id="email"
               placeholder="이메일"
@@ -63,7 +63,7 @@ const SignIn = () => {
                 trigger('email');
               }}
             ></input>
-            <p className={`pointText ${errors.password && 'active'}`}>
+            <p className={`point_text ${errors.password && 'active'}`}>
               {errors.password?.message}{' '}
             </p>
             <input

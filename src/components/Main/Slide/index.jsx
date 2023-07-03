@@ -48,16 +48,18 @@ export const Slide = ({ slides }) => {
                       transition: 'all 0.5s',
                     }}
                   >
-                    <div className="title">
-                      <ul className="icon_list">
-                        <li>
-                          <div>{item.state}</div>
-                        </li>
-                      </ul>
-                      <h1>{item.title.title_1}</h1>
-                      <h1>{item.title.title_2}</h1>
-                      <p>{item.content.content_1}</p>
-                      <p>{item.content.content_2}</p>
+                    <div className="frame">
+                      <div className="title">
+                        <ul className="icon_list">
+                          <li>
+                            <div>{item.state}</div>
+                          </li>
+                        </ul>
+                        <h1>{item.title.title_1}</h1>
+                        <h1>{item.title.title_2}</h1>
+                        <p>{item.content.content_1}</p>
+                        <p>{item.content.content_2}</p>
+                      </div>
                     </div>
                     <a>
                       <Image src={item.img} alt="" width={2600} height={400} />

@@ -1,4 +1,16 @@
-  .myPageModal_container {
+.myPageModal_container {
+  .back {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+  }
+  .content_box {
     position: absolute;
     top: 25px;
     right: 0;
@@ -7,6 +19,7 @@
     border-radius: 4px;
     box-shadow: 0 2px 14px #00000040;
     padding: 22px 36px;
+    z-index: 2;
     box-sizing: border-box;
     .head {
       display: block;
@@ -59,3 +72,4 @@
       }
     }
   }
+}

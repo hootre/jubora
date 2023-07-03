@@ -1,8 +1,9 @@
 .notice_container {
-  padding: 50px 0 50px;
+  padding: 50px 0;
   background: var(--bg-100);
   > div {
-    padding: 0 70px;
+    width: 1400px;
+    margin: 0 auto;
     position: relative;
     .title {
       position: absolute;

@@ -1,6 +1,7 @@
 .SortDropdown_container {
   position: absolute;
   right: 0;
+  z-index: 2;
   .sort_title {
     display: flex;
     align-items: center;
@@ -22,6 +23,7 @@
     }
     li {
       padding: 5px 10px;
+      min-width: 70px;
       cursor: pointer;
       &:hover {
         font-weight: bold;

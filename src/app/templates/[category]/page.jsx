@@ -1,31 +1,76 @@
 'use client';
-import { filterItemList } from 'assets/data';
 import { Search } from 'components/Templates/Search';
-import { FilterAside } from 'components/Templates/Search/FilterAside';
 import { Showcase } from 'components/Templates/Showcase';
-import React from 'react';
-import styles from './templates.module.scss';
+import React, { Suspense } from 'react';
 import { useTemplates } from 'hooks/templates/useTemplates';
-const templates_category = ({ params: { category } }) => {
+import { useTemplateSortType } from 'store';
+import { useTemplateSearchText } from 'store';
+import './templates.scss';
+import { useTemplateTagList } from 'store';
+import { TagList } from 'components/Templates/TagList';
+import { SideCategory } from 'components/Templates/SideCategory';
+
+const templates = ({ params: { category } }) => {
   const { useGetTemplates, useGetCategory } = useTemplates();
 
   const { data: templatesList, isInitialLoading } = useGetTemplates(category);
-  const { data: categoryList } = useGetCategory();
+  const { data: categoryList, isInitialLoading: isCategory } = useGetCategory();
+
+  const SortType = useTemplateSortType();
+  const tagList = useTemplateTagList();
+  console.log(tagList);
   // if (isInitialLoading) {
   //   return <h1>Loading...</h1>;
   // }
   if (!templatesList || !categoryList) {
     return null;
   }
+  let filterDataList = [];
+  if (tagList.length > 0) {
+    filterDataList = templatesList
+      .filter((item) => {
+        if (tagList.filter((tag) => item.title.includes(tag.text)).length === tagList.length) {
+          return item;
+        } else {
+          return false;
+        }
+      })
+      .sort((a, b) => {
+        if (SortType === '최신순') {
+          return new Date(b.created_at) - new Date(a.created_at);
+        } else if (SortType === '조회순') {
+          return new Date(b.views) - new Date(a.views);
+        } else {
+          return new Date(b.sales) - new Date(a.sales);
+        }
+      });
+  } else {
+    filterDataList = templatesList.sort((a, b) => {
+      if (SortType === '최신순') {
+        return new Date(b.created_at) - new Date(a.created_at);
+      } else if (SortType === '조회순') {
+        return new Date(b.views) - new Date(a.views);
+      } else {
+        return new Date(b.sales) - new Date(a.sales);
+      }
+    });
+  }
+  // sort
+
   return (
-    <section className={styles.templats_container}>
-      <FilterAside filterItemList={filterItemList} />
-      <main>
-        <Search categoryList={categoryList} />
-        <h1>이건 </h1>
-        <Showcase templatesList={templatesList} categoryList={categoryList} />
-      </main>
-    </section>
+    <>
+      <section className="main_img_container">
+        <div className="img_box"></div>
+      </section>
+      <section className="templats_container">
+        <SideCategory />
+        <main>
+          <Search categoryList={categoryList} />
+          <TagList />
+          <Showcase templatesList={filterDataList} />
+        </main>
+      </section>
+    </>
   );
 };
-export default templates_category;
+export default templates;

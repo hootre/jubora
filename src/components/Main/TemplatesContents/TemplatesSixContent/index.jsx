@@ -23,13 +23,18 @@ export const TemplatesSixContent = ({
               <h2>{category.minPrice}원~ (1장기준)</h2>
             </div>
             <div className="check">
-              <Link href={`detail/${bannerList[currentItemNum].id}`}>이 디자인 구매하기</Link>
+              <Link
+                href={`/templates/detail/${bannerList[currentItemNum].id}`}
+                className="basic_button"
+              >
+                이 디자인 구매하기
+              </Link>
             </div>
           </div>
           <section>
             <div className="header">
               <h1>다양한 디자인을 구경해보세요</h1>
-              <Link href={`templates?category=${category.id}`}>전체보기</Link>
+              <Link href={`/templates`}>전체보기</Link>
             </div>
             <ul className={bannerType}>
               {bannerList.map((item, idx) => {

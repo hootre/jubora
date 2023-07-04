@@ -2,10 +2,10 @@
 import React from 'react';
 import { GoSearch } from 'react-icons/go';
 import { useTemplatesActions } from 'store';
-import './SearchInput.scss';
 import { useState } from 'react';
 import { v4 } from 'uuid';
 import { toast } from 'react-hot-toast';
+import { Search_input_box } from './style.jsx';
 export const SearchInput = () => {
   const [text, setText] = useState('');
   const { setTemplateSearchText, setAddTemplateTagList } = useTemplatesActions();
@@ -45,7 +45,7 @@ export const SearchInput = () => {
     setText(e.target.value);
   };
   return (
-    <div className="search_input_box">
+    <Search_input_box>
       <div className="search_input">
         <GoSearch className="icon" />
         <input
@@ -59,6 +59,6 @@ export const SearchInput = () => {
           검색
         </button>
       </div>
-    </div>
+    </Search_input_box>
   );
 };

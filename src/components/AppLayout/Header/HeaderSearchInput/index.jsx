@@ -2,12 +2,11 @@
 import React from 'react';
 import { GoSearch } from 'react-icons/go';
 import { useTemplatesActions } from 'store';
-import './HeaderSearchInput.scss';
 import { useState } from 'react';
 import { v4 } from 'uuid';
 import { toast } from 'react-hot-toast';
-import { redirect } from 'next/dist/server/api-utils';
 import { useRouter } from 'next/navigation';
+import { Search_input_box } from './style.jsx';
 export const HeaderSearchInput = () => {
   const [text, setText] = useState('');
   const { setTemplateSearchText, setAddTemplateTagList } = useTemplatesActions();
@@ -35,7 +34,7 @@ export const HeaderSearchInput = () => {
     setText(e.target.value);
   };
   return (
-    <div className="search">
+    <Search_input_box>
       <GoSearch className="icon" />
       <input
         type="text"
@@ -44,6 +43,6 @@ export const HeaderSearchInput = () => {
         onKeyDown={handleKeyDownEnter}
         onChange={handleSearchInput}
       />
-    </div>
+    </Search_input_box>
   );
 };

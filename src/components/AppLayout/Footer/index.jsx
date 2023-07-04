@@ -1,10 +1,10 @@
 import React from 'react';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
-import './Footer.scss';
+import { Footer_container } from './style.jsx';
 export const Footer = () => {
   return (
-    <footer className="footer_container">
+    <Footer_container>
       <div className="footer">
         <div className="footerContent">
           <nav>
@@ -48,6 +48,6 @@ export const Footer = () => {
           <p>평일 09:00~20:00 토/일 휴무</p>
         </div>
       </div>
-    </footer>
+    </Footer_container>
   );
 };

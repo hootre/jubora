@@ -1,10 +1,10 @@
 export const categoryList = [
-  { id: 0, title: '현수막', minPrice: '12,000' },
-  { id: 1, title: '배너', minPrice: '12,000' },
-  { id: 2, title: '명함', minPrice: '12,000' },
-  { id: 3, title: '포스터', minPrice: '12,000' },
-  { id: 4, title: '어깨띠/깃발', minPrice: '12,000' },
-  { id: 5, title: '교회용품', minPrice: '12,000' },
+  { id: 0, title: '현수막', table_name: 'banner_row', category_type: 'row' },
+  { id: 1, title: '배너', table_name: 'banner_col', category_type: 'col' },
+  { id: 2, title: '스티커/포스터', table_name: 'poster', category_type: 'square' },
+  { id: 3, title: '어깨띠/깃발', table_name: 'flag', category_type: 'square' },
+  { id: 4, title: '교회용품', table_name: 'church_items', category_type: 'square' },
+  { id: 5, title: '명함', table_name: 'business_card', category_type: 'square' },
 ];
 export const mainShowTemplatesList = [
   {

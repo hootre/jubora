@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './SortDropdown.scss';
 import { useTemplateSortType, useTemplatesActions } from 'store';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
+import { SortDropdown_container } from './style.jsx';
 export const SortDropdown = () => {
   const sort_list = ['최신순', '조회순', '판매순'];
   const [sortState, setSortState] = useState(false);
@@ -16,7 +16,7 @@ export const SortDropdown = () => {
     setSortState((prev) => !prev);
   };
   return (
-    <div className="SortDropdown_container">
+    <SortDropdown_container>
       <div className="sort_title" onClick={toggleSortState}>
         <button>{templateSortType}</button>
         {sortState ? <AiFillCaretUp className="icon" /> : <AiFillCaretDown className="icon" />}
@@ -30,6 +30,6 @@ export const SortDropdown = () => {
           );
         })}
       </ul>
-    </div>
+    </SortDropdown_container>
   );
 };

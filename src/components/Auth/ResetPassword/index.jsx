@@ -2,10 +2,10 @@
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import { AuthBox } from '../styles';
 import useResetPassword from 'hooks/useResetPassword';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Auth_container } from '../style';
 
 const ResetPassword = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const ResetPassword = () => {
   } = useForm();
 
   return (
-    <AuthBox>
+    <Auth_container>
       <div>
         <div>
           <div className="titleLogo">
@@ -70,7 +70,7 @@ const ResetPassword = () => {
           </form>
         </div>
       </div>
-    </AuthBox>
+    </Auth_container>
   );
 };
 

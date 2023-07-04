@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import './TagList.scss';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useTemplateTagList } from 'store';
 import { useTemplatesActions } from 'store';
+import { TagList_container } from './style';
 
 export const TagList = () => {
   const TagList = useTemplateTagList();
@@ -12,7 +12,7 @@ export const TagList = () => {
     setDeleteTemplateTagList(id);
   };
   return (
-    <section className="tagList_container">
+    <TagList_container className="tagList_container">
       <ul>
         {TagList &&
           TagList.map((item) => {
@@ -24,6 +24,6 @@ export const TagList = () => {
             );
           })}
       </ul>
-    </section>
+    </TagList_container>
   );
 };

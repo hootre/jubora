@@ -1,15 +1,15 @@
 import { SearchInput } from 'components/Templates/Search/SearchInput';
 import { Category } from './Category';
-import './Search.scss';
-export const Search = ({ categoryList }) => {
+import { Search_container } from './style';
+export const Search = () => {
   return (
-    <section className="search_container">
+    <Search_container>
       <div className="search_box">
         <div className="search">
-          <Category categoryList={categoryList} />
+          <Category />
           <SearchInput />
         </div>
       </div>
-    </section>
+    </Search_container>
   );
 };

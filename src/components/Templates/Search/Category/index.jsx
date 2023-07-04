@@ -1,23 +1,24 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import './Category.scss';
-export const Category = ({ categoryList }) => {
+import { categoryList } from 'assets/data';
+import { SelectTextBox_container } from './style.jsx';
+export const Category = () => {
   let pathName = usePathname().split('/')[2];
   if (!pathName) {
-    pathName = 'all';
+    pathName = 'banner_row';
   }
   const [isCategotyState, setIsCategotyState] = useState(false);
   const toggleCategotyState = () => {
     setIsCategotyState((prev) => !prev);
   };
-  const title = categoryList.filter((item) => pathName === item.category_table)[0]?.category_name;
+  const title = categoryList.filter((item) => pathName === item.table_name)[0]?.title;
   return (
-    <ul className="selectTextBox_container" onClick={toggleCategotyState}>
+    <SelectTextBox_container onClick={toggleCategotyState}>
       <div>
-        <span>{pathName === 'all' ? '전체' : title}</span>
+        <span>{title}</span>
         {isCategotyState ? (
           <AiFillCaretUp className="icon" />
         ) : (
@@ -26,17 +27,14 @@ export const Category = ({ categoryList }) => {
       </div>
       <div className={isCategotyState ? 'drop_down active' : 'drop_down'}>
         <ul>
-          <li key="0" className={pathName === 'all' && 'cur_category'}>
-            <Link href={`/templates`}>전체</Link>
-          </li>
           {categoryList &&
-            categoryList.map((item, idx) => (
-              <li key={item.id} className={pathName === item.category_table ? 'cur_category' : ''}>
-                <Link href={`/templates/${item.category_table}`}>{item.category_name}</Link>
+            categoryList.map((item) => (
+              <li key={item.id} className={pathName === item.table_name ? 'cur_category' : ''}>
+                <Link href={`/templates/${item.table_name}`}>{item.title}</Link>
               </li>
             ))}
         </ul>
       </div>
-    </ul>
+    </SelectTextBox_container>
   );
 };

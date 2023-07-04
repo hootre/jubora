@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import GlobalStyle from 'styles/globals';
 
 function Providers({ children }) {
   const [client] = useState(
@@ -19,6 +20,7 @@ function Providers({ children }) {
 
   return (
     <QueryClientProvider client={client}>
+      <GlobalStyle />
       <Toaster />
       {children}client
       <ReactQueryDevtools initialIsOpen={false} />

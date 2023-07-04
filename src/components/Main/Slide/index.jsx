@@ -2,7 +2,8 @@
 import useInterval from 'hooks/custom/useInterval';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import './Slide.scss';
+import { Slide_container } from './style';
+
 // 메인
 export const Slide = ({ slides }) => {
   // 기본 변수
@@ -34,7 +35,7 @@ export const Slide = ({ slides }) => {
   };
 
   return (
-    <section className="slide_container">
+    <Slide_container>
       <div className="slide">
         <div className="slide_list">
           <div className="slide_track">
@@ -84,6 +85,6 @@ export const Slide = ({ slides }) => {
           </div>
         </div>
       </div>
-    </section>
+    </Slide_container>
   );
 };

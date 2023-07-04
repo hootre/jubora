@@ -3,14 +3,13 @@ import { PC, Mobile } from 'hooks/custom/useMediaQuery';
 import React from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
-import { MainContainer } from './MainContainer';
 
 const AppLayout = ({ children }) => {
   return (
     <>
       <PC>
         <Header />
-        <MainContainer>{children}</MainContainer>
+        {children}
         <Footer />
       </PC>
       <Mobile>

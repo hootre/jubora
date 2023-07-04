@@ -3,13 +3,12 @@ import React, { useState } from 'react';
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
-import { GoSearch } from 'react-icons/go';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
 import { usePathname } from 'next/navigation';
 import { useUser } from 'hooks/auth/useUser';
-import './Header.scss';
 import { HeaderSearchInput } from './HeaderSearchInput';
+import { Header_container } from './style.jsx';
 export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
@@ -48,7 +47,7 @@ export const Header = () => {
   //   );
   // }
   return (
-    <header className="header_container">
+    <Header_container>
       <div id="header">
         <div id="navBox">
           <Link href="/">
@@ -56,7 +55,10 @@ export const Header = () => {
           </Link>
           <ul className="nav">
             <li>
-              <Link href="/templates" className={pathName === 'templates' ? 'active' : ''}>
+              <Link
+                href="/templates/banner_row"
+                className={pathName === 'templates' ? 'active' : ''}
+              >
                 현수막/배너
               </Link>
             </li>
@@ -129,6 +131,6 @@ export const Header = () => {
           </div>
         </div>
       </div>
-    </header>
+    </Header_container>
   );
 };

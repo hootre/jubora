@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import './MainLoading.scss';
+import { MainLoading_container } from './style.jsx';
 
 export const MainLoading = () => {
-  return <div className="mainLoading_container"></div>;
+  return <MainLoading_container></MainLoading_container>;
 };

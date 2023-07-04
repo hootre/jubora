@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import './SideCategory.scss';
 import { useTemplatesActions } from 'store';
 import { v4 } from 'uuid';
 import { useTemplateTagList } from 'store';
+import { SideCategory_container } from './style';
 const categoryList = [
   {
     id: 1,
@@ -23,16 +23,17 @@ export const SideCategory = () => {
     });
   };
   return (
-    <aside className="sideCategory_container">
+    <SideCategory_container className="sideCategory_container">
       {categoryList &&
         categoryList.map((category) => {
           return (
             <div key={category.id} className="category_box">
               <h2 className="category_title">{category.title}</h2>
               <ul>
-                {category.category.split(',').map((item) => {
+                {category.category.split(',').map((item, idx) => {
                   return (
                     <li
+                      key={idx}
                       className={`${TagList.includes(item) ? 'active' : ''}category_btn`}
                       onClick={() => handleCategory(item)}
                     >
@@ -44,6 +45,6 @@ export const SideCategory = () => {
             </div>
           );
         })}
-    </aside>
+    </SideCategory_container>
   );
 };

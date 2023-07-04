@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import './PaymentModal.scss';
-import { MdOutlineRemoveShoppingCart } from 'react-icons/md';
-import Link from 'next/link';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-hot-toast';
+import { PaymentModal_container } from './style.jsx';
 export const PaymentModal = ({ toggleIsPayment }) => {
-  const [currentAccount, setCurrentAccount] = useState();
+  const [currentAccount, setCurrentAccount] = useState(0);
   return (
-    <article className="paymentModal_container">
+    <PaymentModal_container>
       <div className="back" onClick={toggleIsPayment}></div>
       <div className="content_box">
         <div className="pay_box">
@@ -94,6 +92,6 @@ export const PaymentModal = ({ toggleIsPayment }) => {
           <button className="basic_button">문자전송</button>
         </div>
       </div>
-    </article>
+    </PaymentModal_container>
   );
 };

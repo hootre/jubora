@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import logo from 'assets/MainPage/logo.png';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,7 +6,7 @@ import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
 import { useUser } from 'hooks/auth/useUser';
 import { redirect } from 'next/navigation';
-import '.././Auth.scss';
+import { Auth_container } from '../style.jsx';
 
 const SignUp = () => {
   const { useCreateUser } = useUser();
@@ -23,12 +22,12 @@ const SignUp = () => {
     watch,
   } = useForm();
   return (
-    <section className="auth_container">
+    <Auth_container>
       <div>
         <div>
           <div className="titleLogo">
             <a href="#">
-              <Image src={logo} alt="img" />
+              <img src={logo} alt="img" />
             </a>
           </div>
           <form onSubmit={handleSubmit(createUser)}>
@@ -48,7 +47,7 @@ const SignUp = () => {
                 trigger('name');
               }}
             />
-            <p className={`point_text ${errors.email && 'active'}`}>{errors.email?.message} </p>
+            <p className={`point_text ${errors.email && 'active'}`}>{errors.email?.message}</p>
             <input
               id="email"
               placeholder="이메일"
@@ -170,7 +169,7 @@ const SignUp = () => {
           </form>
         </div>
       </div>
-    </section>
+    </Auth_container>
   );
 };
 

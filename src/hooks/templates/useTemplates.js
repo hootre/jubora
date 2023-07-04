@@ -16,7 +16,7 @@ const useGetCategory = () => {
   };
   return useQuery(gatherKeys.categoryList, handleGetCategory);
 };
-// 특정 제품 목록
+// 카테고리 제품 목록
 const useGetTemplates = (category) => {
   const handleGetTemplates = async () => {
     const { data, error } = await supabase_client
@@ -34,7 +34,38 @@ const useGetTemplates = (category) => {
   };
   return useQuery([category], handleGetTemplates);
 };
+// 특정 id 제품 상세
+const useGetOnlyTemplates = (id) => {
+  const handleGetOnlyTemplates = async () => {
+    const { data, error } = await supabase_client.from('products').select('*').eq('id', id);
 
+    if (error) {
+      console.error(`get only template ${error.message}`);
+      return;
+    }
+    if (data) {
+      return data;
+    }
+  };
+  return useQuery([`templates_${id}`], handleGetOnlyTemplates);
+};
+// 메인 제품목록 6개
+const useGetSixTemplates = (category) => {
+  const handleGetSixTemplates = async () => {
+    const { data, error } = await supabase_client
+      .from('products')
+      .select('*')
+      .eq('category', category);
+    if (error) {
+      console.error(`get six category template ${error.message}`);
+      return;
+    }
+    if (data) {
+      return data;
+    }
+  };
+  return useQuery([`six_${category}`], handleGetSixTemplates);
+};
 // Templates CREATE
 const useCreateTemplates = () => {
   const handleCreateTemplate = async ({ file, title, category, type, tag }) => {
@@ -144,6 +175,7 @@ export const useTemplates = () => {
   return {
     useGetCategory,
     useGetTemplates,
+    useGetSixTemplates,
     useCreateTemplates,
     useGetALLTemplates,
     useUpdateTemplates,

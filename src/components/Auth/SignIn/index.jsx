@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from 'hooks/auth/useUser';
 import { useEffect } from 'react';
-import '.././Auth.scss';
+import { Auth_container } from '../style.jsx';
 const SignIn = () => {
   // form
   const {
@@ -32,7 +32,7 @@ const SignIn = () => {
     console.log('구글 로그인 완료');
   }
   return (
-    <section className="auth_container">
+    <Auth_container>
       <div>
         <div>
           <div className="titleLogo">
@@ -147,7 +147,7 @@ const SignIn = () => {
           </form>
         </div>
       </div>
-    </section>
+    </Auth_container>
   );
 };
 

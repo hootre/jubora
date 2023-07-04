@@ -1,25 +1,29 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import 'react-tabs/style/react-tabs.css';
-import { categoryList, mainShowTemplatesList } from 'assets/data';
+import { categoryList } from 'assets/data';
 import { TemplatesSixContent } from './TemplatesSixContent';
-import './TemplatesContents.scss';
+import { useTemplates } from 'hooks/templates/useTemplates';
+import { TemplatesContents_container } from './style.jsx';
 
 export const TemplatesContents = () => {
   const [currentTabNum, setCurrentTabNum] = useState(0);
   const [currentItemNum, setCurrentItemNum] = useState([0, 0, 0, 0, 0, 0]);
-  const hendleCurrentTab = useCallback((index) => {
+  const { useGetSixTemplates } = useTemplates();
+  const { data, isLoading } = useGetSixTemplates(categoryList[currentTabNum].table_name);
+
+  const hendleCurrentTab = (index) => {
     setCurrentTabNum(index);
-  }, []);
-  const hendleCurrentItem = useCallback(
-    (num) => {
-      currentItemNum[currentTabNum] = num;
-      setCurrentItemNum([...currentItemNum]);
-    },
-    [currentItemNum, currentTabNum]
-  );
+  };
+  const hendleCurrentItem = (num) => {
+    currentItemNum[currentTabNum] = num;
+    setCurrentItemNum([...currentItemNum]);
+  };
+  if (isLoading) {
+    return null;
+  }
   return (
-    <section className="templatesContents_container">
+    <TemplatesContents_container>
       <ul className="nav">
         {categoryList.map((item, idx) => {
           return (
@@ -33,14 +37,16 @@ export const TemplatesContents = () => {
           );
         })}
       </ul>
-      {
+      {data.length === 0 ? (
+        <h1>6개 미만입니다</h1>
+      ) : (
         <TemplatesSixContent
-          templatesList={mainShowTemplatesList[currentTabNum]}
+          templatesList={data}
           category={categoryList[currentTabNum]}
           currentItemNum={currentItemNum[currentTabNum]}
           hendleCurrentItem={hendleCurrentItem}
         />
-      }
-    </section>
+      )}
+    </TemplatesContents_container>
   );
 };

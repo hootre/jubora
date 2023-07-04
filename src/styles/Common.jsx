@@ -1,0 +1,23 @@
+export const Common = {
+  colors: {
+    primary100: '#0070c0',
+    primary200: '#004e86',
+    primary300: '#6ec3ff',
+    accent100: '#ffc000',
+    accent200: '#b38600',
+    text100: '#333333',
+    text200: '#737373',
+    text300: '#c3c3c3',
+    bg100: '#f5f5f5',
+    bg200: '#e9e9e9',
+    bg300: '#ffffff',
+    bd100: '#e1e2e3',
+    black: '#181823',
+    white: '#fdfdfd',
+    red: '#f03c32',
+    await_text: '#e97777',
+    await_bd: '#ff9f9f',
+    success_text: '#2c9e4b',
+    success_bd: '#9ed763',
+  },
+};

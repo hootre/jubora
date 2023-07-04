@@ -1,76 +1,26 @@
 'use client';
+import { SideCategory } from 'components/Templates/SideCategory';
 import { Search } from 'components/Templates/Search';
 import { Showcase } from 'components/Templates/Showcase';
-import React, { Suspense } from 'react';
-import { useTemplates } from 'hooks/templates/useTemplates';
-import { useTemplateSortType } from 'store';
-import { useTemplateSearchText } from 'store';
-import './templates.scss';
-import { useTemplateTagList } from 'store';
 import { TagList } from 'components/Templates/TagList';
-import { SideCategory } from 'components/Templates/SideCategory';
+import './styles.jsx';
+import { Templates_category_container } from './styles.jsx';
 
 const templates = ({ params: { category } }) => {
-  const { useGetTemplates, useGetCategory } = useTemplates();
-
-  const { data: templatesList, isInitialLoading } = useGetTemplates(category);
-  const { data: categoryList, isInitialLoading: isCategory } = useGetCategory();
-
-  const SortType = useTemplateSortType();
-  const tagList = useTemplateTagList();
-  console.log(tagList);
-  // if (isInitialLoading) {
-  //   return <h1>Loading...</h1>;
-  // }
-  if (!templatesList || !categoryList) {
-    return null;
-  }
-  let filterDataList = [];
-  if (tagList.length > 0) {
-    filterDataList = templatesList
-      .filter((item) => {
-        if (tagList.filter((tag) => item.title.includes(tag.text)).length === tagList.length) {
-          return item;
-        } else {
-          return false;
-        }
-      })
-      .sort((a, b) => {
-        if (SortType === '최신순') {
-          return new Date(b.created_at) - new Date(a.created_at);
-        } else if (SortType === '조회순') {
-          return new Date(b.views) - new Date(a.views);
-        } else {
-          return new Date(b.sales) - new Date(a.sales);
-        }
-      });
-  } else {
-    filterDataList = templatesList.sort((a, b) => {
-      if (SortType === '최신순') {
-        return new Date(b.created_at) - new Date(a.created_at);
-      } else if (SortType === '조회순') {
-        return new Date(b.views) - new Date(a.views);
-      } else {
-        return new Date(b.sales) - new Date(a.sales);
-      }
-    });
-  }
-  // sort
-
   return (
-    <>
+    <Templates_category_container>
       <section className="main_img_container">
         <div className="img_box"></div>
       </section>
       <section className="templats_container">
         <SideCategory />
         <main>
-          <Search categoryList={categoryList} />
+          <Search />
           <TagList />
-          <Showcase templatesList={filterDataList} />
+          <Showcase category={category} />
         </main>
       </section>
-    </>
+    </Templates_category_container>
   );
 };
 export default templates;

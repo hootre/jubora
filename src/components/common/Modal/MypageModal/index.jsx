@@ -1,8 +1,9 @@
 import React from 'react';
-import './MyPageModal.scss';
+import { MyPageModal_container } from './style';
+
 export const MypageModal = ({ user, signOut, toggleIsMypage }) => {
   return (
-    <article className="myPageModal_container">
+    <MyPageModal_container>
       <div className="back" onClick={toggleIsMypage}></div>
       <div className="content_box">
         <div className="head">
@@ -17,6 +18,6 @@ export const MypageModal = ({ user, signOut, toggleIsMypage }) => {
           </ul>
         </div>
       </div>
-    </article>
+    </MyPageModal_container>
   );
 };

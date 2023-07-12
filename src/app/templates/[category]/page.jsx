@@ -8,7 +8,7 @@ import { Templates_category_container } from './styles.jsx';
 
 const templates = ({ params: { category } }) => {
   return (
-    <Templates_category_container>
+    <Templates_category_container className="container">
       <section className="main_img_container">
         <div className="img_box"></div>
       </section>

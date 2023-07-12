@@ -7,18 +7,18 @@ export const Templates_category_container = styled.div`
     justify-content: center;
     padding: 10px 0;
     .img_box {
-      width: 1400px;
+      width: 1200px;
       height: 150px;
       border: 1px solid #000;
     }
   }
 
   .templats_container {
-    display: flex;
-    justify-content: center;
+    position: relative;
+    background: #fff;
     min-height: calc(100vh - 249px);
     > main {
-      width: 1400px;
+      width: 1200px;
     }
   }
 `;

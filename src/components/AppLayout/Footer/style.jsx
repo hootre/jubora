@@ -6,9 +6,7 @@ export const Footer_container = styled.footer`
   color: ${Common.colors.text200};
   font-size: 12px;
   .footer {
-    width: 1400px;
-    margin: 0 auto;
-    padding: 40px 70px;
+    padding: 40px 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;

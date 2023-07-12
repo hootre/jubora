@@ -30,9 +30,7 @@ export const Slide_container = styled.section`
           }
           .frame {
             position: absolute;
-            width: 1400px;
             height: 400px;
-            margin: 0 auto;
             left: 50%;
             transform: translateX(-50%);
             .title {

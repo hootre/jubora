@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteImage, uploadImage } from 'hooks/imageUpload/uploader';
+import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
@@ -37,7 +37,11 @@ const useGetTemplates = (category) => {
 // 특정 id 제품 상세
 const useGetOnlyTemplates = (id) => {
   const handleGetOnlyTemplates = async () => {
-    const { data, error } = await supabase_client.from('products').select('*').eq('id', id);
+    const { data, error } = await supabase_client
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
 
     if (error) {
       console.error(`get only template ${error.message}`);
@@ -175,6 +179,7 @@ export const useTemplates = () => {
   return {
     useGetCategory,
     useGetTemplates,
+    useGetOnlyTemplates,
     useGetSixTemplates,
     useCreateTemplates,
     useGetALLTemplates,

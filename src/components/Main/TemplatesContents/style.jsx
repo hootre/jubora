@@ -4,8 +4,6 @@ import { Common } from 'styles/Common';
 export const TemplatesContents_container = styled.section`
   position: relative;
   padding: 50px 0;
-  width: 1400px;
-  margin: 0 auto;
   overflow: hidden;
   .nav {
     display: flex;

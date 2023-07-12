@@ -4,7 +4,7 @@ import { Notice_container } from './style';
 export const Notice = ({ noticeList }) => {
   return (
     <Notice_container>
-      <div>
+      <div className="container">
         <div className="title">
           <h1>Notice</h1>
         </div>

@@ -14,7 +14,6 @@ const style = css`
     list-style: none;
     font-size: 15px;
     box-sizing: border-box;
-    overflow-x: hidden;
   }
   button {
     border: none;

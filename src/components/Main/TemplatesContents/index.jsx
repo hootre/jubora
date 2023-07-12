@@ -23,7 +23,7 @@ export const TemplatesContents = () => {
     return null;
   }
   return (
-    <TemplatesContents_container>
+    <TemplatesContents_container className="container">
       <ul className="nav">
         {categoryList.map((item, idx) => {
           return (

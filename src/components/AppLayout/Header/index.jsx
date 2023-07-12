@@ -48,7 +48,7 @@ export const Header = () => {
   // }
   return (
     <Header_container>
-      <div id="header">
+      <div id="header" className="container">
         <div id="navBox">
           <Link href="/">
             <Image src={logo} alt="img" />
@@ -98,7 +98,7 @@ export const Header = () => {
                 </li>
               </ul>
             )}
-            {user && (
+            {user?.id && (
               <ul>
                 <li className="item">
                   <a onClick={toggleIsPayment}>결제정보</a>
@@ -115,7 +115,7 @@ export const Header = () => {
                 </li>
               </ul>
             )}
-            {!user && (
+            {!user?.id && (
               <ul>
                 <li className="item">
                   <Link href="/auth/signin">로그인</Link>

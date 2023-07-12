@@ -36,7 +36,7 @@ export const Slide = ({ slides }) => {
 
   return (
     <Slide_container>
-      <div className="slide">
+      <div className="slide ">
         <div className="slide_list">
           <div className="slide_track">
             {slides &&
@@ -49,7 +49,7 @@ export const Slide = ({ slides }) => {
                       transition: 'all 0.5s',
                     }}
                   >
-                    <div className="frame">
+                    <div className="frame container">
                       <div className="title">
                         <ul className="icon_list">
                           <li>

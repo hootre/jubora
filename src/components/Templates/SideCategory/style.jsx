@@ -3,7 +3,8 @@ import { Common } from 'styles/Common';
 
 export const SideCategory_container = styled.aside`
   position: absolute;
-  left: 10px;
+  top: 0;
+  left: -300px;
   width: 250px;
   padding: 15px;
   .category_title {

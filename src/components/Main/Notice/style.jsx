@@ -5,8 +5,6 @@ export const Notice_container = styled.section`
   padding: 50px 0;
   background: ${Common.colors.bg100};
   > div {
-    width: 1400px;
-    margin: 0 auto;
     position: relative;
     .title {
       position: absolute;

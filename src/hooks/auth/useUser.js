@@ -12,14 +12,15 @@ const useIsUser = () => {
 
 // cookie에서 jwt 가져오기
 const useGetSession = async () => {
-    const {
-      data: { session },error
-    } = await supabase_client.auth.getSession();
-    if(error){
-      console.error(`session Error : ${error.message}`);
-      return;
-    }
-    return session;
+  const {
+    data: { session },
+    error,
+  } = await supabase_client.auth.getSession();
+  if (error) {
+    console.error(`session Error : ${error.message}`);
+    return;
+  }
+  return session;
 };
 // session 확인하여 유저정보 출력
 const useGetUserInfo = () => {
@@ -38,7 +39,7 @@ const useGetUserInfo = () => {
       }
       return profiles;
     } else {
-      return;
+      return [];
     }
   };
   return useQuery(gatherKeys.current_user, handleGetUser);
@@ -63,7 +64,7 @@ const useLogOut = () => {
 // 회원가입
 const useCreateUser = () => {
   const handleCreateUser = async ({ name, email, password, privacy_check }) => {
-    const { data:auth, error } = await supabase.auth.signUp({
+    const { data: auth, error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -80,11 +81,11 @@ const useCreateUser = () => {
       if (insertError) {
         const { error } = await supabase_client.auth.admin.deleteUser(auth.user.id);
         if (error) {
-           console.error(`유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`);
-           return;
+          console.error(`유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`);
+          return;
         }
-         console.error(`유저 정보 기입 오류 : ${insertError.message}`);
-         return;
+        console.error(`유저 정보 기입 오류 : ${insertError.message}`);
+        return;
       } else {
         toast.success('회원가입에 성공하였습니다!');
       }
@@ -95,16 +96,16 @@ const useCreateUser = () => {
       switch (error.message) {
         case 'Invalid login credentials':
           toast.error('이미 사용중인 이메일입니다.');
-           console.error(`유저 회원가입 오류 : ${error.message}`);
-           break;
+          console.error(`유저 회원가입 오류 : ${error.message}`);
+          break;
         case 'User already registered':
           toast.error('이미 사용중인 이메일입니다.');
-           console.error(`유저 회원가입 오류 : ${error.message}`);
-           break;
+          console.error(`유저 회원가입 오류 : ${error.message}`);
+          break;
         default:
           toast.error(error.message);
-           console.error(`유저 회원가입 오류 : ${error.message}`);
-           break;
+          console.error(`유저 회원가입 오류 : ${error.message}`);
+          break;
       }
     }
   };
@@ -121,11 +122,11 @@ const useSignIn = () => {
       switch (error.message) {
         case 'Invalid login credentials':
           toast.error('로그인정보가 올바르지 않습니다.');
-           console.error('로그인정보가 올바르지 않습니다.');
-           break;
+          console.error('로그인정보가 올바르지 않습니다.');
+          break;
         default:
-        toast.error('로그인 오류입니다');
-           console.error(`로그인 오류 : ${error.message}`);
+          toast.error('로그인 오류입니다');
+          console.error(`로그인 오류 : ${error.message}`);
       }
     } else {
       toast.success('로그인 성공하였습니다!');

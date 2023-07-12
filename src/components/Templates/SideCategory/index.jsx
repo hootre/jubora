@@ -23,7 +23,7 @@ export const SideCategory = () => {
     });
   };
   return (
-    <SideCategory_container className="sideCategory_container">
+    <SideCategory_container>
       {categoryList &&
         categoryList.map((category) => {
           return (

@@ -9,8 +9,6 @@ export const Header_container = styled.header`
   backdrop-filter: blur(30px);
   background-color: ${Common.colors.bg300};
   #header {
-    width: 1400px;
-    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;

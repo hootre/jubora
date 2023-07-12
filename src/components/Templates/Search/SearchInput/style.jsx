@@ -4,9 +4,12 @@ import { Common } from 'styles/Common';
 export const Search_input_box = styled.div`
   flex: auto;
   height: 100%;
+  flex: 1 1 0px;
   .search_input {
     position: relative;
-    width: 1185px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
     .icon {
       position: absolute;
       cursor: pointer;
@@ -25,11 +28,11 @@ export const Search_input_box = styled.div`
       padding: 12px 18px 12px 60px;
       height: 50px;
       line-height: 50px;
+      flex: 1 1 0px;
     }
     .submit {
-      position: absolute;
-      height: 100%;
-      width: 60px;
+      height: 50px;
+      flex: 0 0 60px;
       padding: 10px;
       background: ${Common.colors.black};
       color: #fff;

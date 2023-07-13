@@ -1,9 +1,10 @@
 import { sha1 } from 'crypto-hash';
 
-export const uploadImage = async (file) => {
+export const uploadFile = async (file) => {
   const data = new FormData();
+
   data.append('file', file);
-  data.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_TEMPLATES);
+  data.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_ORDER);
   return await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/upload', {
     method: 'POST',
     body: data,
@@ -12,7 +13,7 @@ export const uploadImage = async (file) => {
     .then((data) => data);
 };
 
-export const deleteImage = async (public_id) => {
+export const deleteFile = async (public_id) => {
   const data = new FormData();
   const timestamp = new Date().getTime();
   const string = `public_id=${public_id}&timestamp=${timestamp}${process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET}`;

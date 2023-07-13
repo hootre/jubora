@@ -34,7 +34,7 @@ const PriceCalculate = (row, col, count) => {
     } else if (col <= 180) {
       price = tempCol === 1 ? 33000 : tempCol >= 3 ? tempCol * 10000 + 40000 : 40000;
     } else {
-      price = tempRow === 1 ? 40000 : tempRow >= 3 ? tempRow * 12000 + 50000 : 50000;
+      price = tempCol === 1 ? 40000 : tempCol >= 3 ? tempCol * 12000 + 50000 : 50000;
     }
   }
   return Number(price) * Number(count);

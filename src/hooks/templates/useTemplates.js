@@ -154,9 +154,9 @@ const useUpdateTemplates = () => {
 };
 // Templates DELETE
 const useDeleteTemplates = () => {
-  const handleDeleteTemplate = async ({ id, category, public_id }) => {
+  const handleDeleteTemplate = async ({ id, public_id }) => {
     await deleteImage(public_id).then(async () => {
-      const { data, error } = await supabase_client.from(category).delete().eq('id', id);
+      const { data, error } = await supabase_client.from('products').delete().eq('id', id);
 
       if (error) {
         toast.error(error.message);

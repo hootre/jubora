@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import 'react-awesome-button/dist/styles.css';
 import './styles.jsx';
 import { useTemplates } from 'hooks/templates/useTemplates';
@@ -10,6 +10,7 @@ import { useUser } from 'hooks/auth/useUser.js';
 import DaumPost from 'utils/kakaoMap/kakaoMap.jsx';
 import PriceCalculate from 'utils/PriceCalculate.jsx';
 import { toast } from 'react-hot-toast';
+import { useOrder } from 'hooks/order/useOrder.js';
 
 const detail = ({ params: { id } }) => {
   // 현재 id category 가져오기
@@ -22,14 +23,11 @@ const detail = ({ params: { id } }) => {
 
   // kakaoMap Modal
   const [addressObj, setAddressObj] = useState();
-  const handleAddressChange = () => {
-    setValue('address_1', addressObj.areaAddress);
-    setValue('address_2', addressObj.townAddress);
-  };
   // form 데이터 관리
   const {
     handleSubmit,
     formState: { isSubmitting, errors },
+    reset,
     watch,
     setValue,
     register,
@@ -86,11 +84,23 @@ const detail = ({ params: { id } }) => {
   // 로그인 로그아웃 상태
   useEffect(() => {
     if (user) {
+      setValue('isUser', true);
       setValue('name', user.name);
     }
-  }, [user]);
+
+    setValue('isUser', false);
+    setValue('price', price);
+    setValue('products_id', datail_data?.id);
+    setValue('address_1', addressObj?.areaAddress);
+    setValue('address_2', addressObj?.townAddress);
+  }, [addressObj, price, datail_data, user]);
+
+  const { useCreateOrder } = useOrder();
+  const { mutate: createOrder } = useCreateOrder();
   const onSubmit = (data) => {
     console.log(data);
+    createOrder(data);
+    reset();
   };
   if (isLoading || userLoading) {
     return <h1>Loading</h1>;
@@ -118,6 +128,7 @@ const detail = ({ params: { id } }) => {
                     variant="outlined"
                     type="text"
                     size="small"
+                    required
                     onKeyDown={(e) => checkKeyDown(e)}
                     {...register('name')}
                   />
@@ -126,12 +137,14 @@ const detail = ({ params: { id } }) => {
                   <h2>비밀번호</h2>
                   <TextField
                     fullWidth
-                    label="비밀번호"
+                    label="비밀번호(4자리)"
                     variant="outlined"
                     type="password"
                     size="small"
+                    required
+                    inputProps={{ maxLength: 4 }}
                     onKeyDown={(e) => checkKeyDown(e)}
-                    {...register('check_num')}
+                    {...register('password')}
                   />
                 </div>
               </div>
@@ -144,6 +157,7 @@ const detail = ({ params: { id } }) => {
                   row
                   aria-labelledby="demo-row-radio-buttons-group-label"
                   name="row-radio-buttons-group"
+                  required
                   onKeyDown={(e) => checkKeyDown(e)}
                   {...register('in_out_type')}
                 >
@@ -158,6 +172,7 @@ const detail = ({ params: { id } }) => {
                   defaultValue={'재단(압정사용시)'}
                   fullWidth
                   size="small"
+                  required
                   onKeyDown={(e) => checkKeyDown(e)}
                   {...register('corner_type')}
                 >
@@ -184,8 +199,8 @@ const detail = ({ params: { id } }) => {
                       variant="outlined"
                       type="number"
                       size="small"
+                      required
                       defaultValue={180}
-                      value={watch('row')}
                       onKeyDown={handleKeydown}
                       error={errors.row}
                       helperText={errors.row && '1~999'}
@@ -203,8 +218,8 @@ const detail = ({ params: { id } }) => {
                       variant="outlined"
                       type="number"
                       size="small"
+                      required
                       defaultValue={70}
-                      value={watch('col')}
                       onKeyDown={handleKeydown}
                       error={errors.col}
                       helperText={errors.col && '1~999'}
@@ -221,8 +236,8 @@ const detail = ({ params: { id } }) => {
                       type="number"
                       variant="outlined"
                       size="small"
+                      required
                       defaultValue={1}
-                      value={watch('count')}
                       onKeyDown={handleKeydown}
                       error={errors.count}
                       helperText={errors.count && '1~99'}
@@ -242,7 +257,9 @@ const detail = ({ params: { id } }) => {
                   variant="outlined"
                   type="text"
                   size="small"
+                  required
                   placeholder="ex)01012345678"
+                  inputProps={{ maxLength: 11 }}
                   onKeyDown={(e) => checkKeyDown(e)}
                   error={errors.phone}
                   helperText={errors.phone && '전화번호 형식에 맞춰라'}
@@ -261,7 +278,6 @@ const detail = ({ params: { id } }) => {
                       variant="outlined"
                       type="text"
                       onKeyDown={(e) => checkKeyDown(e)}
-                      onChange={handleAddressChange}
                       value={addressObj?.areaAddress || ''}
                       size="small"
                       {...register('address_1')}
@@ -273,7 +289,6 @@ const detail = ({ params: { id } }) => {
                       variant="outlined"
                       type="text"
                       onKeyDown={(e) => checkKeyDown(e)}
-                      onChange={handleAddressChange}
                       value={addressObj?.townAddress || ''}
                       size="small"
                       {...register('address_2')}

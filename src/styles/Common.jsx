@@ -13,7 +13,7 @@ export const Common = {
     bg200: '#e9e9e9',
     bg300: '#ffffff',
     bd100: '#e1e2e3',
-    black: '#181823',
+    black: '#25252c',
     white: '#fdfdfd',
     red: '#f03c32',
     await_text: '#e97777',

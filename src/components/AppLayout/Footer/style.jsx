@@ -2,6 +2,10 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const Footer_container = styled.footer`
+  position: absolute;
+  width: 100%;
+  height: 200px;
+  bottom: -200px;
   background-color: ${Common.colors.black};
   color: ${Common.colors.text200};
   font-size: 12px;

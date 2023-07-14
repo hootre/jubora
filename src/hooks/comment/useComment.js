@@ -3,103 +3,58 @@ import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 import { deleteFile, uploadFile } from 'utils/fileUpload/fileUpload';
-import { redirect } from 'next/navigation';
-
-// 특정 id 제품 상세
-const useGetOnlyOrder = (id) => {
-  const handleGetOnlyOrder = async () => {
-    const { data, error } = await supabase_client.from('order').select('*').eq('id', id).single();
-
-    if (error) {
-      console.error(`get only order ${error.message}`);
-      return;
-    }
-    if (data) {
-      return data;
-    }
-  };
-  return useQuery([`order_${id}`], handleGetOnlyOrder);
-};
 
 // ORDER 생성
-const useCreateOrder = () => {
-  const handleCreateOrder = async ({
-    isUser,
-    state,
-    title,
-    name,
-    password,
-    phone,
-    row,
-    col,
-    count,
-    address_1,
-    address_2,
-    address_3,
+const useCreateComment = () => {
+  const handleCreateComment = async ({
+    from_table,
+    from_table_id,
+    from_comment,
+    writer,
     contents,
-    in_out_type,
-    corner_type,
-    image,
-    price,
-    file,
   }) => {
-    let fileData = null;
-
-    if (file.length) {
-      fileData = await uploadFile(file[0]);
-    }
-    const { data, error } = await supabase_client.from('order').insert({
-      isUser,
-      state,
-      title,
-      name,
-      phone,
-      row,
-      col,
-      count,
-      address_1,
-      address_2,
-      address_3,
+    const { data, error } = await supabase_client.from('comment').insert({
+      from_table,
+      from_table_id,
+      from_comment,
+      writer,
       contents,
-      in_out_type,
-      corner_type,
-      password,
-      image,
-      price,
-      file: fileData?.url,
-      public_id: fileData?.public_id,
     });
     if (error) {
       toast.error(error.message);
-      console.error(`ORDER CREATE ERROR : ${error.message}`);
+      console.error(`Comment CREATE ERROR : ${error.message}`);
       return;
     } else {
-      toast.success('ORDER CREATE SUCCESS');
+      toast.success('Comment CREATE SUCCESS');
     }
     return data;
   };
 
   const client = useQueryClient();
-  return useMutation(handleCreateOrder, {
+  return useMutation(handleCreateComment, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.order);
+      await client.invalidateQueries(gatherKeys.comment);
     },
   });
 };
 // ORDER 목록
-const useGetOrder = () => {
-  const handleGetOrder = async () => {
+const useGetComment = (from_table, from_table_id) => {
+  const handleGetComment = async () => {
+    console.log(from_table);
     const { data, error } = await supabase_client
-      .from('order')
-      .select('id,title,image,name, created_at');
+      .from('comment')
+      .select('*')
+      .eq('from_table', from_table)
+      .eq('from_table_id', from_table_id);
+
     if (error) {
       toast.error(error.message);
-      console.error(`ORDER REDE ERROR : ${error.message}`);
+      console.error(`comment REDE ERROR : ${error.message}`);
       return [];
     }
     return data;
   };
-  return useQuery(gatherKeys.order, handleGetOrder);
+  return useQuery([`comment_${from_table_id}`], handleGetComment);
 };
 // ORDER 수정
 const useUpdateOrder = () => {
@@ -190,12 +145,9 @@ const useDeleteOrder = () => {
     },
   });
 };
-export const useOrder = () => {
+export const useComment = () => {
   return {
-    useGetOnlyOrder,
-    useCreateOrder,
-    useGetOrder,
-    useUpdateOrder,
-    useDeleteOrder,
+    useCreateComment,
+    useGetComment,
   };
 };

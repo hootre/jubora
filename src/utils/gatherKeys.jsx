@@ -2,6 +2,7 @@ export const gatherKeys = {
   current_user: ['current_user'],
   template: ['template'],
   order: ['order'],
+  comment: ['comment'],
   categoryList: ['categoryList'],
   //   lists: () => [...todoKeys.all, 'list'],
   //   list: (filters) => [...todoKeys.lists(), { filters }],

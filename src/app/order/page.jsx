@@ -1,21 +1,39 @@
 'use client';
-import React from 'react';
-import { Board } from 'components/Board';
-
-import { orderDataList } from 'assets/data';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
+import * as React from 'react';
+import { Order_container } from './styles';
 import { useOrder } from 'hooks/order/useOrder';
-const headerList = ['번호', '제목', '글쓴이', '날짜'];
+import { BoardCard } from 'components/common/Board/BoardCard';
+import { BoardCardHeader } from 'components/common/Board/BoardCardHeader';
+
 const order = () => {
   const { useGetOrder } = useOrder();
   const { data, isLoading } = useGetOrder();
   if (isLoading) {
     return <h1>Loading</h1>;
   }
-  console.log(data);
   return (
-    <section className="page_container">
-      <Board boardDataList={orderDataList} headerList={headerList} />
-    </section>
+    <Order_container>
+      <h1 className="order_title">
+        ORDER <span>주문접수 내역입니다.</span>
+      </h1>
+      <ul>
+        <BoardCardHeader />
+        {data
+          .sort((a, b) => b.id - a.id)
+          ?.map((item) => (
+            <BoardCard key={item.id} item={item} />
+          ))}
+      </ul>
+    </Order_container>
   );
 };
 export default order;

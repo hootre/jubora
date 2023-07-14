@@ -11,15 +11,19 @@ import DaumPost from 'utils/kakaoMap/kakaoMap.jsx';
 import PriceCalculate from 'utils/PriceCalculate.jsx';
 import { toast } from 'react-hot-toast';
 import { useOrder } from 'hooks/order/useOrder.js';
+import { useRouter } from 'next/navigation.js';
 
 const detail = ({ params: { id } }) => {
   // 현재 id category 가져오기
   const { useGetOnlyTemplates } = useTemplates();
-  const { data: datail_data, isLoading } = useGetOnlyTemplates(id);
+  const { data: detail_data, isLoading } = useGetOnlyTemplates(id);
 
   // user상태관리
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
+  // Order 생성
+  const { useCreateOrder } = useOrder();
+  const { mutate: createOrder } = useCreateOrder();
 
   // kakaoMap Modal
   const [addressObj, setAddressObj] = useState();
@@ -27,7 +31,6 @@ const detail = ({ params: { id } }) => {
   const {
     handleSubmit,
     formState: { isSubmitting, errors },
-    reset,
     watch,
     setValue,
     register,
@@ -75,7 +78,6 @@ const detail = ({ params: { id } }) => {
       toast.error('1개 이상을 선택해주세요');
     }
     setPrice(PriceCalculate(Number(watch('row')), Number(watch('col')), Number(watch('count'))));
-    console.log(watch('row'));
   };
 
   // 가격 상태 관리
@@ -87,35 +89,36 @@ const detail = ({ params: { id } }) => {
       setValue('isUser', true);
       setValue('name', user.name);
     }
-
+    // 기본 값
     setValue('isUser', false);
+    setValue('state', '확인전');
     setValue('price', price);
-    setValue('products_id', datail_data?.id);
+    setValue('title', detail_data?.title);
+    setValue('image', detail_data?.file);
+    setValue('products_id', detail_data?.id);
     setValue('address_1', addressObj?.areaAddress);
     setValue('address_2', addressObj?.townAddress);
-  }, [addressObj, price, datail_data, user]);
+  }, [addressObj, price, detail_data, user]);
 
-  const { useCreateOrder } = useOrder();
-  const { mutate: createOrder } = useCreateOrder();
+  const router = useRouter();
   const onSubmit = (data) => {
     console.log(data);
     createOrder(data);
-    reset();
+    router.push('/order');
   };
   if (isLoading || userLoading) {
     return <h1>Loading</h1>;
   }
-
   return (
     <Detail_container>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="productImgBox">
-          <img src={datail_data.file} alt="" />
+          <img src={detail_data.file} alt="" />
         </div>
         <div className="productContent">
           <div className="titleBox">
-            <span className="subTitle">현수막/배너</span>
-            <h2 className="title">{datail_data.title}</h2>
+            <span className="subTitle">{detail_data.category_name}</span>
+            <h2 className="title">{detail_data.title}</h2>
           </div>
           <div className="contentBox">
             {!user?.id && (

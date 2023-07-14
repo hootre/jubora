@@ -15,6 +15,10 @@ const style = css`
     font-size: 15px;
     box-sizing: border-box;
   }
+  body {
+    position: relative;
+    min-height: 737px;
+  }
   button {
     border: none;
     background: none;

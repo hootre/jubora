@@ -1,5 +1,5 @@
 'use client';
-import logo from 'assets/MainPage/logo.png';
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
@@ -27,7 +27,7 @@ const SignUp = () => {
         <div>
           <div className="titleLogo">
             <a href="#">
-              <img src={logo} alt="img" />
+              <img src="assets/MainPage/logo.png" alt="img" />
             </a>
           </div>
           <form onSubmit={handleSubmit(createUser)}>

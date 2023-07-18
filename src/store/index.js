@@ -7,6 +7,7 @@ const useTemplatesStore = create((set) => ({
   templateSearchText: '',
   // 제품 리스트 필터 on/off
   isCurrentFilter: false,
+
   actions: {
     // 삭제
     setDeleteTemplateTagList: (id) => {

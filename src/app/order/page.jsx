@@ -1,13 +1,4 @@
 'use client';
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
 import * as React from 'react';
 import { Order_container } from './styles';
 import { useOrder } from 'hooks/order/useOrder';
@@ -30,7 +21,7 @@ const order = () => {
         {data
           .sort((a, b) => b.id - a.id)
           ?.map((item) => (
-            <BoardCard key={item.id} item={item} />
+            <BoardCard key={item.id} item={item} table={'order'} modal />
           ))}
       </ul>
     </Order_container>

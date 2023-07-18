@@ -39,7 +39,7 @@ export const Header_container = styled.header`
           width: 110px;
           text-align: center;
           > a {
-            color: ${Common.colors.text200};
+            color: ${Common.colors.black};
             font-size: 14px;
             font-weight: 500;
             line-height: 1.63;
@@ -49,7 +49,7 @@ export const Header_container = styled.header`
             &:hover {
               font-weight: bold;
               text-decoration: none;
-              color: ${Common.colors.text100};
+              color: ${Common.colors.black};
             }
             &:after {
               opacity: 0;
@@ -89,7 +89,7 @@ export const Header_container = styled.header`
               font-stretch: normal;
               font-style: normal;
               letter-spacing: normal;
-              color: ${Common.colors.text200};
+              color: ${Common.colors.black};
             }
           }
         }

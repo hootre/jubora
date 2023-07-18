@@ -30,7 +30,6 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
     setValue('from_comment', from_comment);
   }, [user]);
   const onSubmit = (data) => {
-    console.log(data);
     createComment(data);
   };
   if (userLoading) {

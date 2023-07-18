@@ -19,18 +19,9 @@ const SignIn = () => {
   } = useForm();
   //auth
   const { useSignIn, useSignInGoogle } = useUser();
-  const { mutate: basicLogin, isLoading, isSuccess } = useSignIn();
-  const { mutate: googleLogin, isSuccess: googleSuccess } = useSignInGoogle();
+  const { mutate: basicLogin, isLoading } = useSignIn();
+  const { mutate: googleLogin } = useSignInGoogle();
   const router = useRouter();
-  useEffect(() => {
-    if (isSuccess) {
-      router.push('/');
-    }
-  }, [isSuccess]);
-
-  if (googleSuccess) {
-    console.log('구글 로그인 완료');
-  }
   return (
     <Auth_container>
       <div>
@@ -40,7 +31,17 @@ const SignIn = () => {
               <Image src={logo} alt="" />
             </a>
           </div>
-          <form onSubmit={handleSubmit(basicLogin)}>
+          <form
+            onSubmit={handleSubmit((data) =>
+              basicLogin(data, {
+                onSuccess: ({ user }) => {
+                  if (user) {
+                    router.push('/');
+                  }
+                },
+              })
+            )}
+          >
             <div className="titleLabel">
               <label htmlFor="titleLabel">로그인</label>
             </div>

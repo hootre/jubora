@@ -4,7 +4,7 @@ import { Common } from 'styles/Common';
 export const BoardCard_container = styled.div`
   display: flex;
   justify-content: center;
-  > a {
+  > div {
     width: 1200px;
     display: flex;
     align-items: center;
@@ -15,6 +15,11 @@ export const BoardCard_container = styled.div`
     transition: all 0.2s ease;
     &:hover {
       background: ${Common.colors.bg100};
+      .id,
+      .name,
+      .date {
+        color: ${Common.colors.black};
+      }
       .title {
         color: ${Common.colors.primary100};
       }

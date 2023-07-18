@@ -26,7 +26,6 @@ const style = css`
   }
   a {
     text-decoration: none;
-
     color: ${Common.colors.white};
   }
   input {

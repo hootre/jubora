@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from 'lib/supabase';
 import supabase_client from 'lib/supabase-browser';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 
@@ -55,8 +56,10 @@ const useLogOut = () => {
     }
   };
   const client = useQueryClient();
+  const router = useRouter();
   return useMutation(handleLogout, {
     onSuccess: () => {
+      router.refresh();
       client.removeQueries(gatherKeys.current_user);
     },
   });
@@ -114,7 +117,7 @@ const useCreateUser = () => {
 // 유저 로그인
 const useSignIn = () => {
   const handleLogin = async ({ email, password }) => {
-    const { error } = await supabase_client.auth.signInWithPassword({
+    const { data, error } = await supabase_client.auth.signInWithPassword({
       email,
       password,
     });
@@ -128,8 +131,10 @@ const useSignIn = () => {
           toast.error('로그인 오류입니다');
           console.error(`로그인 오류 : ${error.message}`);
       }
+      return error;
     } else {
       toast.success('로그인 성공하였습니다!');
+      return data;
     }
   };
 

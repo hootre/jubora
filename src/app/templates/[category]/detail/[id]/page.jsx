@@ -86,11 +86,10 @@ const detail = ({ params: { id } }) => {
   // 로그인 로그아웃 상태
   useEffect(() => {
     if (user) {
-      setValue('isUser', true);
+      setValue('writer_user_email', user.email);
       setValue('name', user.name);
     }
     // 기본 값
-    setValue('isUser', false);
     setValue('state', '확인전');
     setValue('price', price);
     setValue('title', detail_data?.title);

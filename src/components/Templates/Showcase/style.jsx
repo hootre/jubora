@@ -70,7 +70,7 @@ export const Showcase_container = styled.section`
     overflow: overlay;
     ul {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       -webkit-box-align: center;
       align-items: center;

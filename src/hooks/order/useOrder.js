@@ -24,7 +24,7 @@ const useGetOnlyOrder = (id) => {
 // ORDER 생성
 const useCreateOrder = () => {
   const handleCreateOrder = async ({
-    isUser,
+    writer_user_email,
     state,
     title,
     name,
@@ -49,7 +49,7 @@ const useCreateOrder = () => {
       fileData = await uploadFile(file[0]);
     }
     const { data, error } = await supabase_client.from('order').insert({
-      isUser,
+      writer_user_email,
       state,
       title,
       name,
@@ -91,7 +91,7 @@ const useGetOrder = () => {
   const handleGetOrder = async () => {
     const { data, error } = await supabase_client
       .from('order')
-      .select('id,title,image,name, created_at');
+      .select('id,writer_user_email,title,name, created_at');
     if (error) {
       toast.error(error.message);
       console.error(`ORDER REDE ERROR : ${error.message}`);
@@ -104,7 +104,7 @@ const useGetOrder = () => {
 // ORDER 수정
 const useUpdateOrder = () => {
   const handleUpdateOrder = async ({
-    isUser,
+    writer_user_email,
     state,
     title,
     name,
@@ -129,7 +129,7 @@ const useUpdateOrder = () => {
         console.error(`Cloudinary UPLOAD ERROR`);
       }
       const { data, error } = await supabase_client.from('order').insert({
-        isUser,
+        writer_user_email,
         state,
         title,
         name,

@@ -48,7 +48,6 @@ const useGetComment = (from_table, from_table_id) => {
       .eq('from_table_id', from_table_id);
 
     if (error) {
-      toast.error(error.message);
       console.error(`comment REDE ERROR : ${error.message}`);
       return [];
     }

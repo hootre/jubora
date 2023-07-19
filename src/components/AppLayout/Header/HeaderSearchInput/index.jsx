@@ -35,7 +35,6 @@ export const HeaderSearchInput = () => {
   };
   return (
     <Search_input_box>
-      <GoSearch className="icon" />
       <input
         type="text"
         placeholder="상품 검색"
@@ -43,6 +42,7 @@ export const HeaderSearchInput = () => {
         onKeyDown={handleKeyDownEnter}
         onChange={handleSearchInput}
       />
+      <GoSearch className="icon" />
     </Search_input_box>
   );
 };

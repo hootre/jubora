@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 export const Order_container = styled.section`
-  width: 1200px;
+  width: 1280px;
   margin: 0 auto;
   padding: 50px 0;
   .order_title {

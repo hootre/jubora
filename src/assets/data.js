@@ -210,18 +210,21 @@ export const filterItemList = [
 ];
 export const slides = [
   {
+    id: 0,
     state: 'NEW',
     title: {
-      title_1: '오오오 엄청나 이건 첫번째 ',
-      title_2: '레이저 가가가가가각 머그컵',
+      title_1: '오오오 엄청나 이건 첫번째/n레이저 가가가가가각 머그컵',
+      title_2: '',
     },
     content: {
       content_1: '10부터 제작가능한 머그컵에 우리 브랜드를 새겨보세요. ',
       content_2: '대량 주문시 더욱 커지는 할인 혜택까지!(1개 3,100원)~',
     },
     img: 'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F1857626894ca14340ddcf.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-08.jpg?alt=media&token=8f638804-4fd7-4acf-aaec-e004c5360d20',
+    subTitle: '처음 이미지다',
   },
   {
+    id: 1,
     state: 'NEW',
     title: {
       title_1: '오오오 엄청나 이건 두번째 ',
@@ -232,8 +235,10 @@ export const slides = [
       content_2: '대량 주문시 더욱 커지는 할인 혜택까지!(1개 3,100원)~',
     },
     img: 'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F1857625ab044559ac3675.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-07.jpg?alt=media&token=ef3390ff-8b91-4ed4-ab89-3fad6c15b99c',
+    subTitle: '이거누르면 댐',
   },
   {
+    id: 3,
     state: 'NEW',
     title: {
       title_1: '오오오 엄청나 이건 세번째 ',
@@ -244,6 +249,7 @@ export const slides = [
       content_2: '대량 주문시 더욱 커지는 할인 혜택까지!(1개 3,100원)~',
     },
     img: 'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F18576203692ea07fba06a.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-01.jpg?alt=media&token=f0ef1c27-7c9b-4527-9d8d-84c017646e04',
+    subTitle: '힘들다요',
   },
 ];
 export const showCaseList = [

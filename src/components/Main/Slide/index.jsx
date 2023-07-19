@@ -68,20 +68,23 @@ export const Slide = ({ slides }) => {
                   </div>
                 );
               })}
-          </div>
-          <div className="nav_btn">
-            <ul>
-              {slides &&
-                slides.map((item, idx) => {
-                  return (
-                    <li
-                      key={idx}
-                      className={`${currentIndex === idx ? 'current_slide' : ''}`}
-                      onClick={() => handleSwipe(idx)}
-                    ></li>
-                  );
-                })}
-            </ul>
+            <div className="nav_btn">
+              <ul>
+                {slides &&
+                  slides.map((item, idx) => {
+                    return (
+                      <li
+                        key={idx}
+                        className={`${currentIndex === idx ? 'current_slide' : ''}`}
+                        onClick={() => handleSwipe(idx)}
+                      >
+                        <span className="progress_bar"></span>
+                        <span className="text">{item.subTitle}</span>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

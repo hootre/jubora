@@ -78,24 +78,56 @@ export const Slide_container = styled.section`
       }
       .nav_btn {
         position: absolute;
-        bottom: -20px;
         left: 50%;
+        bottom: 20px;
+        width: 1200px;
         transform: translateX(-50%);
         > ul {
+          width: 100%;
           display: flex;
-          justify-content: center;
+          justify-content: start;
           align-items: center;
           > li {
             cursor: pointer;
-            height: 10px;
-            width: 30px;
-            border: 1px solid ${Common.colors.bd100};
-            background-color: ${Common.colors.primary300};
-            opacity: 0.5;
-            transition: all 0.5s;
-            &.current_slide {
-              width: 70px;
+            height: 50px;
+            width: 120px;
+            margin: 0 20px;
+            .progress_bar {
+              display: block;
+              height: 3px;
+              width: 120px;
+              border-radius: 15px;
+              background-color: ${Common.colors.bd100};
               opacity: 1;
+              transition: all 0.5s;
+              position: relative;
+              &:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 3px;
+                width: 0px;
+                background-color: ${Common.colors.primary300};
+              }
+            }
+            .text {
+              display: inline-block;
+              padding: 10px;
+              color: ${Common.colors.text300};
+              width: 100%;
+              text-align: center;
+            }
+            &.current_slide {
+              .progress_bar {
+                &:after {
+                  transition: all 5s linear;
+                  width: 120px;
+                }
+              }
+              .text {
+                color: ${Common.colors.black};
+              }
             }
           }
         }

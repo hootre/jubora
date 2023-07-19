@@ -33,7 +33,7 @@ const style = css`
   }
   /* custom */
   .container {
-    width: 1200px;
+    width: 1280px;
     margin: 0 auto;
   }
 

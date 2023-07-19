@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const Notice_container = styled.section`
+  margin-top: 50px;
   padding: 50px 0;
   background: ${Common.colors.bg100};
   > div {

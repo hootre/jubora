@@ -8,6 +8,9 @@ const useTemplatesStore = create((set) => ({
   // 제품 리스트 필터 on/off
   isCurrentFilter: false,
 
+  // header 스크롤 이벤트 상태저장
+  isHeaderScrollActive: false,
+
   actions: {
     // 삭제
     setDeleteTemplateTagList: (id) => {
@@ -27,6 +30,8 @@ const useTemplatesStore = create((set) => ({
     setIsCurrentFilter: () => {
       set((state) => ({ isCurrentFilter: !state.isCurrentFilter }));
     },
+
+    setIsHeaderScrollActive: (state) => set({ templateSortType: state }),
   },
 }));
 
@@ -35,6 +40,8 @@ export const useTemplateSortType = () => useTemplatesStore((state) => state.temp
 export const useIsCurrentFilter = () => useTemplatesStore((state) => state.isCurrentFilter);
 export const useTemplateSearchText = () => useTemplatesStore((state) => state.templateSearchText);
 export const useTemplateTagList = () => useTemplatesStore((state) => state.templateTagList);
+export const useIsHeaderScrollActive = () =>
+  useTemplatesStore((state) => state.isHeaderScrollActive);
 
 // action
 export const useTemplatesActions = () => useTemplatesStore((state) => state.actions);

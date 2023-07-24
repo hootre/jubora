@@ -23,4 +23,7 @@ export const Common = {
     success_text: '#2c9e4b',
     success_bd: '#9ed763',
   },
+  size: {
+    container_width: '1280px',
+  },
 };

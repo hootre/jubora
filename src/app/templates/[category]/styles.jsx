@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Common } from 'styles/Common';
 
 export const Templates_category_container = styled.div`
   .main_img_container {
@@ -7,7 +8,7 @@ export const Templates_category_container = styled.div`
     justify-content: center;
     padding: 10px 0;
     .img_box {
-      width: 1200px;
+      width: ${Common.size.container_width};
       height: 150px;
       border: 1px solid #000;
     }
@@ -18,7 +19,7 @@ export const Templates_category_container = styled.div`
     background: #fff;
     min-height: calc(100vh - 249px);
     > main {
-      width: 1200px;
+      width: ${Common.size.container_width};
     }
   }
 `;

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
+import { Common } from 'styles/Common';
 
 export const Order_container = styled.section`
-  width: 1280px;
+  width: ${Common.size.container_width};
   margin: 0 auto;
   padding: 50px 0;
   .order_title {

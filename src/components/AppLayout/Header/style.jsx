@@ -8,6 +8,7 @@ export const Header_container = styled.header`
   .prev_site {
     display: flex;
     justify-content: center;
+    height: 40px;
   }
   .header {
     display: flex;
@@ -83,12 +84,12 @@ export const Header_container = styled.header`
         top: 0;
         left: 0;
         background-color: ${Common.colors.white};
-        z-index: 5;
+        z-index: ${(props) => (props.ScrollActive ? 5 : 1)};
         display: flex;
         justify-content: center;
         transition: all 0.2s ease;
         > div {
-          width: 1280px;
+          width: ${Common.size.container_width};
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -108,16 +109,14 @@ export const Header_container = styled.header`
               margin-right: 5px;
               transition: all 0.2s ease;
             }
-            &:nth-child(1) {
-              margin-right: 10px;
-            }
             transition: all 0.2s ease;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 0;
-            width: 130px;
+            padding: 5px 0;
+            font-size: 14px;
+            width: 120px;
             text-align: center;
             font-weight: bold;
             margin: 0 0 0 10px;
@@ -152,8 +151,8 @@ export const Header_container = styled.header`
               width: 160px;
               text-align: center;
               color: ${Common.colors.black};
-              font-size: 18px;
-              font-weight: 500;
+              font-size: 17px;
+              font-weight: bold;
               line-height: 1.63;
               font-stretch: normal;
               font-style: normal;
@@ -173,7 +172,7 @@ export const Header_container = styled.header`
               }
             }
             &.benner_col:hover ~ .drop_down_container {
-              .menu_benner_col {
+              .menu_benner {
                 display: flex;
               }
             }
@@ -197,8 +196,9 @@ export const Header_container = styled.header`
             position: absolute;
             overflow: auto;
             display: none;
-            top: 55px;
-            width: 1280px;
+            top: 45px;
+            z-index: 5;
+            width: ${Common.size.container_width};
             height: 410px;
             background: #fff;
             box-shadow: 0px 3px 3px 2px rgba(0, 0, 0, 0.05);

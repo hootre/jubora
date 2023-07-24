@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const Search_input_box = styled.div`
-  flex: auto;
   height: 100%;
-  flex: 1 1 0px;
+  width: 400px;
   .search_input {
     position: relative;
     width: 100%;

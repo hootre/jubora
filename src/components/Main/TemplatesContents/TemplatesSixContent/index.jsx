@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { TemplatesSixContent_container } from './style.jsx';
+import { ImageItem } from 'components/common/ImageItem/index.jsx';
 export const TemplatesSixContent = ({
   templatesList,
   category,
@@ -19,10 +20,21 @@ export const TemplatesSixContent = ({
                   onClick={() => hendleCurrentItem(idx)}
                   className={currentItemNum === idx ? 'current_content' : ''}
                 >
-                  <img src={item.file} width={1200} height={1200} alt="img" />
-                  <div className="purchase_box">
-                    <div className="purchase">구매하기</div>
-                  </div>
+                  {/* <img src={item.file} alt="img" /> */}
+                  <ImageItem
+                    img_src={item.file}
+                    href={`/templates/${templatesList[currentItemNum].type}/detail/${item.id}`}
+                    text={'구매하기'}
+                  />
+                  {/* <div className="purchase_box">
+                    <div className="purchase">
+                      <Link
+                        href={`/templates/${templatesList[currentItemNum].type}/detail/${item.id}`}
+                      >
+                        구매하기
+                      </Link>
+                    </div>
+                  </div> */}
                 </li>
               );
             })}

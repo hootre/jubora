@@ -213,8 +213,8 @@ export const slides = [
     id: 0,
     state: 'NEW',
     title: {
-      title_1: '오오오 엄청나 이건 첫번째/n레이저 가가가가가각 머그컵',
-      title_2: '',
+      title_1: '오오오 엄청나 이건 첫번째',
+      title_2: '레이저 가가가가가각 머그컵',
     },
     content: {
       content_1: '10부터 제작가능한 머그컵에 우리 브랜드를 새겨보세요. ',

@@ -9,6 +9,7 @@ import { useTemplates } from 'hooks/templates/useTemplates';
 import { useTemplateSortType } from 'store';
 import { useTemplateTagList } from 'store';
 import { Showcase_container } from './style.jsx';
+import { ImageItem } from 'components/common/ImageItem/index.jsx';
 
 export const Showcase = ({ category }) => {
   const { useGetTemplates } = useTemplates();
@@ -66,12 +67,11 @@ export const Showcase = ({ category }) => {
             templatesList.map((item) => {
               return (
                 <li key={item.id} className={item.type}>
-                  <div>
-                    <img src={item.file} alt="현수막이미지" />
-                    <AwesomeButton type="primary" className="choice">
-                      <Link href={`/templates/${item.category}/detail/${item.id}`}>선택</Link>
-                    </AwesomeButton>
-                  </div>
+                  <ImageItem
+                    img_src={item.file}
+                    href={`/templates/${item.category}/detail/${item.id}`}
+                    text={'구매하기'}
+                  />
                 </li>
               );
             })}

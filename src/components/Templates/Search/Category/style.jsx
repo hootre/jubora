@@ -5,7 +5,6 @@ export const SelectTextBox_container = styled.ul`
   position: relative;
   height: 50px;
   padding: 15px;
-  flex: 0 0 155px;
   background-color: ${Common.colors.black};
   border-radius: 5px 0 0 5px;
   display: flex;

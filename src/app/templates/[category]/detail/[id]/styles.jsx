@@ -7,23 +7,86 @@ export const Detail_container = styled.section`
     align-items: center;
     gap: 56px;
     margin: 30px auto;
-    max-width: 1200px;
+    max-width: ${Common.size.container_width};
     min-height: calc(100vh - 249px);
   }
-
+  .form_box {
+    flex: 1 1 800px;
+  }
+  .side_detail {
+    width: 300px;
+    height: 700px;
+    > h1 {
+      padding: 10px;
+      font-size: 25px;
+    }
+    .side_content {
+      padding: 15px;
+      border: 1px solid #000;
+      > img {
+        width: 100%;
+        object-fit: cover;
+      }
+      > h1 {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px 0;
+      }
+      > p {
+        color: ${Common.colors.text200};
+        line-height: 25px;
+        margin-bottom: 10px;
+      }
+      .price {
+        border-top: 1px solid#000;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        > h1 {
+          font-size: 25px;
+        }
+        > h2 {
+          color: ${Common.colors.primary100};
+          font-size: 25px;
+        }
+      }
+    }
+    .purchaseBox {
+      margin-top: 10px;
+      > button {
+        width: 100%;
+      }
+    }
+  }
   .productImgBox {
-    flex: 1;
     display: flex;
-    justify-content: center;
-    img {
-      width: 80%;
-      object-fit: contain;
+    align-items: end;
+    justify-content: start;
+    > div {
+      h1 {
+        padding: 5px;
+      }
+      img {
+        padding: 5px;
+        border: 1px solid ${Common.colors.bd100};
+        width: 400px;
+        object-fit: contain;
+      }
+    }
+    .sample_btn {
+      margin: 5px;
+      padding: 7px 60px;
+      color: ${Common.colors.white};
+      background: ${Common.colors.black};
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      cursor: pointer;
     }
   }
   .productContent {
     display: flex;
     flex-direction: column;
-    width: 400px;
+
     .titleBox {
       padding: 5px 0;
       border-bottom: 1px solid var(--base-black);
@@ -41,6 +104,26 @@ export const Detail_container = styled.section`
     .contentBox {
       margin: 10px 0;
       position: relative;
+      .from_item_btn_box {
+        display: flex;
+        gap: 10px;
+      }
+      .from_item_btn {
+        padding: 10px 40px;
+        color: ${Common.colors.text300};
+        background: ${Common.colors.white};
+        border: 1px solid ${Common.colors.bd100};
+        border-radius: 2px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        &.active,
+        &:hover {
+          font-weight: bold;
+          color: ${Common.colors.white};
+          background: ${Common.colors.black};
+        }
+      }
+
       .option_container {
         display: flex;
         -webkit-box-align: baseline;
@@ -49,6 +132,7 @@ export const Detail_container = styled.section`
         flex-direction: row;
         padding: 10px 0;
         border-bottom: 1px solid ${Common.colors.bd100};
+
         .point_text {
           height: 0;
           display: flex;
@@ -62,6 +146,14 @@ export const Detail_container = styled.section`
         h2 {
           font-size: 15px;
           flex: 0 0 100px;
+        }
+        &.name_box {
+          > h2:not(:first-child) {
+            flex: 0 0 80px;
+          }
+          > div {
+            margin-right: 10px;
+          }
         }
         .option_box {
           display: flex;
@@ -85,6 +177,14 @@ export const Detail_container = styled.section`
       align-items: center;
       position: relative;
       padding-bottom: 20px;
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+      }
+      input {
+        width: 50px;
+      }
       &:after {
         content: '70cm 이상 10cm 단위로 입력해주세요';
         position: absolute;
@@ -119,6 +219,7 @@ export const Detail_container = styled.section`
           transition: all 0.2s ease;
           cursor: pointer;
           &:hover {
+            font-weight: bold;
             background: ${Common.colors.primaryBg};
             transform: translateY(-2px);
           }
@@ -126,9 +227,10 @@ export const Detail_container = styled.section`
       }
       > div {
         margin: 5px 0;
-      }
-      input {
-        width: 100%;
+        width: 300px;
+        .address_input {
+          width: 300px;
+        }
       }
     }
     .contents {
@@ -140,12 +242,21 @@ export const Detail_container = styled.section`
         font-size: 16px;
         flex: 0 0 100px;
       }
-      > textarea {
-        flex: 1 1 0%;
-        padding: 15px;
-        height: 100px;
-        background: transparent;
+      .textarea {
+        width: 300px;
+        background: ${Common.colors.white};
         outline: none;
+      }
+    }
+    .file_box {
+      > input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        font-size: 0;
+        visibility: hidden;
       }
     }
     .contentText {

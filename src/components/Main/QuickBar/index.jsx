@@ -18,7 +18,6 @@ export const QuickBar = () => {
     } else {
       setScrollActive(false);
     }
-    console.log(scrollY);
   }, [scrollY]);
   return (
     <QuickBar_container ScrollActive={ScrollActive}>

@@ -70,7 +70,7 @@ export const Showcase_container = styled.section`
     overflow: overlay;
     ul {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 24px;
       -webkit-box-align: center;
       align-items: center;
@@ -80,46 +80,65 @@ export const Showcase_container = styled.section`
       li {
         position: relative;
         overflow: hidden;
-        display: flex;
-        transition: all 0.3s ease 0s;
-        .choice {
+        transition: all 0.2s ease;
+        .purchase_box {
           position: absolute;
-          bottom: 10px;
-          right: 15px;
-          transition: all 0.3s ease 0s;
-          filter: opacity(0);
-          width: 50px;
-          height: 20px;
-          a {
-            font-size: 12px;
-            width: 50px;
-            height: 100%;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 5px;
+          transition: all 0.4s ease;
+          background: rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          .purchase {
+            transition: all 0.2s ease;
+
+            &:hover {
+              > a {
+                color: ${Common.colors.black};
+              }
+              background: ${Common.colors.white};
+              transform: translateY(-2px);
+            }
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 0;
+            width: 80px;
+            height: 20px;
+            text-align: center;
+            color: ${Common.colors.white};
+            border: 1px solid ${Common.colors.white};
+            border-radius: 5px;
+            transform: translateY(20px);
           }
         }
         &:hover {
-          filter: drop-shadow(rgba(0, 0, 0, 0.15) 4px 4px 10px);
-          .choice {
-            filter: opacity(1);
+          box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+            rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+          .purchase_box {
+            opacity: 1;
+            .purchase {
+              transform: translateY(0px);
+            }
           }
         }
-        div {
+
+        &.current_content {
           cursor: pointer;
-          display: flex;
-          user-select: none;
+          box-shadow: 0 0 4px ${Common.colors.primary100};
+        }
+        > img {
+          cursor: pointer;
+          height: 100px;
           width: 100%;
-          flex-direction: column;
-          -webkit-box-align: center;
-          align-items: center;
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background-color: ${Common.colors.bg100};
-            transition: opacity 1s ease-out 0s;
-          }
-          a {
-            color: ${Common.colors.white};
-          }
+          object-fit: cover;
+          transition: all 0.2s ease;
         }
       }
     }

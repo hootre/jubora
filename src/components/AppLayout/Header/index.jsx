@@ -183,7 +183,7 @@ export const Header = () => {
                     {category
                       .filter((item) => item.from_nav === 'banner')
                       .map((item) => (
-                        <div className="nav_menu_item">
+                        <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
                             {item.category_list.split(',').map((text) => (
@@ -198,7 +198,7 @@ export const Header = () => {
                     {category
                       .filter((item) => item.from_nav === 'print')
                       .map((item) => (
-                        <div className="nav_menu_item">
+                        <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
                             {item.category_list.split(',').map((text) => (
@@ -213,7 +213,7 @@ export const Header = () => {
                     {category
                       .filter((item) => item.from_nav === 'real')
                       .map((item) => (
-                        <div className="nav_menu_item">
+                        <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
                             {item.category_list.split(',').map((text) => (

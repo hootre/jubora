@@ -2,7 +2,7 @@
 import logo from 'assets/MainPage/logo.png';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import useResetPassword from 'hooks/useResetPassword';
+import useResetPassword from 'hooks/supabase/public/useResetPassword';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Auth_container } from '../style';

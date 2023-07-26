@@ -36,7 +36,15 @@ const style = css`
     width: ${Common.size.container_width};
     margin: 0 auto;
   }
-
+  .basic_flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .basic_input {
+    padding: 5px;
+  }
   .basic_button {
     display: flex;
     justify-content: center;

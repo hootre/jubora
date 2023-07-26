@@ -5,7 +5,7 @@ import Link from 'next/link';
 export const ImageItem = ({ img_src, href, text }) => {
   return (
     <ImageItem_container>
-      <img src={img_src} alt="img" />
+      <img src={img_src} alt="img" loading="lazy" />
       <div className="purchase_box">
         <div className="purchase">
           <Link href={href}>{text}</Link>

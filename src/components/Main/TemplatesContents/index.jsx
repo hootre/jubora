@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import 'react-tabs/style/react-tabs.css';
 import { categoryList } from 'assets/data';
 import { TemplatesSixContent } from './TemplatesSixContent';
-import { useTemplates } from 'hooks/templates/useTemplates';
+import { useTemplates } from 'hooks/products/useBanner';
 import { TemplatesContents_container } from './style.jsx';
 import Link from 'next/link';
+import { ItemTypeGroup } from 'components/Templates/Showcase/ItemTypeGroup';
 
 export const TemplatesContents = () => {
   const [currentTabNum, setCurrentTabNum] = useState(0);
@@ -13,9 +14,12 @@ export const TemplatesContents = () => {
   const { useGetSixTemplates } = useTemplates();
   const { data, isLoading } = useGetSixTemplates(categoryList[currentTabNum].table_name);
 
-  const hendleCurrentTab = (index) => {
-    setCurrentTabNum(index);
+  // 가로,세로,포스터
+  const [bannerType, setBannerType] = useState('banner_row');
+  const handleBannerType = (e) => {
+    setBannerType(e.target.value);
   };
+
   const hendleCurrentItem = (num) => {
     currentItemNum[currentTabNum] = num;
     setCurrentItemNum([...currentItemNum]);
@@ -30,19 +34,8 @@ export const TemplatesContents = () => {
           <h1>BEST DESIGN</h1>
           <span>다양한 디자인을 구경해보세요</span>
         </div>
-        <ul className="nav">
-          {categoryList.map((item, idx) => {
-            return (
-              <li
-                key={item.id}
-                className={currentTabNum === idx ? 'active' : ''}
-                onClick={() => hendleCurrentTab(item.id)}
-              >
-                {item.title}
-              </li>
-            );
-          })}
-        </ul>
+
+        <ItemTypeGroup bannerType={bannerType} handleBannerType={handleBannerType} />
         <Link href={`/templates/banner_row`}>전체보기</Link>
       </div>
 

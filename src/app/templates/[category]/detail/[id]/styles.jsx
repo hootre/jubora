@@ -258,6 +258,21 @@ export const Detail_container = styled.section`
         font-size: 0;
         visibility: hidden;
       }
+      .file_text {
+        border: 1px solid #ddd;
+        padding: 0 15px;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+        .file_name {
+          color: ${Common.colors.black};
+          padding: 10px;
+          margin-right: 20px;
+          font-size: 14px;
+        }
+      }
     }
     .contentText {
       display: flex;

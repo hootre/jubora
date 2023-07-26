@@ -1,6 +1,5 @@
 'use client';
 import { SideCategory } from 'components/Templates/SideCategory';
-import { Search } from 'components/Templates/Search';
 import { Showcase } from 'components/Templates/Showcase';
 import { TagList } from 'components/Templates/TagList';
 import './styles.jsx';
@@ -15,7 +14,6 @@ const templates = ({ params: { category } }) => {
       <section className="templats_container">
         <SideCategory />
         <main>
-          <Search />
           <TagList />
           <Showcase category={category} />
         </main>

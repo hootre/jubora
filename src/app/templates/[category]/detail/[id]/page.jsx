@@ -1,22 +1,24 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-awesome-button/dist/styles.css';
 import './styles.jsx';
-import { useTemplates } from 'hooks/templates/useTemplates';
 import { useForm } from 'react-hook-form';
 import { Detail_container } from './styles.jsx';
-import { TextField } from '@mui/material';
-import { useUser } from 'hooks/auth/useUser.js';
+import { Backdrop, Box, Fade, Modal, TextField } from '@mui/material';
+
 import DaumPost from 'utils/kakaoMap/kakaoMap.jsx';
 import PriceCalculate from 'utils/PriceCalculate.jsx';
 import { toast } from 'react-hot-toast';
-import { useOrder } from 'hooks/order/useOrder.js';
 import { useRouter } from 'next/navigation.js';
+import { Showcase } from 'components/Templates/Showcase/index.jsx';
+import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
+import { useUser } from 'hooks/supabase/auth/useUser.js';
+import { useOrder } from 'hooks/supabase/order/useOrder.js';
 
 const detail = ({ params: { id } }) => {
   // 현재 id category 가져오기
-  const { useGetOnlyTemplates } = useTemplates();
-  const { data: detail_data, isLoading } = useGetOnlyTemplates(id);
+  const { useGetOnlyTemplate } = useTemplates();
+  const { data: detail_data, isLoading } = useGetOnlyTemplate(id);
 
   // user상태관리
   const { useGetUserInfo } = useUser();
@@ -25,6 +27,13 @@ const detail = ({ params: { id } }) => {
   const { useCreateOrder } = useOrder();
   const { mutate: createOrder } = useCreateOrder();
 
+  // 샘플선택
+
+  const [open, setOpen] = useState(false);
+  const handleSampleDesignModal = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
   // kakaoMap Modal
   const [addressObj, setAddressObj] = useState();
   // form 데이터 관리
@@ -84,6 +93,7 @@ const detail = ({ params: { id } }) => {
 
   // 로그인 로그아웃 상태
   useEffect(() => {
+    console.log(detail_data);
     if (user) {
       setValue('writer_user_email', user.email);
       setValue('name', user.name);
@@ -122,9 +132,35 @@ const detail = ({ params: { id } }) => {
               <h1>선택 이미지</h1>
               <img src={detail_data.file} alt="" />
             </div>
-            <button className="sample_btn" type="button" value="샘플선택">
+            <button
+              onClick={handleSampleDesignModal}
+              className="sample_btn"
+              type="button"
+              value="샘플선택"
+            >
               샘플선택 +
             </button>
+            <Modal
+              aria-labelledby="transition-modal-title"
+              aria-describedby="transition-modal-description"
+              open={open}
+              onClose={handleClose}
+              closeAfterTransition
+              slots={{ backdrop: Backdrop }}
+              slotProps={{
+                backdrop: {
+                  timeout: 500,
+                },
+              }}
+            >
+              <Fade in={open}>
+                <Box>
+                  <div className="showcase_box">
+                    <Showcase category={detail_data.category} />
+                  </div>
+                </Box>
+              </Fade>
+            </Modal>
           </div>
           <div className="productContent">
             <div className="contentBox">
@@ -134,21 +170,21 @@ const detail = ({ params: { id } }) => {
                     <>
                       <h2>이름/회사명</h2>
                       <TextField
-                        label="이름/회사명"
                         variant="outlined"
                         type="text"
                         size="small"
                         required
+                        placeholder="이름/회사명"
                         onKeyDown={(e) => checkKeyDown(e)}
                         {...register('name')}
                       />
                       <h2>비밀번호</h2>
                       <TextField
-                        label="비밀번호(4자리)"
                         variant="outlined"
                         type="password"
                         size="small"
                         required
+                        placeholder="비밀번호"
                         inputProps={{ maxLength: 4 }}
                         onKeyDown={(e) => checkKeyDown(e)}
                         {...register('password')}
@@ -371,6 +407,11 @@ const detail = ({ params: { id } }) => {
                   첨부파일 등록
                 </label>
                 <input id="file" type="file" accept="image/*" name="file" {...register('file')} />
+                {watch('file')?.[0]?.name && (
+                  <div className="file_text">
+                    <span className="file_name">{watch('file')[0].name}</span>
+                  </div>
+                )}
               </div>
 
               {/* <div className="contentText">

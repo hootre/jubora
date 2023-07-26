@@ -3,6 +3,11 @@ import { Common } from 'styles/Common';
 
 export const Showcase_container = styled.section`
   margin-top: 30px;
+  .filter_nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .top_nav {
     display: flex;
     align-items: center;
@@ -30,53 +35,23 @@ export const Showcase_container = styled.section`
       }
     }
   }
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    nav ul {
-      display: flex;
-      justify-content: space-between;
-      li {
-        position: relative;
-        padding: 8px 24px;
-        .back {
-          position: absolute;
-          left: 0;
-          top: 0;
-          transition: all 0.2s ease;
-          width: 100%;
-          height: 100%;
-          background: ${Common.colors.black};
-          z-index: -1;
-          border-radius: 0.375rem;
-        }
-        a {
-          cursor: pointer;
-          z-index: -1;
-          border-radius: 5px;
-          color: ${Common.colors.text200};
-          &:hover {
-            color: ${Common.colors.black};
-          }
-          &.active {
-            color: ${Common.colors.white};
-          }
-        }
-      }
-    }
-  }
+
   .showcase {
     overflow: overlay;
     ul {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      -webkit-box-align: center;
-      align-items: center;
-      list-style: none;
-      margin: 5px 0px;
-      padding: 0px;
+      gap: 10px;
+      &.banner_row {
+        grid-template-rows: repeat(2, 100px);
+        grid-template-columns: repeat(3, 0.5fr);
+      }
+      &.banner_col {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      &.banner_square {
+        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+      }
       li {
         position: relative;
         overflow: hidden;

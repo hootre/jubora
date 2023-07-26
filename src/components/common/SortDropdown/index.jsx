@@ -18,18 +18,24 @@ export const SortDropdown = () => {
   return (
     <SortDropdown_container>
       <div className="sort_title" onClick={toggleSortState}>
-        <button>{templateSortType}</button>
+        <span>{templateSortType}</span>
         {sortState ? <AiFillCaretUp className="icon" /> : <AiFillCaretDown className="icon" />}
       </div>
-      <ul className={`${sortState && 'active'} `}>
-        {sort_list.map((item, idx) => {
-          return (
-            <li key={idx} onClick={() => handleSetSortType(item)}>
-              {item}
-            </li>
-          );
-        })}
-      </ul>
+      <div className={sortState ? 'drop_down active' : 'drop_down'}>
+        <ul>
+          {sort_list.map((item, idx) => {
+            return (
+              <li
+                key={idx}
+                onClick={() => handleSetSortType(item)}
+                className={templateSortType === item ? 'cur_category' : ''}
+              >
+                <span>{item}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </SortDropdown_container>
   );
 };

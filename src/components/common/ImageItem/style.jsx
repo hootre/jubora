@@ -59,7 +59,7 @@ export const ImageItem_container = styled.div`
   > img {
     cursor: pointer;
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
     transition: all 0.2s ease;
   }

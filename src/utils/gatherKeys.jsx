@@ -1,6 +1,6 @@
 export const gatherKeys = {
   current_user: ['current_user'],
-  template: ['template'],
+  templates: ['templates'],
   productsCategory: ['productsCategory'],
   order: ['order'],
   comment: ['comment'],

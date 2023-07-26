@@ -1,28 +1,34 @@
 'use client';
 import React from 'react';
-import Link from 'next/link';
-import { AwesomeButton } from 'react-awesome-button';
 import 'react-awesome-button/dist/styles.css';
-import { SortDropdown } from 'components/common/SortDropdown';
 import './style.jsx';
-import { useTemplates } from 'hooks/templates/useTemplates';
 import { useTemplateSortType } from 'store';
 import { useTemplateTagList } from 'store';
 import { Showcase_container } from './style.jsx';
 import { ImageItem } from 'components/common/ImageItem/index.jsx';
+import { Search } from '../Search/index.jsx';
+import { useState } from 'react';
+import { ItemTypeGroup } from './ItemTypeGroup/index.jsx';
+import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
 
 export const Showcase = ({ category }) => {
-  const { useGetTemplates } = useTemplates();
+  // template 목록
+  const { useGetCategoryTemplate } = useTemplates();
+  const { data: templatesList, isLoading } = useGetCategoryTemplate(category);
 
-  const { data: templatesList, isInitialLoading } = useGetTemplates(category);
+  // 가로,세로,포스터
+  const [bannerType, setBannerType] = useState('banner_row');
+  const handleBannerType = (e) => {
+    setBannerType(e.target.value);
+  };
 
   const SortType = useTemplateSortType();
   const tagList = useTemplateTagList();
   // if (isInitialLoading) {
   //   return <h1>Loading...</h1>;
   // }
-  if (!templatesList) {
-    return null;
+  if (isLoading) {
+    return <h1>Loading</h1>;
   }
   let filterDataList = [];
   if (tagList.length > 0) {
@@ -56,19 +62,28 @@ export const Showcase = ({ category }) => {
   }
   return (
     <Showcase_container>
+      <div className="filter_nav">
+        <Search />
+        <ItemTypeGroup bannerType={bannerType} handleBannerType={handleBannerType} />
+      </div>
       <div className="top_nav">
         <h2 className="title">{templatesList?.length}개의 디자인이 있습니다.</h2>
         {/* <SortFilter categoryList={categoryList} /> */}
-        <SortDropdown>Button</SortDropdown>
       </div>
       <div className="showcase">
-        <ul>
+        <ul className={bannerType}>
           {templatesList &&
             templatesList.map((item) => {
               return (
-                <li key={item.id} className={item.type}>
+                <li key={item.id}>
                   <ImageItem
-                    img_src={item.file}
+                    img_src={
+                      bannerType === 'banner_row'
+                        ? item.img_row
+                        : bannerType === 'banner_col'
+                        ? item.img_col
+                        : item.img_square
+                    }
                     href={`/templates/${item.category}/detail/${item.id}`}
                     text={'구매하기'}
                   />

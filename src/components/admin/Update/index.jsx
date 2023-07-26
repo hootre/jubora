@@ -1,6 +1,6 @@
 'use client';
 import React, { memo, useState } from 'react';
-import { useTemplates } from 'hooks/templates/useTemplates';
+import { useTemplates } from 'hooks/products/useBanner';
 
 const Update = ({ hasFormData, isUpdate, setIsUpdate }) => {
   const [formData, setFormData] = useState(hasFormData);

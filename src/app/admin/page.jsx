@@ -1,5 +1,6 @@
-import Create from 'components/admin/Create';
-import { GetTemplateAll } from 'components/admin/Rede/GetTemplateAll';
+'use client';
+import Create from 'components/admin/Create/CreateBanner';
+import { GetTemplateAll } from 'components/admin/Read';
 
 export default function admin() {
   return (

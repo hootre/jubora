@@ -145,14 +145,14 @@ export const Header = () => {
                     현수막
                   </Link>
                 </li>
-                <li className="banner_col">
+                {/* <li className="banner_col">
                   <Link
                     href="/templates/banner_row"
                     className={pathName === 'templates' ? 'active' : ''}
                   >
                     배너
                   </Link>
-                </li>
+                </li> */}
                 <li className="print">
                   <Link
                     href="/templates/banner_row"

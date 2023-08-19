@@ -20,7 +20,7 @@ const useGetOnlyTemplate = (id) => {
       }
     });
   };
-  return useQuery([`banner_${id}`], handleGetOnlyTemplate);
+  return useQuery([`templates_${id}`], handleGetOnlyTemplate);
 };
 // 특정 category 목록
 const useGetCategoryTemplate = (category) => {
@@ -39,6 +39,20 @@ const useGetCategoryTemplate = (category) => {
   };
   return useQuery([category], handleGetCategoryTemplate);
 };
+// 제품목록 6개만 가져오기
+const useGetSixTemplates = () => {
+  const handleGetSixTemplates = async () => {
+    const { data, error } = await supabase_client.from('templates').select('*').range(0, 6);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`제품목록 6개 불러오기 오류 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
+  };
+  return useQuery(gatherKeys.templates_six, handleGetSixTemplates);
+};
 // 제품목록 가져오기
 const useGetTemplates = () => {
   const handleGetTemplates = async () => {
@@ -51,8 +65,9 @@ const useGetTemplates = () => {
       }
     });
   };
-  return useQuery(gatherKeys.banner, handleGetTemplates);
+  return useQuery(gatherKeys.templates, handleGetTemplates);
 };
+
 // 제품 생성
 const useCreateTemplate = () => {
   const handleCreateTemplate = async ({
@@ -86,6 +101,7 @@ const useCreateTemplate = () => {
       tag,
       tag_detail,
     });
+
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`생성 오류 :  ${error.message}`);
@@ -179,6 +195,7 @@ export const useTemplates = () => {
   return {
     useGetOnlyTemplate,
     useGetCategoryTemplate,
+    useGetSixTemplates,
     useGetTemplates,
     useCreateTemplate,
   };

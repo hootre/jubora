@@ -7,7 +7,6 @@ const useTemplatesStore = create((set) => ({
   templateSearchText: '',
   // 제품 리스트 필터 on/off
   isCurrentFilter: false,
-
   // header 스크롤 이벤트 상태저장
   isHeaderScrollActive: false,
 

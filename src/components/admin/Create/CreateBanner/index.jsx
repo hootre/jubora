@@ -1,20 +1,28 @@
 'use client';
 import React, { memo, useState } from 'react';
 import { Create_container } from './styles';
-import { useProductsCategory } from 'hooks/supabase/public/useProductsCategory';
+import { useProductsCategory, useProductsTag } from 'hooks/supabase/public/useProductsCategory';
 import { useTemplates } from 'hooks/supabase/templates/useTemplates';
+import { useOrderSetting } from 'hooks/supabase/order/orderSetting/useOrderSetting';
 
 const CreateBanner = () => {
   // 제품 카테고리 목록
-  const { useGetProductsCategory } = useProductsCategory();
-  const { data: categoryList, isLoading } = useGetProductsCategory();
+  const { useGetProductsTag } = useProductsTag();
+  const { data: categoryList, isLoading: prodctsTag_loading } = useGetProductsTag();
 
-  // 배너 생성
+  // 제품 목록 생성
   const { useCreateTemplate } = useTemplates();
   const { mutate: handleCreateBanner } = useCreateTemplate();
 
+  // from_btn 목록
+  const { useGetWantOrderSetting } = useOrderSetting();
+  const { data: fromBtnList, isLoading: from_btn_loading } = useGetWantOrderSetting([
+    'id',
+    'category_name',
+  ]);
+
   // form data
-  const [formData, setFormData] = useState({ category: 'banner' });
+  const [formData, setFormData] = useState({});
   const [isUploading, setIsUploading] = useState(false);
 
   const handleChange = (e) => {
@@ -38,22 +46,16 @@ const CreateBanner = () => {
       },
     });
   };
-  if (!categoryList) {
+  if (prodctsTag_loading || from_btn_loading) {
     return <h1>Loading</h1>;
   }
+  console.log(fromBtnList);
   return (
     <Create_container className="">
-      <h2 className="">새로운 제품 등록</h2>
-      {/* {product.file && (
-        <img
-          className="w-96 mx-auto mb-2"
-          src={URL.createObjectURL(product.file)}
-          alt="local file"
-        />
-      )} */}
       <form className="" onSubmit={handleSubmit}>
+        <h2 className="title">현수막 제품 등록</h2>
         <div className="option_container file_box">
-          <h2>가로형</h2>
+          <h2>가로형(기본)</h2>
           <div>
             <label htmlFor="img_row" className="from_item_btn">
               첨부파일 등록
@@ -142,11 +144,54 @@ const CreateBanner = () => {
           </div>
         </div>
         <div className="option_container file_box">
+          <h2>카테고리</h2>
+          <div className="basic_flex">
+            <select
+              className="basic_input"
+              name="category"
+              required
+              onChange={handleChange}
+              value={formData.category ?? '선택'}
+            >
+              <option disabled value="선택">
+                선택
+              </option>
+              <option value="banner">현수막</option>
+              <option value="print">인쇄물</option>
+              <option value="real">실사</option>
+            </select>{' '}
+          </div>
+        </div>
+        <div className="option_container file_box">
+          <h2>분류 기준</h2>
+          <div className="basic_flex">
+            <select
+              className="basic_input"
+              name="from_btn"
+              required
+              onChange={handleChange}
+              value={formData.from_btn ?? '선택'}
+            >
+              <option disabled value="선택">
+                선택
+              </option>
+              {fromBtnList
+                .sort((a, b) => b.id - a.id)
+                .map((item) => (
+                  <option key={item.id} value={item.category_name}>
+                    {item.category_name}
+                  </option>
+                ))}
+            </select>{' '}
+          </div>
+        </div>
+        <div className="option_container file_box">
           <h2>태그</h2>
           <div className="basic_flex">
             <select
               className="basic_input"
               name="tag"
+              required
               onChange={handleChange}
               value={formData.tag ?? '대분류'}
             >
@@ -162,6 +207,7 @@ const CreateBanner = () => {
             <select
               className="basic_input"
               name="tag_detail"
+              required
               onChange={handleChange}
               value={formData.tag_detail ?? '소분류'}
             >

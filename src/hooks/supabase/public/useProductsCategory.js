@@ -5,9 +5,9 @@ import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 
 // 제품목록 가져오기
-const useGetProductsCategory = () => {
-  const handleGetProductsCategory = async () => {
-    const { data, error } = await supabase_client.from('products_category').select('*');
+const useGetProductsTag = () => {
+  const handleGetuseGetProductsTag = async () => {
+    const { data, error } = await supabase_client.from('products_tag').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`제품 TAG 불러오기 실패 :  ${error.message}`);
@@ -16,7 +16,7 @@ const useGetProductsCategory = () => {
       }
     });
   };
-  return useQuery(gatherKeys.productsCategory, handleGetProductsCategory);
+  return useQuery(gatherKeys.productsTag, handleGetuseGetProductsTag);
 };
 // 제품 생성
 const useCreateBanner = () => {
@@ -128,8 +128,8 @@ const useDeleteTemplates = () => {
     },
   });
 };
-export const useProductsCategory = () => {
+export const useProductsTag = () => {
   return {
-    useGetProductsCategory,
+    useGetProductsTag,
   };
 };

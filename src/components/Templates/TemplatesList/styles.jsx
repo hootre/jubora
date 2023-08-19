@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Templates_category_container = styled.div`
+export const TemplatesList_container = styled.div`
   .main_img_container {
     display: flex;
     align-items: center;

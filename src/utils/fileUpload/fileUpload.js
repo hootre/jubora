@@ -25,9 +25,5 @@ export const deleteFile = async (public_id) => {
   return await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/destroy', {
     method: 'POST',
     body: data,
-  })
-    .then((data) => console.log(data))
-    .catch((error) => {
-      console.error(`deleteImage Error : ${error.message}`);
-    });
+  });
 };

@@ -3,6 +3,7 @@ import { Common } from 'styles/Common';
 
 export const ImageItem_container = styled.div`
   position: relative;
+  height: 100%;
   overflow: hidden;
   transition: all 0.2s ease;
   .purchase_box {
@@ -16,17 +17,11 @@ export const ImageItem_container = styled.div`
     align-items: center;
     padding: 5px;
     transition: all 0.4s ease;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.1);
     opacity: 0;
     .purchase {
       transition: all 0.2s ease;
-      &:hover {
-        > a {
-          color: ${Common.colors.black};
-        }
-        background: ${Common.colors.white};
-        transform: translateY(-2px);
-      }
+      background: ${Common.colors.white};
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -38,17 +33,22 @@ export const ImageItem_container = styled.div`
       color: ${Common.colors.white};
       border: 1px solid ${Common.colors.white};
       border-radius: 5px;
-      transform: translateY(20px);
+      > a {
+        color: ${Common.colors.primary100};
+        font-weight: bold;
+      }
+      &:hover {
+        background: ${Common.colors.white};
+        transform: translateY(-2px);
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+      }
     }
   }
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px, rgba(0, 0, 0, 0.1) 0px 7px 13px -3px,
-      rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+      rgba(0, 0, 0, 0.1) 0px -3px 0px inset;
     .purchase_box {
       opacity: 1;
-      .purchase {
-        transform: translateY(0px);
-      }
     }
   }
 
@@ -59,7 +59,6 @@ export const ImageItem_container = styled.div`
   > img {
     cursor: pointer;
     width: 100%;
-    height: auto;
     object-fit: cover;
     transition: all 0.2s ease;
   }

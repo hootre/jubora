@@ -4,9 +4,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
-import { useUser } from 'hooks/auth/useUser';
 import { redirect } from 'next/navigation';
 import { Auth_container } from '../style.jsx';
+import { useUser } from 'hooks/supabase/auth/useUser.js';
 
 const SignUp = () => {
   const { useCreateUser } = useUser();

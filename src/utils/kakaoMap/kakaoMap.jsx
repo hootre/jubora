@@ -21,10 +21,9 @@ function DaumPost(props) {
       //지역주소 제외 전체주소 치환
       fullAddress = fullAddress.replace(localAddress, '');
       //조건 판단 완료 후 지역 주소 및 상세주소 state 수정
-      props.setAddressObj({
-        areaAddress: localAddress,
-        townAddress: (fullAddress += extraAddress !== '' ? `(${extraAddress})` : ''),
-      });
+
+      props.setValue('address_1', localAddress);
+      props.setValue('address_2', (fullAddress += extraAddress !== '' ? `(${extraAddress})` : ''));
       //주소 검색이 완료된 후 결과를 매개변수로 전달
     }
   };

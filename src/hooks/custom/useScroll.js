@@ -1,4 +1,3 @@
-import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
 
 export function useScroll() {

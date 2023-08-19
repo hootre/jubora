@@ -31,7 +31,8 @@ export const PasswordCheckModal = ({ table, id }) => {
     <PasswordCheck_container>
       <h1>게시글 비밀번호 입력</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" {...register('password')} />
+        <input type="password" maxLength={4} {...register('password')} />
+        <button className="basic_button">확인</button>
       </form>
     </PasswordCheck_container>
   );

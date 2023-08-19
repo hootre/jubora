@@ -1,7 +1,7 @@
 export const Common = {
   colors: {
     primaryBg: '#d9ecfa',
-    primary100: '#0070c0',
+    primary100: '#4286f4',
     primary200: '#004e86',
     primary300: '#6ec3ff',
     accent100: '#ffc000',
@@ -13,7 +13,7 @@ export const Common = {
     text300: '#c3c3c3',
     bg100: '#f5f5f5',
     bg200: '#e9e9e9',
-    bg300: '#ffffff',
+    bg300: '#f9fbfe',
     bd100: '#e1e2e3',
     black: '#25252c',
     white: '#fff',

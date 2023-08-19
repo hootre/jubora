@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { BoardCommentInput_container } from './style';
-import { useUser } from 'hooks/auth/useUser';
 import { useForm } from 'react-hook-form';
-import { useComment } from 'hooks/comment/useComment';
+import { useUser } from 'hooks/supabase/auth/useUser';
+import { useComment } from 'hooks/supabase/comment/useComment';
 
 export const BoardCommentInput = ({ from_table, from_table_id, from_comment = null, writer }) => {
   // user상태관리

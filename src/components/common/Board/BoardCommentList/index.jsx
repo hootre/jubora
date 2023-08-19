@@ -1,6 +1,6 @@
 import React from 'react';
 import { BoardCommentList_container } from './style';
-import { useComment } from 'hooks/comment/useComment';
+import { useComment } from 'hooks/supabase/comment/useComment';
 
 export const BoardCommentList = ({ from_table, from_table_id }) => {
   const { useGetComment } = useComment();

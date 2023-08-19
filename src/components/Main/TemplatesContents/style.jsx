@@ -3,7 +3,9 @@ import { Common } from 'styles/Common';
 
 export const TemplatesContents_container = styled.section`
   position: relative;
-  margin: 50px auto;
+  margin: 100px auto;
+  transition: all 0.2s;
+  height: auto;
   .header {
     display: flex;
     justify-content: space-between;

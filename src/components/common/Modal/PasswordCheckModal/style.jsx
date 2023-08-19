@@ -11,4 +11,10 @@ export const PasswordCheck_container = styled.div`
   border: 2px solid ${Common.colors.bg200};
   box-shadow: 24px;
   padding: 4px;
+  > form {
+    display: flex;
+    > input {
+      line-height: 40px;
+    }
+  }
 `;

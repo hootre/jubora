@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Detail_container = styled.section`
+export const Order_detail_container = styled.section`
   > form {
     display: flex;
     align-items: center;
@@ -11,78 +11,9 @@ export const Detail_container = styled.section`
     min-height: calc(100vh - 249px);
   }
   .form_box {
-    flex: 1 1 800px;
+    width: 800px;
   }
-  .side_detail {
-    width: 300px;
-    height: 700px;
-    > h1 {
-      padding: 10px;
-      font-size: 25px;
-    }
-    .side_content {
-      padding: 15px;
-      border: 1px solid #000;
-      > img {
-        width: 100%;
-        object-fit: cover;
-      }
-      > h1 {
-        font-size: 20px;
-        font-weight: bold;
-        padding: 10px 0;
-      }
-      > p {
-        color: ${Common.colors.text200};
-        line-height: 25px;
-        margin-bottom: 10px;
-      }
-      .price {
-        border-top: 1px solid#000;
-        display: flex;
-        justify-content: space-between;
-        padding: 10px;
-        > h1 {
-          font-size: 25px;
-        }
-        > h2 {
-          color: ${Common.colors.primary100};
-          font-size: 25px;
-        }
-      }
-    }
-    .purchaseBox {
-      margin-top: 10px;
-      > button {
-        width: 100%;
-      }
-    }
-  }
-  .productImgBox {
-    display: flex;
-    align-items: end;
-    justify-content: start;
-    > div {
-      h1 {
-        padding: 5px;
-      }
-      img {
-        padding: 5px;
-        border: 1px solid ${Common.colors.bd100};
-        width: 400px;
-        object-fit: contain;
-      }
-    }
-    .sample_btn {
-      margin: 5px;
-      padding: 7px 60px;
-      color: ${Common.colors.white};
-      background: ${Common.colors.black};
-      border-radius: 10px;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-  }
+
   .productContent {
     display: flex;
     flex-direction: column;
@@ -106,11 +37,14 @@ export const Detail_container = styled.section`
       position: relative;
       .from_item_btn_box {
         display: flex;
+
         gap: 10px;
       }
       .from_item_btn {
-        padding: 10px 40px;
-        color: ${Common.colors.text300};
+        font-size: 12px;
+        width: 150px;
+        padding: 10px 20px;
+        color: ${Common.colors.text100};
         background: ${Common.colors.white};
         border: 1px solid ${Common.colors.bd100};
         border-radius: 2px;
@@ -147,8 +81,13 @@ export const Detail_container = styled.section`
           font-size: 15px;
           flex: 0 0 100px;
         }
+        .type_btn_box {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
         &.name_box {
-          > h2:not(:first-child) {
+          > h2:not(:first-of-type) {
             flex: 0 0 80px;
           }
           > div {

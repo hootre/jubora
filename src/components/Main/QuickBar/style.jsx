@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const QuickBar_container = styled.aside`
   position: ${(props) => (props.ScrollActive ? 'fixed' : 'absolute')};
-  top: ${(props) => (props.ScrollActive ? '80px' : '22%')};
+  top: ${(props) => (props.ScrollActive ? '80px' : '24%')};
   left: 50%;
   width: 150px;
   margin-left: 687px;

@@ -3,11 +3,12 @@ import { BoardCard_container } from './style';
 import { Backdrop, Box, Fade, Modal } from '@mui/material';
 import { PasswordCheckModal } from 'components/common/Modal/PasswordCheckModal';
 import { useRouter } from 'next/navigation';
-import { useUser } from 'hooks/auth/useUser';
+import { useUser } from 'hooks/supabase/auth/useUser';
 
 export const BoardCard = ({
-  item: { id, title, writer_user_email, name, created_at },
+  item: { id, public_id, title, writer_user_email, name, created_at },
   table,
+  deleteOrder,
   modal = false,
 }) => {
   const [open, setOpen] = useState(false);
@@ -16,7 +17,6 @@ export const BoardCard = ({
   const { data: user } = useGetUserInfo();
 
   const router = useRouter();
-
   const handleCheckisModal = () => {
     if (user.email === writer_user_email) {
       router.push(`/${table}/${id}`);
@@ -34,6 +34,9 @@ export const BoardCard = ({
         <span className="name">{name}</span>
         <span className="date">{String(created_at).substring(5, 10)}</span>
       </div>
+      <button onClick={() => deleteOrder(id, public_id)} className="basic_button">
+        삭제
+      </button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

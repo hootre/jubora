@@ -26,7 +26,7 @@ const style = css`
   }
   a {
     text-decoration: none;
-    color: ${Common.colors.white};
+    color: ${Common.colors.black};
   }
   input {
     outline: none;
@@ -40,7 +40,6 @@ const style = css`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
   }
   .basic_input {
     padding: 5px;
@@ -50,8 +49,9 @@ const style = css`
     justify-content: center;
     align-items: center;
     font-size: 16px;
+    min-width: 50px;
     cursor: pointer;
-    padding: 15px;
+    padding: 5px;
     border-radius: 5px;
     transition: all 0.2s;
     background: ${Common.colors.primary100};

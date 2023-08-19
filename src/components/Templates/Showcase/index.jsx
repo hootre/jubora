@@ -84,7 +84,7 @@ export const Showcase = ({ category }) => {
                         ? item.img_col
                         : item.img_square
                     }
-                    href={`/templates/${item.category}/detail/${item.id}`}
+                    href={`/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
                     text={'구매하기'}
                   />
                 </li>

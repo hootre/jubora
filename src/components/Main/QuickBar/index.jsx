@@ -13,7 +13,7 @@ export const QuickBar = () => {
   const { scrollY } = useScroll();
   const [ScrollActive, setScrollActive] = useState(false);
   useEffect(() => {
-    if (scrollY > (pathName === '' ? 576 : 143)) {
+    if (scrollY > (pathName === '' ? 550 : 143)) {
       setScrollActive(true);
     } else {
       setScrollActive(false);

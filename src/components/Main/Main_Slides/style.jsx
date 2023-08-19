@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Slide_container = styled.section`
+export const Main_Slides_container = styled.section`
   position: relative;
   left: 0;
   height: 400px;

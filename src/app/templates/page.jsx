@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
-export default function templates() {
+export default function page() {
   redirect('/templates/banner_row');
 }

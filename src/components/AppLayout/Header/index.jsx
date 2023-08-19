@@ -6,37 +6,27 @@ import Link from 'next/link';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
 import { usePathname } from 'next/navigation';
-import { useUser } from 'hooks/auth/useUser';
 import { HeaderSearchInput } from './HeaderSearchInput';
 import { Header_container } from './style.jsx';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
-import { useProductsCategory } from 'hooks/templates/useProductsCategory';
-import { useIsHeaderScrollActive } from 'store';
+
 import { useScroll } from 'hooks/custom/useScroll';
 import { useEffect } from 'react';
+import { useUser } from 'hooks/supabase/auth/useUser';
+import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
 export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   const { mutate } = useLogOut();
   // productCategory 관리
-  const { useGetProductsCategory } = useProductsCategory();
-  const { data: category, isLoading: categoryLoading } = useGetProductsCategory();
+  const { useGetProductsTag } = useProductsTag();
+  const { data: tag, isLoading: tagLoading } = useGetProductsTag();
   // path 관련
-  const pathName = usePathname().substring(1).split('/')[0];
+  const pathName = usePathname().substring(1).split('/')[1];
   let navCutLine =
-    pathName === 'templates'
-      ? 1
-      : pathName === 'order'
-      ? 2
-      : pathName === 'sian'
-      ? 3
-      : pathName === 'price'
-      ? 4
-      : pathName === 'notify'
-      ? 5
-      : 0;
+    pathName === 'banner' ? 0 : pathName === 'print' ? 1 : pathName === 'real' ? 2 : -3;
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
@@ -59,7 +49,7 @@ export const Header = () => {
       setScrollActive(false);
     }
   }, [scrollY]);
-  if (categoryLoading || userLoading) {
+  if (tagLoading || userLoading) {
     return <h1>Loading</h1>;
   }
   return (
@@ -78,9 +68,14 @@ export const Header = () => {
               <div className="login">
                 <ul>
                   {user?.role === 'admin' && (
-                    <li className="item">
-                      <Link href="/admin">관리자페이지</Link>
-                    </li>
+                    <>
+                      <li className="item">
+                        <Link href="/admin/main">관리자페이지</Link>
+                      </li>
+                      <li className="item">
+                        <span></span>
+                      </li>
+                    </>
                   )}
                   {user?.id && (
                     <>
@@ -138,10 +133,7 @@ export const Header = () => {
             <div>
               <ul className="nav">
                 <li className="benner">
-                  <Link
-                    href="/templates/banner_row"
-                    className={pathName === 'templates' ? 'active' : ''}
-                  >
+                  <Link href="/templates/banner" className={pathName === 'banner' ? 'active' : ''}>
                     현수막
                   </Link>
                 </li>
@@ -154,23 +146,17 @@ export const Header = () => {
                   </Link>
                 </li> */}
                 <li className="print">
-                  <Link
-                    href="/templates/banner_row"
-                    className={pathName === 'sian' ? 'active' : ''}
-                  >
+                  <Link href="/templates/print" className={pathName === 'print' ? 'active' : ''}>
                     인쇄물
                   </Link>
                 </li>
                 <li className="real">
-                  <Link
-                    href="/templates/banner_row"
-                    className={pathName === 'price' ? 'active' : ''}
-                  >
+                  <Link href="/templates/real" className={pathName === 'real' ? 'active' : ''}>
                     실사
                   </Link>
                 </li>
                 <div
-                  className={pathName === '' ? 'non lineBox ' : 'lineBox'}
+                  className={navCutLine >= 0 ? 'lineBox ' : 'lineBox non'}
                   style={{ left: `${navCutLine * 160}px` }}
                 ></div>
 
@@ -180,13 +166,13 @@ export const Header = () => {
                 </div> */}
 
                   <div className="nav_item menu_benner">
-                    {category
+                    {tag
                       .filter((item) => item.from_nav === 'banner')
                       .map((item) => (
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
-                            {item.category_list.split(',').map((text) => (
+                            {item.category_list.list.map((text) => (
                               <li>{text}</li>
                             ))}
                           </ul>
@@ -195,13 +181,13 @@ export const Header = () => {
                   </div>
 
                   <div className="nav_item menu_print">
-                    {category
+                    {tag
                       .filter((item) => item.from_nav === 'print')
                       .map((item) => (
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
-                            {item.category_list.split(',').map((text) => (
+                            {item.category_list.list.map((text) => (
                               <li>{text}</li>
                             ))}
                           </ul>
@@ -210,13 +196,13 @@ export const Header = () => {
                   </div>
 
                   <div className="nav_item menu_real">
-                    {category
+                    {tag
                       .filter((item) => item.from_nav === 'real')
                       .map((item) => (
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
-                            {item.category_list.split(',').map((text) => (
+                            {item.category_list.list.map((text) => (
                               <li>{text}</li>
                             ))}
                           </ul>
@@ -227,12 +213,16 @@ export const Header = () => {
               </ul>
               <ul className="sian_box">
                 <li>
-                  <LibraryAddCheckOutlinedIcon />
-                  시안확인
+                  <Link href="/mypage/my_modify" className="basic_flex">
+                    <LibraryAddCheckOutlinedIcon />
+                    시안확인
+                  </Link>
                 </li>
                 <li>
-                  <PaymentOutlinedIcon />
-                  개인결제
+                  <Link href="/mypage/my_modify" className="basic_flex">
+                    <PaymentOutlinedIcon />
+                    개인결제
+                  </Link>
                 </li>
               </ul>
             </div>

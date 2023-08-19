@@ -1,7 +1,7 @@
 import React from 'react';
 import { BoardCardHeader_container } from './style';
 
-export const BoardCardHeader = () => {
+export const BoardCardHeader = ({ boardHeaderText }) => {
   return (
     <BoardCardHeader_container>
       <div>

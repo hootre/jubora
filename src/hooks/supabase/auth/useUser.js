@@ -18,7 +18,7 @@ const useGetSession = async () => {
     error,
   } = await supabase_client.auth.getSession();
   if (error) {
-    console.error(`session Error : ${error.message}`);
+    console.error(`유저 session 가져오기 오류 : ${error.message}`);
     return;
   }
   return session;
@@ -28,17 +28,18 @@ const useGetUserInfo = () => {
   const handleGetUser = async () => {
     const session = await useGetSession();
     if (session) {
-      let { data: profiles, error } = await supabase_client
+      let { data, error } = await supabase_client
         .from('profiles')
         .select('*')
         .eq('id', session?.user.id)
         .single();
-
-      if (error) {
-        console.error(`getUser Error : ${error.message}`);
-        return;
-      }
-      return profiles;
+      return new Promise((resolve, reject) => {
+        if (error) {
+          reject(`유저 정보 출력 오류 :  ${error.message}`);
+        } else {
+          resolve(data);
+        }
+      });
     } else {
       return [];
     }
@@ -60,6 +61,28 @@ const useLogOut = () => {
   return useMutation(handleLogout, {
     onSuccess: () => {
       router.refresh();
+      client.removeQueries(gatherKeys.current_user);
+    },
+  });
+};
+
+//회원퇄퇴
+const useDelete = (id) => {
+  const handleDelete = async () => {
+    const { error: profiles_error } = await supabase_client.from('profiles').delete().eq('id', id);
+
+    if (profiles_error) {
+      console.error(`회원탈퇴 오류 : ${error.message}`);
+    } else {
+      const { error } = await supabase_client.auth.admin.deleteUser(id);
+      if (!error) toast.success('회원퇄퇴 성공');
+    }
+  };
+  const client = useQueryClient();
+  const router = useRouter();
+  return useMutation(handleDelete, {
+    onSuccess: () => {
+      router.push('/');
       client.removeQueries(gatherKeys.current_user);
     },
   });
@@ -114,6 +137,57 @@ const useCreateUser = () => {
   };
   return useMutation(handleCreateUser);
 };
+
+// 회원 정보 업데이트
+const useUpdateUser = () => {
+  const handleUpdateUser = async ({
+    id,
+    name,
+    phone,
+    password,
+    address_1,
+    address_2,
+    address_3,
+  }) => {
+    if (password) {
+      const { data, error } = await supabase_client.auth.updateUser({
+        password,
+      });
+      if (error) {
+        toast.error(`비밀변호 변경 실패 ${error.message}`);
+      } else {
+        toast.success('비밀변호 변경완료');
+      }
+    }
+    const { data, error } = await supabase_client
+      .from('profiles')
+      .update({
+        name,
+        phone,
+        address_1,
+        address_2,
+        address_3,
+      })
+      .eq('id', id);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`유저 정보 수정 오류 :  ${error.message}`);
+      } else {
+        toast.success('수정완료 하였습니다');
+        resolve(data);
+      }
+    });
+  };
+  const client = useQueryClient();
+  const router = useRouter();
+  return useMutation(handleUpdateUser, {
+    onSuccess: async () => {
+      router.refresh();
+      await client.invalidateQueries(gatherKeys.current_user);
+    },
+  });
+};
+
 // 유저 로그인
 const useSignIn = () => {
   const handleLogin = async ({ email, password }) => {
@@ -182,8 +256,10 @@ export const useUser = () => {
     useGetSession,
     useGetUserInfo,
     useCreateUser,
+    useUpdateUser,
     useSignIn,
     useSignInGoogle,
     useLogOut,
+    useDelete,
   };
 };

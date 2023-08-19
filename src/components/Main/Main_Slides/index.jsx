@@ -2,10 +2,13 @@
 import useInterval from 'hooks/custom/useInterval';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Slide_container } from './style';
+import { Main_Slides_container } from './style';
+import { useMainSlides } from 'hooks/supabase/main/slides/useMainSlides';
 
 // 메인
-export const Slide = ({ slides }) => {
+export const Main_Slides = () => {
+  const { useGetMainSlides } = useMainSlides();
+  const { data: slides, isLoading } = useGetMainSlides();
   // 기본 변수
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -34,8 +37,11 @@ export const Slide = ({ slides }) => {
     }
   };
 
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
   return (
-    <Slide_container>
+    <Main_Slides_container>
       <div className="slide ">
         <div className="slide_list">
           <div className="slide_track">
@@ -51,15 +57,11 @@ export const Slide = ({ slides }) => {
                   >
                     <div className="frame container">
                       <div className="title">
-                        <ul className="icon_list">
-                          <li>
-                            <div>{item.state}</div>
-                          </li>
-                        </ul>
-                        <h1>{item.title.title_1}</h1>
-                        <h1>{item.title.title_2}</h1>
-                        <p>{item.content.content_1}</p>
-                        <p>{item.content.content_2}</p>
+                        <ul className="icon_list"></ul>
+                        <h1>{item.title_1}</h1>
+                        <h1>{item.title_2}</h1>
+                        <p>{item.content_1}</p>
+                        <p>{item.content_2}</p>
                       </div>
                     </div>
                     <a>
@@ -79,7 +81,7 @@ export const Slide = ({ slides }) => {
                         onClick={() => handleSwipe(idx)}
                       >
                         <span className="progress_bar"></span>
-                        <span className="text">{item.subTitle}</span>
+                        <span className="text">{item.subtitle}</span>
                       </li>
                     );
                   })}
@@ -88,6 +90,6 @@ export const Slide = ({ slides }) => {
           </div>
         </div>
       </div>
-    </Slide_container>
+    </Main_Slides_container>
   );
 };

@@ -138,7 +138,7 @@ export const Header_container = styled.header`
             bottom: -4px;
             width: 160px;
             opacity: 1;
-            z-index: 3;
+            z-index: 10;
             border-bottom: 4px solid ${Common.colors.accent100};
             transition-duration: 0.4s;
             transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);

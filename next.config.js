@@ -9,7 +9,12 @@ const nextConfig = {
     includePaths: [path.join(__dirname, 'styles')],
   },
   images: {
-    domains: ['firebasestorage.googleapis.com', 'jubora.co.kr', 'cloudinary.com'],
+    domains: [
+      'firebasestorage.googleapis.com',
+      'jubora.co.kr',
+      'cloudinary.com',
+      'res.cloudinary.com',
+    ],
   },
 };
 module.exports = nextConfig;

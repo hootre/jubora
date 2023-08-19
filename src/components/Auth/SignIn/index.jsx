@@ -5,15 +5,13 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useUser } from 'hooks/auth/useUser';
-import { useEffect } from 'react';
 import { Auth_container } from '../style.jsx';
+import { useUser } from 'hooks/supabase/auth/useUser.js';
 const SignIn = () => {
   // form
   const {
     register,
     handleSubmit,
-    watch,
     trigger,
     formState: { isValid, errors },
   } = useForm();

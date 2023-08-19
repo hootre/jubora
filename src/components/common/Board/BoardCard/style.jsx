@@ -4,6 +4,7 @@ import { Common } from 'styles/Common';
 export const BoardCard_container = styled.div`
   display: flex;
   justify-content: center;
+
   > div {
     width: 1280px;
     display: flex;

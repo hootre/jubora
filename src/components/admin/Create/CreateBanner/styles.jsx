@@ -9,6 +9,12 @@ export const Create_container = styled.section`
     max-width: ${Common.size.container_width};
     margin: 0 auto;
   }
+  .title {
+    width: 100%;
+    text-align: left;
+    font-size: 22px;
+    padding: 20px;
+  }
   .from_item_btn {
     padding: 10px 40px;
     border-radius: 2px;
@@ -29,7 +35,7 @@ export const Create_container = styled.section`
     border-bottom: 1px solid ${Common.colors.bd100};
 
     h2 {
-      flex: 0 0 120px;
+      flex: 0 0 140px;
       font-size: 15px;
       padding: 0 20px;
     }

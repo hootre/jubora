@@ -8,22 +8,37 @@ export const TemplatesSixContent_container = styled.div`
   .content {
     display: flex;
     justify-content: space-between;
-    height: 550px;
     max-width: ${Common.size.container_width};
     section {
       ul {
         display: grid;
         gap: 10px;
-        &.row {
-          grid-template-rows: repeat(2, 0.5fr);
-          grid-template-columns: repeat(3, 1fr);
+        transition: opacity 3s ease-in, height 1s ease;
+        > li {
+          opacity: 0;
         }
-        &.col {
+        &.banner_row {
+          grid-template-rows: repeat(2, 100px);
+          grid-template-columns: repeat(3, 0.5fr);
+          height: 270px;
+          > li {
+            opacity: 1;
+          }
+        }
+        &.banner_col {
           grid-template-columns: repeat(6, 1fr);
+          height: 620px;
+          > li {
+            opacity: 1;
+          }
         }
-        &.square {
+        &.banner_square {
           grid-template-rows: repeat(2, 1fr);
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(4, 1fr);
+          height: 770px;
+          > li {
+            opacity: 1;
+          }
         }
       }
     }

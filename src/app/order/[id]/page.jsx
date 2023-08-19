@@ -2,7 +2,7 @@
 import { BoardCommentInput } from 'components/common/Board/BoardCommentInput';
 import { BoardCommentList } from 'components/common/Board/BoardCommentList';
 import { BoardDetail } from 'components/common/Board/BoardDetail';
-import { useOrder } from 'hooks/order/useOrder';
+import { useOrder } from 'hooks/supabase/order/useOrder';
 import React from 'react';
 
 const order_detail = ({ params: { id } }) => {

@@ -1,40 +1,26 @@
 import React from 'react';
-import Link from 'next/link';
 import { TemplatesSixContent_container } from './style.jsx';
 import { ImageItem } from 'components/common/ImageItem/index.jsx';
-export const TemplatesSixContent = ({
-  templatesList,
-  category,
-  currentItemNum,
-  hendleCurrentItem,
-}) => {
+export const TemplatesSixContent = ({ templatesList, bannerType }) => {
   return (
     <TemplatesSixContent_container>
       <div className="content">
         <section>
-          <ul className={templatesList[currentItemNum].type}>
-            {templatesList.map((item, idx) => {
+          <ul className={bannerType}>
+            {templatesList.map((item) => {
               return (
-                <li
-                  key={item.id}
-                  onClick={() => hendleCurrentItem(idx)}
-                  className={currentItemNum === idx ? 'current_content' : ''}
-                >
-                  {/* <img src={item.file} alt="img" /> */}
+                <li key={item.id}>
                   <ImageItem
-                    img_src={item.file}
-                    href={`/templates/${templatesList[currentItemNum].type}/detail/${item.id}`}
+                    img_src={
+                      bannerType === 'banner_row'
+                        ? item.img_row
+                        : bannerType === 'banner_col'
+                        ? item.img_col
+                        : item.img_square
+                    }
+                    href={`/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
                     text={'구매하기'}
                   />
-                  {/* <div className="purchase_box">
-                    <div className="purchase">
-                      <Link
-                        href={`/templates/${templatesList[currentItemNum].type}/detail/${item.id}`}
-                      >
-                        구매하기
-                      </Link>
-                    </div>
-                  </div> */}
                 </li>
               );
             })}

@@ -50,7 +50,7 @@ export const Showcase_container = styled.section`
       }
       &.banner_square {
         grid-template-rows: repeat(2, 1fr);
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
       li {
         position: relative;

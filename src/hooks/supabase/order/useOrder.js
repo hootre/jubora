@@ -3,7 +3,6 @@ import supabase_client from 'lib/supabase-browser';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 import { deleteFile, uploadFile } from 'utils/fileUpload/fileUpload';
-import { redirect } from 'next/navigation';
 
 // 특정 id 제품 상세
 const useGetOnlyOrder = (id) => {
@@ -91,7 +90,7 @@ const useGetOrder = () => {
   const handleGetOrder = async () => {
     const { data, error } = await supabase_client
       .from('order')
-      .select('id,writer_user_email,title,name, created_at');
+      .select('id,public_id,writer_user_email,title,name, created_at');
     if (error) {
       toast.error(error.message);
       console.error(`ORDER REDE ERROR : ${error.message}`);
@@ -149,14 +148,14 @@ const useUpdateOrder = () => {
         file: url,
         public_id: public_id,
       });
-      if (error) {
-        toast.error(error.message);
-        console.error(`ORDER UPDATA ERROR : ${error.message}`);
-        return;
-      } else {
-        toast.success('ORDER UPDATA SUCCESS');
-      }
-      return data;
+      return new Promise((resolve, reject) => {
+        if (error) {
+          reject(`주문 수정 오류 :  ${error.message}`);
+        } else {
+          toast.success('성공적으로 수정하였습니다');
+          resolve(data);
+        }
+      });
     });
   };
 
@@ -169,19 +168,40 @@ const useUpdateOrder = () => {
 };
 // Templates DELETE
 const useDeleteOrder = () => {
-  const handleDeleteOrder = async ({ id, public_id }) => {
-    await deleteFile(public_id).then(async () => {
-      const { data, error } = await supabase_client.from('order').delete().eq('id', id);
+  const handleDeleteOrder = async (id, public_id) => {
+    if (public_id) {
+      await deleteFile(public_id).then(async (res) => {
+        console.log(res);
+        if (res.ok) {
+          const { error } = await supabase_client.from('order').delete().eq('id', id);
 
-      if (error) {
-        toast.error(error.message);
-        console.error(`ORDER DELETE ERROR : ${error.message}`);
-        return;
-      } else {
-        toast.success('ORDER DELETE SUCCESS');
-      }
-      return data;
-    });
+          return new Promise((resolve, reject) => {
+            if (error) {
+              reject(`주문 삭제 오류 :  ${error.message}`);
+            } else {
+              console.log(error);
+              toast.success('성공적으로 삭제하였습니다');
+              resolve('성공');
+            }
+          });
+        } else {
+          toast.error('이미지 삭제 실패');
+        }
+      });
+    } else {
+      const { error } = await supabase_client.from('order').delete().eq('id', id);
+
+      return new Promise((resolve, reject) => {
+        if (error) {
+          toast.error('주문 삭제 오류');
+          reject(`주문 삭제 오류 :  ${error.message}`);
+        } else {
+          console.log(error);
+          toast.success('성공적으로 삭제하였습니다');
+          resolve('성공');
+        }
+      });
+    }
   };
   const client = useQueryClient();
   return useMutation(handleDeleteOrder, {

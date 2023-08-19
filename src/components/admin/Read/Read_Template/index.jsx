@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import { Showcase } from 'components/Templates/Showcase';
-import { ReadTemplateAll_container } from './style';
+import { Read_Template_container } from './style';
 
-export const Read = () => {
+export const Read_Template = () => {
   return (
-    <ReadTemplateAll_container className="container">
+    <Read_Template_container className="container">
       <Showcase category={'banner'} />
-    </ReadTemplateAll_container>
+    </Read_Template_container>
   );
 };

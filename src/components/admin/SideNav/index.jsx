@@ -1,24 +1,31 @@
 import React from 'react';
 import { SideNav_container } from './style';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import logo from 'assets/MainPage/logo.png';
+import Image from 'next/image';
 
 export const SideNav = () => {
+  // path 관련
+  const pathName = usePathname().substring(1).split('/')[1];
   return (
     <SideNav_container>
-      <ul>
-        <li>
-          <Link href="/admin/main">메인화면</Link>
-        </li>
-        <li>
-          <Link href="/admin/templates">제품관련</Link>
-        </li>
-        <li>
-          <Link href="/admin/user">사용자 관련</Link>
-        </li>
-        <li>
-          <Link href="/admin/userPage">마이페이지 관련</Link>
-        </li>
-      </ul>
+      <div className="logo">
+        <Link href="/">
+          <Image src={logo} alt="admin_logo" width={100} />
+        </Link>
+      </div>
+      <div className="nav_list">
+        <div className={pathName === 'dashboard' ? 'active' : ''}>
+          <Link href="/admin/dashboard">종합 화면</Link>
+        </div>
+        <div className={pathName === 'user' ? 'active' : ''}>
+          <Link href="/admin/user">사용자</Link>
+        </div>
+        <div className={pathName === 'templates' ? 'active' : ''}>
+          <Link href="/admin/templates">게시판</Link>
+        </div>
+      </div>
     </SideNav_container>
   );
 };

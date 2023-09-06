@@ -89,7 +89,7 @@ export const PaymentModal = ({ toggleIsPayment }) => {
               </CopyToClipboard>
             </div>
           </div>
-          <button className="basic_button">문자전송</button>
+          <button className="C_basic_button">문자전송</button>
         </div>
       </div>
     </PaymentModal_container>

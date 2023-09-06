@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from 'lib/supabase';
-import supabase_client from 'lib/supabase-browser';
+import supabase_client from 'lib/supabase_client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
@@ -23,6 +23,27 @@ const useGetSession = async () => {
   }
   return session;
 };
+
+// userList 가져오기
+const useGetUserList = () => {
+  const handleGetUserList = async () => {
+    const session = await useGetSession();
+    if (session) {
+      const { data, error } = await supabase_client.from('profiles').select('*');
+      return new Promise((resolve, reject) => {
+        if (error) {
+          reject(`유저 리스트 불러오기 오류 :  ${error.message}`);
+        } else {
+          resolve(data);
+        }
+      });
+    } else {
+      return [];
+    }
+  };
+  return useQuery(gatherKeys.current_userList, handleGetUserList);
+};
+
 // session 확인하여 유저정보 출력
 const useGetUserInfo = () => {
   const handleGetUser = async () => {
@@ -46,6 +67,7 @@ const useGetUserInfo = () => {
   };
   return useQuery(gatherKeys.current_user, handleGetUser);
 };
+
 // 로그아웃
 const useLogOut = () => {
   const handleLogout = async () => {
@@ -67,12 +89,12 @@ const useLogOut = () => {
 };
 
 //회원퇄퇴
-const useDelete = (id) => {
-  const handleDelete = async () => {
+const useDelete = () => {
+  const handleDelete = async (id) => {
     const { error: profiles_error } = await supabase_client.from('profiles').delete().eq('id', id);
 
     if (profiles_error) {
-      console.error(`회원탈퇴 오류 : ${error.message}`);
+      console.error(`회원탈퇴 오류 : ${profiles_error.message}`);
     } else {
       const { error } = await supabase_client.auth.admin.deleteUser(id);
       if (!error) toast.success('회원퇄퇴 성공');
@@ -84,6 +106,25 @@ const useDelete = (id) => {
     onSuccess: () => {
       router.push('/');
       client.removeQueries(gatherKeys.current_user);
+    },
+  });
+};
+//회원삭제
+const useAdminDelete = () => {
+  const handleAdminDelete = async (id) => {
+    const { error: profiles_error } = await supabase_client.from('profiles').delete().eq('id', id);
+
+    if (profiles_error) {
+      console.log(`회원삭제 오류 : ${profiles_error.message}`);
+    } else {
+      const { error } = await supabase_client.auth.admin.deleteUser(id);
+      if (!error) console.log('회원삭제 성공');
+    }
+  };
+  const client = useQueryClient();
+  return useMutation(handleAdminDelete, {
+    onSuccess: () => {
+      client.removeQueries(gatherKeys.current_userList);
     },
   });
 };
@@ -213,9 +254,11 @@ const useSignIn = () => {
   };
 
   const client = useQueryClient();
+  const router = useRouter();
   return useMutation(handleLogin, {
     onSuccess: async () => {
       await client.invalidateQueries(gatherKeys.current_user);
+      router.refresh();
     },
   });
 };
@@ -254,12 +297,14 @@ export const useUser = () => {
   return {
     useIsUser,
     useGetSession,
+    useGetUserList,
     useGetUserInfo,
     useCreateUser,
     useUpdateUser,
     useSignIn,
     useSignInGoogle,
     useLogOut,
+    useAdminDelete,
     useDelete,
   };
 };

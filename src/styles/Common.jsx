@@ -4,6 +4,7 @@ export const Common = {
     primary100: '#4286f4',
     primary200: '#004e86',
     primary300: '#6ec3ff',
+    adminBg: '#7a6fbe',
     accent100: '#ffc000',
     accent200: '#ffd558',
     point100: '#4fc286',

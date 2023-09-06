@@ -5,7 +5,7 @@ import { Card } from './Card';
 
 export const CardList = () => {
   return (
-    <CardList_container className="container">
+    <CardList_container className="C_container">
       <Card />
       <Card />
       <Card />

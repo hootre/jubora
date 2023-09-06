@@ -7,14 +7,31 @@ export const PasswordCheck_container = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
-  background-color: ${Common.colors.bg200};
-  border: 2px solid ${Common.colors.bg200};
   box-shadow: 24px;
-  padding: 4px;
+  padding: 15px;
+  background: ${Common.colors.white};
+  border-radius: 15px;
   > form {
     display: flex;
-    > input {
-      line-height: 40px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    > h1 {
+      padding: 10px;
+    }
+    .input_box {
+      display: flex;
+      > input {
+        width: 150px;
+        border: 2px solid ${Common.colors.primaryBg};
+        line-height: 20px;
+        margin-right: 10px;
+        transition: all 0.2s ease;
+        &:hover,
+        &:focus {
+          border: 2px solid ${Common.colors.primary100};
+        }
+      }
     }
   }
 `;

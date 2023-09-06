@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import supabase from 'lib/supabase-browser';
+import supabase from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 
 const ResetPassword = async (formData) => {

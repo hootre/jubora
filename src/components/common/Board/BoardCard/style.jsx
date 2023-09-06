@@ -6,7 +6,7 @@ export const BoardCard_container = styled.div`
   justify-content: center;
 
   > div {
-    width: 1280px;
+    width: 100%;
     display: flex;
     align-items: center;
     height: 50px;

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
-import supabase_client from 'lib/supabase-browser';
+import supabase_client from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 
@@ -122,10 +122,10 @@ const useCreateTemplate = () => {
 // Templates ALL REDE
 const useGetALLTemplates = () => {
   const handleGetTemplates = async () => {
-    const { data, error } = await supabase_client.from('products').select('*');
+    const { data, error } = await supabase_client.from('templates').select('*');
     if (error) {
       toast.error(error.message);
-      console.error(`products REDE ERROR : ${error.message}`);
+      console.error(`templates REDE ERROR : ${error.message}`);
       return;
     }
     return data;
@@ -140,7 +140,7 @@ const useUpdateTemplates = () => {
       if (!url) {
         console.error(`Cloudinary UPLOAD ERROR`);
       }
-      const { data, error } = await supabase_client.from('products').update({
+      const { data, error } = await supabase_client.from('templates').update({
         title,
         type,
         tag,
@@ -170,18 +170,38 @@ const useUpdateTemplates = () => {
 // Templates DELETE
 const useDeleteTemplates = () => {
   const handleDeleteTemplate = async ({ id, public_id }) => {
-    await deleteImage(public_id)
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-    const { data, error } = await supabase_client.from('products').delete().eq('id', id);
+    if (public_id) {
+      await deleteImage(public_id).then(async (res) => {
+        if (res.ok) {
+          const { error } = await supabase_client.from('templates').delete().eq('id', id);
 
-    if (error) {
-      toast.error(error.message);
-      console.error(`Templates DELETE ERROR : ${error.message}`);
-      return false;
+          return new Promise((resolve, reject) => {
+            if (error) {
+              toast.error('제품 삭제 오류');
+              reject(`제품 삭제 오류 :  ${error.message}`);
+            } else {
+              console.log(error);
+              toast.success('성공적으로 삭제하였습니다');
+              resolve('성공');
+            }
+          });
+        } else {
+          toast.error('제품 이미지 삭제 실패');
+        }
+      });
     } else {
-      toast.success('Templates DELETE SUCCESS');
-      return true;
+      const { error } = await supabase_client.from('templates').delete().eq('id', id);
+
+      return new Promise((resolve, reject) => {
+        if (error) {
+          toast.error('제품 삭제 오류');
+          reject(`제품 삭제 오류 :  ${error.message}`);
+        } else {
+          console.log(error);
+          toast.success('성공적으로 삭제하였습니다');
+          resolve('성공');
+        }
+      });
     }
   };
   const client = useQueryClient();
@@ -198,5 +218,6 @@ export const useTemplates = () => {
     useGetSixTemplates,
     useGetTemplates,
     useCreateTemplate,
+    useDeleteTemplates,
   };
 };

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import supabase_client from 'lib/supabase-browser';
+import supabase_client from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 import { deleteFile, uploadFile } from 'utils/fileUpload/fileUpload';
@@ -41,6 +41,13 @@ const useCreateOrder = () => {
     image,
     price,
     file,
+    item_1,
+    item_2,
+    item_3,
+    item_4,
+    item_5,
+    item_6,
+    item_7,
   }) => {
     let fileData = null;
 
@@ -67,6 +74,13 @@ const useCreateOrder = () => {
       price,
       file: fileData?.url,
       public_id: fileData?.public_id,
+      item_1,
+      item_2,
+      item_3,
+      item_4,
+      item_5,
+      item_6,
+      item_7,
     });
     if (error) {
       toast.error(error.message);
@@ -90,7 +104,7 @@ const useGetOrder = () => {
   const handleGetOrder = async () => {
     const { data, error } = await supabase_client
       .from('order')
-      .select('id,public_id,writer_user_email,title,name, created_at');
+      .select('id,public_id,writer_user_email,price,state,title,name, created_at');
     if (error) {
       toast.error(error.message);
       console.error(`ORDER REDE ERROR : ${error.message}`);
@@ -121,6 +135,13 @@ const useUpdateOrder = () => {
     image,
     price,
     file,
+    item_1,
+    item_2,
+    item_3,
+    item_4,
+    item_5,
+    item_6,
+    item_7,
   }) => {
     await deleteFile(public_id);
     await uploadFile(file).then(async ({ url, public_id }) => {
@@ -147,6 +168,13 @@ const useUpdateOrder = () => {
         price,
         file: url,
         public_id: public_id,
+        item_1,
+        item_2,
+        item_3,
+        item_4,
+        item_5,
+        item_6,
+        item_7,
       });
       return new Promise((resolve, reject) => {
         if (error) {
@@ -171,7 +199,6 @@ const useDeleteOrder = () => {
   const handleDeleteOrder = async (id, public_id) => {
     if (public_id) {
       await deleteFile(public_id).then(async (res) => {
-        console.log(res);
         if (res.ok) {
           const { error } = await supabase_client.from('order').delete().eq('id', id);
 

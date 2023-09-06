@@ -6,9 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useUser } from 'hooks/supabase/auth/useUser';
 
 export const BoardCard = ({
-  item: { id, public_id, title, writer_user_email, name, created_at },
+  item: { id, public_id, state, title, writer_user_email, name, created_at },
   table,
-  deleteOrder,
   modal = false,
 }) => {
   const [open, setOpen] = useState(false);
@@ -19,7 +18,7 @@ export const BoardCard = ({
   const router = useRouter();
   const handleCheckisModal = () => {
     if (user.email === writer_user_email) {
-      router.push(`/${table}/${id}`);
+      router.push(`/home/${table}/${id}`);
     } else {
       setOpen(true);
     }
@@ -29,14 +28,14 @@ export const BoardCard = ({
     <BoardCard_container>
       <div onClick={modal && handleCheckisModal}>
         <span className="id">{id}</span>
-        <span className="state">[ 확인전 ]</span>
+        <span className="state">[{state}]</span>
         <span className="title">{title}</span>
         <span className="name">{name}</span>
         <span className="date">{String(created_at).substring(5, 10)}</span>
       </div>
-      <button onClick={() => deleteOrder(id, public_id)} className="basic_button">
+      {/* <button onClick={() => deleteOrder(id, public_id)} className="C_basic_button">
         삭제
-      </button>
+      </button> */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

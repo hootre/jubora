@@ -4,7 +4,7 @@ import { Create_container } from './styles';
 import { useMainSlides } from 'hooks/supabase/main/slides/useMainSlides';
 
 const Create_Mainslides = () => {
-  // 제품 카테고리 목록
+  // 메인 슬라이드
   const { useCreateMainSlides } = useMainSlides();
   const { mutate: CreateMainSlide } = useCreateMainSlides();
   // form data
@@ -65,7 +65,7 @@ const Create_Mainslides = () => {
           <h2>제목</h2>
           <div className="item">
             <input
-              className="basic_input"
+              className="C_basic_input"
               type="text"
               name="title_1"
               value={formData.title_1 ?? ''}
@@ -76,7 +76,7 @@ const Create_Mainslides = () => {
           </div>
           <div className="item">
             <input
-              className="basic_input"
+              className="C_basic_input"
               type="text"
               name="title_2"
               value={formData.title_2 ?? ''}
@@ -90,7 +90,7 @@ const Create_Mainslides = () => {
           <h2>내용</h2>
           <div className="item">
             <input
-              className="basic_input"
+              className="C_basic_input"
               type="text"
               name="content_1"
               value={formData.content_1 ?? ''}
@@ -101,7 +101,7 @@ const Create_Mainslides = () => {
           </div>
           <div className="item">
             <input
-              className="basic_input"
+              className="C_basic_input"
               type="text"
               name="content_2"
               value={formData.content_2 ?? ''}
@@ -115,7 +115,7 @@ const Create_Mainslides = () => {
           <h2>소제목</h2>
           <div className="item">
             <input
-              className="basic_input"
+              className="C_basic_input"
               type="text"
               name="subtitle"
               value={formData.subtitle ?? ''}
@@ -125,8 +125,8 @@ const Create_Mainslides = () => {
             />
           </div>
         </div>
-        <div className="basic_flex">
-          <button className="basic_button" disabled={isUploading}>
+        <div className="C_basic_flex">
+          <button className="C_basic_button" disabled={isUploading}>
             {isUploading ? '업로드중...' : '제품 등록하기'}
           </button>
         </div>

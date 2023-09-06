@@ -25,7 +25,7 @@ export const Create_container = styled.section`
     background: ${Common.colors.black};
   }
   .option_container {
-    width: 1280px;
+    width: 100%;
     display: flex;
     -webkit-box-align: baseline;
     align-items: center;
@@ -41,38 +41,6 @@ export const Create_container = styled.section`
     }
     > div {
       display: flex;
-    }
-
-    &.file_box {
-      .file_input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        font-size: 0;
-        visibility: hidden;
-      }
-      .file_text {
-        border: 1px solid #ddd;
-        padding: 0 15px;
-        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        margin-left: 20px;
-        .file_name {
-          color: ${Common.colors.black};
-          padding: 10px;
-          margin-right: 20px;
-          font-size: 14px;
-        }
-        .delete_btn {
-          cursor: pointer;
-          font-size: 12px;
-          color: ${Common.colors.text200};
-        }
-      }
     }
   }
 `;

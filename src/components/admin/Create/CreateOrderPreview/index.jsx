@@ -46,9 +46,9 @@ const CreateOrderPreview = () => {
         <h2 className="title">주문 상세보기 등록</h2>
         <div className="option_container file_box">
           <h2>설정 태그</h2>
-          <div className="basic_flex">
+          <div className="C_basic_flex">
             <select
-              className="basic_input"
+              className="C_basic_input"
               name="from_category"
               required
               onChange={handleChange}
@@ -94,7 +94,7 @@ const CreateOrderPreview = () => {
           <h2>제목</h2>
           <div>
             <input
-              className="basic_input"
+              className="C_basic_input"
               type="text"
               name="title"
               value={formData.title ?? ''}
@@ -118,8 +118,8 @@ const CreateOrderPreview = () => {
           />
         </div>
 
-        <div className="basic_flex">
-          <button className="basic_button" disabled={isUploading}>
+        <div className="C_basic_flex">
+          <button className="C_basic_button" disabled={isUploading}>
             {isUploading ? '업로드중...' : '제품 등록하기'}
           </button>
         </div>

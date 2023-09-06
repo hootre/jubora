@@ -1,7 +1,13 @@
 'use client';
-import CreateBanner from 'components/admin/Create/CreateBanner';
-import { Read } from 'components/admin/Read/Read_Template';
+import { AdminUserPage } from 'components/admin/AdminUserPage';
+import { useUser } from 'hooks/supabase/auth/useUser';
 
-export default function user() {
-  return <></>;
-}
+const page = () => {
+  const { useGetUserList, useAdminDelete } = useUser();
+
+  const { mutate } = useAdminDelete();
+  const { data, isLoading } = useGetUserList();
+
+  return <AdminUserPage data={data} handleDelete={mutate} />;
+};
+export default page;

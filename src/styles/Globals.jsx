@@ -32,26 +32,31 @@ const style = css`
     outline: none;
   }
   /* custom */
-  .container {
+  .C_container {
     width: ${Common.size.container_width};
     margin: 0 auto;
   }
-  .basic_flex {
+  .C_ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .C_basic_flex {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .basic_input {
+  .C_basic_input {
     padding: 5px;
   }
-  .basic_button {
+  .C_basic_button {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 16px;
     min-width: 50px;
     cursor: pointer;
-    padding: 5px;
+    padding: 10px;
     border-radius: 5px;
     transition: all 0.2s;
     background: ${Common.colors.primary100};
@@ -61,6 +66,9 @@ const style = css`
       background: ${Common.colors.primary300};
       transform: translateY(-2px);
       box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+    &:active {
+      transform: translateY(0px);
     }
   }
 

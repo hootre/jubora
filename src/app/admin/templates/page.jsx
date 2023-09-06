@@ -3,7 +3,7 @@ import CreateBanner from 'components/admin/Create/CreateBanner';
 import CreateOrderPreview from 'components/admin/Create/CreateOrderPreview';
 import { Read_Template } from 'components/admin/Read/Read_Template';
 
-export default function templates() {
+const page = () => {
   return (
     <section>
       <CreateBanner />
@@ -11,4 +11,5 @@ export default function templates() {
       <Read_Template />
     </section>
   );
-}
+};
+export default page;

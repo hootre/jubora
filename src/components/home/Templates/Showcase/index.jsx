@@ -26,6 +26,7 @@ export const Showcase = ({ category }) => {
     setBannerType(e.target.value);
   };
 
+  // zustand
   const SortType = useTemplateSortType();
   const tagList = useTemplateTagList();
   // if (isInitialLoading) {

@@ -38,10 +38,10 @@ export const LoginRequest_container = styled.div`
       margin: 0 5px;
       padding: 10px 32px;
       transition: all 0.2s ease;
-      &.cancel {
+      &.signUp {
         background-color: ${Common.colors.bg200};
       }
-      &.delete {
+      &.signIn {
         background-color: ${Common.colors.bg200};
       }
       &:hover {

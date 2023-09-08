@@ -1,9 +1,9 @@
 import { sha1 } from 'crypto-hash';
 
-export const uploadImage = async (file) => {
+export const uploadImage = async (file, folder) => {
   const data = new FormData();
   data.append('file', file);
-  data.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_TEMPLATES);
+  data.append('upload_preset', folder);
   return await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_URL + '/upload', {
     method: 'POST',
     body: data,

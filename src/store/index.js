@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 const useTemplatesStore = create((set) => ({
+  // 로그인/로그아웃 상태관리
+  authState: false,
   // 제품 현재 정렬
   templateSortType: '최신순',
   // 현재 태그리스트
@@ -29,12 +31,16 @@ const useTemplatesStore = create((set) => ({
     setIsCurrentFilter: () => {
       set((state) => ({ isCurrentFilter: !state.isCurrentFilter }));
     },
+    setAuthState: () => {
+      set((state) => ({ authState: !state.authState }));
+    },
 
     setIsHeaderScrollActive: (state) => set({ templateSortType: state }),
   },
 }));
 
 // state
+export const useAuthState = () => useTemplatesStore((state) => state.authState);
 export const useTemplateSortType = () => useTemplatesStore((state) => state.templateSortType);
 export const useIsCurrentFilter = () => useTemplatesStore((state) => state.isCurrentFilter);
 export const useTemplateSearchText = () => useTemplatesStore((state) => state.templateSearchText);

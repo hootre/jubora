@@ -4,7 +4,6 @@ import { useUser } from 'hooks/supabase/auth/useUser';
 
 const page = () => {
   const { useGetUserList, useAdminDelete } = useUser();
-
   const { mutate } = useAdminDelete();
   const { data, isLoading } = useGetUserList();
 

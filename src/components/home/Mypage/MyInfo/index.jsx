@@ -32,7 +32,6 @@ export const MyInfo = () => {
   }, [userData]);
 
   const onSubmit = (data) => {
-    console.log(data);
     updateUser(data);
   };
   // 회원탈퇴 모달 관리

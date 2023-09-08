@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
-import { deleteFile, uploadFile } from 'utils/fileUpload/fileUpload';
+import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
+import { uploadImage, deleteImage } from 'utils/imageUpload/uploader';
 
 // 특정 id 제품 상세
 const useGetOnlyOrder = (id) => {
@@ -52,7 +53,7 @@ const useCreateOrder = () => {
     let fileData = null;
 
     if (file.length) {
-      fileData = await uploadFile(file[0]);
+      fileData = await uploadImage(file[0], cloudFolderList.order);
     }
     const { data, error } = await supabase_client.from('order').insert({
       writer_user_email,
@@ -144,7 +145,7 @@ const useUpdateOrder = () => {
     item_7,
   }) => {
     await deleteFile(public_id);
-    await uploadFile(file).then(async ({ url, public_id }) => {
+    await uploadImage(file, cloudFolderList.order).then(async ({ url, public_id }) => {
       if (!url) {
         console.error(`Cloudinary UPLOAD ERROR`);
       }
@@ -198,7 +199,7 @@ const useUpdateOrder = () => {
 const useDeleteOrder = () => {
   const handleDeleteOrder = async (id, public_id) => {
     if (public_id) {
-      await deleteFile(public_id).then(async (res) => {
+      await deleteImage(public_id).then(async (res) => {
         if (res.ok) {
           const { error } = await supabase_client.from('order').delete().eq('id', id);
 

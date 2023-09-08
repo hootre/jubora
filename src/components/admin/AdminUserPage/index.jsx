@@ -9,7 +9,8 @@ import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { memo } from 'react';
 import { useForm } from 'react-hook-form';
-
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 export const AdminUserPage = memo(({ data, handleDelete }) => {
   //유저 데이터
   const [userData, setUserData] = useState(data);
@@ -18,8 +19,20 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
   }, [data]);
   // 유저 삭제
   const deleteUser = () => {
-    checkedList.map((id) => {
-      handleDelete(id);
+    confirmAlert({
+      title: '정말로 삭제하시겠습니까?',
+      message: '복구 불가능합니다',
+      buttons: [
+        {
+          label: '삭제',
+          onClick: () => {
+            checkedList.map((id) => {
+              handleDelete(id);
+            });
+          },
+        },
+        { label: '취소' },
+      ],
     });
   };
   // user check 관리
@@ -78,7 +91,10 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
     <AdminUserPage_container>
       <div className="top_box">
         <div className="button_box">
-          <button className="C_basic_button" onClick={deleteUser}>
+          <button
+            className="C_basic_button"
+            onClick={() => (checkedList.length > 0 ? deleteUser() : null)}
+          >
             선택 삭제
           </button>
         </div>
@@ -162,7 +178,7 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
               {`${item.address_1} ${item.address_2}`}
             </div>
             <div className="grid-table-cell" data-title="Series">
-              {SimpleDate(item.created_at, 'y')}
+              {SimpleDate(item.updated_at, 'y')}
             </div>
             <div className="grid-table-cell" data-title="Air Date">
               {SimpleDate(item.created_at, 'y')}

@@ -15,6 +15,9 @@ import { useScroll } from 'hooks/custom/useScroll';
 import { useEffect } from 'react';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
+import { AuthModal } from 'components/home/Auth/AuthModal';
+import { useTemplatesActions } from 'store';
+import { useAuthState } from 'store';
 export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
@@ -39,6 +42,9 @@ export const Header = () => {
     setIsMypage((prev) => !prev);
   };
 
+  //Auth Modal 관련
+  // zustand
+  const { setAuthState } = useTemplatesActions();
   // scroll event
   const { scrollY } = useScroll();
   const [ScrollActive, setScrollActive] = useState(false);
@@ -50,8 +56,9 @@ export const Header = () => {
     }
   }, [scrollY]);
   if (tagLoading || userLoading) {
-    return <h1>Loading</h1>;
+    return;
   }
+
   return (
     <Header_container ScrollActive={ScrollActive}>
       <div className="prev_site">
@@ -101,13 +108,7 @@ export const Header = () => {
                   {!user?.id && (
                     <>
                       <li className="item">
-                        <Link href="/home/auth/signin">로그인</Link>
-                      </li>
-                      <li className="item">
-                        <span></span>
-                      </li>
-                      <li className="item">
-                        <Link href="/home/auth/signup">회원가입</Link>
+                        <a onClick={setAuthState}>로그인/회원가입</a>
                       </li>
                     </>
                   )}
@@ -115,13 +116,7 @@ export const Header = () => {
                     <span></span>
                   </li>
                   <li className="item">
-                    <Link href="/home/auth/signup">주문내역</Link>
-                  </li>
-                  <li className="item">
-                    <span></span>
-                  </li>
-                  <li className="item">
-                    <Link href="/home/auth/signup">고객센터</Link>
+                    <Link href="/home/notice">고객센터</Link>
                   </li>
                 </ul>
               </div>
@@ -179,7 +174,7 @@ export const Header = () => {
                           <h1>{item.title}</h1>
                           <ul>
                             {item.category_list.list.map((text) => (
-                              <li>{text}</li>
+                              <li key={text}>{text}</li>
                             ))}
                           </ul>
                         </div>
@@ -194,7 +189,7 @@ export const Header = () => {
                           <h1>{item.title}</h1>
                           <ul>
                             {item.category_list.list.map((text) => (
-                              <li>{text}</li>
+                              <li key={text}>{text}</li>
                             ))}
                           </ul>
                         </div>
@@ -209,7 +204,7 @@ export const Header = () => {
                           <h1>{item.title}</h1>
                           <ul>
                             {item.category_list.list.map((text) => (
-                              <li>{text}</li>
+                              <li key={text}>{text}</li>
                             ))}
                           </ul>
                         </div>

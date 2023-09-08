@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Auth_container } from '../style.jsx';
 import { useUser } from 'hooks/supabase/auth/useUser.js';
-const SignIn = () => {
+const SignIn = ({ authType, setAuthType }) => {
   // form
   const {
     register,
@@ -21,132 +21,163 @@ const SignIn = () => {
   const { mutate: googleLogin } = useSignInGoogle();
   const router = useRouter();
   return (
-    <Auth_container>
-      <div>
-        <div>
-          <div className="titleLogo">
-            <a href="#">
-              <Image src={logo} alt="" />
-            </a>
-          </div>
-          <form
-            onSubmit={handleSubmit((data) =>
-              basicLogin(data, {
-                onSuccess: ({ user }) => {
-                  if (user) {
-                    router.push('/');
-                  }
-                },
-              })
-            )}
-          >
-            <div className="titleLabel">
-              <label htmlFor="titleLabel">로그인</label>
-            </div>
-            <p className={`point_text ${errors.email && 'active'}`}>{errors.email?.message} </p>
-            <input
-              id="email"
-              placeholder="이메일"
-              className={`input ${errors.email && 'invalid'}`}
-              name="email"
-              type="email"
-              required={true}
-              {...register('email', {
-                required: '이메일은 필수입니다',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: '이메일 형식을 지켜주세요',
-                },
-              })}
-              onKeyUp={() => {
-                trigger('email');
-              }}
-            ></input>
-            <p className={`point_text ${errors.password && 'active'}`}>
-              {errors.password?.message}{' '}
-            </p>
-            <input
-              name="password"
-              placeholder="비밀번호"
-              id="password"
-              type="password"
-              autoComplete="off"
-              className={`input form-control ${errors.password && 'invalid'}`}
-              required={true}
-              {...register('password', {
-                required: '비밀번호는 필수입니다.',
-                pattern: {
-                  value: /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
-                  message: '6~20 자의 영문대소문자, 숫자 및 특수문자 입력해 주세요',
-                },
-                minLength: {
-                  value: 6,
-                  message: '비밀번호는 최소 8글자 이상입니다.',
-                },
-                maxLength: {
-                  value: 20,
-                  message: '비밀번호는 최소 20글자 이하입니다.',
-                },
-              })}
-              onKeyUp={() => {
-                trigger('password');
-              }}
-            ></input>
-            <button
-              type={isValid ? 'submit' : 'button'}
-              className={`submit ${isValid && 'possible'}`}
-              disabled={isLoading}
-            >
-              <span>로그인</span>
-            </button>
-            <ul className="login_util">
-              <Link className="util_btn" href="/home/auth/signup">
-                아이디 찾기
-              </Link>
-              <Link className="util_btn" href="/home/auth/reset">
-                비밀번호 찾기
-              </Link>
-              <Link className="util_btn" href="/home/auth/signup">
-                회원가입
-              </Link>
-            </ul>
-            <div className="webLogin">
-              <button type="button" className="googleBtn" onClick={googleLogin}>
-                <span>
-                  <svg viewBox="0 0 57 56" className="css-1h47l4s">
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M41.6657 28.3122C41.6657 27.34 41.5789 26.4044 41.4158 25.5068H28.5V30.8112H35.8813C35.5629 32.5255 34.5968 33.9792 33.1446 34.9514V38.3922H37.5758C40.1693 36.0044 41.6657 32.4889 41.6657 28.3122Z"
-                      fill="#3D82F0"
-                    ></path>
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M28.5003 41.7146C32.2032 41.7146 35.3072 40.4864 37.5761 38.3927L33.1449 34.9504C31.9167 35.7733 30.3457 36.2594 28.5003 36.2594C24.9285 36.2594 21.9053 33.8472 20.8264 30.606H16.2443V34.1595C18.5011 38.6411 23.1396 41.7146 28.5003 41.7146Z"
-                      fill="#31A752"
-                    ></path>
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M20.8261 30.606C20.5518 29.7831 20.3964 28.9039 20.3964 28.0002C20.3964 27.0966 20.5518 26.2174 20.8261 25.3945V21.841H16.244C15.316 23.6924 14.7857 25.7877 14.7857 28.0002C14.7857 30.2128 15.316 32.3081 16.244 34.1595L20.8261 30.606Z"
-                      fill="#F9BA00"
-                    ></path>
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M28.5003 19.7407C30.5133 19.7407 32.322 20.4325 33.7422 21.7917L37.6767 17.8588C35.3011 15.6447 32.1971 14.2855 28.5003 14.2855C23.1396 14.2855 18.5011 17.359 16.2443 21.842L20.8264 25.394C21.9053 22.1529 24.9285 19.7407 28.5003 19.7407Z"
-                      fill="#E64234"
-                    ></path>
-                  </svg>
-                </span>
-                <p>Google</p>
-              </button>
-            </div>
-          </form>
-        </div>
+    <div>
+      <div className="title">
+        <h2>편리한 이용을 위해</h2>
+        <h1>로그인이 필요합니다</h1>
       </div>
-    </Auth_container>
+      <ul className="login_util">
+        <li className={authType === 'signIn' ? 'active' : ''} onClick={() => setAuthType('signIn')}>
+          로그인
+        </li>
+        <li className={authType === 'signUp' ? 'active' : ''} onClick={() => setAuthType('signUp')}>
+          회원가입
+        </li>
+      </ul>
+      <main>
+        <form
+          className="form_box"
+          onSubmit={handleSubmit((data) =>
+            basicLogin(data, {
+              onSuccess: ({ user }) => {
+                if (user) {
+                  router.push('/');
+                }
+              },
+            })
+          )}
+        >
+          <p className={`point_text ${errors.email && 'active'}`}>{errors.email?.message} </p>
+          <input
+            id="email"
+            placeholder="이메일"
+            className={`input ${errors.email && 'invalid'}`}
+            name="email"
+            type="email"
+            required={true}
+            {...register('email', {
+              required: '이메일은 필수입니다',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: '이메일 형식을 지켜주세요',
+              },
+            })}
+            onKeyUp={() => {
+              trigger('email');
+            }}
+          ></input>
+          <p className={`point_text ${errors.password && 'active'}`}>{errors.password?.message} </p>
+          <input
+            name="password"
+            placeholder="비밀번호"
+            id="password"
+            type="password"
+            autoComplete="off"
+            className={`input form-control ${errors.password && 'invalid'}`}
+            required={true}
+            {...register('password', {
+              required: '비밀번호는 필수입니다.',
+              pattern: {
+                value: /^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+                message: '6~20 자의 영문대소문자, 숫자 및 특수문자 입력해 주세요',
+              },
+              minLength: {
+                value: 6,
+                message: '비밀번호는 최소 8글자 이상입니다.',
+              },
+              maxLength: {
+                value: 20,
+                message: '비밀번호는 최소 20글자 이하입니다.',
+              },
+            })}
+            onKeyUp={() => {
+              trigger('password');
+            }}
+          ></input>
+          <span className="passwordForget" onClick={() => setAuthType('forgetPassword')}>
+            아이디/비밀번호 찾기
+          </span>
+
+          <button
+            type={isValid ? 'submit' : 'button'}
+            className={`submit ${isValid && 'possible'}`}
+            disabled={isLoading}
+          >
+            <span>로그인</span>
+          </button>
+
+          <div className="social_login_box">
+            <button type="button" className="googleBtn" onClick={googleLogin}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                <g id="logo_google" transform="translate(5 3.973)">
+                  <path
+                    id="사각형_5282"
+                    fill="none"
+                    d="M0 0H32V32H0z"
+                    data-name="사각형 5282"
+                    transform="translate(-5 -3.973)"
+                  />
+                  <path
+                    id="패스_6627"
+                    fill="#4285f4"
+                    d="M283.466 225.5a13.918 13.918 0 0 0-.2-2.4H272.1v4.557h6.392a5.478 5.478 0 0 1-2.365 3.6v2.957h3.813a11.557 11.557 0 0 0 3.526-8.714z"
+                    data-name="패스 6627"
+                    transform="translate(-261.267 -213.371)"
+                  />
+                  <path
+                    id="패스_6628"
+                    fill="#34a853"
+                    d="M39.475 333.866a11.328 11.328 0 0 0 7.844-2.857l-3.813-2.957a7.177 7.177 0 0 1-10.67-3.752H28.9v3.048a11.835 11.835 0 0 0 10.575 6.518z"
+                    data-name="패스 6628"
+                    transform="translate(-28.641 -310.171)"
+                  />
+                  <path
+                    id="패스_6629"
+                    fill="#fbbc04"
+                    d="M5.139 157.579a7.088 7.088 0 0 1 0-4.531V150h-3.93a11.844 11.844 0 0 0 0 10.627z"
+                    data-name="패스 6629"
+                    transform="translate(-.95 -143.45)"
+                  />
+                  <path
+                    id="패스_6630"
+                    fill="#ea4335"
+                    d="M39.475 4.665a6.43 6.43 0 0 1 4.539 1.774l3.378-3.379a11.373 11.373 0 0 0-7.917-3.078A11.831 11.831 0 0 0 28.9 6.5l3.931 3.048a7.078 7.078 0 0 1 6.644-4.883z"
+                    data-name="패스 6630"
+                    transform="translate(-28.641 .046)"
+                  />
+                </g>
+              </svg>
+            </button>
+            <button type="button" className="kakaoBtn" onClick={googleLogin}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                <g id="logo_kakao" transform="translate(3 4)">
+                  <path
+                    id="사각형_5283"
+                    fill="none"
+                    d="M0 0H32V32H0z"
+                    data-name="사각형 5283"
+                    transform="translate(-3 -4)"
+                  />
+                  <path
+                    id="합치기_5"
+                    fill="#3e2723"
+                    d="M4.325 22.294l1.6-3.7C2.363 16.8 0 13.657 0 10.071 0 4.509 5.685 0 12.7 0s12.7 4.509 12.7 10.071-5.689 10.071-12.7 10.071a15.976 15.976 0 0 1-2.585-.209L5.289 23.1a1.218 1.218 0 0 1-.622.233c-.467.002-.534-.592-.342-1.039z"
+                    data-name="합치기 5"
+                  />
+                  <path
+                    id="합치기_6"
+                    fill="#ffeb3b"
+                    d="M8.788 6.853L8.405 5.8H5.7l-.329.906a.657.657 0 1 1-1.233-.446L6.161.7a.655.655 0 0 1 .124-.206.932.932 0 0 1 1.244-.245.657.657 0 0 1 .4.394l2.1 5.76a.658.658 0 0 1-.393.842.671.671 0 0 1-.224.039.658.658 0 0 1-.624-.431zM6.18 4.488h1.746l-.873-2.4zM1.97 6.459V1.423H.657a.657.657 0 1 1 0-1.313H4.6a.657.657 0 0 1 0 1.313H3.284v5.036a.657.657 0 0 1-1.314 0zm9.09.651H10.976a.686.686 0 0 1-.686-.686V.8a.686.686 0 0 1 1.372 0v5h1.972a.656.656 0 1 1 0 1.312zm6.691-.338l-1.794-2.38-.3.3V6.35a.657.657 0 0 1-1.314 0V.657a.657.657 0 0 1 1.314 0v2.181L17.788.706a.657.657 0 1 1 .929.929l-1.822 1.82 1.9 2.526a.657.657 0 0 1-1.049.791z"
+                    data-name="합치기 6"
+                    transform="translate(2.846 7.115)"
+                  />
+                </g>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
   );
 };
 

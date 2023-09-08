@@ -4,6 +4,8 @@ import { QueryClientProvider, QueryClient, QueryCache } from '@tanstack/react-qu
 import { Toaster, toast } from 'react-hot-toast';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import GlobalStyle from 'styles/globals';
+import { AuthModal } from 'components/home/Auth/AuthModal';
+import GoogleAnalytics from 'app/GoogleAnalytics';
 
 function Providers({ children }) {
   const [client] = useState(
@@ -29,7 +31,9 @@ function Providers({ children }) {
 
   return (
     <QueryClientProvider client={client}>
+      <GoogleAnalytics />
       <GlobalStyle />
+      <AuthModal />
       <Toaster />
       {children}
       <ReactQueryDevtools initialIsOpen={false} />

@@ -8,25 +8,10 @@ import { useUser } from 'hooks/supabase/auth/useUser';
 export const BoardCard = ({
   item: { id, public_id, state, title, writer_user_email, name, created_at },
   table,
-  modal = false,
 }) => {
-  const [open, setOpen] = useState(false);
-  // user상태관리
-  const { useGetUserInfo } = useUser();
-  const { data: user } = useGetUserInfo();
-
-  const router = useRouter();
-  const handleCheckisModal = () => {
-    if (user.email === writer_user_email) {
-      router.push(`/home/${table}/${id}`);
-    } else {
-      setOpen(true);
-    }
-  };
-  const handleClose = () => setOpen(false);
   return (
     <BoardCard_container>
-      <div onClick={modal && handleCheckisModal}>
+      <div>
         <span className="id">{id}</span>
         <span className="state">[{state}]</span>
         <span className="title">{title}</span>
@@ -36,25 +21,6 @@ export const BoardCard = ({
       {/* <button onClick={() => deleteOrder(id, public_id)} className="C_basic_button">
         삭제
       </button> */}
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={open}>
-          <Box>
-            <PasswordCheckModal table={table} id={id} />
-          </Box>
-        </Fade>
-      </Modal>
     </BoardCard_container>
   );
 };

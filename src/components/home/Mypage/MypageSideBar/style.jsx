@@ -49,8 +49,11 @@ export const MypageSideBar_container = styled.div`
           display: flex;
           justify-content: center;
           padding: 30px;
-          margin: 5px 0;
         }
+        h1 {
+          color: ${Common.colors.text300};
+        }
+        box-shadow: 0px 0px 3px rgba(100, 100, 100, 0.1);
         &:hover,
         &.active {
           h1 {

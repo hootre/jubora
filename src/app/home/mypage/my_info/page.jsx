@@ -3,13 +3,14 @@ import { LoginRequest } from 'components/common/LoginRequest';
 import supabase_server from 'lib/supabase-server';
 import React from 'react';
 
-const page = async () => {
+const page = async ({ searchParams: { code } }) => {
   const {
     data: { session },
   } = await supabase_server.auth.getSession();
-  if (session?.user) {
+  if (session?.user || code) {
     return <MyInfo />;
+  } else {
+    return <LoginRequest />;
   }
-  return <LoginRequest />;
 };
 export default page;

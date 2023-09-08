@@ -3,6 +3,7 @@ import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import supabase_client from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
+import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 
 // 특정 id 제품 상세
 const useGetOnlyTemplate = (id) => {
@@ -79,14 +80,23 @@ const useCreateTemplate = () => {
     tag,
     tag_detail,
   }) => {
-    const { url: img_url_row, public_id: public_id_row } = await uploadImage(img_row)
+    const { url: img_url_row, public_id: public_id_row } = await uploadImage(
+      img_row,
+      cloudFolderList.templates
+    )
       .then((data) => data)
       .catch((error) => console.log(`가로형 이미지 업로드 오류 :  ${error.message}`));
 
-    const { url: img_url_col, public_id: public_id_col } = await uploadImage(img_col)
+    const { url: img_url_col, public_id: public_id_col } = await uploadImage(
+      img_col,
+      cloudFolderList.templates
+    )
       .then((data) => data)
       .catch((error) => console.log(`세로형 이미지 업로드 오류 :  ${error.message}`));
-    const { url: img_url_square, public_id: public_id_square } = await uploadImage(img_square)
+    const { url: img_url_square, public_id: public_id_square } = await uploadImage(
+      img_square,
+      cloudFolderList.templates
+    )
       .then((data) => data)
       .catch((error) => console.log(`포스터형 이미지 업로드 오류 :  ${error.message}`));
     const { data, error } = await supabase_client.from('templates').insert({
@@ -125,8 +135,7 @@ const useGetALLTemplates = () => {
     const { data, error } = await supabase_client.from('templates').select('*');
     if (error) {
       toast.error(error.message);
-      console.error(`templates REDE ERROR : ${error.message}`);
-      return;
+      throw console.log(`templates REDE ERROR : ${error.message}`);
     }
     return data;
   };
@@ -136,7 +145,7 @@ const useGetALLTemplates = () => {
 const useUpdateTemplates = () => {
   const handleUpdateTemplate = async ({ file, title, category, type, tag, public_id }) => {
     await deleteImage(public_id).then();
-    await uploadImage(file).then(async ({ url, public_id }) => {
+    await uploadImage(file, cloudFolderList.templates).then(async ({ url, public_id }) => {
       if (!url) {
         console.error(`Cloudinary UPLOAD ERROR`);
       }

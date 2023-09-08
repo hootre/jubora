@@ -1,5 +1,5 @@
 import { Main_Slides } from 'components/home/Main/Main_Slides';
-import { Notice } from 'components/home/Main/Notice';
+import { Main_Notice } from 'components/home/Main/Main_Notice';
 import { noticeList } from 'assets/data';
 import { TemplatesContents } from 'components/home/Main/TemplatesContents';
 import { CardList } from 'components/common/CardList';
@@ -16,7 +16,7 @@ const Home = async () => {
       <img src="https://nuriad.co.kr/data/bbsData/16376642931.jpg" alt="" />
       <CardList />
       <img src="https://nuriad.co.kr/data/bbsData/16376639661.jpg" alt="" />
-      <Notice noticeList={noticeList} />
+      <Main_Notice noticeList={noticeList} />
     </HomeLayoutComponent>
   );
 };

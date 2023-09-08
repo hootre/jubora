@@ -74,7 +74,6 @@ const Order_detail = ({ detail_data, order_setting, bannerType }) => {
 
   const router = useRouter();
   const onSubmit = (data) => {
-    console.log(data);
     createOrder(data);
     // router.push('/order');
   };

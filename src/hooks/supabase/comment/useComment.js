@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
-import { deleteFile, uploadFile } from 'utils/fileUpload/fileUpload';
+import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
+import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 
 // ORDER 생성
 const useCreateComment = () => {
@@ -77,8 +78,8 @@ const useUpdateOrder = () => {
     price,
     file,
   }) => {
-    await deleteFile(public_id);
-    await uploadFile(file).then(async ({ url, public_id }) => {
+    await deleteImage(public_id);
+    await uploadImage(file, cloudFolderList.order).then(async ({ url, public_id }) => {
       if (!url) {
         console.error(`Cloudinary UPLOAD ERROR`);
       }
@@ -124,7 +125,7 @@ const useUpdateOrder = () => {
 // Templates DELETE
 const useDeleteOrder = () => {
   const handleDeleteOrder = async ({ id, public_id }) => {
-    await deleteFile(public_id).then(async () => {
+    await deleteImage(public_id).then(async () => {
       const { data, error } = await supabase_client.from('order').delete().eq('id', id);
 
       if (error) {

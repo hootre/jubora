@@ -4,7 +4,6 @@ export default function Loading() {
   return (
     <>
       <MainLoading />
-      <h1>dqdqwwqdqw</h1>
     </>
   );
 }

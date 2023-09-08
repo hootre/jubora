@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase_client';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
+import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 // 특정 id 제품 상세
 const useGetOnlyOrderItemPreview = (id) => {
@@ -32,7 +33,7 @@ const useGetOnlyOrderItemPreview = (id) => {
 // ORDER 생성
 const useCreateOrderItemPreview = () => {
   const handleCreateOrderItemPreview = async ({ from_category, img, title, description }) => {
-    const { url, public_id } = await uploadImage(img)
+    const { url, public_id } = await uploadImage(img, cloudFolderList.order)
       .then((data) => data)
       .catch((error) => console.log(`주문 상세 이미지 업로드 오류 :  ${error.message}`));
 
@@ -86,7 +87,7 @@ const useUpdateOrderItemPreview = () => {
     prev_public_id,
   }) => {
     await deleteImage(prev_public_id);
-    const { url, public_id } = await uploadImage(img)
+    const { url, public_id } = await uploadImage(img, cloudFolderList.order)
       .then((data) => data)
       .catch((error) => console.log(`주문 상세 이미지 업로드 오류 :  ${error.message}`));
     const { data, error } = await supabase_client

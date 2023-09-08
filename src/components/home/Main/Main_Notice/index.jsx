@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import { Notice_container } from './style';
-export const Notice = ({ noticeList }) => {
+import { Main_Notice_container } from './style';
+export const Main_Notice = ({ noticeList }) => {
   return (
-    <Notice_container>
+    <Main_Notice_container>
       <div className="C_container">
         <div className="title">
           <h1>Notice</h1>
@@ -30,6 +30,6 @@ export const Notice = ({ noticeList }) => {
           </a>
         </div>
       </div>
-    </Notice_container>
+    </Main_Notice_container>
   );
 };

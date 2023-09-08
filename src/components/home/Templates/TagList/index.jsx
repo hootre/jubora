@@ -6,6 +6,7 @@ import { useTemplatesActions } from 'store';
 import { TagList_container } from './style';
 
 export const TagList = () => {
+  // zustand
   const TagList = useTemplateTagList();
   const { setDeleteTemplateTagList } = useTemplatesActions();
   const handleDeleteTag = (id) => {

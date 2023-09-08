@@ -13,9 +13,9 @@ const categoryList = [
   },
 ];
 export const SideCategory = () => {
+  // zustand
   const { setAddTemplateTagList } = useTemplatesActions();
   const TagList = useTemplateTagList();
-
   const handleCategory = (category) => {
     setAddTemplateTagList({
       id: v4(),

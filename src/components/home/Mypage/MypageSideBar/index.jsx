@@ -11,10 +11,11 @@ export const MypageSideBar = () => {
   const { data: userData, isLoading } = useGetUserInfo();
 
   // path 관련
-  const pathName = usePathname().substring(1).split('/')[1];
+  const pathName = usePathname().substring(1).split('/')[2];
   if (isLoading) {
     return <h1>Loading</h1>;
   }
+  console.log(pathName);
   return (
     <MypageSideBar_container>
       <div className="nav_box">

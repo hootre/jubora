@@ -5,7 +5,7 @@ import { Footer_container } from './style.jsx';
 export const Footer = () => {
   return (
     <Footer_container>
-      <div className="footer container">
+      <div className="footer C_container">
         <div className="footerContent">
           <nav>
             <ul>

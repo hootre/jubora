@@ -6,6 +6,12 @@ const style = css`
   ${reset};
   * {
     box-sizing: border-box;
+    -webkit-scrollbar {
+      width: 5px;
+    }
+    -webkit-scrollbar-thumb {
+      background: #666;
+    }
   }
   html {
     padding: 0;
@@ -18,6 +24,7 @@ const style = css`
   body {
     position: relative;
     min-height: 737px;
+    overflow-x: hidden;
   }
   button {
     border: none;
@@ -32,6 +39,41 @@ const style = css`
     outline: none;
   }
   /* custom */
+
+  //react-hooks-form pointText
+
+  // 로그인 조건 경고 텍스트
+  .point_text {
+    height: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: ${Common.colors.red};
+    font-size: 12px;
+    opacity: 0.2;
+    transition: all 0.5s ease;
+    &.active {
+      height: 30px;
+      opacity: 1;
+      padding: 10px;
+    }
+  }
+  @keyframes smoothAppear {
+    from {
+      opacity: 0;
+      transform: translateY(-5%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .react-confirm-alert-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   .C_container {
     width: ${Common.size.container_width};
     margin: 0 auto;
@@ -58,7 +100,7 @@ const style = css`
     cursor: pointer;
     padding: 10px;
     border-radius: 5px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     background: ${Common.colors.primary100};
     color: ${Common.colors.white};
     font-weight: bold;
@@ -69,6 +111,13 @@ const style = css`
     }
     &:active {
       transform: translateY(0px);
+    }
+    > a {
+      color: ${Common.colors.white};
+    }
+    &.inactive {
+      background: ${Common.colors.bd100};
+      color: ${Common.colors.text200};
     }
   }
 

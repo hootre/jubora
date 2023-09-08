@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="kr">
       <body>
-        <GoogleAnalytics />
         <Providers>{children}</Providers>
       </body>
     </html>

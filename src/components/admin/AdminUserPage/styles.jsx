@@ -13,6 +13,7 @@ export const AdminUserPage_container = styled.div`
       padding: 20px;
       font-size: 20px;
     }
+
     .search_box {
       width: 300px;
       display: flex;

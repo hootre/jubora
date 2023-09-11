@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Notice_Read_container = styled.section`
+export const Question_Read_container = styled.section`
   width: ${Common.size.container_width};
   margin: 0 auto;
   padding: 50px 0;

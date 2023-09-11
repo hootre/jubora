@@ -5,6 +5,8 @@ export const gatherKeys = {
   templates_six: ['templates_six'],
   productsTag: ['productsTag'],
   order: ['order'],
+  notice: ['notice'],
+
   orderSetting: ['orderSetting'],
   orderItemPreview: ['orderItemPreview'],
   comment: ['comment'],

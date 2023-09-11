@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { Notice_Read_container } from './styles';
+import { Question_Read_container } from './styles';
 import { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ import { useNotice } from 'hooks/supabase/notice/useNotice';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-const Notice_Read = () => {
+const Question_Read = () => {
   // user상태관리
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -76,7 +76,7 @@ const Notice_Read = () => {
     return <h1>Loading</h1>;
   }
   return (
-    <Notice_Read_container>
+    <Question_Read_container>
       <div className="top_box">
         <h1 className="order_title">
           NOTICE <span>공지사항입니다.</span>
@@ -151,7 +151,7 @@ const Notice_Read = () => {
             </li>
           ))}
       </ul>
-    </Notice_Read_container>
+    </Question_Read_container>
   );
 };
-export default Notice_Read;
+export default Question_Read;

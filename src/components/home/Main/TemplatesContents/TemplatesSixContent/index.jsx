@@ -8,18 +8,20 @@ export const TemplatesSixContent = ({ templatesList, bannerType }) => {
         <section>
           <ul className={bannerType}>
             {templatesList.map((item) => {
+              console.log(item);
               return (
                 <li key={item.id}>
                   <ImageItem
                     img_src={
                       bannerType === 'banner_row'
-                        ? item.img_row
+                        ? item.public_id_row
                         : bannerType === 'banner_col'
-                        ? item.img_col
-                        : item.img_square
+                        ? item.public_id_col
+                        : item.public_id_square
                     }
                     href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
                     text={'구매하기'}
+                    bannerType={bannerType}
                   />
                 </li>
               );

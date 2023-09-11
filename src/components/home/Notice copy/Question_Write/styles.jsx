@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Notice_Write_container = styled.form`
+export const Question_Write_container = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;

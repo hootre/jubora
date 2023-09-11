@@ -9,6 +9,7 @@ import { Backdrop, Box, Fade, Modal } from '@mui/material';
 
 import { useTemplatesActions } from 'store';
 import { useAuthState } from 'store';
+import { BasicModal } from 'components/common/Modal/BasicModal';
 export const AuthModal = () => {
   //Auth Modal 관련
   // zustand
@@ -21,37 +22,21 @@ export const AuthModal = () => {
     setAuthType('signIn');
   };
   return (
-    <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
-      open={authState}
-      onClose={onClose}
-      closeAfterTransition
-      slots={{ backdrop: Backdrop }}
-      slotProps={{
-        backdrop: {
-          timeout: 500,
-        },
-      }}
-    >
-      <Fade in={authState}>
-        <Box>
-          <Auth_container>
-            <button className="closeBtn" onClick={onClose}>
-              <AiOutlineClose />
-            </button>
-            {authType === 'signIn' ? (
-              <SignIn authType={authType} setAuthType={setAuthType} />
-            ) : authType === 'signUp' ? (
-              <SignUp authType={authType} setAuthType={setAuthType} />
-            ) : authType === 'forgetPassword' ? (
-              <ForgetPassword setAuthType={setAuthType} />
-            ) : (
-              <h1>Error</h1>
-            )}
-          </Auth_container>
-        </Box>
-      </Fade>
-    </Modal>
+    <BasicModal state={authState} setState={onClose}>
+      <Auth_container>
+        <button className="closeBtn" onClick={onClose}>
+          <AiOutlineClose />
+        </button>
+        {authType === 'signIn' ? (
+          <SignIn authType={authType} setAuthType={setAuthType} />
+        ) : authType === 'signUp' ? (
+          <SignUp authType={authType} setAuthType={setAuthType} />
+        ) : authType === 'forgetPassword' ? (
+          <ForgetPassword setAuthType={setAuthType} />
+        ) : (
+          <h1>Error</h1>
+        )}
+      </Auth_container>
+    </BasicModal>
   );
 };

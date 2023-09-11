@@ -8,6 +8,6 @@ export const Write_contaier = styled.section`
       padding: 5px;
     }
     padding-bottom: 20px;
-    border-bottom: 5px solid ${Common.colors.primary100};
+    border-bottom: 5px solid ${Common.colors.primary300};
   }
 `;

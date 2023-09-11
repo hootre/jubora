@@ -1,6 +1,5 @@
 import React from 'react';
 import { AdminUserPage_container } from './styles';
-import { useUser } from 'hooks/supabase/auth/useUser';
 import { RiSearchLine, RiLoopRightFill } from 'react-icons/ri';
 import { SimpleDate } from 'utils/SimpleDate';
 import { FormControl, MenuItem, Select } from '@mui/material';

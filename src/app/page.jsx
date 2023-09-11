@@ -4,7 +4,7 @@ import { noticeList } from 'assets/data';
 import { TemplatesContents } from 'components/home/Main/TemplatesContents';
 import { CardList } from 'components/common/CardList';
 import { serverTemplates } from 'hooks/supabase/templates/serverTemplates';
-import HomeLayoutComponent from 'components/home/HomeLayoutComponent/HomeLayoutComponent';
+import HomeLayoutComponent from 'components/home/HomeLayoutComponent/HomeLayout';
 
 const Home = async () => {
   const { serverGetSixTemplates } = serverTemplates();

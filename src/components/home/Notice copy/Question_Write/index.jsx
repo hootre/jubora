@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Notice_Write_container } from './styles';
+import { Question_Write_container } from './styles';
 // Toast UI Editor
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 import { useNotice } from 'hooks/supabase/notice/useNotice';
-const Notice_Write = ({ name }) => {
+const Question_Write = ({ name }) => {
   // notice 생성함수
   const { useCreateNotice } = useNotice();
   const { mutate: createNotice } = useCreateNotice();
@@ -62,7 +62,7 @@ const Notice_Write = ({ name }) => {
     return false;
   };
   return (
-    <Notice_Write_container className="C_container">
+    <Question_Write_container className="C_container">
       <div className="top_box">
         <div className="box">
           <h1>분류</h1>
@@ -124,7 +124,7 @@ const Notice_Write = ({ name }) => {
           작성완료
         </div>
       </div>
-    </Notice_Write_container>
+    </Question_Write_container>
   );
 };
-export default Notice_Write;
+export default Question_Write;

@@ -19,8 +19,8 @@ export const TemplatesSixContent_container = styled.div`
         }
         &.banner_row {
           grid-template-rows: repeat(2, 100px);
-          grid-template-columns: repeat(3, 0.5fr);
-          height: 270px;
+          grid-template-columns: repeat(3, 1fr);
+          height: 250px;
           > li {
             opacity: 1;
           }

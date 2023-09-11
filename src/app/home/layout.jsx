@@ -1,5 +1,5 @@
-import HomeLayoutComponent from 'components/home/HomeLayoutComponent/HomeLayoutComponent';
+import HomeLayout from 'components/home/HomeLayoutComponent/HomeLayout';
 
-export default async function HomeLayout({ children }) {
-  return <HomeLayoutComponent>{children}</HomeLayoutComponent>;
+export default async function layout({ children }) {
+  return <HomeLayout>{children}</HomeLayout>;
 }

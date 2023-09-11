@@ -1,10 +1,11 @@
 'use client';
-import React from 'react';
 import { Write_contaier } from './styles';
 import { useState } from 'react';
 import { Notice_Write } from '../Notice/Notice_Write';
 import { FormControl, MenuItem, Select } from '@mui/material';
-export const Write = () => {
+import Question_Write from '../Notice copy/Question_Write';
+export const Write = ({ name }) => {
+  // 게시판 select
   const [table, setTable] = useState('notice');
   const handleChange = (event) => {
     setTable(event.target.value);
@@ -28,9 +29,9 @@ export const Write = () => {
         </FormControl>
       </div>
       {table === 'notice' ? (
-        <Notice_Write />
+        <Notice_Write name={name} />
       ) : table === 'question' ? (
-        <h1>ㅠㅠ</h1>
+        <Question_Write name={name} />
       ) : table === 'orderAnswer' ? (
         <h1>ㅠㅠ</h1>
       ) : (

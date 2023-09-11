@@ -5,7 +5,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { QuickBar } from 'components/home/Main/QuickBar';
 
-const HomeLayoutComponent = ({ children }) => {
+const HomeLayout = ({ children }) => {
   return (
     <>
       <PC>
@@ -21,4 +21,4 @@ const HomeLayoutComponent = ({ children }) => {
     </>
   );
 };
-export default HomeLayoutComponent;
+export default HomeLayout;

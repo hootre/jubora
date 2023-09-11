@@ -18,6 +18,8 @@ import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
 import { AuthModal } from 'components/home/Auth/AuthModal';
 import { useTemplatesActions } from 'store';
 import { useAuthState } from 'store';
+import { TextDropdown } from 'components/common/TextDropdown';
+import { headerNoticeTextList } from 'assets/data';
 export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
@@ -116,7 +118,7 @@ export const Header = () => {
                     <span></span>
                   </li>
                   <li className="item">
-                    <Link href="/home/notice">고객센터</Link>
+                    <TextDropdown title="고객센터" dropdownText={headerNoticeTextList} />
                   </li>
                 </ul>
               </div>

@@ -4,20 +4,20 @@ import { noticeList } from 'assets/data';
 import { TemplatesContents } from 'components/home/Main/TemplatesContents';
 import { CardList } from 'components/common/CardList';
 import { serverTemplates } from 'hooks/supabase/templates/serverTemplates';
-import HomeLayoutComponent from 'components/home/HomeLayoutComponent/HomeLayout';
+import HomeLayout from 'components/home/HomeLayout';
 
 const Home = async () => {
   const { serverGetSixTemplates } = serverTemplates();
   const six_data = await serverGetSixTemplates();
   return (
-    <HomeLayoutComponent>
+    <HomeLayout>
       <Main_Slides />
       <TemplatesContents six_data={six_data} />
       <img src="https://nuriad.co.kr/data/bbsData/16376642931.jpg" alt="" />
       <CardList />
       <img src="https://nuriad.co.kr/data/bbsData/16376639661.jpg" alt="" />
       <Main_Notice noticeList={noticeList} />
-    </HomeLayoutComponent>
+    </HomeLayout>
   );
 };
 

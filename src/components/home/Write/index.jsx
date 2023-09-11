@@ -1,9 +1,11 @@
 'use client';
 import { Write_contaier } from './styles';
 import { useState } from 'react';
-import { Notice_Write } from '../Notice/Notice_Write';
 import { FormControl, MenuItem, Select } from '@mui/material';
-import Question_Write from '../Notice copy/Question_Write';
+import Notice_Write from '../CenterLayout/Notice/Notice_Write';
+import Question_Write from '../CenterLayout/Question/Question_Write';
+import Link from 'next/link';
+
 export const Write = ({ name }) => {
   // 게시판 select
   const [table, setTable] = useState('notice');
@@ -28,6 +30,7 @@ export const Write = ({ name }) => {
           </Select>
         </FormControl>
       </div>
+
       {table === 'notice' ? (
         <Notice_Write name={name} />
       ) : table === 'question' ? (

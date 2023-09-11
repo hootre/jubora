@@ -2,12 +2,10 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const Notice_Read_container = styled.section`
-  width: ${Common.size.container_width};
-  margin: 0 auto;
-  padding: 50px 0;
+  width: 100%;
   .top_box {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     padding: 0 20px;
     .order_title {
       font-size: 30px;
@@ -20,6 +18,10 @@ export const Notice_Read_container = styled.section`
     .btn_box {
       display: flex;
       gap: 5px;
+      > div {
+        font-weight: normal;
+        font-size: 12px;
+      }
       .delete_btn {
         background-color: ${Common.colors.red};
       }
@@ -85,22 +87,23 @@ export const Notice_Read_container = styled.section`
         }
       }
       > span {
-        color: ${Common.colors.text200};
+        color: ${Common.colors.text100};
         &.id {
           flex: 0 0 50px;
           text-align: center;
         }
         &.state {
-          color: ${Common.colors.primary100};
+          color: ${Common.colors.black};
           flex: 0 0 100px;
           text-align: center;
-          &.active {
-            color: ${Common.colors.text200};
+          &.notice {
+            font-weight: bold;
+            color: ${Common.colors.red};
           }
         }
         &.title {
           flex: 1;
-          text-align: center;
+          text-align: left;
           overflow: hidden;
         }
         &.name {

@@ -2,13 +2,11 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const Question_Read_container = styled.section`
-  width: ${Common.size.container_width};
-  margin: 0 auto;
-  padding: 50px 0;
+  width: 100%;
   .top_box {
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 10px;
     .order_title {
       font-size: 30px;
       font-weight: bold;
@@ -20,6 +18,10 @@ export const Question_Read_container = styled.section`
     .btn_box {
       display: flex;
       gap: 5px;
+      > div {
+        font-weight: normal;
+        font-size: 12px;
+      }
       .delete_btn {
         background-color: ${Common.colors.red};
       }
@@ -34,27 +36,15 @@ export const Question_Read_container = styled.section`
       align-items: center;
       height: 50px;
       padding: 10px;
-      border-bottom: 1px solid ${Common.colors.bd100};
+      border-bottom: 2px solid ${Common.colors.black};
       transition: all 0.2s ease;
       > span {
-        &.id {
-          flex: 0 0 50px;
-          text-align: center;
-        }
         &.state {
           flex: 0 0 100px;
           text-align: center;
         }
         &.title {
           flex: 1;
-          text-align: center;
-        }
-        &.name {
-          flex: 0 0 100px;
-          text-align: center;
-        }
-        &.date {
-          flex: 0 0 100px;
           text-align: center;
         }
       }
@@ -62,57 +52,35 @@ export const Question_Read_container = styled.section`
   }
   .board_item {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    width: 100%;
 
     > div {
       width: 100%;
       display: flex;
       align-items: center;
-      height: 50px;
+      height: 70px;
       padding: 10px;
       border-bottom: 1px solid ${Common.colors.bd100};
       cursor: pointer;
       transition: all 0.2s ease;
-      &:hover {
-        background: ${Common.colors.bg100};
-        .id,
-        .name,
-        .date {
-          color: ${Common.colors.black};
-        }
-        .title {
-          color: ${Common.colors.primary100};
-        }
-      }
+      font-size: 16px;
+      font-weight: 400;
       > span {
-        color: ${Common.colors.text200};
-        &.id {
-          flex: 0 0 50px;
-          text-align: center;
-        }
+        color: ${Common.colors.black};
         &.state {
-          color: ${Common.colors.primary100};
+          color: ${Common.colors.text200};
           flex: 0 0 100px;
           text-align: center;
-          &.active {
-            color: ${Common.colors.text200};
-          }
         }
         &.title {
           flex: 1;
-          text-align: center;
-          overflow: hidden;
-        }
-        &.name {
-          flex: 0 0 100px;
-          text-align: center;
-          overflow: hidden;
-        }
-        &.date {
-          flex: 0 0 100px;
-          text-align: center;
         }
       }
+    }
+    .icon {
+      font-size: 30px;
+      flex: 0 0 50px;
     }
   }
 `;

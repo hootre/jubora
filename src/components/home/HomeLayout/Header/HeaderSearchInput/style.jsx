@@ -4,6 +4,7 @@ import { Common } from 'styles/Common';
 export const Search_input_box = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 0px 18px;
   background: ${Common.colors.white};
   border: 1px solid ${Common.colors.primary100};
@@ -12,7 +13,6 @@ export const Search_input_box = styled.div`
   width: 400px;
   height: 40px;
   line-height: 40px;
-  margin-right: 25px;
   transition: all 0.3s;
   &:hover {
     border-color: ${Common.colors.primary300};

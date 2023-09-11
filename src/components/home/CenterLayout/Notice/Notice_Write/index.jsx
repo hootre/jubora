@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Question_Write_container } from './styles';
+import { Notice_Write_container } from './styles';
 // Toast UI Editor
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
@@ -12,7 +12,9 @@ import { useEffect } from 'react';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 import { useNotice } from 'hooks/supabase/notice/useNotice';
-const Question_Write = ({ name }) => {
+import Notice_Read from '../Notice_Read';
+import Link from 'next/link';
+const Notice_Write = ({ name }) => {
   // notice 생성함수
   const { useCreateNotice } = useNotice();
   const { mutate: createNotice } = useCreateNotice();
@@ -62,7 +64,7 @@ const Question_Write = ({ name }) => {
     return false;
   };
   return (
-    <Question_Write_container className="C_container">
+    <Notice_Write_container className="C_container">
       <div className="top_box">
         <div className="box">
           <h1>분류</h1>
@@ -79,7 +81,6 @@ const Question_Write = ({ name }) => {
               })}
             >
               <MenuItem value="공지">공지</MenuItem>
-              <MenuItem value="필독">필독</MenuItem>
               <MenuItem value="일반">일반</MenuItem>
             </Select>
           </FormControl>
@@ -98,6 +99,9 @@ const Question_Write = ({ name }) => {
           />
           <p className={`point_text ${errors.title && 'active'}`}>{errors.title?.message} </p>
         </div>
+        <Link href="/home/center/notice" className="direct_board">
+          게시판 바로가기
+        </Link>
       </div>
 
       <Editor
@@ -124,7 +128,8 @@ const Question_Write = ({ name }) => {
           작성완료
         </div>
       </div>
-    </Question_Write_container>
+      <Notice_Read />
+    </Notice_Write_container>
   );
 };
-export default Question_Write;
+export default Notice_Write;

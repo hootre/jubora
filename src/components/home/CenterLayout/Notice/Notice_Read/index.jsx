@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { Question_Read_container } from './styles';
+import { Notice_Read_container } from './styles';
 import { useState } from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ import { useNotice } from 'hooks/supabase/notice/useNotice';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-const Question_Read = () => {
+const Notice_Read = () => {
   // user상태관리
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -50,7 +50,9 @@ const Question_Read = () => {
       if (checked) {
         const checkedListArray = [];
 
-        noticeData.forEach((notice) => checkedListArray.push(notice.id));
+        noticeData.forEach((notice) =>
+          checkedListArray.push({ id: notice.id, images: notice.images })
+        );
 
         setCheckedLists(checkedListArray);
       } else {
@@ -63,10 +65,11 @@ const Question_Read = () => {
   // 개별 체크 클릭 시 발생하는 함수
   const onCheckedElement = useCallback(
     (checked, list) => {
+      console.log(checkedList);
       if (checked) {
         setCheckedLists([...checkedList, list]);
       } else {
-        setCheckedLists(checkedList.filter((el) => el !== list));
+        setCheckedLists(checkedList.filter((el) => el.id !== list.id));
       }
     },
     [checkedList]
@@ -76,22 +79,19 @@ const Question_Read = () => {
     return <h1>Loading</h1>;
   }
   return (
-    <Question_Read_container>
+    <Notice_Read_container>
       <div className="top_box">
-        <h1 className="order_title">
-          NOTICE <span>공지사항입니다.</span>
-        </h1>
         {user.role === 'admin' ? (
           <div className="btn_box">
-            <button className="C_basic_button">
+            <div className="C_basic_button">
               <Link href="/home/write">글쓰기</Link>
-            </button>
-            <button
+            </div>
+            <div
               className="C_basic_button delete_btn"
-              onClick={() => (checkedList.length > 0 ? deleteNotice() : null)}
+              onClick={() => (checkedList.length > 0 ? deleteNotice() : '')}
             >
               선택 삭제
-            </button>
+            </div>
           </div>
         ) : (
           <></>
@@ -126,16 +126,18 @@ const Question_Read = () => {
       </div>
       <ul>
         {noticeData
-          .sort((a, b) => b.id - a.id)
+          .sort((item) => item.state === '공지')
           ?.map((item) => (
-            <li className="board_item">
+            <li className="board_item" key={item.id}>
               <div>
                 {user.role === 'admin' ? (
                   <span>
                     <input
                       type="checkbox"
-                      onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-                      checked={checkedList.includes(item.id) ? true : false}
+                      onChange={(e) =>
+                        onCheckedElement(e.target.checked, { id: item.id, images: item.images })
+                      }
+                      checked={checkedList.filter((el) => el.id === item.id).length ? true : false}
                     />
                   </span>
                 ) : (
@@ -143,7 +145,9 @@ const Question_Read = () => {
                 )}
 
                 <span className="id">{item.id}</span>
-                <span className="state">[{item.type}]</span>
+                <span className={item.type === '공지' ? 'notice state' : 'state'}>
+                  [{item.type}]
+                </span>
                 <span className="title">{item.title}</span>
                 <span className="name">{item.name}</span>
                 <span className="date">{String(item.created_at).substring(5, 10)}</span>
@@ -151,7 +155,7 @@ const Question_Read = () => {
             </li>
           ))}
       </ul>
-    </Question_Read_container>
+    </Notice_Read_container>
   );
 };
-export default Question_Read;
+export default Notice_Read;

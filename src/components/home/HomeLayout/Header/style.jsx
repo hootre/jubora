@@ -3,7 +3,6 @@ import { Common } from 'styles/Common';
 
 export const Header_container = styled.header`
   box-shadow: 0px 3px 3px 2px rgba(0, 0, 0, 0.05);
-
   background-color: ${Common.colors.white};
   .prev_site {
     display: flex;
@@ -42,6 +41,10 @@ export const Header_container = styled.header`
         .sub_container {
           display: flex;
           align-items: start;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1.67;
+          color: ${Common.colors.text200};
           .login {
             > ul {
               display: flex;
@@ -59,13 +62,10 @@ export const Header_container = styled.header`
                   cursor: pointer;
                   display: flex;
                   align-items: center;
-                  font-size: 12px;
-                  font-weight: 500;
-                  line-height: 1.67;
                   font-stretch: normal;
                   font-style: normal;
                   letter-spacing: normal;
-                  color: ${Common.colors.black};
+                  color: ${Common.colors.text200};
                 }
               }
             }

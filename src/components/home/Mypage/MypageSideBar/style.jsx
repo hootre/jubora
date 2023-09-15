@@ -10,6 +10,7 @@ export const MypageSideBar_container = styled.div`
       background-color: ${Common.colors.bg300};
       border-radius: 15px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       .class {

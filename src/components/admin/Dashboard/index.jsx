@@ -4,10 +4,10 @@ import { SmallCard } from './SmallCard';
 import { Read_Mainslides } from '../Read/Read_Mainslides';
 import { Read_MainslidesList } from '../Read/Read_MainslidesList';
 import { RiMoneyEuroBoxLine, RiLogoutBoxRLine, RiStackLine, RiUserAddLine } from 'react-icons/ri';
-import { Read_OrderList } from '../Read/Read_OrderList';
 import { Read_userList } from '../Read/Read_userList';
 import { DashboardFrame } from './DashboardFrame';
 import { useUser } from 'hooks/supabase/auth/useUser';
+import Read_OrderList from '../Read/Read_OrderList';
 
 export const Dashboard = () => {
   //유저 데이터
@@ -16,7 +16,6 @@ export const Dashboard = () => {
   if (isLoading) {
     return <h1>로딩중</h1>;
   }
-  console.log(data);
   return (
     <Dashboard_container>
       <section>

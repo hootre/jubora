@@ -15,12 +15,12 @@ const Question_Read = () => {
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
 
-  // notice
+  // Question
   const { useGetQuestion, useDeleteQuestion } = useQuestion();
   const { data: questionData, isLoading } = useGetQuestion();
   const { mutate: handleDelete } = useDeleteQuestion();
 
-  const deleteNotice = () => {
+  const deleteQuestion = () => {
     confirmAlert({
       title: '정말로 삭제하시겠습니까?',
       message: '복구 불가능합니다',
@@ -28,8 +28,9 @@ const Question_Read = () => {
         {
           label: '삭제',
           onClick: () => {
-            checkedList.map((id) => {
-              handleDelete(id);
+            console.log(checkedList);
+            checkedList.map((item) => {
+              handleDelete(item);
             });
           },
         },
@@ -51,7 +52,7 @@ const Question_Read = () => {
       if (checked) {
         const checkedListArray = [];
 
-        questionData.forEach((notice) => checkedListArray.push(notice.id));
+        questionData.forEach((item) => checkedListArray.push({ id: item.id, images: item.images }));
 
         setCheckedLists(checkedListArray);
       } else {
@@ -67,7 +68,7 @@ const Question_Read = () => {
       if (checked) {
         setCheckedLists([...checkedList, list]);
       } else {
-        setCheckedLists(checkedList.filter((el) => el !== list));
+        setCheckedLists(checkedList.filter((el) => el.id !== list.id));
       }
     },
     [checkedList]
@@ -99,11 +100,11 @@ const Question_Read = () => {
         {user.role === 'admin' ? (
           <div className="btn_box">
             <div className="C_basic_button">
-              <Link href="/home/write">글쓰기</Link>
+              <Link href="/admin/board/write">글쓰기</Link>
             </div>
             <div
               className="C_basic_button delete_btn"
-              onClick={() => (checkedList.length > 0 ? deleteNotice() : null)}
+              onClick={() => (checkedList.length > 0 ? deleteQuestion() : null)}
             >
               선택 삭제
             </div>
@@ -116,15 +117,19 @@ const Question_Read = () => {
         {questionData
           .sort((a, b) => b.id - a.id)
           ?.map((item) => (
-            <Accordion contents={item.contents}>
+            <Accordion contents={item.contents} key={item.id}>
               <div className="board_item" key={item.id}>
                 <div>
                   {user.role === 'admin' ? (
                     <span>
                       <input
                         type="checkbox"
-                        onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-                        checked={checkedList.includes(item.id) ? true : false}
+                        onChange={(e) =>
+                          onCheckedElement(e.target.checked, { id: item.id, images: item.images })
+                        }
+                        checked={
+                          checkedList.filter((el) => el.id === item.id).length ? true : false
+                        }
                       />
                     </span>
                   ) : (

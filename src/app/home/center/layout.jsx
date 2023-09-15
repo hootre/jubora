@@ -1,4 +1,4 @@
-import CenterLayout from 'components/home/CenterLayout';
+import CenterLayout from 'components/home/Center/CenterLayout';
 
 export default async function layout({ children }) {
   return <CenterLayout>{children}</CenterLayout>;

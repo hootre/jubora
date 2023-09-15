@@ -13,12 +13,6 @@ export const SianBoardCard_container = styled.div`
     border-bottom: 1px solid ${Common.colors.bd100};
     cursor: pointer;
     transition: all 0.2s ease;
-    &:hover {
-      background: ${Common.colors.bg100};
-      .title {
-        color: ${Common.colors.primary100};
-      }
-    }
     > span {
       color: ${Common.colors.black};
       margin: 10px 0;
@@ -42,6 +36,13 @@ export const SianBoardCard_container = styled.div`
       &.title {
         flex: 1;
         text-align: center;
+        &:hover {
+          > a {
+            font-weight: bold;
+            text-decoration: underline;
+            color: ${Common.colors.primary100};
+          }
+        }
       }
       &.orderId {
         flex: 0 0 100px;

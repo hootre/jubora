@@ -22,7 +22,7 @@ export const BoardDetail = ({
         <div className="title_box">
           <span className="title">{title}</span>
           <span className="name">{name}</span>
-          <span className="created_at">{String(created_at).substring(5, 10)}</span>
+          <span className="created_at">{SimpleDate(data.created_at, 'm')}</span>
         </div>
         <div className="img">
           <img src={image} alt="contentImg" />

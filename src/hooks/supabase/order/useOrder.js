@@ -83,14 +83,14 @@ const useCreateOrder = () => {
       item_6,
       item_7,
     });
-    if (error) {
-      toast.error(error.message);
-      console.error(`ORDER CREATE ERROR : ${error.message}`);
-      return;
-    } else {
-      toast.success('ORDER CREATE SUCCESS');
-    }
-    return data;
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`Order 생성 오류 :  ${error.message}`);
+      } else {
+        toast.success('성공적으로 생성하였습니다');
+        resolve(data);
+      }
+    });
   };
 
   const client = useQueryClient();
@@ -234,7 +234,7 @@ const useDeleteOrder = () => {
   const client = useQueryClient();
   return useMutation(handleDeleteOrder, {
     onSuccess: () => {
-      client.removeQueries(gatherKeys.template);
+      client.removeQueries(gatherKeys.order);
     },
   });
 };

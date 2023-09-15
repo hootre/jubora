@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Question_Write_container } from './styles';
+import { QnA_Write_container } from './styles';
 // Toast UI Editor
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
@@ -11,14 +11,12 @@ import { FormControl, MenuItem, Select, TextField } from '@mui/material';
 import { useEffect } from 'react';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
-import { useNotice } from 'hooks/supabase/notice/useNotice';
-import Question_Read from '../Question_Read';
-import { useQuestion } from 'hooks/supabase/question/useQuestion';
 import Link from 'next/link';
-const Question_Write = ({ name }) => {
+import { useQnA } from 'hooks/supabase/qna/useQnA';
+const QnA_Write = ({ name }) => {
   // notice 생성함수
-  const { useCreateQuestion } = useQuestion();
-  const { mutate: createQuestion } = useCreateQuestion();
+  const { useCreateQnA } = useQnA();
+  const { mutate: createQnA } = useCreateQnA();
   // form
   const {
     register,
@@ -42,7 +40,7 @@ const Question_Write = ({ name }) => {
   // editor
   const editorRef = useRef(null);
   const onSubmit = async (data) => {
-    createQuestion(data, {
+    createQnA(data, {
       onSuccess: () => {
         getValues('images')?.ids?.map(async (public_id) => {
           if (!getValues('contents').includes(public_id)) {
@@ -65,7 +63,7 @@ const Question_Write = ({ name }) => {
     return false;
   };
   return (
-    <Question_Write_container className="C_container">
+    <QnA_Write_container className="C_container">
       <div className="top_box">
         <div className="box">
           <h1>분류</h1>
@@ -76,17 +74,16 @@ const Question_Write = ({ name }) => {
             <Select
               labelId="demo-select-small-label"
               id="demo-select-small"
-              defaultValue={'일반'}
+              defaultValue={'일반문의'}
               {...register('type', {
                 required: '분류 선택은 필수입니다.',
               })}
             >
-              <MenuItem value="일반">일반</MenuItem>
-              <MenuItem value="배송">배송</MenuItem>
-              <MenuItem value="회원">회원</MenuItem>
-              <MenuItem value="디자인">디자인</MenuItem>
-              <MenuItem value="주문/결제">주문/결제</MenuItem>
-              <MenuItem value="출력/마감">출력/마감</MenuItem>
+              <MenuItem value="일반문의">일반문의</MenuItem>
+              <MenuItem value="배송문의">배송문의</MenuItem>
+              <MenuItem value="회원문의">회원문의</MenuItem>
+              <MenuItem value="주문/결제문의">주문/결제문의</MenuItem>
+              <MenuItem value="출력/마감문의">출력/마감문의</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -105,7 +102,7 @@ const Question_Write = ({ name }) => {
           <p className={`point_text ${errors.title && 'active'}`}>{errors.title?.message} </p>
         </div>
 
-        <Link href="/home/center/question" className="direct_board">
+        <Link href="/home/center/qna" className="direct_board">
           게시판 바로가기
         </Link>
       </div>
@@ -136,8 +133,7 @@ const Question_Write = ({ name }) => {
           작성완료
         </div>
       </div>
-      <Question_Read />
-    </Question_Write_container>
+    </QnA_Write_container>
   );
 };
-export default Question_Write;
+export default QnA_Write;

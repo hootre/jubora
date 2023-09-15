@@ -1,12 +1,16 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Question_Read_container = styled.section`
+export const Read_OrderList_container = styled.section`
   width: 100%;
+  padding: 20px;
+  .login_check {
+    height: 100px;
+    position: relative;
+  }
   .top_box {
     display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
+    justify-content: end;
     .order_title {
       font-size: 30px;
       font-weight: bold;
@@ -35,16 +39,27 @@ export const Question_Read_container = styled.section`
       display: flex;
       align-items: center;
       height: 50px;
-      padding: 10px;
-      border-bottom: 2px solid ${Common.colors.black};
+      border-bottom: 1px solid ${Common.colors.bd100};
       transition: all 0.2s ease;
       > span {
+        &.id {
+          flex: 0 0 50px;
+          text-align: center;
+        }
         &.state {
           flex: 0 0 100px;
           text-align: center;
         }
         &.title {
           flex: 1;
+          text-align: center;
+        }
+        &.name {
+          flex: 0 0 100px;
+          text-align: center;
+        }
+        &.date {
+          flex: 0 0 100px;
           text-align: center;
         }
       }
@@ -59,15 +74,19 @@ export const Question_Read_container = styled.section`
       width: 100%;
       display: flex;
       align-items: center;
-      height: 70px;
-      padding: 10px;
+      height: 50px;
+      line-height: 50px;
       border-bottom: 1px solid ${Common.colors.bd100};
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 400;
       > span {
         color: ${Common.colors.black};
+        &.id {
+          flex: 0 0 50px;
+          text-align: center;
+        }
         &.state {
           color: ${Common.colors.text200};
           flex: 0 0 100px;
@@ -75,6 +94,21 @@ export const Question_Read_container = styled.section`
         }
         &.title {
           flex: 1;
+          text-align: left;
+          overflow: hidden;
+          > a:hover {
+            text-decoration: underline;
+            color: ${Common.colors.primary100};
+          }
+        }
+        &.name {
+          flex: 0 0 100px;
+          text-align: center;
+          overflow: hidden;
+        }
+        &.date {
+          flex: 0 0 100px;
+          text-align: center;
         }
       }
     }

@@ -27,8 +27,8 @@ const Notice_Read = () => {
         {
           label: '삭제',
           onClick: () => {
-            checkedList.map((id) => {
-              handleDelete(id);
+            checkedList.map((item) => {
+              handleDelete(item);
             });
           },
         },
@@ -50,9 +50,7 @@ const Notice_Read = () => {
       if (checked) {
         const checkedListArray = [];
 
-        noticeData.forEach((notice) =>
-          checkedListArray.push({ id: notice.id, images: notice.images })
-        );
+        noticeData.forEach((item) => checkedListArray.push({ id: item.id, images: item.images }));
 
         setCheckedLists(checkedListArray);
       } else {
@@ -65,7 +63,6 @@ const Notice_Read = () => {
   // 개별 체크 클릭 시 발생하는 함수
   const onCheckedElement = useCallback(
     (checked, list) => {
-      console.log(checkedList);
       if (checked) {
         setCheckedLists([...checkedList, list]);
       } else {
@@ -84,7 +81,7 @@ const Notice_Read = () => {
         {user.role === 'admin' ? (
           <div className="btn_box">
             <div className="C_basic_button">
-              <Link href="/home/write">글쓰기</Link>
+              <Link href="/admin/board/write">글쓰기</Link>
             </div>
             <div
               className="C_basic_button delete_btn"
@@ -148,7 +145,9 @@ const Notice_Read = () => {
                 <span className={item.type === '공지' ? 'notice state' : 'state'}>
                   [{item.type}]
                 </span>
-                <span className="title">{item.title}</span>
+                <span className="title">
+                  <Link href={`/home/center/notice/${item.id}`}>{item.title}</Link>
+                </span>
                 <span className="name">{item.name}</span>
                 <span className="date">{String(item.created_at).substring(5, 10)}</span>
               </div>

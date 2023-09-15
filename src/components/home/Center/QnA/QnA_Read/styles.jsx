@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const Notice_Read_container = styled.section`
+export const QnA_Read_container = styled.section`
   width: 100%;
+  .login_check {
+    height: 100px;
+    position: relative;
+  }
   .top_box {
     display: flex;
     justify-content: end;
-    padding: 0 20px;
     .order_title {
       font-size: 30px;
       font-weight: bold;
@@ -35,7 +38,6 @@ export const Notice_Read_container = styled.section`
       display: flex;
       align-items: center;
       height: 50px;
-      padding: 10px;
       border-bottom: 1px solid ${Common.colors.bd100};
       transition: all 0.2s ease;
       > span {
@@ -64,47 +66,39 @@ export const Notice_Read_container = styled.section`
   }
   .board_item {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    width: 100%;
 
     > div {
       width: 100%;
       display: flex;
       align-items: center;
       height: 50px;
-      padding: 10px;
+      line-height: 50px;
       border-bottom: 1px solid ${Common.colors.bd100};
       cursor: pointer;
       transition: all 0.2s ease;
-      &:hover {
-        background: ${Common.colors.bg100};
-        .id,
-        .name,
-        .date {
-          color: ${Common.colors.black};
-        }
-        .title {
-          color: ${Common.colors.primary100};
-        }
-      }
+      font-size: 14px;
+      font-weight: 400;
       > span {
-        color: ${Common.colors.text100};
+        color: ${Common.colors.black};
         &.id {
           flex: 0 0 50px;
           text-align: center;
         }
         &.state {
-          color: ${Common.colors.black};
+          color: ${Common.colors.text200};
           flex: 0 0 100px;
           text-align: center;
-          &.notice {
-            font-weight: bold;
-            color: ${Common.colors.red};
-          }
         }
         &.title {
           flex: 1;
           text-align: left;
           overflow: hidden;
+          > a:hover {
+            text-decoration: underline;
+            color: ${Common.colors.primary100};
+          }
         }
         &.name {
           flex: 0 0 100px;
@@ -116,6 +110,10 @@ export const Notice_Read_container = styled.section`
           text-align: center;
         }
       }
+    }
+    .icon {
+      font-size: 30px;
+      flex: 0 0 50px;
     }
   }
 `;

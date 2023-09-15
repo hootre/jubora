@@ -5,7 +5,7 @@ import { gatherKeys } from 'utils/gatherKeys';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 
-// ORDER 생성
+// Comment 생성
 const useCreateComment = () => {
   const handleCreateComment = async ({
     from_table,
@@ -21,24 +21,24 @@ const useCreateComment = () => {
       writer,
       contents,
     });
-    if (error) {
-      toast.error(error.message);
-      console.error(`Comment CREATE ERROR : ${error.message}`);
-      return;
-    } else {
-      toast.success('Comment CREATE SUCCESS');
-    }
-    return data;
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`댓글 작성 오류 :  ${error.message}`);
+      } else {
+        toast.success('성공적으로 작성하였습니다');
+        resolve(data);
+      }
+    });
   };
 
   const client = useQueryClient();
   return useMutation(handleCreateComment, {
-    onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.comment);
+    onSuccess: (data, variables) => {
+      client.invalidateQueries([`comment_${variables.from_table_id}`]);
     },
   });
 };
-// ORDER 목록
+// Comment 목록
 const useGetComment = (from_table, from_table_id) => {
   const handleGetComment = async () => {
     console.log(from_table);
@@ -48,17 +48,19 @@ const useGetComment = (from_table, from_table_id) => {
       .eq('from_table', from_table)
       .eq('from_table_id', from_table_id);
 
-    if (error) {
-      console.error(`comment REDE ERROR : ${error.message}`);
-      return [];
-    }
-    return data;
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`Comment 가져오기 오류 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
   };
   return useQuery([`comment_${from_table_id}`], handleGetComment);
 };
-// ORDER 수정
-const useUpdateOrder = () => {
-  const handleUpdateOrder = async ({
+// Comment 수정
+const useUpdateComment = () => {
+  const handleUpdateComment = async ({
     isUser,
     state,
     title,
@@ -79,11 +81,11 @@ const useUpdateOrder = () => {
     file,
   }) => {
     await deleteImage(public_id);
-    await uploadImage(file, cloudFolderList.order).then(async ({ url, public_id }) => {
+    await uploadImage(file, cloudFolderList.Comment).then(async ({ url, public_id }) => {
       if (!url) {
         console.error(`Cloudinary UPLOAD ERROR`);
       }
-      const { data, error } = await supabase_client.from('order').insert({
+      const { data, error } = await supabase_client.from('Comment').insert({
         isUser,
         state,
         title,
@@ -106,42 +108,39 @@ const useUpdateOrder = () => {
       });
       if (error) {
         toast.error(error.message);
-        console.error(`ORDER UPDATA ERROR : ${error.message}`);
+        console.error(`Comment UPDATA ERROR : ${error.message}`);
         return;
       } else {
-        toast.success('ORDER UPDATA SUCCESS');
+        toast.success('Comment UPDATA SUCCESS');
       }
       return data;
     });
   };
 
   const client = useQueryClient();
-  return useMutation(handleUpdateOrder, {
-    onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.order);
+  return useMutation(handleUpdateComment, {
+    onSuccess: () => {
+      client.invalidateQueries(gatherKeys.Comment);
     },
   });
 };
 // Templates DELETE
-const useDeleteOrder = () => {
-  const handleDeleteOrder = async ({ id, public_id }) => {
-    await deleteImage(public_id).then(async () => {
-      const { data, error } = await supabase_client.from('order').delete().eq('id', id);
-
+const useDeleteComment = () => {
+  const handleDeleteComment = async ({ id, from_table_id }) => {
+    const { data, error } = await supabase_client.from('comment').delete().eq('id', id);
+    return new Promise((resolve, reject) => {
       if (error) {
-        toast.error(error.message);
-        console.error(`ORDER DELETE ERROR : ${error.message}`);
-        return;
+        reject(`댓글 삭제 오류 :  ${error.message}`);
       } else {
-        toast.success('ORDER DELETE SUCCESS');
+        toast.success('성공적으로 삭제하였습니다');
+        resolve(data);
       }
-      return data;
     });
   };
   const client = useQueryClient();
-  return useMutation(handleDeleteOrder, {
-    onSuccess: () => {
-      client.removeQueries(gatherKeys.template);
+  return useMutation(handleDeleteComment, {
+    onSuccess: (data, variables) => {
+      client.invalidateQueries([`comment_${variables.from_table_id}`]);
     },
   });
 };
@@ -149,5 +148,6 @@ export const useComment = () => {
   return {
     useCreateComment,
     useGetComment,
+    useDeleteComment,
   };
 };

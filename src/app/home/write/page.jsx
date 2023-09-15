@@ -1,8 +1,8 @@
 'use client';
+import { Write } from 'components/home/Write';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { Write } from 'components/home/Write';
 const page = () => {
   // 어드민 유저정보 확인
   const { useGetUserInfo } = useUser();
@@ -11,11 +11,12 @@ const page = () => {
 
   if (isLoading) {
     return <h1>검사중</h1>;
-  } else if (data.role !== 'admin') {
-    toast.error('인가된 사용자만 접근 가능합니다');
-    router.push('/');
-  } else {
+  }
+  if (data.id) {
     return <Write name={data.name} />;
+  } else {
+    toast.error('사용자만 접근 가능합니다');
+    router.back();
   }
 };
 export default page;

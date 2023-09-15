@@ -4,6 +4,21 @@ import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 
+// 특정 id 제품 상세
+const useGetOnlyNotice = (id) => {
+  const handleGetOnlyNotice = async () => {
+    const { data, error } = await supabase_client.from('notice').select('*').eq('id', id).single();
+
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`Notice Detail 오류 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
+  };
+  return useQuery([`notice_${id}`], handleGetOnlyNotice);
+};
 //  생성
 const useCreateNotice = () => {
   const handleCreateNotice = async ({ name, title, contents, images, type }) => {
@@ -91,5 +106,5 @@ const useDeleteNotice = () => {
   });
 };
 export const useNotice = () => {
-  return { useCreateNotice, useGetNotice, useUpdateNotice, useDeleteNotice };
+  return { useGetOnlyNotice, useCreateNotice, useGetNotice, useUpdateNotice, useDeleteNotice };
 };

@@ -9,7 +9,9 @@ const CenterLayout = ({ children }) => {
   return (
     <CenterLayout_container className="C_container">
       <div className="header">
-        <h1>고객센터</h1>
+        <Link href="/home/center/notice" className="title">
+          고객센터
+        </Link>
         <div className="nav_box">
           <div className="nav_item">
             <Link href="/home/center/notice" className={pathName === 'notice' ? ' active' : ''}>
@@ -22,7 +24,7 @@ const CenterLayout = ({ children }) => {
             </Link>
           </div>
           <div className="nav_item">
-            <Link href="/home/center/qanda" className={pathName === 'qanda' ? ' active' : ''}>
+            <Link href="/home/center/qna" className={pathName === 'qna' ? ' active' : ''}>
               Q&A
             </Link>
           </div>

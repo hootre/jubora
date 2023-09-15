@@ -13,7 +13,6 @@ export const TextDropdown_container = styled.div`
     }
     .dropdownText_box {
       opacity: 0;
-      transition: opacity 0.3s ease;
       position: absolute;
       display: flex;
       flex-direction: column;

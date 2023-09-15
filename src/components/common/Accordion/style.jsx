@@ -5,7 +5,7 @@ export const Accordion_container = styled.div`
   .main {
     &:hover,
     &.active {
-      background: ${Common.colors.bg100};
+      background: ${Common.colors.bg300};
     }
   }
   .content {

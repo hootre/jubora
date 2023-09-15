@@ -18,6 +18,7 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
     formState: {},
     setValue,
     register,
+    reset,
   } = useForm();
   // 로그인 로그아웃 상태
   useEffect(() => {
@@ -28,9 +29,10 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
     setValue('from_table', from_table);
     setValue('from_table_id', from_table_id);
     setValue('from_comment', from_comment);
-  }, [user]);
+  }, [user, reset]);
   const onSubmit = (data) => {
     createComment(data);
+    reset();
   };
   if (userLoading) {
     return <h1>Loading</h1>;
@@ -39,7 +41,7 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
   return (
     <BoardCommentInput_container>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" {...register('contents')} />
+        <input type="text" {...register('contents')} placeholder="댓글을 입력해주세요" />
       </form>
     </BoardCommentInput_container>
   );

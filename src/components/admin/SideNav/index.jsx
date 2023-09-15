@@ -22,8 +22,8 @@ export const SideNav = () => {
         <div className={pathName === 'user' ? 'active' : ''}>
           <Link href="/admin/user">사용자</Link>
         </div>
-        <div className={pathName === 'templates' ? 'active' : ''}>
-          <Link href="/admin/templates">게시판</Link>
+        <div className={pathName === 'board' ? 'active' : ''}>
+          <Link href="/admin/board">게시판</Link>
         </div>
       </div>
     </SideNav_container>

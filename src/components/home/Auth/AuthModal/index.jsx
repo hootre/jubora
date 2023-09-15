@@ -5,8 +5,6 @@ import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import ForgetPassword from '../ForgetPassword';
 import { AiOutlineClose } from 'react-icons/ai';
-import { Backdrop, Box, Fade, Modal } from '@mui/material';
-
 import { useTemplatesActions } from 'store';
 import { useAuthState } from 'store';
 import { BasicModal } from 'components/common/Modal/BasicModal';

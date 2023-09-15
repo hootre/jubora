@@ -109,8 +109,8 @@ const useLogOut = () => {
   const router = useRouter();
   return useMutation(handleLogout, {
     onSuccess: () => {
-      router.refresh();
       client.removeQueries(gatherKeys.current_user);
+      router.refresh();
     },
   });
 };

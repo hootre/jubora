@@ -11,15 +11,21 @@ import { useState } from 'react';
 import { ItemTypeGroup } from './ItemTypeGroup/index.jsx';
 import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
 import { useUser } from 'hooks/supabase/auth/useUser.js';
+import { Pagination, Stack } from '@mui/material';
 
-export const Showcase = ({ category }) => {
+export const Showcase = ({ category = 'banner' }) => {
+  // 페이지 기본값
+  const [page, setPage] = useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
   // user상태관리
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   // template 목록
-  const { useGetCategoryTemplate } = useTemplates();
-  const { data: templatesList, isLoading } = useGetCategoryTemplate(category);
-
+  const { useGetTemplatesPage, useGetCategoryCount } = useTemplates();
+  const { data: templatesList, isLoading } = useGetTemplatesPage(category, page);
+  const { data: templatesCount } = useGetCategoryCount(category);
   // 가로,세로,포스터
   const [bannerType, setBannerType] = useState('banner_row');
   const handleBannerType = (e) => {
@@ -29,9 +35,6 @@ export const Showcase = ({ category }) => {
   // zustand
   const SortType = useTemplateSortType();
   const tagList = useTemplateTagList();
-  // if (isInitialLoading) {
-  //   return <h1>Loading...</h1>;
-  // }
   if (isLoading || userLoading) {
     return <h1>Loading</h1>;
   }
@@ -72,7 +75,7 @@ export const Showcase = ({ category }) => {
         <ItemTypeGroup bannerType={bannerType} handleBannerType={handleBannerType} />
       </div>
       <div className="top_nav">
-        <h2 className="title">{templatesList?.length}개의 디자인이 있습니다.</h2>
+        <h2 className="title">{templatesCount?.length}개의 디자인이 있습니다.</h2>
         {/* <SortFilter categoryList={categoryList} /> */}
       </div>
       <div className="showcase">
@@ -81,23 +84,43 @@ export const Showcase = ({ category }) => {
             templatesList.map((item) => {
               return (
                 <li key={item.id}>
-                  {user.role === 'admin' && <button className="delete_btn">삭제</button>}
-
-                  <ImageItem
-                    img_src={
-                      bannerType === 'banner_row'
-                        ? item.img_row
-                        : bannerType === 'banner_col'
-                        ? item.img_col
-                        : item.img_square
-                    }
-                    href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
-                    text={'구매하기'}
-                  />
+                  {bannerType === 'banner_row' ? (
+                    <ImageItem
+                      img_src={item.img_row}
+                      href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
+                      text={'구매하기'}
+                      bannerType={'banner_row'}
+                    />
+                  ) : bannerType === 'banner_col' ? (
+                    <ImageItem
+                      img_src={item.img_col}
+                      href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
+                      text={'구매하기'}
+                      bannerType={'banner_col'}
+                    />
+                  ) : (
+                    <ImageItem
+                      img_src={item.img_square}
+                      href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
+                      text={'구매하기'}
+                      bannerType={'banner_square'}
+                    />
+                  )}
                 </li>
               );
             })}
         </ul>
+      </div>
+      <div className="pagenation">
+        <Stack spacing={2}>
+          <Pagination
+            count={Math.ceil(templatesCount?.length / 50)}
+            variant="outlined"
+            shape="rounded"
+            page={page}
+            onChange={handleChange}
+          />
+        </Stack>
       </div>
     </Showcase_container>
   );

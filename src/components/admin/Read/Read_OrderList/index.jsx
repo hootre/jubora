@@ -76,23 +76,11 @@ const Read_OrderList = () => {
   if (isLoading || userLoading) {
     return <h1>Loading</h1>;
   }
-  if (!user.id) {
-    return (
-      <Read_OrderList_container>
-        <div className="login_check">
-          <LoginRequest />
-        </div>
-      </Read_OrderList_container>
-    );
-  }
   return (
     <Read_OrderList_container>
       <div className="top_box">
         {user.role === 'admin' ? (
           <div className="btn_box">
-            <div className="C_basic_button">
-              <Link href="/home/write">글쓰기</Link>
-            </div>
             <div
               className="C_basic_button delete_btn"
               onClick={() => (checkedList.length > 0 ? deleteNotice() : '')}
@@ -156,7 +144,7 @@ const Read_OrderList = () => {
                 <span className="id">{item.id}</span>
                 <span className="state">[{item.state}]</span>
                 <span className="title">
-                  <Link href={`/admin/order/${item.id}`}>{item.title}</Link>
+                  <Link href={`/admin/board/write/sian/${item.id}`}>{item.title}</Link>
                 </span>
                 <span className="name">{item.name}</span>
                 <span className="date">{String(item.created_at).substring(5, 10)}</span>

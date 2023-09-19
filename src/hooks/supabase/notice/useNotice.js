@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase_client';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
@@ -56,11 +57,11 @@ const useGetNotice = () => {
   return useQuery(gatherKeys.notice, handleGetNotice);
 };
 // 수정
-const useUpdateNotice = () => {
-  const handleUpdateNotice = async ({ id, name, title, contents, images, type }) => {
+const useUpdateNotice = (id) => {
+  const handleUpdateNotice = async ({ id, title, contents, images, type }) => {
     const { data, error } = await supabase_client
       .from('notice')
-      .update({ name, title, contents, images, type })
+      .update({ title, contents, images, type })
       .eq('id', id);
 
     return new Promise((resolve, reject) => {
@@ -75,33 +76,45 @@ const useUpdateNotice = () => {
 
   const client = useQueryClient();
   return useMutation(handleUpdateNotice, {
-    onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.notice);
+    onSuccess: () => {
+      client.invalidateQueries([`notice_${id}`]);
+      client.invalidateQueries([`notice`]);
     },
   });
 };
 // 삭제
 const useDeleteNotice = () => {
   const handleDeleteNotice = async ({ id, images }) => {
-    if (images.ids.length > 0) {
+    if (images?.ids.length > 0) {
       images.ids.map(async (public_id) => {
         await deleteImage(public_id);
       });
     }
-    const { data, error } = await supabase_client.from('notice').delete().eq('id', id);
-    return new Promise((resolve, reject) => {
-      if (error) {
-        reject(`공지사항 삭제 오류 :  ${error.message}`);
-      } else {
-        toast.success('성공적으로 삭제하였습니다');
-        resolve(data);
-      }
-    });
+    const { error: sianError } = await supabase_client
+      .from('comment')
+      .delete()
+      .eq('from_table', 'notice')
+      .eq('from_table_id', id);
+    if (!sianError) {
+      const { data, error } = await supabase_client.from('notice').delete().eq('id', id);
+      return new Promise((resolve, reject) => {
+        if (error) {
+          reject(`공지사항 삭제 오류 :  ${error.message}`);
+        } else {
+          toast.success('성공적으로 삭제하였습니다');
+          resolve(data);
+        }
+      });
+    } else {
+      throw new Error('댓글 삭제 오류');
+    }
   };
+  const router = useRouter();
   const client = useQueryClient();
   return useMutation(handleDeleteNotice, {
     onSuccess: () => {
       client.removeQueries(gatherKeys.notice);
+      router.push('/admin/board/write/notice');
     },
   });
 };

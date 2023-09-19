@@ -23,7 +23,7 @@ export const SideNav = () => {
           <Link href="/admin/user">사용자</Link>
         </div>
         <div className={pathName === 'board' ? 'active' : ''}>
-          <Link href="/admin/board">게시판</Link>
+          <Link href="/admin/board/write/notice">게시판</Link>
         </div>
       </div>
     </SideNav_container>

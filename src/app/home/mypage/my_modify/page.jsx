@@ -9,7 +9,7 @@ const page = async () => {
   } = await supabase_server.auth.getSession();
 
   if (session?.user) {
-    return <MyModify />;
+    return <MyModify email={session.user.email} />;
   }
   return <PasswordCheckModal table="order" />;
 };

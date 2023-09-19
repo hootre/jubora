@@ -1,5 +1,6 @@
 import { Backdrop, Box, Fade, Modal } from '@mui/material';
 import React from 'react';
+import { Modal_container } from './style';
 
 export const BasicModal = ({ state, setState, children }) => {
   return (
@@ -17,7 +18,9 @@ export const BasicModal = ({ state, setState, children }) => {
       }}
     >
       <Fade in={state}>
-        <Box>{children}</Box>
+        <Box>
+          <Modal_container width={1280}>{children}</Modal_container>
+        </Box>
       </Fade>
     </Modal>
   );

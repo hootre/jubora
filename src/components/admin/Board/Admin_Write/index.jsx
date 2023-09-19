@@ -1,54 +1,29 @@
 'use client';
 import { Write_contaier } from './styles';
-import { useState } from 'react';
-import { FormControl, MenuItem, Select } from '@mui/material';
-import Notice_Write from '../../../home/Center/Notice/Notice_Write';
-import Question_Write from '../../../home/Center/Question/Question_Write';
-import { useUser } from 'hooks/supabase/auth/useUser';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-export const Admin_Write = () => {
-  // 어드민 유저정보 확인
-  const { useGetUserInfo } = useUser();
-  const {
-    data: { name },
-    isLoading,
-  } = useGetUserInfo();
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
-  // 게시판 select
-  const [table, setTable] = useState('notice');
-  const handleChange = (event) => {
-    setTable(event.target.value);
-  };
+export const Admin_Write = ({ children }) => {
+  // path 관련
+  const pathName = usePathname().substring(1).split('/')[3];
+  console.log(pathName);
   return (
     <Write_contaier className="C_container">
       <div className="table_select_box">
         <h1>게시판 선택</h1>
-        <FormControl sx={{ minWidth: 150 }} size="small">
-          <Select
-            labelId="demo-select-small-label"
-            id="demo-select-small"
-            defaultValue={'notice'}
-            value={table}
-            onChange={handleChange}
-          >
-            <MenuItem value="notice">공지사항</MenuItem>
-            <MenuItem value="question">자주묻는 질문</MenuItem>
-            <MenuItem value="orderAnswer">시안확인답변</MenuItem>
-          </Select>
-        </FormControl>
+        <div className="board_link_box">
+          <div className={pathName === 'notice' ? 'board_link active' : 'board_link'}>
+            <Link href="/admin/board/write/notice">공지사항</Link>
+          </div>
+          <div className={pathName === 'question' ? 'board_link active' : 'board_link'}>
+            <Link href="/admin/board/write/question">자주묻는 질문</Link>
+          </div>
+          <div className={pathName === 'sian' ? 'board_link active' : 'board_link'}>
+            <Link href="/admin/board/write/sian">시안확인</Link>
+          </div>
+        </div>
       </div>
-
-      {table === 'notice' ? (
-        <Notice_Write name={name} />
-      ) : table === 'question' ? (
-        <Question_Write name={name} />
-      ) : table === 'orderAnswer' ? (
-        <h1>ㅠㅠ</h1>
-      ) : (
-        <h1>Error</h1>
-      )}
+      {children}
     </Write_contaier>
   );
 };

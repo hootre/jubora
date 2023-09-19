@@ -3,6 +3,7 @@ import { Common } from 'styles/Common';
 
 export const Showcase_container = styled.section`
   margin-top: 30px;
+  width: ${Common.size.container_width};
   .filter_nav {
     display: flex;
     align-items: center;
@@ -120,5 +121,10 @@ export const Showcase_container = styled.section`
         }
       }
     }
+  }
+  .pagenation {
+    padding: 50px 0;
+    display: flex;
+    justify-content: center;
   }
 `;

@@ -27,6 +27,6 @@ export const deleteImage = async (public_id) => {
   })
     .then((data) => console.log(data))
     .catch((error) => {
-      console.error(`deleteImage Error : ${error.message}`);
+      throw console.error(`deleteImage Error : ${error.message}`);
     });
 };

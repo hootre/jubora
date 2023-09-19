@@ -1,35 +1,62 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase_client';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
+import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 
-// 특정 id 제품 상세
-const useGetOnlySian = (id) => {
+// Order Id에 맞는 sian list
+const useGetOnlySian = (order_id) => {
   const handleGetOnlySian = async () => {
-    const { data, error } = await supabase_client.from('sian').select('*').eq('id', id).single();
+    const { data, error } = await supabase_client.from('sian').select('*').eq('order_id', order_id);
 
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`Sian Detail 오류 :  ${error.message}`);
+        reject(`시안확인 리스트 가져오기 오류 :  ${error.message}`);
       } else {
         resolve(data);
       }
     });
   };
-  return useQuery([`sian_${id}`], handleGetOnlySian);
+  return useQuery([`sian_${order_id}`], handleGetOnlySian);
+};
+// 빈 시안 생성
+//  생성
+const useCreateEmptySian = (order_id) => {
+  const handleCreateEmptySian = async () => {
+    const { data, error } = await supabase_client.from('sian').insert({ order_id });
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`시안확인 생성오류 :  ${error.message}`);
+      } else {
+        toast.success('성공적으로 생성하였습니다');
+        resolve(data);
+      }
+    });
+  };
+  const client = useQueryClient();
+  return useMutation(handleCreateEmptySian, {
+    onSuccess: async () => {
+      await client.invalidateQueries([`sian_${order_id}`]);
+    },
+  });
 };
 //  생성
 const useCreateSian = () => {
-  const handleCreateSian = async ({ name, title, contents, images, type, images }) => {
-    if (images.ids.length > 0) {
-      images.ids.map(async (public_id) => {
-        await deleteImage(public_id);
-      });
+  const handleCreateSian = async ({ order_id, main_img, admin_text, user_text }) => {
+    let fileData = null;
+    if (main_img.length) {
+      fileData = await uploadImage(main_img[0], cloudFolderList.board);
     }
-    const { data, error } = await supabase_client
-      .from('sian')
-      .insert({ name, title, contents, images, type });
+
+    const { data, error } = await supabase_client.from('sian').insert({
+      order_id,
+      main_img: fileData?.url,
+      public_id: fileData?.public_id,
+      admin_text,
+      user_text,
+    });
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`시안확인 생성오류 :  ${error.message}`);
@@ -46,27 +73,10 @@ const useCreateSian = () => {
     },
   });
 };
-// 목록
-const useGetSian = () => {
-  const handleGetSian = async () => {
-    const { data, error } = await supabase_client.from('sian').select('*');
-    return new Promise((resolve, reject) => {
-      if (error) {
-        reject(`메인 슬라이드 불러오기 오류 :  ${error.message}`);
-      } else {
-        resolve(data);
-      }
-    });
-  };
-  return useQuery(gatherKeys.sian, handleGetSian);
-};
 // 수정
 const useUpdateSian = () => {
-  const handleUpdateSian = async ({ id, name, title, contents, images, type }) => {
-    const { data, error } = await supabase_client
-      .from('sian')
-      .update({ name, title, contents, images, type })
-      .eq('id', id);
+  const handleUpdateSian = async ({ id, user_text }) => {
+    const { data, error } = await supabase_client.from('sian').update({ user_text }).eq('id', id);
 
     return new Promise((resolve, reject) => {
       if (error) {
@@ -86,13 +96,8 @@ const useUpdateSian = () => {
   });
 };
 // 삭제
-const useDeleteSian = () => {
-  const handleDeleteSian = async ({ id, images }) => {
-    if (images.ids.length > 0) {
-      images.ids.map(async (public_id) => {
-        await deleteImage(public_id);
-      });
-    }
+const useDeleteSian = (order_id) => {
+  const handleDeleteSian = async (id) => {
     const { data, error } = await supabase_client.from('sian').delete().eq('id', id);
     return new Promise((resolve, reject) => {
       if (error) {
@@ -103,13 +108,15 @@ const useDeleteSian = () => {
       }
     });
   };
+  const router = useRouter();
   const client = useQueryClient();
   return useMutation(handleDeleteSian, {
     onSuccess: () => {
-      client.removeQueries(gatherKeys.sian);
+      client.removeQueries([`sian_${order_id}`]);
+      router.push('/admin/board/write/sian');
     },
   });
 };
 export const useSian = () => {
-  return { useGetOnlySian, useCreateSian, useGetSian, useUpdateSian, useDeleteSian };
+  return { useGetOnlySian, useCreateSian, useCreateEmptySian, useUpdateSian, useDeleteSian };
 };

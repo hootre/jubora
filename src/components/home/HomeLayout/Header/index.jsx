@@ -15,9 +15,7 @@ import { useScroll } from 'hooks/custom/useScroll';
 import { useEffect } from 'react';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
-import { AuthModal } from 'components/home/Auth/AuthModal';
 import { useTemplatesActions } from 'store';
-import { useAuthState } from 'store';
 import { TextDropdown } from 'components/common/TextDropdown';
 import { headerNoticeTextList } from 'assets/data';
 export const Header = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageItem_container } from './style';
 import Link from 'next/link';
 import { CldImage } from 'next-cloudinary';
@@ -6,15 +6,12 @@ import { CldImage } from 'next-cloudinary';
 export const ImageItem = ({ img_src, href, text, bannerType }) => {
   return (
     <ImageItem_container>
-      {/* <img src={img_src} alt="img" loading="lazy" />
-       */}
       <CldImage
-        width={bannerType === 'banner_row' ? 900 : bannerType === 'banner_col' ? 300 : 400}
-        height={bannerType === 'banner_row' ? 200 : bannerType === 'banner_col' ? 600 : 600}
-        sizes="100vw"
+        width={bannerType === 'banner_row' ? 900 : bannerType === 'banner_col' ? 200 : 300}
+        height={bannerType === 'banner_row' ? 100 : bannerType === 'banner_col' ? 620 : 380}
         loading="lazy"
         src={img_src}
-        alt="Description of my image"
+        alt="제품 이미지"
       />
       <div className="purchase_box">
         <div className="purchase">

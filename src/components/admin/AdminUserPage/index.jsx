@@ -79,7 +79,6 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
   };
   // 검색 Submit
   const onSubmit = (formData) => {
-    console.log(formData);
     if (formData.searchText === '') setUserData(data);
     setUserData(data.filter((user) => user[selectState].includes(formData.searchText)));
   };

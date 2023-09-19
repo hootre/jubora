@@ -4,10 +4,11 @@ import { MyModify_container } from './style';
 import { SianBoardCardHeader } from 'components/common/SianBoard/SianBoardCardHeader';
 import { useOrder } from 'hooks/supabase/order/useOrder';
 import { SianBoardCard } from 'components/common/SianBoard/SianBoardCard';
+import { useUser } from 'hooks/supabase/auth/useUser';
 
-export const MyModify = () => {
-  const { useGetOrder } = useOrder();
-  const { data, isLoading } = useGetOrder();
+export const MyModify = ({ email }) => {
+  const { useGetUserOrder } = useOrder();
+  const { data, isLoading } = useGetUserOrder(email);
 
   if (isLoading) {
     return <h1>Loading</h1>;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { serverTemplates } from 'hooks/supabase/templates/serverTemplates';
 import { serverOrderSetting } from 'hooks/supabase/order/orderSetting/serverOrderSetting';
-import Order_detail from 'components/home/Order/Order_detail';
+import Order_Write from 'components/home/Order/Order_Write';
 
 const page = async ({ params: { id }, searchParams: { bannerType } }) => {
   // 제품 이미지 가져오기
@@ -14,7 +14,7 @@ const page = async ({ params: { id }, searchParams: { bannerType } }) => {
 
   // user 상태
   return (
-    <Order_detail detail_data={detail_data} order_setting={order_setting} bannerType={bannerType} />
+    <Order_Write detail_data={detail_data} order_setting={order_setting} bannerType={bannerType} />
   );
 };
 export default page;

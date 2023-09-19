@@ -1,98 +1,91 @@
-import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@mui/material';
-import React, { useState } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
+'use client';
+import React, { useCallback, useState } from 'react';
 import { SianUpdateList_container } from './style';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { useSian } from 'hooks/supabase/sian/useSian';
+import { SianUpdate } from '../SianUpdate';
+import { Skeleton_SianUpdate } from 'components/common/Skeleton/Skeleton_SianUpdate';
+import { Sian_Admin_Skeleton } from 'components/admin/Board/Admin_Write_Item/Sian_Admin_Skeleton';
+import { confirmAlert } from 'react-confirm-alert';
 
-export const SianUpdateList = ({ data }) => {
-  const [expanded, setExpanded] = useState('panel1');
+export const SianUpdateList = ({ order_id, role }) => {
+  // sian Data
+  const { useGetOnlySian, useCreateEmptySian, useDeleteSian } = useSian();
+  const { data: sianData } = useGetOnlySian(order_id);
+  const { mutate: DeleteSian } = useDeleteSian(order_id);
+  const { mutate: CreateEmptySian } = useCreateEmptySian(order_id);
+  const handleCreateSian = () => {
+    CreateEmptySian();
+  };
+  // user check 관리
+  const [checkedList, setCheckedLists] = useState([]);
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
+  // 시안 삭제
+  const deleteSian = () => {
+    confirmAlert({
+      title: '정말로 삭제하시겠습니까?',
+      message: '복구 불가능합니다',
+      buttons: [
+        {
+          label: '삭제',
+          onClick: () => {
+            checkedList.map((id) => {
+              DeleteSian(id);
+            });
+          },
+        },
+        { label: '취소' },
+      ],
+    });
   };
 
-  const imageUploadSetValue = (e) => {
-    if (watch('images')?.length === 3) {
-      return toast.error('업로드는 3개까지 가능합니다');
-    }
-    if (watch('images')) {
-      setValue('images', [...watch('images'), e.target.files[0]]);
-    } else {
-      setValue('images', [e.target.files[0]]);
-    }
-  };
-  const deleteData = (img) => {
-    setValue(
-      'images',
-      watch('images').filter((item) => item.name !== img.name)
-    );
-  };
-  const onSubmit = (data) => {
-    console.log(data);
-  };
-  // react hooks form
-  const { register, setValue, handleSubmit, watch } = useForm();
+  // 개별 체크 클릭 시 발생하는 함수
+  const onCheckedElement = useCallback(
+    (checked, list) => {
+      if (checked) {
+        setCheckedLists([...checkedList, list]);
+      } else {
+        setCheckedLists(checkedList.filter((el) => el !== list));
+      }
+    },
+    [checkedList]
+  );
   return (
     <SianUpdateList_container>
-      <li>
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary
-            expandIcon={<FiChevronDown />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
+      {role === 'admin' && (
+        <div className="btn_box">
+          <div className="create_sian" onClick={handleCreateSian}>
+            시안등록하기
+          </div>
+          <div
+            className="delete_sian"
+            onClick={() => (checkedList.length > 0 ? deleteSian() : null)}
           >
-            <h1>시안_1</h1>
-          </AccordionSummary>
-          <AccordionDetails>
-            <form className="sian_modify_box">
-              <img src={data.image} alt="sian_img" />
-              <div className="modify_box">
-                <div className="sell_text">
-                  <h2>판매자 전달사항</h2>
-                  <p>이렇게 해서 이러쿵 저러쿵 하였습니다</p>
-                </div>
-                <div className="modify_text">
-                  <h2>구매자 수정요청</h2>
-                  <div className="textarea_box">
-                    <textarea
-                      placeholder="시안을 보시고 수정사항을 적어주세요"
-                      {...register('text')}
-                    />
-                    <div className="file_list">
-                      {watch('images')?.map((img) => (
-                        <div key={img.size} className="file_text">
-                          <span className="file_name">{img.name}</span>
-                          <div className="delete_btn" onClick={() => deleteData(img)}>
-                            삭제
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="sianupdate_btn_box">
-                  <div className="file_box">
-                    <label htmlFor="file" className="from_item_btn active">
-                      첨부파일 등록
-                    </label>
-                    <input
-                      id="file"
-                      type="file"
-                      accept="image/*"
-                      name="file"
-                      onChange={imageUploadSetValue}
-                    />
-                  </div>
-                  <div className="submit" onClick={handleSubmit(onSubmit)}>
-                    등록하기
-                  </div>
-                </div>
-              </div>
-            </form>
-          </AccordionDetails>
-        </Accordion>
-      </li>
+            선택 삭제
+          </div>
+        </div>
+      )}
+      {sianData?.length ? (
+        sianData.map((item, index) => (
+          <li className="sian_item" key={item.id}>
+            <input
+              type="checkbox"
+              onChange={(e) => onCheckedElement(e.target.checked, item.id)}
+              checked={checkedList.includes(item.id) ? true : false}
+            />
+            <SianUpdate
+              key={item.id}
+              data={item}
+              index={index}
+              expand={index === sianData.length - 1}
+              role={role}
+            />
+          </li>
+        ))
+      ) : role === 'admin' ? (
+        <Sian_Admin_Skeleton order_id={order_id} />
+      ) : (
+        <Skeleton_SianUpdate />
+      )}
     </SianUpdateList_container>
   );
 };

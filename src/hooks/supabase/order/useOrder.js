@@ -10,19 +10,36 @@ const useGetOnlyOrder = (id) => {
   const handleGetOnlyOrder = async () => {
     const { data, error } = await supabase_client.from('order').select('*').eq('id', id).single();
 
-    if (error) {
-      console.error(`get only order ${error.message}`);
-      return;
-    }
-    if (data) {
-      return data;
-    }
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`특정 주문내역 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
   };
   return useQuery([`order_${id}`], handleGetOnlyOrder);
 };
+// 해당 user.id 제품
+const useGetUserOrder = (email) => {
+  const handleGetUserOrder = async () => {
+    const { data, error } = await supabase_client
+      .from('order')
+      .select('*')
+      .eq('writer_user_email', email);
 
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`해당 유저 주문내역 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
+  };
+  return useQuery([`order_${email}`], handleGetUserOrder);
+};
 // ORDER 생성
-const useCreateOrder = () => {
+const useCreateOrder = (email) => {
   const handleCreateOrder = async ({
     writer_user_email,
     state,
@@ -37,8 +54,8 @@ const useCreateOrder = () => {
     address_2,
     address_3,
     contents,
-    in_out_type,
-    corner_type,
+    category_type,
+    template_type,
     image,
     price,
     file,
@@ -51,7 +68,6 @@ const useCreateOrder = () => {
     item_7,
   }) => {
     let fileData = null;
-
     if (file.length) {
       fileData = await uploadImage(file[0], cloudFolderList.order);
     }
@@ -68,8 +84,8 @@ const useCreateOrder = () => {
       address_2,
       address_3,
       contents,
-      in_out_type,
-      corner_type,
+      category_type,
+      template_type,
       password,
       image,
       price,
@@ -96,7 +112,7 @@ const useCreateOrder = () => {
   const client = useQueryClient();
   return useMutation(handleCreateOrder, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.order);
+      await client.invalidateQueries([`order_${email}`]);
     },
   });
 };
@@ -116,8 +132,9 @@ const useGetOrder = () => {
   return useQuery(gatherKeys.order, handleGetOrder);
 };
 // ORDER 수정
-const useUpdateOrder = () => {
+const useUpdateOrder = (id) => {
   const handleUpdateOrder = async ({
+    id,
     writer_user_email,
     state,
     title,
@@ -131,11 +148,10 @@ const useUpdateOrder = () => {
     address_2,
     address_3,
     contents,
-    in_out_type,
-    corner_type,
+    category_type,
+    template_type,
     image,
     price,
-    file,
     item_1,
     item_2,
     item_3,
@@ -144,12 +160,9 @@ const useUpdateOrder = () => {
     item_6,
     item_7,
   }) => {
-    await deleteFile(public_id);
-    await uploadImage(file, cloudFolderList.order).then(async ({ url, public_id }) => {
-      if (!url) {
-        console.error(`Cloudinary UPLOAD ERROR`);
-      }
-      const { data, error } = await supabase_client.from('order').insert({
+    const { data, error } = await supabase_client
+      .from('order')
+      .update({
         writer_user_email,
         state,
         title,
@@ -162,13 +175,11 @@ const useUpdateOrder = () => {
         address_2,
         address_3,
         contents,
-        in_out_type,
-        corner_type,
+        category_type,
+        template_type,
         password,
         image,
         price,
-        file: url,
-        public_id: public_id,
         item_1,
         item_2,
         item_3,
@@ -176,59 +187,66 @@ const useUpdateOrder = () => {
         item_5,
         item_6,
         item_7,
-      });
-      return new Promise((resolve, reject) => {
-        if (error) {
-          reject(`주문 수정 오류 :  ${error.message}`);
-        } else {
-          toast.success('성공적으로 수정하였습니다');
-          resolve(data);
-        }
-      });
+      })
+      .eq('id', id);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`주문 수정 오류 :  ${error.message}`);
+      } else {
+        toast.success('성공적으로 수정하였습니다');
+        resolve(data);
+      }
     });
   };
 
   const client = useQueryClient();
   return useMutation(handleUpdateOrder, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.order);
+      await client.invalidateQueries([`order_${id}`]);
     },
   });
 };
-// Templates DELETE
+// ORDER DELETE
 const useDeleteOrder = () => {
   const handleDeleteOrder = async (id, public_id) => {
     if (public_id) {
       await deleteImage(public_id).then(async (res) => {
         if (res.ok) {
-          const { error } = await supabase_client.from('order').delete().eq('id', id);
+          const { error: sianError } = await supabase_client
+            .from('sian')
+            .delete()
+            .eq('order_id', id);
+          if (!sianError) {
+            const { error } = await supabase_client.from('order').delete().eq('id', id);
 
-          return new Promise((resolve, reject) => {
-            if (error) {
-              reject(`주문 삭제 오류 :  ${error.message}`);
-            } else {
-              console.log(error);
-              toast.success('성공적으로 삭제하였습니다');
-              resolve('성공');
-            }
-          });
-        } else {
-          toast.error('이미지 삭제 실패');
+            return new Promise((resolve, reject) => {
+              if (error) {
+                reject(`주문 삭제 오류 :  ${error.message}`);
+              } else {
+                toast.success('성공적으로 삭제하였습니다');
+                resolve('성공');
+              }
+            });
+          } else {
+            toast.error('이미지 삭제 실패');
+          }
         }
       });
     } else {
-      const { error } = await supabase_client.from('order').delete().eq('id', id);
-
-      return new Promise((resolve, reject) => {
-        if (error) {
-          toast.error('주문 삭제 오류');
-          reject(`주문 삭제 오류 :  ${error.message}`);
-        } else {
-          console.log(error);
-          toast.success('성공적으로 삭제하였습니다');
-          resolve('성공');
-        }
-      });
+      const { error: sianError } = await supabase_client.from('sian').delete().eq('order_id', id);
+      if (!sianError) {
+        const { error } = await supabase_client.from('order').delete().eq('id', id);
+        return new Promise((resolve, reject) => {
+          if (error) {
+            toast.error('주문 삭제 오류');
+            reject(`주문 삭제 오류 :  ${error.message}`);
+          } else {
+            console.log(error);
+            toast.success('성공적으로 삭제하였습니다');
+            resolve('성공');
+          }
+        });
+      }
     }
   };
   const client = useQueryClient();
@@ -241,6 +259,7 @@ const useDeleteOrder = () => {
 export const useOrder = () => {
   return {
     useGetOnlyOrder,
+    useGetUserOrder,
     useCreateOrder,
     useGetOrder,
     useUpdateOrder,

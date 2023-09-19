@@ -2,11 +2,11 @@
 import React, { useEffect } from 'react';
 import { MyInfo_container } from './style';
 import { useUser } from 'hooks/supabase/auth/useUser';
-import { Item_text } from 'components/home/Order/Item_text';
-import { Item_address } from 'components/home/Order/Item_address';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { ConfirmBtn } from 'components/common/ConfirmBtn';
+import { Item_text } from 'components/home/Order/Order_writer_Item/Item_text';
+import { Item_address } from 'components/home/Order/Order_writer_Item/Item_address';
 
 export const MyInfo = () => {
   // 유저 정보

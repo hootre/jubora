@@ -94,7 +94,7 @@ export const Read_OrderList_container = styled.section`
         }
         &.title {
           flex: 1;
-          text-align: left;
+          text-align: center;
           overflow: hidden;
           > a:hover {
             text-decoration: underline;

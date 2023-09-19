@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase_client from 'lib/supabase_client';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
@@ -35,10 +36,12 @@ const useCreateQnA = () => {
       }
     });
   };
+  const router = useRouter();
   const client = useQueryClient();
   return useMutation(handleCreateQnA, {
-    onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.qna);
+    onSuccess: () => {
+      router.push('/home/center/qna');
+      client.invalidateQueries(gatherKeys.qna);
     },
   });
 };
@@ -77,7 +80,8 @@ const useUpdateQnA = () => {
   const client = useQueryClient();
   return useMutation(handleUpdateQnA, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.qna);
+      client.invalidateQueries(gatherKeys.qna);
+      client.invalidateQueries([`qna_${id}`]);
     },
   });
 };

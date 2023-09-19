@@ -68,7 +68,7 @@ const useUpdateQuestion = () => {
 // 삭제
 const useDeleteQuestion = () => {
   const handleDeleteQuestion = async ({ id, images }) => {
-    if (images.ids.length > 0) {
+    if (images?.ids.length > 0) {
       images.ids.map(async (public_id) => {
         await deleteImage(public_id);
       });

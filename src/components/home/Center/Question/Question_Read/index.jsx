@@ -28,7 +28,6 @@ const Question_Read = () => {
         {
           label: '삭제',
           onClick: () => {
-            console.log(checkedList);
             checkedList.map((item) => {
               handleDelete(item);
             });
@@ -100,7 +99,7 @@ const Question_Read = () => {
         {user.role === 'admin' ? (
           <div className="btn_box">
             <div className="C_basic_button">
-              <Link href="/admin/board/write">글쓰기</Link>
+              <Link href="/admin/board/write/question">글쓰기</Link>
             </div>
             <div
               className="C_basic_button delete_btn"

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BoardCommentInput_container } from './style';
 import { useForm } from 'react-hook-form';
 import { useUser } from 'hooks/supabase/auth/useUser';
@@ -9,6 +9,7 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   // comment 생성
+  const [disabled, setDisabled] = useState();
   const { useCreateComment } = useComment();
   const { mutate: createComment } = useCreateComment();
 
@@ -25,14 +26,16 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
     if (user) {
       setValue('writer', user.name ? user.name : writer);
     }
-    // 기본 값
-    setValue('from_table', from_table);
-    setValue('from_table_id', from_table_id);
-    setValue('from_comment', from_comment);
+    reset({ from_table, from_table_id, from_comment });
   }, [user, reset]);
   const onSubmit = (data) => {
-    createComment(data);
-    reset();
+    setDisabled(true);
+    createComment(data, {
+      onSuccess: () => {
+        setDisabled(false);
+        reset();
+      },
+    });
   };
   if (userLoading) {
     return <h1>Loading</h1>;
@@ -41,7 +44,13 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
   return (
     <BoardCommentInput_container>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" {...register('contents')} placeholder="댓글을 입력해주세요" />
+        <input
+          type="text"
+          {...register('contents')}
+          placeholder="댓글을 입력해주세요"
+          required
+          disabled={disabled}
+        />
       </form>
     </BoardCommentInput_container>
   );

@@ -1,4 +1,4 @@
-import { Notice_detail } from 'components/home/Center/Notice/Notice_detail';
+import { Notice_detail } from 'components/home/Center/Notice/Notice_Detail';
 import React from 'react';
 
 const page = ({ params: { id } }) => {

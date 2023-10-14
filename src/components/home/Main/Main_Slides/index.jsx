@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Main_Slides_container } from './style';
 import { useMainSlides } from 'hooks/supabase/main/slides/useMainSlides';
+import { Skeleton } from '@mui/material';
 
 // 메인
 export const Main_Slides = () => {
@@ -38,7 +39,7 @@ export const Main_Slides = () => {
   };
 
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return <Skeleton animation="wave" />;
   }
   return (
     <Main_Slides_container>

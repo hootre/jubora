@@ -41,7 +41,6 @@ const useCreateComment = () => {
 // Comment 목록
 const useGetComment = (from_table, from_table_id) => {
   const handleGetComment = async () => {
-    console.log(from_table);
     const { data, error } = await supabase_client
       .from('comment')
       .select('*')

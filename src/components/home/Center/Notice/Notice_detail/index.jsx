@@ -62,7 +62,7 @@ export const Notice_detail = ({ id }) => {
             </>
           ) : (
             <div className="modify_btn" onClick={toggleSianUpdate}>
-              주문수정하기
+              수정하기
             </div>
           ))}
       </div>

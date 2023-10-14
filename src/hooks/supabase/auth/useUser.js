@@ -3,6 +3,7 @@ import { supabase } from 'lib/supabase';
 import supabase_client from 'lib/supabase_client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import { useTemplatesActions } from 'store';
 import { gatherKeys } from 'utils/gatherKeys';
 import { koreaDate } from 'utils/koreaDate';
 
@@ -145,7 +146,7 @@ const useAdminDelete = () => {
       throw `회원삭제 오류 : ${profiles_error.message}`;
     } else {
       const { error } = await supabase_client.auth.admin.deleteUser(id);
-      if (!error) console.log('회원삭제 성공');
+      if (!error) toast.success('회원삭제 성공');
     }
   };
   const client = useQueryClient();
@@ -202,9 +203,12 @@ const useCreateUser = () => {
   };
   const client = useQueryClient();
   const router = useRouter();
+  // zustand
+  const { setAuthState } = useTemplatesActions();
   return useMutation(handleCreateUser, {
     onSuccess: async () => {
       await client.invalidateQueries(gatherKeys.current_user);
+      setAuthState();
       router.refresh();
     },
   });
@@ -290,10 +294,13 @@ const useSignIn = () => {
 
   const client = useQueryClient();
   const router = useRouter();
+  // zustand
+  const { setAuthState } = useTemplatesActions();
   return useMutation(handleLogin, {
     onSuccess: async () => {
       await client.invalidateQueries(gatherKeys.current_user);
-      router.refresh();
+      setAuthState();
+      router.push('/');
     },
   });
 };

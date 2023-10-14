@@ -1,8 +1,6 @@
 import React from 'react';
-import logo from 'assets/MainPage/logo.png';
-import Image from 'next/image';
 import { Footer_container } from './style.jsx';
-export const Footer = () => {
+export const Footer = ({ logoImage }) => {
   return (
     <Footer_container>
       <div className="footer C_container">
@@ -25,7 +23,7 @@ export const Footer = () => {
             </ul>
           </nav>
           <div className="footerInfo">
-            <Image src={logo} alt="footer" />
+            <img src={logoImage} alt="footer" />
             <div>
               <p>
                 <b>상호</b> : JK주보라 <b>사업자등록번호</b> : 593-56-00232

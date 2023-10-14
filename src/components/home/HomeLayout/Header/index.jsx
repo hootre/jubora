@@ -1,7 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import logo from 'assets/MainPage/logo.png';
-import Image from 'next/image';
 import Link from 'next/link';
 import { PaymentModal } from 'components/common/Modal/PaymentModal';
 import { MypageModal } from 'components/common/Modal/MypageModal';
@@ -17,8 +15,40 @@ import { useUser } from 'hooks/supabase/auth/useUser';
 import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
 import { useTemplatesActions } from 'store';
 import { TextDropdown } from 'components/common/TextDropdown';
-import { headerNoticeTextList } from 'assets/data';
-export const Header = () => {
+
+export const headerNoticeTextList = [
+  {
+    text: '공지사항',
+    href: '/home/center/notice',
+  },
+
+  {
+    text: '자주 묻는 질문',
+    href: '/home/center/question',
+  },
+
+  {
+    text: 'Q&A',
+    href: '/home/center/qna',
+  },
+];
+export const headerMainNavList = [
+  {
+    text: '현수막',
+    pathname: 'banner',
+  },
+
+  {
+    text: '인쇄물',
+    pathname: 'print',
+  },
+
+  {
+    text: '실사',
+    pathname: 'real',
+  },
+];
+export const Header = ({ logoImage, topImage }) => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -27,9 +57,9 @@ export const Header = () => {
   const { useGetProductsTag } = useProductsTag();
   const { data: tag, isLoading: tagLoading } = useGetProductsTag();
   // path 관련
-  const pathName = usePathname().substring(1).split('/')[1];
+  const pathname = usePathname().substring(1).split('/')[1];
   let navCutLine =
-    pathName === 'banner' ? 0 : pathName === 'print' ? 1 : pathName === 'real' ? 2 : -3;
+    pathname === 'banner' ? 0 : pathname === 'print' ? 1 : pathname === 'real' ? 2 : -3;
   // 로그인on상태에서 toggle Nav
   const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
@@ -58,17 +88,17 @@ export const Header = () => {
   if (tagLoading || userLoading) {
     return;
   }
-
+  console.log(logoImage);
   return (
     <Header_container ScrollActive={ScrollActive}>
       <div className="prev_site">
-        <img src="https://siloamdesign.com/data/banner/22050210574177.jpg" alt="" />
+        <img src={topImage} alt="topImage" />
       </div>
       <div className="header C_container">
         <div className="nav_container">
           <div className="header_top">
             <Link href="/">
-              <Image src={logo} alt="img" />
+              <img src={logoImage} alt="logo" />
             </Link>
             <HeaderSearchInput />
             <div className="sub_container">
@@ -127,35 +157,16 @@ export const Header = () => {
           <div className="nav_box">
             <div>
               <ul className="nav">
-                <li className="benner">
-                  <Link
-                    href="/home/templates/banner"
-                    className={pathName === 'banner' ? 'active' : ''}
-                  >
-                    현수막
-                  </Link>
-                </li>
-                {/* <li className="banner_col">
-                  <Link
-                    href="/templates/banner_row"
-                    className={pathName === 'templates' ? 'active' : ''}
-                  >
-                    배너
-                  </Link>
-                </li> */}
-                <li className="print">
-                  <Link
-                    href="/home/templates/print"
-                    className={pathName === 'print' ? 'active' : ''}
-                  >
-                    인쇄물
-                  </Link>
-                </li>
-                <li className="real">
-                  <Link href="/home/templates/real" className={pathName === 'real' ? 'active' : ''}>
-                    실사
-                  </Link>
-                </li>
+                {headerMainNavList.map((item) => (
+                  <li className="benner">
+                    <Link
+                      href={`/home/templates/${item.pathname}`}
+                      className={pathname === item.pathname ? 'active' : ''}
+                    >
+                      {item.text}
+                    </Link>
+                  </li>
+                ))}
                 <div
                   className={navCutLine >= 0 ? 'lineBox ' : 'lineBox non'}
                   style={{ left: `${navCutLine * 160}px` }}

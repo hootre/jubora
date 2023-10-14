@@ -1,9 +1,12 @@
 'use client';
-import React, { memo, useState } from 'react';
-import { Create_container } from './styles';
+import { MainSlides_Wrtie_container } from './styles';
 import { useMainSlides } from 'hooks/supabase/main/slides/useMainSlides';
+import { Read_Mainslides } from 'components/admin/Read/Read_Mainslides';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { getByteSize } from 'utils/getByteSize';
 
-const Create_Mainslides = () => {
+export const MainSlides_Wrtie = () => {
   // 메인 슬라이드
   const { useCreateMainSlides } = useMainSlides();
   const { mutate: CreateMainSlide } = useCreateMainSlides();
@@ -14,8 +17,13 @@ const Create_Mainslides = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'img') {
-      setFormData((formData) => ({ ...formData, [name]: files[0] }));
-      return;
+      if (files[0].size > 10485760) {
+        setFormData('');
+        toast.error('이미지 사이즈가 10mb보다 큽니다');
+      } else {
+        setFormData((formData) => ({ ...formData, [name]: files[0] }));
+        return;
+      }
     }
     setFormData((formData) => ({ ...formData, [name]: value }));
   };
@@ -33,15 +41,18 @@ const Create_Mainslides = () => {
     });
   };
   return (
-    <Create_container className="">
+    <MainSlides_Wrtie_container>
       <form className="" onSubmit={handleSubmit}>
         <h2 className="title">메인 슬라이드 등록</h2>
         <div className="option_container file_box">
           <h2>메인 이미지</h2>
           <div>
-            <label htmlFor="img" className="from_item_btn">
-              첨부파일 등록
-            </label>
+            <div className="input_box">
+              <label htmlFor="img" className="from_item_btn">
+                첨부파일 등록
+              </label>
+              <span className="confirm_text">최대 이미지 크기는 10mb입니다</span>
+            </div>
             <input
               id="img"
               className="file_input"
@@ -54,6 +65,7 @@ const Create_Mainslides = () => {
             {formData?.img?.name && (
               <div className="file_text">
                 <span className="file_name">{formData?.img?.name}</span>
+                <span className="file_size">{getByteSize(formData?.img?.size)}</span>
                 <div className="delete_btn" onClick={() => deleteData('img')}>
                   삭제
                 </div>
@@ -70,7 +82,6 @@ const Create_Mainslides = () => {
               name="title_1"
               value={formData.title_1 ?? ''}
               placeholder="첫번째줄"
-              required
               onChange={handleChange}
             />
           </div>
@@ -81,7 +92,6 @@ const Create_Mainslides = () => {
               name="title_2"
               value={formData.title_2 ?? ''}
               placeholder="두번째줄"
-              required
               onChange={handleChange}
             />
           </div>
@@ -95,7 +105,6 @@ const Create_Mainslides = () => {
               name="content_1"
               value={formData.content_1 ?? ''}
               placeholder="첫번째줄"
-              required
               onChange={handleChange}
             />
           </div>
@@ -106,7 +115,6 @@ const Create_Mainslides = () => {
               name="content_2"
               value={formData.content_2 ?? ''}
               placeholder="두번째줄"
-              required
               onChange={handleChange}
             />
           </div>
@@ -131,8 +139,8 @@ const Create_Mainslides = () => {
           </button>
         </div>
       </form>
-    </Create_container>
+      <h2>메인 슬라이드</h2>
+      <Read_Mainslides />
+    </MainSlides_Wrtie_container>
   );
 };
-
-export default memo(Create_Mainslides);

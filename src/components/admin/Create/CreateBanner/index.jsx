@@ -45,7 +45,6 @@ const CreateBanner = () => {
     setFormData((formData) => ({ ...formData, [name]: '' }));
   };
   const onSubmit = (data) => {
-    console.log(data);
     setIsUploading(true);
     handleCreateBanner(formData, {
       onSuccess: () => {
@@ -57,7 +56,6 @@ const CreateBanner = () => {
   if (prodctsTag_loading || from_btn_loading) {
     return <h1>Loading</h1>;
   }
-  console.log(fromBtnList);
   return (
     <Create_container className="">
       <FormProvider {...methods}>

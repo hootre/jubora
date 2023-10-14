@@ -1,7 +1,14 @@
 'use client';
 import React from 'react';
 import { Main_Notice_container } from './style';
-export const Main_Notice = ({ noticeList }) => {
+import { useNotice } from 'hooks/supabase/notice/useNotice';
+import Link from 'next/link';
+export const Main_Notice = ({ noticeImage }) => {
+  const { useGetMainNotice_4 } = useNotice();
+  const { data, isLoading } = useGetMainNotice_4();
+  if (isLoading) {
+    return;
+  }
   return (
     <Main_Notice_container>
       <div className="C_container">
@@ -10,24 +17,23 @@ export const Main_Notice = ({ noticeList }) => {
         </div>
         <div className="notice">
           <ul className="notice_list">
-            {noticeList &&
-              noticeList.map((item, idx) => {
-                return (
-                  <li key={idx}>
-                    <a href="#">{item[0]}</a>
-                    <svg className="SvgIcon_SvgIcon__root__svg__DKYBi" viewBox="0 0 18 18">
-                      <path d="m11.955 9-5.978 5.977a.563.563 0 0 0 .796.796l6.375-6.375a.563.563 0 0 0 0-.796L6.773 2.227a.562.562 0 1 0-.796.796L11.955 9z"></path>
-                    </svg>
-                  </li>
-                );
-              })}
+            {data.map((item) => (
+              <li key={item.id}>
+                <span className={item.type === '공지' ? 'notice state' : 'state'}>
+                  [{item.type}]
+                </span>
+                <Link href={`/home/center/notice/${item.id}`}>
+                  <h2>{item.title}</h2>
+                  <svg className="SvgIcon_SvgIcon__root__svg__DKYBi" viewBox="0 0 18 18">
+                    <path d="m11.955 9-5.978 5.977a.563.563 0 0 0 .796.796l6.375-6.375a.563.563 0 0 0 0-.796L6.773 2.227a.562.562 0 1 0-.796.796L11.955 9z"></path>
+                  </svg>
+                </Link>
+              </li>
+            ))}
           </ul>
-          <a href="#" className="bottom_banner">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-bottom-banner%2F17e47a5fb3a0cc6b0ee93.jpg?alt=media&token=888ffbef-3445-4a01-a389-3913bd02f456"
-              alt=""
-            />
-          </a>
+          <div className="bottom_banner">
+            <img src={noticeImage} alt="noticeImage" />
+          </div>
         </div>
       </div>
     </Main_Notice_container>

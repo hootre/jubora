@@ -37,36 +37,61 @@ export const Main_Notice_container = styled.section`
     align-items: flex-start;
     justify-content: space-between;
     ul {
-      width: 360px;
-      flex: 0 0 360px;
+      width: 720px;
+      height: 250px;
       background: ${Common.colors.bg300};
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
       border-radius: 4px;
-      padding: 8px 30px;
-      margin-right: 30px;
+      padding: 8px 10px;
+      margin-right: 20px;
+      display: flex;
+      flex-direction: column;
       li {
         border-bottom: 1px solid ${Common.colors.bg200};
         &:last-child {
           border-bottom: none;
         }
-        padding: 14px 0 15px;
+        padding: 13px 0 15px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        a {
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 24px;
-          color: ${Common.colors.text200};
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          max-width: 260px;
+        > .state {
+          color: ${Common.colors.black};
+          flex: 0 0 50px;
+          text-align: center;
+          font-size: 15px;
+          &.notice {
+            font-weight: bold;
+            color: ${Common.colors.red};
+          }
         }
-        svg {
-          width: 24px;
-          height: 24px;
-          opacity: 0.2;
+
+        > a {
+          display: flex;
+          justify-content: space-between;
+          flex: 4;
+          &:hover {
+            h2 {
+              color: ${Common.colors.black};
+            }
+            svg {
+              opacity: 1;
+            }
+          }
+          h2 {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 24px;
+            margin: 0 10px;
+            color: ${Common.colors.text200};
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          > svg {
+            width: 24px;
+            height: 24px;
+            opacity: 0.2;
+          }
         }
       }
     }
@@ -76,7 +101,7 @@ export const Main_Notice_container = styled.section`
       img {
         position: relative;
         width: 100%;
-        height: 236px;
+        height: 250px;
         border-radius: 4px;
         overflow: hidden;
         object-fit: cover;

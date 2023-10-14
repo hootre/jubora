@@ -12,9 +12,8 @@ export const TextDropdown_container = styled.div`
       cursor: pointer;
     }
     .dropdownText_box {
-      opacity: 0;
+      display: none;
       position: absolute;
-      display: flex;
       flex-direction: column;
       gap: 5px;
       background: ${Common.colors.white};
@@ -25,6 +24,7 @@ export const TextDropdown_container = styled.div`
       top: 20px;
       left: -30px;
       z-index: 10;
+      animation: smoothAppear 0.5s;
       a {
         display: block;
         border-radius: 10px;
@@ -36,7 +36,7 @@ export const TextDropdown_container = styled.div`
     }
     &:hover {
       > .dropdownText_box {
-        opacity: 1;
+        display: flex;
       }
     }
   }

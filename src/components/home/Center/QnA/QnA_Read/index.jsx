@@ -78,15 +78,6 @@ const QnA_Read = () => {
   if (isLoading || userLoading) {
     return <h1>Loading</h1>;
   }
-  if (!user.id) {
-    return (
-      <QnA_Read_container>
-        <div className="login_check">
-          <LoginRequest />
-        </div>
-      </QnA_Read_container>
-    );
-  }
   return (
     <QnA_Read_container>
       <div className="top_box">

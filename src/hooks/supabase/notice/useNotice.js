@@ -48,7 +48,7 @@ const useGetNotice = () => {
     const { data, error } = await supabase_client.from('notice').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`메인 슬라이드 불러오기 오류 :  ${error.message}`);
+        reject(`공지사항 불러오기 오류 :  ${error.message}`);
       } else {
         resolve(data);
       }
@@ -56,6 +56,21 @@ const useGetNotice = () => {
   };
   return useQuery(gatherKeys.notice, handleGetNotice);
 };
+// 메인슬라이드 최신 4개 게시글
+const useGetMainNotice_4 = () => {
+  const handleGetMainNotice_4 = async () => {
+    const { data, error } = await supabase_client.from('notice').select('*').range(0, 4);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`메인 슬라이드 불러오기 오류 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
+  };
+  return useQuery(['handleGetMainNotice_4'], handleGetMainNotice_4);
+};
+
 // 수정
 const useUpdateNotice = (id) => {
   const handleUpdateNotice = async ({ id, title, contents, images, type }) => {
@@ -119,5 +134,12 @@ const useDeleteNotice = () => {
   });
 };
 export const useNotice = () => {
-  return { useGetOnlyNotice, useCreateNotice, useGetNotice, useUpdateNotice, useDeleteNotice };
+  return {
+    useGetOnlyNotice,
+    useCreateNotice,
+    useGetNotice,
+    useGetMainNotice_4,
+    useUpdateNotice,
+    useDeleteNotice,
+  };
 };

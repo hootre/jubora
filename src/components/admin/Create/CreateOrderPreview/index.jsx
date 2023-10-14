@@ -29,7 +29,6 @@ const CreateOrderPreview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsUploading(true);
-    console.log(formData);
     useCreateOrderItemPreview(formData, {
       onSuccess: () => {
         setFormData({});

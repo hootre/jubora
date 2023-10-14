@@ -58,6 +58,7 @@ const style = css`
       padding: 10px;
     }
   }
+  /* animation: smoothAppear 0.5s; */
   @keyframes smoothAppear {
     from {
       opacity: 0;

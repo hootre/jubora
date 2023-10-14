@@ -16,6 +16,8 @@ export const gatherKeys = {
   comment: ['comment'],
   categoryList: ['categoryList'],
   mainSlides: ['mainSlides'],
+  mainSettingImage: ['mainSettingImage'],
+  mainTemplatesCard: ['mainTemplatesCard'],
   //   lists: () => [...todoKeys.all, 'list'],
   //   list: (filters) => [...todoKeys.lists(), { filters }],
   //   details: () => [...todoKeys.all, 'detail'],

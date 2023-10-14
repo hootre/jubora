@@ -5,7 +5,6 @@ import { useTemplates } from 'hooks/products/useBanner';
 const Update = ({ hasFormData, isUpdate, setIsUpdate }) => {
   const [formData, setFormData] = useState(hasFormData);
   const [isUploading, setIsUploading] = useState(false);
-  console.log(formData);
   const { useUpdateTemplates, useDeleteTemplates } = useTemplates();
   const { mutate: useUpdateTemplate } = useUpdateTemplates();
   const { mutate: useDeleteTemplate } = useDeleteTemplates();

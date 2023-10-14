@@ -35,7 +35,6 @@ const ForgetPassword = ({ setAuthType }) => {
     }
     setValue('email', '');
     setButtonState(false);
-    console.log(buttonState);
   };
   return (
     <div>

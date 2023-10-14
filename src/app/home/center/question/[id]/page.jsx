@@ -11,7 +11,6 @@ const order_detail = ({ params: { id } }) => {
   if (isLoading) {
     return <h1>Loading</h1>;
   }
-  console.log(data);
   return (
     <>
       <BoardDetail data={data} />

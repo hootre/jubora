@@ -14,11 +14,11 @@ const useCreateMainSlides = () => {
     content_2,
     subtitle,
   }) => {
-    const { url, public_id } = await uploadImage(img)
+    const { url, public_id } = await uploadImage(img, 'jubora_board')
       .then((data) => data)
       .catch((error) => console.log(`메인 슬라이드 이미지 업로드 오류 :  ${error.message}`));
 
-    const { data, error } = await supabase_client.from('main_slides').insert({
+    const { data, error } = await supabase_client.from('mainSlides').insert({
       img: url,
       public_id,
       title_1,
@@ -45,10 +45,10 @@ const useCreateMainSlides = () => {
     },
   });
 };
-// ORDER 목록
+// 목록
 const useGetMainSlides = () => {
   const handleGetMainSlides = async () => {
-    const { data, error } = await supabase_client.from('main_slides').select('*');
+    const { data, error } = await supabase_client.from('mainSlides').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`메인 슬라이드 불러오기 오류 :  ${error.message}`);
@@ -59,7 +59,7 @@ const useGetMainSlides = () => {
   };
   return useQuery(gatherKeys.mainSlides, handleGetMainSlides);
 };
-// ORDER 수정
+// 수정
 const useUpdateMainSlides = () => {
   const handleUpdateMainSlides = async ({
     img,
@@ -75,7 +75,7 @@ const useUpdateMainSlides = () => {
       .then((data) => data)
       .catch((error) => console.log(`메인 슬라이드 이미지 업로드 오류 :  ${error.message}`));
     const { data, error } = await supabase_client
-      .from('main_slides')
+      .from('mainSlides')
       .update({
         img: url,
         public_id,
@@ -104,11 +104,15 @@ const useUpdateMainSlides = () => {
     },
   });
 };
-// Templates DELETE
+//삭제
 const useDeleteMainSlides = () => {
-  const handleDeleteMainSlides = async ({ id, prev_public_id }) => {
-    await deleteImage(prev_public_id);
-    const { data, error } = await supabase_client.from('main_slides').delete().eq('id', id);
+  const handleDeleteMainSlides = async ({ id, images }) => {
+    if (images?.ids.length > 0) {
+      images.ids.map(async (public_id) => {
+        await deleteImage(public_id);
+      });
+    }
+    const { data, error } = await supabase_client.from('mainSlides').delete().eq('id', id);
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`메인 슬라이드 수정 오류 :  ${error.message}`);

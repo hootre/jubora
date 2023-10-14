@@ -8,7 +8,6 @@ export const TemplatesSixContent = ({ templatesList, bannerType }) => {
         <section>
           <ul className={bannerType}>
             {templatesList.map((item) => {
-              console.log(item);
               return (
                 <li key={item.id}>
                   <ImageItem

@@ -1,4 +1,5 @@
 'use client';
+import { Skeleton } from '@mui/material';
 import { AdminLayout } from 'components/admin/AdminLayout';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,11 @@ export default function layout({ children }) {
 
   const router = useRouter();
   if (isLoading) {
-    return <h1>검사중</h1>;
+    return (
+      <Skeleton variant="rectangular" width="100%">
+        <div style={{ height: '2000px' }} />
+      </Skeleton>
+    );
   } else if (data.role !== 'admin') {
     toast.error('인가된 사용자만 접근 가능합니다');
     router.push('/');

@@ -1,14 +1,3 @@
-export const headerNoticeTextList = [
-  {
-    text: '공지사항',
-    href: '/home/center/notice',
-  },
-
-  {
-    text: '자주 묻는 질문',
-    href: '/home/center/question',
-  },
-];
 export const mainShowTemplatesList = [
   {
     bannerType: 'row',

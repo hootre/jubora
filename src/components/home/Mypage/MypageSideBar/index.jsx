@@ -15,7 +15,6 @@ export const MypageSideBar = () => {
   if (isLoading) {
     return <h1>Loading</h1>;
   }
-  console.log(pathName);
   return (
     <MypageSideBar_container>
       <div className="nav_box">

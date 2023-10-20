@@ -18,8 +18,10 @@ const useCreateMainSettingImage = () => {
       position,
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (error) {
+        await deleteImage(public_id);
+        toast.error(`CODE : ${error.code}`);
         reject(`메인 구성 이미지 생성 오류 :  ${error.message}`);
       } else {
         toast.success('성공적으로 생성하였습니다');
@@ -67,8 +69,10 @@ const useUpdateMainSettingImage = () => {
             public_id,
           })
           .eq('id', id);
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
           if (error) {
+            await deleteImage(public_id);
+            toast.error(`CODE : ${error.code}`);
             reject(`메인 구성 이미지 수정 오류 :  ${error.message}`);
           } else {
             toast.success('성공적으로 수정하였습니다');

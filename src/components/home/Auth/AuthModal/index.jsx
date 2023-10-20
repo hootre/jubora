@@ -20,7 +20,7 @@ export const AuthModal = () => {
     setAuthType('signIn');
   };
   return (
-    <BasicModal state={authState} setState={onClose}>
+    <BasicModal state={authState} onClose={onClose}>
       <Auth_container>
         <button className="closeBtn" onClick={onClose}>
           <AiOutlineClose />

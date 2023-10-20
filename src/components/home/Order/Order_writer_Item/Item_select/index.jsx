@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Public_order_container } from '../style';
 import { memo } from 'react';
@@ -7,9 +7,13 @@ export const Item_select = memo(({ title, valueName, list }) => {
   // react hooks form
   const {
     register,
+    setValue,
     formState: { errors },
     watch,
   } = useFormContext();
+  useEffect(() => {
+    setValue(valueName, list[0]);
+  }, []);
   return (
     <Public_order_container className="contents">
       <h2>{title}</h2>
@@ -21,9 +25,6 @@ export const Item_select = memo(({ title, valueName, list }) => {
           {...register(valueName)}
           value={watch(valueName) ?? '선택'}
         >
-          <option disabled value="선택">
-            선택
-          </option>
           {list.map((item, idx) => (
             <option key={idx} value={item}>
               {item}

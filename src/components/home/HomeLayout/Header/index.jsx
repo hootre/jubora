@@ -15,6 +15,8 @@ import { useUser } from 'hooks/supabase/auth/useUser';
 import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
 import { useTemplatesActions } from 'store';
 import { TextDropdown } from 'components/common/TextDropdown';
+import { useMainSettingImage } from 'hooks/supabase/main/settingImage/useSettingImage';
+import { Skeleton } from '@mui/material';
 
 export const headerNoticeTextList = [
   {
@@ -48,7 +50,7 @@ export const headerMainNavList = [
     pathname: 'real',
   },
 ];
-export const Header = ({ logoImage, topImage }) => {
+export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -85,10 +87,25 @@ export const Header = ({ logoImage, topImage }) => {
       setScrollActive(false);
     }
   }, [scrollY]);
-  if (tagLoading || userLoading) {
-    return;
+  // 해더 이미지 가져오기
+  const { useGetMainSettingImage } = useMainSettingImage();
+  const { data: MainSettingImageData, isLoading: imageLoading } = useGetMainSettingImage();
+  let logoImage, topImage;
+
+  if (tagLoading || userLoading || imageLoading) {
+    return (
+      <Skeleton variant="rectangular" width="100%">
+        <div style={{ height: '200px' }} />
+      </Skeleton>
+    );
   }
-  console.log(logoImage);
+  MainSettingImageData.map((item) => {
+    if (item.position === 'logo') {
+      logoImage = item.image;
+    } else if (item.position === 'top') {
+      topImage = item.image;
+    }
+  });
   return (
     <Header_container ScrollActive={ScrollActive}>
       <div className="prev_site">

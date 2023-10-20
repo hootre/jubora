@@ -50,7 +50,7 @@ export const Order_Detail = ({ data }) => {
               </>
             ) : (
               <div className="modify_btn" onClick={toggleSianUpdate}>
-                주문수정하기
+                수정하기
               </div>
             )}
           </div>

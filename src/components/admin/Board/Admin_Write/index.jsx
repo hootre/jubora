@@ -9,7 +9,7 @@ export const Admin_Write = ({ children }) => {
     { pathname: 'mainTemplatesCard', text: '메인 상품카드' },
     { pathname: 'mainSettingImage', text: '메인페이지 구성 이미지' },
     { pathname: 'templates', text: '제품등록' },
-    { pathname: 'templatesFilters', text: '제품 필터목록' },
+    { pathname: 'templatesTag', text: '제품 필터목록' },
     { pathname: 'notice', text: '공지사항' },
     { pathname: 'question', text: '자주묻는 질문' },
     { pathname: 'sian', text: '시안확인' },

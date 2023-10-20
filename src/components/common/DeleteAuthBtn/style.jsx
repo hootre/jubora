@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const ConfirmBtn_container = styled.div`
+export const DeleteAuthBtn_container = styled.div`
   .delete_user_btn {
     position: absolute;
     top: 10px;

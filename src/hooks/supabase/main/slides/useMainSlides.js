@@ -28,8 +28,10 @@ const useCreateMainSlides = () => {
       subtitle,
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (error) {
+        await deleteImage(public_id);
+        toast.error(`CODE : ${error.code}`);
         reject(`메인 슬라이드 생성 오류 :  ${error.message}`);
       } else {
         toast.success('성공적으로 생성하였습니다');
@@ -87,8 +89,10 @@ const useUpdateMainSlides = () => {
       })
       .eq('id', id);
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (error) {
+        await deleteImage(public_id);
+        toast.error(`CODE : ${error.code}`);
         reject(`메인 슬라이드 수정 오류 :  ${error.message}`);
       } else {
         toast.success('성공적으로 수정하였습니다');

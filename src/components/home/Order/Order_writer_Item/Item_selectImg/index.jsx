@@ -39,7 +39,7 @@ export const Item_selectImg = memo(({ bannerType, detail_data }) => {
       <button onClick={toaggleModal} className="sample_btn" type="button" value="샘플선택">
         샘플선택 +
       </button>
-      <BasicModal state={open} setState={toaggleModal}>
+      <BasicModal state={open} onClose={toaggleModal}>
         <Showcase category={detail_data.category} />
       </BasicModal>
     </Public_order_container>

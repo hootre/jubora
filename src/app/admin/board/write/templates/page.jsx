@@ -1,6 +1,6 @@
-import Notice_Write from 'components/admin/Board/Notice_Write';
+import { Templates_Write } from 'components/admin/Board/Templates_Write';
 
 const page = () => {
-  return <Notice_Write />;
+  return <Templates_Write />;
 };
 export default page;

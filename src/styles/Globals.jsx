@@ -40,6 +40,8 @@ const style = css`
   }
   /* custom */
 
+  .confirm_box {
+  }
   //react-hooks-form pointText
 
   // 로그인 조건 경고 텍스트
@@ -91,6 +93,15 @@ const style = css`
   }
   .C_basic_input {
     padding: 5px;
+    padding: 8.5px 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    &::placeholder {
+      color: ${Common.colors.text300};
+    }
+    &:hover {
+      border-color: ${Common.colors.black};
+    }
   }
   .C_basic_button {
     display: flex;

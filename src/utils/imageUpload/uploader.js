@@ -1,4 +1,5 @@
 import { sha1 } from 'crypto-hash';
+import toast from 'react-hot-toast';
 
 export const uploadImage = async (file, folder = 'jubora_board') => {
   // folder = jubora_order, jubora_templates, jubora_board,
@@ -12,14 +13,12 @@ export const uploadImage = async (file, folder = 'jubora_board') => {
     .then((response) => {
       // reponse가 ok가 아닐 때
       if (!response.ok) {
-        throw new Error(`${response.status} 에러 발생`);
+        toast.error('이미지 업로드 실패');
+        throw console.error(`${response.status} 에러 발생`);
       }
       return response.json();
     })
-    .then((data) => data)
-    .catch((error) => {
-      throw console.error(`이런 에러 발생 : ${error.message}`);
-    });
+    .then((data) => data);
 };
 
 export const deleteImage = async (public_id) => {
@@ -35,8 +34,13 @@ export const deleteImage = async (public_id) => {
     method: 'POST',
     body: data,
   })
-    .then((data) => data)
-    .catch((error) => {
-      throw console.error(`deleteImage Error : ${error.message}`);
-    });
+    .then((response) => {
+      // reponse가 ok가 아닐 때
+      if (!response.ok) {
+        toast.error('이미지 삭제 실패');
+        throw console.error(`${response.status} 에러 발생`);
+      }
+      return response.json();
+    })
+    .then((data) => data);
 };

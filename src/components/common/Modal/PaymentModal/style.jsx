@@ -17,10 +17,8 @@ export const PaymentModal_container = styled.article`
     position: absolute;
     top: 25px;
     right: 0;
-    width: 760px;
+    width: 340px;
     z-index: 2;
-    min-height: 360px;
-    max-height: 720px;
     border-radius: 10px;
     box-shadow: 0 0 16px #221f1f40;
     background-color: ${Common.colors.white};
@@ -142,7 +140,6 @@ export const PaymentModal_container = styled.article`
       flex-direction: column;
       .order_content {
         .order_phone_box {
-          margin-top: 50px;
           margin-bottom: 10px;
           > h2 {
             font-size: 18px;

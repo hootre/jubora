@@ -4,7 +4,7 @@ import { MyInfo_container } from './style';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { ConfirmBtn } from 'components/common/ConfirmBtn';
+import { DeleteAuthBtn } from 'components/common/DeleteAuthBtn';
 import { Item_text } from 'components/home/Order/Order_writer_Item/Item_text';
 import { Item_address } from 'components/home/Order/Order_writer_Item/Item_address';
 
@@ -60,7 +60,7 @@ export const MyInfo = () => {
                 <Item_address title="주소" />
                 <div className="btn_box">
                   <button className="update_btn">수정하기</button>
-                  <ConfirmBtn
+                  <DeleteAuthBtn
                     openState={openState}
                     title="회원탈퇴"
                     handleOpen={handleOpen}

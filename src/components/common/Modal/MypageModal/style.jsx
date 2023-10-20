@@ -9,7 +9,7 @@ export const MyPageModal_container = styled.article`
     right: 0;
     bottom: 0;
     height: 100vh;
-    z-index: 1;
+    z-index: 2;
     background: rgba(0, 0, 0, 0.05);
     cursor: pointer;
   }
@@ -22,7 +22,7 @@ export const MyPageModal_container = styled.article`
     border-radius: 4px;
     box-shadow: 0 2px 14px #00000040;
     padding: 22px 36px;
-    z-index: 2;
+    z-index: 3;
     box-sizing: border-box;
     .head {
       display: block;

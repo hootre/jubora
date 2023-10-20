@@ -3,7 +3,7 @@ import supabase_client from 'lib/supabase_client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { gatherKeys } from 'utils/gatherKeys';
-import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
+import { deleteImage } from 'utils/imageUpload/uploader';
 
 // 특정 id 제품 상세
 const useGetOnlyNotice = (id) => {

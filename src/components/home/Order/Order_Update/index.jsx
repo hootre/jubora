@@ -101,7 +101,7 @@ export const Order_Update = ({ data, role }) => {
               <button onClick={toaggleModal} className="sample_btn" type="button" value="샘플선택">
                 샘플선택 +
               </button>
-              <BasicModal state={open} setState={toaggleModal}>
+              <BasicModal state={open} onClose={toaggleModal}>
                 <Select_Showcase category={data.category_type} toaggleModal={toaggleModal} />
               </BasicModal>
             </td>

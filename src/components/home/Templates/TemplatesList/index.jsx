@@ -4,7 +4,7 @@ import { Showcase } from 'components/home/Templates/Showcase';
 import { TagList } from 'components/home/Templates/TagList';
 import { TemplatesList_container } from './styles.jsx';
 
-export const TemplatesList = ({ category }) => {
+export const TemplatesList = ({ bannerState }) => {
   return (
     <TemplatesList_container className="C_container">
       <section className="main_img_container">
@@ -14,7 +14,7 @@ export const TemplatesList = ({ category }) => {
         <SideCategory />
         <main>
           <TagList />
-          <Showcase category={category} />
+          <Showcase bannerState={bannerState} />
         </main>
       </section>
     </TemplatesList_container>

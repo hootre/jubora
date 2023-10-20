@@ -13,7 +13,7 @@ import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
 import { useUser } from 'hooks/supabase/auth/useUser.js';
 import { Pagination, Stack } from '@mui/material';
 
-export const Showcase = ({ category = 'banner' }) => {
+export const Showcase = ({ bannerState = 'banner' }) => {
   // 페이지 기본값
   const [page, setPage] = useState(1);
   const handleChange = (event, value) => {
@@ -24,8 +24,8 @@ export const Showcase = ({ category = 'banner' }) => {
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   // template 목록
   const { useGetTemplatesPage, useGetCategoryCount } = useTemplates();
-  const { data: templatesList, isLoading } = useGetTemplatesPage(category, page);
-  const { data: templatesCount } = useGetCategoryCount(category);
+  const { data: templatesList, isLoading } = useGetTemplatesPage(bannerState, page);
+  const { data: templatesCount } = useGetCategoryCount(bannerState);
   // 가로,세로,포스터
   const [bannerType, setBannerType] = useState('banner_row');
   const handleBannerType = (e) => {
@@ -87,21 +87,21 @@ export const Showcase = ({ category = 'banner' }) => {
                   {bannerType === 'banner_row' ? (
                     <ImageItem
                       img_src={item.img_row}
-                      href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
+                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}`}
                       text={'구매하기'}
                       bannerType={'banner_row'}
                     />
                   ) : bannerType === 'banner_col' ? (
                     <ImageItem
                       img_src={item.img_col}
-                      href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
+                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}`}
                       text={'구매하기'}
                       bannerType={'banner_col'}
                     />
                   ) : (
                     <ImageItem
                       img_src={item.img_square}
-                      href={`/home/templates/${item.category}/detail/${item.id}?bannerType=${bannerType}`}
+                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}`}
                       text={'구매하기'}
                       bannerType={'banner_square'}
                     />

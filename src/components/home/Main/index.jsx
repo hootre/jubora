@@ -37,7 +37,7 @@ export const Main = () => {
   });
   return (
     <Main_container>
-      <HomeLayout logoImage={logoImage} topImage={topImage}>
+      <HomeLayout>
         <Main_Slides />
         <TemplatesContents six_data={six_data} />
         <img src={centerImage} alt="centerImage" className="mainImage" />

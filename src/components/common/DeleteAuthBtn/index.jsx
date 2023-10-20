@@ -1,10 +1,10 @@
 import React from 'react';
-import { ConfirmBtn_container, Modal_Content } from './style';
+import { DeleteAuthBtn_container, Modal_Content } from './style';
 import { Backdrop, Box, Fade, Modal } from '@mui/material';
 
-export const ConfirmBtn = ({ openState, title, handleOpen, handleClose }) => {
+export const DeleteAuthBtn = ({ openState, title, handleOpen, handleClose }) => {
   return (
-    <ConfirmBtn_container>
+    <DeleteAuthBtn_container>
       <div onClick={handleOpen} className="delete_user_btn">
         {title}
       </div>
@@ -38,6 +38,6 @@ export const ConfirmBtn = ({ openState, title, handleOpen, handleClose }) => {
           </Box>
         </Fade>
       </Modal>
-    </ConfirmBtn_container>
+    </DeleteAuthBtn_container>
   );
 };

@@ -5,18 +5,18 @@ export const TagList_container = styled.section`
   display: flex;
   ul {
     display: flex;
-
+    gap: 10px;
     .tag_btn {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      padding: 10px;
+      width: 120px;
+      padding: 10px 15px;
       border: ${Common.colors.bd100};
       background: ${Common.colors.black};
       border-radius: 10px;
       font-size: 12px;
       color: ${Common.colors.white};
-      margin-right: 10px;
       .icon {
         margin-left: 5px;
         cursor: pointer;

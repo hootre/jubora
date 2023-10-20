@@ -2,6 +2,7 @@ export const gatherKeys = {
   current_user: ['current_user'],
   current_userList: ['current_userList'],
   templates: ['templates'],
+  templatesTag: ['templatesTag'],
   templates_six: ['templates_six'],
   templates_page: ['templates_page'],
   templates_count: ['templates_count'],

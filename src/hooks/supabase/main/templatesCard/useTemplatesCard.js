@@ -20,8 +20,10 @@ const useCreateMainTemplatesCard = () => {
       description,
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (error) {
+        await deleteImage(public_id);
+        toast.error(`CODE : ${error.code}`);
         reject(`메인 제품 연결 카드 생성 오류 :  ${error.message}`);
       } else {
         toast.success('성공적으로 생성하였습니다');
@@ -77,8 +79,10 @@ const useUpdateMainTemplatesCard = () => {
             public_id,
           })
           .eq('id', id);
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
           if (error) {
+            await deleteImage(public_id);
+            toast.error(`CODE : ${error.code}`);
             reject(`메인 제품 연결 카드 수정 오류 :  ${error.message}`);
           } else {
             toast.success('성공적으로 수정하였습니다');
@@ -99,6 +103,7 @@ const useUpdateMainTemplatesCard = () => {
         .eq('id', id);
       return new Promise((resolve, reject) => {
         if (error) {
+          toast.error(`CODE : ${error.code}`);
           reject(`메인 제품 연결 카드 수정 오류 :  ${error.message}`);
         } else {
           toast.success('성공적으로 수정하였습니다');

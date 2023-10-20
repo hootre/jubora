@@ -44,11 +44,6 @@ export const MypageSideBar = () => {
               <h1>시안확인</h1>
             </Link>
           </div>
-          <div className={pathName === 'my_order' ? 'active' : ''}>
-            <Link href="/home/mypage/my_order">
-              <h1>주문내역</h1>
-            </Link>
-          </div>
           <div className={pathName === 'my_pay' ? 'active' : ''}>
             <Link href="/home/mypage/my_pay">
               <h1>결제내역</h1>

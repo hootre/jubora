@@ -9,7 +9,7 @@ export const Main_TemplatesCardList = () => {
   const { useGetMainTemplatesCard } = useMainTemplatesCard();
   const { data: MainTemplatesCardData, isLoading } = useGetMainTemplatesCard();
   if (isLoading) {
-    return <Skeleton animation="wave" variant="circular" width={1280} height={400} />;
+    return;
   }
   return (
     <Main_TemplatesCardList_container className="C_container">

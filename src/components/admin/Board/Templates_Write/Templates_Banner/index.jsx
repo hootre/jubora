@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Item_upload } from 'components/home/Order/Order_writer_Item/Item_upload';
-import { Item_text } from 'components/home/Order/Order_writer_Item/Item_text';
-import { Item_selectTwo } from 'components/home/Order/Order_writer_Item/Item_selectTwo';
-import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
-import { Templates_Banner_container } from './styles';
-import { Item_category } from 'components/home/Order/Order_writer_Item/Item_category';
+
 import { useTemplates } from 'hooks/supabase/templates/useTemplates';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
+import { AiOutlineClose } from 'react-icons/ai';
+import { Item_select } from 'components/home/Order/Order_writer_Item/Item_select';
 export const Templates_Banner = ({ bannerState }) => {
   // 제품 목록 생성
   const { useCreateTemplate } = useTemplates();
@@ -17,12 +18,26 @@ export const Templates_Banner = ({ bannerState }) => {
   const { handleSubmit, watch, setValue, reset } = methods;
   const [isUploading, setIsUploading] = useState(false);
 
-  // 제품 카테고리 목록
-  const { useGetProductsTag } = useProductsTag();
-  const { data: categoryList, isLoading: prodctsTag_loading } = useGetProductsTag();
+  // 태그 관리
+  const { useGetTemplatesTag } = useTemplatesTag();
+  const { data: templatesTagData, isLoading: tag_loading } = useGetTemplatesTag();
+  // 태그 생성
+  const toggleCategory = (data) => {
+    const DuplicateCheck = watch('category').filter((item) => item === data).length > 0;
+    if (DuplicateCheck) {
+      setValue(
+        'category',
+        watch('category').filter((item) => item != data)
+      );
+      return;
+    }
+    const uniqueData = [...watch('category'), data];
+    setValue('category', uniqueData);
+  };
 
   useEffect(() => {
     setValue('bannerState', bannerState);
+    setValue('category', []);
   }, [bannerState]);
   const onSubmit = (data) => {
     setIsUploading(true);
@@ -33,28 +48,65 @@ export const Templates_Banner = ({ bannerState }) => {
       },
     });
   };
-  if (prodctsTag_loading) {
-    return;
+  if (tag_loading) {
+    return <MainLoading />;
   }
+  const bannerTypeList = templatesTagData.map((item) => {
+    return item.title;
+  });
   return (
-    <Templates_Banner_container>
+    <>
       <FormProvider {...methods}>
         <main>
+          <Item_select title="제품 항목" valueName="bannerType" list={bannerTypeList} />
           <Item_upload title="가로형(기본)" valueName="img_row" />
           <Item_upload title="세로형" valueName="img_col" />
           <Item_upload title="포스터형" valueName="img_square" />
-          <Item_category title={'분류 기준'} valueName={'category'} />
-          <Item_selectTwo
-            title="태그"
-            valueName_1="tag"
-            valueName_2="tag_detail"
-            list_1={categoryList}
-            list_2={
-              categoryList.filter(
-                (item) => item.title === (watch('tag') ?? categoryList[0].title)
-              )[0]?.category_list.list
-            }
-          />
+          <div className="option_container">
+            <h2>태그목록</h2>
+            <div className="tag_content">
+              <Accordion className="accordion">
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>태그</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ul>
+                    {templatesTagData.map((item) => (
+                      <li className="tag_box">
+                        <h2>{item.title}</h2>
+                        {Array.isArray(item.tagList.list) &&
+                          item.tagList.list?.map((item) => (
+                            <div
+                              key={item}
+                              className={
+                                watch('category')?.filter((data) => data === item).length > 0
+                                  ? 'tag_btn active'
+                                  : 'tag_btn'
+                              }
+                              onClick={() => toggleCategory(item)}
+                            >
+                              {item}
+                            </div>
+                          ))}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionDetails>
+              </Accordion>
+              <div className="tag_box">
+                {watch('category')?.map((item) => (
+                  <div className="tag_btn active">
+                    {item}
+                    <AiOutlineClose className="icon" onClick={() => toggleCategory(item)} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
           <div className="C_basic_flex submit_btn">
             <button
               className="C_basic_button"
@@ -66,6 +118,6 @@ export const Templates_Banner = ({ bannerState }) => {
           </div>
         </main>
       </FormProvider>
-    </Templates_Banner_container>
+    </>
   );
 };

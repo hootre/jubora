@@ -10,6 +10,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { LoginRequest } from 'components/common/LoginRequest';
 import { useQnA } from 'hooks/supabase/qna/useQnA';
 import { useOrder } from 'hooks/supabase/order/useOrder';
+import { MainLoading } from 'components/Loading/MainLoading';
 const Read_OrderList = () => {
   // user상태관리
   const { useGetUserInfo } = useUser();
@@ -74,7 +75,7 @@ const Read_OrderList = () => {
     [checkedList]
   );
   if (isLoading || userLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <Read_OrderList_container>

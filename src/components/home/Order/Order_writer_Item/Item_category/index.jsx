@@ -19,20 +19,14 @@ export const Item_category = ({ title, valueName, placeholder = '' }) => {
         setText('');
         return;
       }
-      setValue(valueName, [
-        ...watch(valueName),
-        {
-          id: v4(),
-          text: text,
-        },
-      ]);
+      setValue(valueName, [...watch(valueName), text]);
       setText('');
     }
   };
-  const deleteCategory = (id) => {
+  const deleteCategory = (data) => {
     setValue(
       valueName,
-      watch(valueName).filter((item) => item.id != id)
+      watch(valueName).filter((item) => item != data)
     );
   };
   return (
@@ -51,9 +45,9 @@ export const Item_category = ({ title, valueName, placeholder = '' }) => {
         <ul className="category_tag_list">
           {watch(valueName) &&
             watch(valueName).map((item) => (
-              <li key={item.id} className="tag_btn">
-                {item.text}
-                <AiOutlineClose className="icon" onClick={() => deleteCategory(item.id)} />
+              <li key={item} className="tag_btn">
+                {item}
+                <AiOutlineClose className="icon" onClick={() => deleteCategory(item)} />
               </li>
             ))}
         </ul>

@@ -12,6 +12,7 @@ import { ItemTypeGroup } from './ItemTypeGroup/index.jsx';
 import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
 import { useUser } from 'hooks/supabase/auth/useUser.js';
 import { Pagination, Stack } from '@mui/material';
+import { MainLoading } from 'components/Loading/MainLoading/index.jsx';
 
 export const Showcase = ({ bannerState = 'banner' }) => {
   // 페이지 기본값
@@ -34,9 +35,10 @@ export const Showcase = ({ bannerState = 'banner' }) => {
 
   // zustand
   const SortType = useTemplateSortType();
+  // 현재 적용된 태그
   const tagList = useTemplateTagList();
   if (isLoading || userLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   let filterDataList = [];
   if (tagList.length > 0) {
@@ -75,13 +77,13 @@ export const Showcase = ({ bannerState = 'banner' }) => {
         <ItemTypeGroup bannerType={bannerType} handleBannerType={handleBannerType} />
       </div>
       <div className="top_nav">
-        <h2 className="title">{templatesCount?.length}개의 디자인이 있습니다.</h2>
+        <h2 className="title">{filterDataList?.length}개의 디자인이 있습니다.</h2>
         {/* <SortFilter categoryList={categoryList} /> */}
       </div>
       <div className="showcase">
         <ul className={bannerType}>
-          {templatesList &&
-            templatesList.map((item) => {
+          {filterDataList &&
+            filterDataList.map((item) => {
               return (
                 <li key={item.id}>
                   {bannerType === 'banner_row' ? (

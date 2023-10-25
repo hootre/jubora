@@ -7,10 +7,9 @@ const page = async ({ params: { id }, searchParams: { bannerType } }) => {
   // 제품 이미지 가져오기
   const { serverGetOnlyTemplates } = serverTemplates();
   const detail_data = await serverGetOnlyTemplates(id);
-
   // 초기 주문 항목 리스트
   const { serverGetTypeOrderSetting } = serverOrderSetting();
-  const order_setting = await serverGetTypeOrderSetting(bannerType);
+  const order_setting = await serverGetTypeOrderSetting('순서지');
 
   // user 상태
   return (

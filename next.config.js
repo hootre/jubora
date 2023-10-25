@@ -1,5 +1,6 @@
 const path = require('path');
 const nextConfig = {
+  swcMinify: true,
   reactStrictMode: false,
   experimental: { appDir: true },
   compiler: {

@@ -20,28 +20,139 @@ export const Public_order_container = styled.div`
   padding: 10px 0;
   border-bottom: 1px solid ${Common.colors.bd100};
 
-  /* Item_category */
-  .category_box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    .category_tag_list {
+  /* orderSetting_container */
+  &.orderSetting_container {
+    width: 100%;
+    border: none;
+    .upload_input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      font-size: 0;
+      visibility: hidden;
+    }
+    .file_text {
+      border: 1px solid #ddd;
+      margin: 0 10px 10px 10px;
+      padding: 0 15px;
+      width: 200px;
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
       display: flex;
-      .tag_btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      align-items: center;
+      .file_name {
+        color: ${Common.colors.black};
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 20px;
         padding: 10px;
-        border: ${Common.colors.bd100};
-        background: ${Common.colors.black};
-        border-radius: 10px;
-        font-size: 12px;
-        color: ${Common.colors.white};
-        margin-right: 10px;
-        .icon {
-          margin-left: 5px;
-          cursor: pointer;
+        margin-right: 20px;
+        font-size: 11px;
+      }
+      .delete_btn {
+        cursor: pointer;
+        font-size: 10px;
+        color: ${Common.colors.text200};
+      }
+    }
+    .category_box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .category_tag_list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        .tag_btn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: ${Common.colors.text100};
+          background: ${Common.colors.white};
+          border: 1px solid ${Common.colors.bd100};
+          border-radius: 2px;
+          transition: all 0.2s ease;
+          min-width: 100px;
+          max-width: 250px;
+          .tag_content {
+            display: flex;
+            padding: 10px;
+            gap: 40px;
+          }
+          > span {
+            font-size: 18px;
+            text-align: center;
+          }
+          .icon_box {
+            height: 100%;
+            display: flex;
+            gap: 5px;
+            .icon {
+              font-size: 17px;
+              cursor: pointer;
+              color: ${Common.colors.text300};
+              transition: all 0.2s ease;
+              &:hover {
+                color: ${Common.colors.black};
+                transform: scale(1.1);
+              }
+            }
+          }
+          > img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+          }
+          .description {
+            width: 100%;
+            > h3 {
+              padding: 10px 0 5px 10px;
+              font-size: 12px;
+              color: ${Common.colors.text300};
+              border-bottom: 1px solid ${Common.colors.text300};
+            }
+            .tag_textarea {
+              max-width: 250px;
+              height: 70px;
+              border: none;
+              outline: none;
+              resize: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  /* Item_category */
+  &.category_container {
+    width: 100%;
+    .category_box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      .category_tag_list {
+        display: flex;
+        .tag_btn {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+          border: ${Common.colors.bd100};
+          background: ${Common.colors.black};
+          border-radius: 10px;
+          font-size: 12px;
+          color: ${Common.colors.white};
+          margin-right: 10px;
+          .icon {
+            margin-left: 5px;
+            cursor: pointer;
+          }
         }
       }
     }

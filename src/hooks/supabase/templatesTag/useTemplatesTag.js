@@ -5,11 +5,12 @@ import { gatherKeys } from 'utils/gatherKeys';
 
 //  생성
 const useCreateTemplatesTag = () => {
-  const handleCreateTemplatesTag = async ({ title, tagList }) => {
+  const handleCreateTemplatesTag = async ({ title, tagList, from_nav }) => {
     const list = { list: tagList };
     const { data, error } = await supabase_client.from('templatesTag').insert({
       title,
       tagList: list,
+      from_nav,
     });
     return new Promise(async (resolve, reject) => {
       if (error) {
@@ -38,7 +39,7 @@ const useGetTemplatesTag = () => {
         toast.error(`CODE : ${error.code}`);
         reject(`제품 태그 불러오기 오류 :  ${error.message}`);
       } else {
-        resolve(data.sort((a, b) => b.id - a.id));
+        resolve(data.sort((a, b) => b.from_nav - a.from_nav));
       }
     });
   };
@@ -46,13 +47,14 @@ const useGetTemplatesTag = () => {
 };
 // 수정
 const useUpdateTemplatesTag = () => {
-  const handleUpdateTemplatesTag = async ({ id, title, tagList }) => {
+  const handleUpdateTemplatesTag = async ({ id, title, tagList, from_nav }) => {
     const list = { list: tagList };
     const { data, error } = await supabase_client
       .from('templatesTag')
       .update({
         title,
         tagList: list,
+        from_nav,
       })
       .eq('id', id);
 

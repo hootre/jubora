@@ -171,12 +171,7 @@ export const Header_container = styled.header`
                 color: ${Common.colors.accent100};
               }
             }
-            &.benner_col:hover ~ .drop_down_container {
-              .menu_benner {
-                display: flex;
-              }
-            }
-            &.benner:hover ~ .drop_down_container {
+            &.banner:hover ~ .drop_down_container {
               .menu_benner {
                 display: flex;
               }

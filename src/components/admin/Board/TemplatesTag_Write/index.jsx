@@ -8,6 +8,7 @@ import { Item_category } from 'components/home/Order/Order_writer_Item/Item_cate
 import { Item_text } from 'components/home/Order/Order_writer_Item/Item_text';
 import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
 import { Read_TemplatesTag } from 'components/admin/Read/Read_TemplatesTag';
+import { Item_select } from 'components/home/Order/Order_writer_Item/Item_select';
 
 export const TemplatesTag_Write = () => {
   // 제품 목록 생성
@@ -32,6 +33,11 @@ export const TemplatesTag_Write = () => {
       <FormProvider {...methods}>
         <main>
           <Item_text title={'제목'} valueName={'title'} />
+          <Item_select
+            title={'해당 목록'}
+            valueName={'from_nav'}
+            list={['banner', 'print', 'real']}
+          />
           <Item_category title={'태그'} valueName={'tagList'} />
           <div className="C_basic_flex submit_btn">
             <button

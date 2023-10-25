@@ -3,6 +3,8 @@ import { Common } from 'styles/Common';
 
 export const Write_contaier = styled.section`
   padding: 50px 0;
+  width: ${Common.size.container_width};
+  margin: 0 auto;
   .table_select_box {
     padding-bottom: 20px;
     border-bottom: 5px solid ${Common.colors.primary300};

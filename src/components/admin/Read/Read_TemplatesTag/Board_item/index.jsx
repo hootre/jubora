@@ -36,7 +36,10 @@ export const Board_item = ({ item, updateTemplatesTag, delteTemplatesTag }) => {
   return (
     <div key={item.id} className="tag_conatiner">
       <div className="top_box">
-        <h1 className="title">{item.title}</h1>
+        <div className="title_box">
+          <h1 className="title">{item.title}</h1>
+          <span>{item.from_nav}</span>
+        </div>
         <div className="btn_box">
           {update ? (
             <>
@@ -71,8 +74,8 @@ export const Board_item = ({ item, updateTemplatesTag, delteTemplatesTag }) => {
           <>
             {Array.isArray(item.tagList.list) &&
               item.tagList.list?.map((item) => (
-                <li key={item.id} className="tag_btn">
-                  {item.text}
+                <li key={item} className="tag_btn">
+                  {item}
                 </li>
               ))}
           </>

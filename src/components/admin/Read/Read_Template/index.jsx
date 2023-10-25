@@ -31,7 +31,6 @@ export const Read_Template = () => {
           label: '삭제',
           onClick: () => {
             checkedList.map((item) => {
-              console.log(item);
               handleDelete(item);
             });
             setCheckedLists([]);
@@ -129,6 +128,7 @@ export const Read_Template = () => {
       <ul>
         {templatesData?.map((item) => (
           <Board_item
+            key={item.id}
             user={user}
             item={item}
             checkedList={checkedList}

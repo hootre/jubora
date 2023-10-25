@@ -17,9 +17,9 @@ export const Modal_view = ({ item }) => {
           />
         </>
       ) : item.bannerState === 'print' ? (
-        <CldImage width={500} height={500} loading="lazy" src={item.img_square} alt="제품 이미지" />
+        <CldImage width={500} height={500} loading="lazy" src={item.img_row} alt="제품 이미지" />
       ) : (
-        <CldImage width={500} height={500} loading="lazy" src={item.img_square} alt="제품 이미지" />
+        <CldImage width={500} height={500} loading="lazy" src={item.img_row} alt="제품 이미지" />
       )}
     </Modal_view_container>
   );

@@ -17,47 +17,17 @@ import { useTemplatesActions } from 'store';
 import { TextDropdown } from 'components/common/TextDropdown';
 import { useMainSettingImage } from 'hooks/supabase/main/settingImage/useSettingImage';
 import { Skeleton } from '@mui/material';
+import { headerMainNavList, headerNoticeTextList } from 'assets/data';
+import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
 
-export const headerNoticeTextList = [
-  {
-    text: '공지사항',
-    href: '/home/center/notice',
-  },
-
-  {
-    text: '자주 묻는 질문',
-    href: '/home/center/question',
-  },
-
-  {
-    text: 'Q&A',
-    href: '/home/center/qna',
-  },
-];
-export const headerMainNavList = [
-  {
-    text: '현수막',
-    pathname: 'banner',
-  },
-
-  {
-    text: '인쇄물',
-    pathname: 'print',
-  },
-
-  {
-    text: '실사',
-    pathname: 'real',
-  },
-];
 export const Header = () => {
   // user상태관리
   const { useGetUserInfo, useLogOut } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   const { mutate } = useLogOut();
-  // productCategory 관리
-  const { useGetProductsTag } = useProductsTag();
-  const { data: tag, isLoading: tagLoading } = useGetProductsTag();
+  // useTemplatesTag 관리
+  const { useGetTemplatesTag } = useTemplatesTag();
+  const { data: tag, isLoading: tagLoading } = useGetTemplatesTag();
   // path 관련
   const pathname = usePathname().substring(1).split('/')[1];
   let navCutLine =
@@ -76,7 +46,7 @@ export const Header = () => {
 
   //Auth Modal 관련
   // zustand
-  const { setAuthState } = useTemplatesActions();
+  const { setAuthState, setTemplateTagList } = useTemplatesActions();
   // scroll event
   const { scrollY } = useScroll();
   const [ScrollActive, setScrollActive] = useState(false);
@@ -175,7 +145,7 @@ export const Header = () => {
             <div>
               <ul className="nav">
                 {headerMainNavList.map((item) => (
-                  <li className="benner">
+                  <li className={item.pathname} key={item.id}>
                     <Link
                       href={`/home/templates/${item.pathname}`}
                       className={pathname === item.pathname ? 'active' : ''}
@@ -189,11 +159,8 @@ export const Header = () => {
                   style={{ left: `${navCutLine * 160}px` }}
                 ></div>
 
+                {/*메뉴 출력  */}
                 <div className="drop_down_container">
-                  {/* <div className="menu_all">
-                  <h1>첫번째 메뉴</h1>
-                </div> */}
-
                   <div className="nav_item menu_benner">
                     {tag
                       .filter((item) => item.from_nav === 'banner')
@@ -201,8 +168,15 @@ export const Header = () => {
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
-                            {item.category_list.list.map((text) => (
-                              <li key={text}>{text}</li>
+                            {item.tagList.list.map((text) => (
+                              <li
+                                key={text}
+                                onClick={() => {
+                                  setTemplateTagList(text);
+                                }}
+                              >
+                                <Link href={'/home/templates/banner'}>{text}</Link>
+                              </li>
                             ))}
                           </ul>
                         </div>
@@ -216,8 +190,15 @@ export const Header = () => {
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
-                            {item.category_list.list.map((text) => (
-                              <li key={text}>{text}</li>
+                            {item.tagList.list.map((text) => (
+                              <li
+                                key={text}
+                                onClick={() => {
+                                  setTemplateTagList(text);
+                                }}
+                              >
+                                <Link href={'/home/templates/print'}>{text}</Link>
+                              </li>
                             ))}
                           </ul>
                         </div>
@@ -231,8 +212,15 @@ export const Header = () => {
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
-                            {item.category_list.list.map((text) => (
-                              <li key={text}>{text}</li>
+                            {item.tagList.list.map((text) => (
+                              <li
+                                key={text}
+                                onClick={() => {
+                                  setTemplateTagList(text);
+                                }}
+                              >
+                                <Link href={'/home/templates/real'}>{text}</Link>
+                              </li>
                             ))}
                           </ul>
                         </div>

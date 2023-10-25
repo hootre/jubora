@@ -7,7 +7,7 @@ import { gatherKeys } from 'utils/gatherKeys';
 const useGetOnlyOrderSetting = (type) => {
   const handleGetOnlyOrderSetting = async () => {
     const { data, error } = await supabase_client
-      .from('order_setting')
+      .from('orderSetting')
       .select('*')
       .eq('type', type)
       .single();
@@ -31,7 +31,7 @@ const useGetOnlyOrderSetting = (type) => {
 // 원하는 항목 불러오기
 const useGetWantOrderSetting = (wantList) => {
   const handleGetWantOrderSetting = async () => {
-    const { data, error } = await supabase_client.from('order_setting').select(wantList.join());
+    const { data, error } = await supabase_client.from('orderSetting').select(wantList.join());
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`원하는 항목 불러오기 오류 :  ${error.message}`);
@@ -55,7 +55,7 @@ const useCreateOrderSetting = () => {
     item_6,
     item_7,
   }) => {
-    const { data, error } = await supabase_client.from('order_setting').insert({
+    const { data, error } = await supabase_client.from('orderSetting').insert({
       category_name,
       item_1,
       item_2,
@@ -86,7 +86,7 @@ const useCreateOrderSetting = () => {
 // ORDER 목록
 const useGetOrderSetting = () => {
   const handleGetOrderSetting = async () => {
-    const { data, error } = await supabase_client.from('order_setting').select('*');
+    const { data, error } = await supabase_client.from('orderSetting').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`Order Setting 불러오기 오류 :  ${error.message}`);
@@ -111,7 +111,7 @@ const useUpdateOrderSetting = () => {
     item_7,
   }) => {
     const { data, error } = await supabase_client
-      .from('order_setting')
+      .from('orderSetting')
       .update({
         category_name,
         item_1,
@@ -144,7 +144,7 @@ const useUpdateOrderSetting = () => {
 // Templates DELETE
 const useDeleteOrderSetting = () => {
   const handleDeleteOrderSetting = async ({ id }) => {
-    const { data, error } = await supabase_client.from('order_setting').delete().eq('id', id);
+    const { data, error } = await supabase_client.from('orderSetting').delete().eq('id', id);
     return new Promise((resolve, reject) => {
       if (error) {
         reject(`Order Setting 수정 오류 :  ${error.message}`);

@@ -13,17 +13,27 @@ const useTemplatesStore = create((set) => ({
   isHeaderScrollActive: false,
 
   actions: {
-    // 삭제
-    setDeleteTemplateTagList: (id) => {
-      set((prev) => ({
-        templateTagList: prev.templateTagList.filter((tag) => tag.id != id),
-      }));
+    // 제품 태그 리셋 후 추가
+    setTemplateTagList: (state) => {
+      set(() => {
+        return {
+          templateTagList: [state],
+        };
+      });
     },
-    // 추가
-    setAddTemplateTagList: (state) => {
-      set((prev) => ({
-        templateTagList: [...prev.templateTagList, state],
-      }));
+    // 제품 태그 추가/삭제
+    setToggleTemplateTagList: (state) => {
+      set((prev) => {
+        const DuplicateCheck = prev.templateTagList.filter((item) => item === state).length > 0;
+        if (DuplicateCheck) {
+          return {
+            templateTagList: prev.templateTagList.filter((item) => item != state),
+          };
+        }
+        return {
+          templateTagList: [...prev.templateTagList, state],
+        };
+      });
     },
     setTemplateSearchText: (state) => set({ templateSearchText: state }),
     setTemplateSortType: (state) => set({ templateSortType: state }),
@@ -31,6 +41,7 @@ const useTemplatesStore = create((set) => ({
     setIsCurrentFilter: () => {
       set((state) => ({ isCurrentFilter: !state.isCurrentFilter }));
     },
+    // auth 모달 관리를 위한것
     setAuthState: () => {
       set((state) => ({ authState: !state.authState }));
     },

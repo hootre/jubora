@@ -30,7 +30,7 @@ export const Board_item = ({ user, item, checkedList, onCheckedElement }) => {
           <span className="id">{item.id}</span>
           <span className="state">
             {item.bannerState === 'banner'
-              ? '배너'
+              ? '현수막'
               : item.bannerState === 'print'
               ? '인쇄물'
               : item.bannerState === 'real'

@@ -3,6 +3,5 @@ import { Common } from 'styles/Common';
 
 export const Main_container = styled.section`
   .mainImage {
-    transform: translateX(18%);
   }
 `;

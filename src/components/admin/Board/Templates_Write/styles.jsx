@@ -2,6 +2,49 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const Templates_Write_container = styled.div`
+  /* 현수막, 인쇄물, 실사 css */
+  .tag_content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .tag_box {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: 10px;
+      .tag_btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 15px;
+        border: 1px solid ${Common.colors.bd100};
+        background: ${Common.colors.white};
+        border-radius: 10px;
+        font-size: 12px;
+        color: ${Common.colors.black};
+        cursor: pointer;
+        .icon {
+          margin-left: 5px;
+          cursor: pointer;
+        }
+        &:hover,
+        &.active {
+          color: ${Common.colors.white};
+          background: ${Common.colors.black};
+        }
+      }
+    }
+  }
+  .accordion {
+    display: flex;
+    flex-direction: column;
+  }
   main {
     display: flex;
     align-items: center;

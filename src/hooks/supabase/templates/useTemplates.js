@@ -23,6 +23,27 @@ const useGetOnlyTemplate = (id) => {
   };
   return useQuery([`templates_${id}`], handleGetOnlyTemplate);
 };
+// 특정 id 조회수 증가
+const useUpdateView = (views, id) => {
+  const handleUpdateView = async () => {
+    const { data, error } = await supabase_server
+      .from('templates')
+      .update({ views: ++views })
+      .eq('id', id);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`조회수증가 오류 :  ${error.message}`);
+      } else {
+        resolve(data);
+      }
+    });
+  };
+  return useMutation(handleUpdateView, {
+    onSuccess: async () => {
+      await client.invalidateQueries([`templates_${id}`]);
+    },
+  });
+};
 // 특정 category 목록
 const useGetCategoryTemplate = (bannerState) => {
   const handleGetCategoryTemplate = async () => {
@@ -113,6 +134,7 @@ const useGetTemplates = () => {
 const useCreateTemplate = () => {
   const handleCreateTemplate = async ({
     bannerState,
+    bannerType,
     img_row,
     img_col,
     img_square,
@@ -138,6 +160,7 @@ const useCreateTemplate = () => {
       );
       const { data, error } = await supabase_client.from('templates').insert({
         bannerState,
+        bannerType,
         img_row: img_url_row,
         img_col: img_url_col,
         img_square: img_url_square,
@@ -148,6 +171,8 @@ const useCreateTemplate = () => {
         category: categoryList,
         tag,
         tag_detail,
+        view: 0,
+        sales: 0,
       });
 
       return new Promise(async (resolve, reject) => {
@@ -266,6 +291,7 @@ export const useTemplates = () => {
     useGetOnlyTemplate,
     useGetCategoryTemplate,
     useGetTemplatesPage,
+    useUpdateView,
     useGetCategoryCount,
     useGetSixTemplates,
     useGetTemplates,

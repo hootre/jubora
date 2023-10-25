@@ -6,7 +6,7 @@ import { Board_item } from './Board_item';
 export const Read_TemplatesTag = () => {
   // 태그 관리
   const { useGetTemplatesTag, useUpdateTemplatesTag, useDeleteTemplatesTag } = useTemplatesTag();
-  const { data: TemplatesTagData, isLoading } = useGetTemplatesTag();
+  const { data: templatesTagData, isLoading } = useGetTemplatesTag();
   const { mutate: updateTemplatesTag } = useUpdateTemplatesTag();
   const { mutate: delteTemplatesTag } = useDeleteTemplatesTag();
 
@@ -15,7 +15,7 @@ export const Read_TemplatesTag = () => {
   }
   return (
     <Read_TemplatesTag_container>
-      {TemplatesTagData.map((item) => (
+      {templatesTagData.map((item) => (
         <Board_item
           key={item.id}
           item={item}

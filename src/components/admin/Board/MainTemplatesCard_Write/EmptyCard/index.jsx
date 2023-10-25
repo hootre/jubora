@@ -27,7 +27,6 @@ export const EmptyCard = ({ item, index, updataData }) => {
   useEffect(() => {
     setValue('id', item.id);
     if (item.image) {
-      setValue('isChangeImage', true);
       setValue('image', item.image);
       setValue('title', item.title);
       setValue('subtitle', item.subtitle);

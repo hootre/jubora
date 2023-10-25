@@ -31,7 +31,7 @@ export const Item_selectImg = memo(({ bannerType, detail_data }) => {
               ? detail_data.img_col
               : bannerType === 'banner_square'
               ? detail_data.img_square
-              : detail_data.image
+              : detail_data.img_row
           }
           alt=""
         />

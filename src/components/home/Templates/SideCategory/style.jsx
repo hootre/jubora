@@ -7,15 +7,25 @@ export const SideCategory_container = styled.aside`
   left: -300px;
   width: 250px;
   padding: 15px;
-  .category_title {
-    font-size: 20px;
-    font-weight: bold;
-    padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .accordion {
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: 1px solid ${Common.colors.primary300};
   }
+
+  .category_title {
+    font-size: 15px;
+    font-weight: bold;
+  }
+
   ul {
     display: flex;
     flex-wrap: wrap;
     .category_btn {
+      text-align: center;
       margin: 5px;
       padding: 10px;
       min-width: 50px;

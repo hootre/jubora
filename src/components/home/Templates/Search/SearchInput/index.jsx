@@ -8,7 +8,7 @@ import { toast } from 'react-hot-toast';
 import { Search_input_box } from './style.jsx';
 export const SearchInput = () => {
   const [text, setText] = useState('');
-  const { setTemplateSearchText, setAddTemplateTagList } = useTemplatesActions();
+  const { setTemplateSearchText, setToggleTemplateTagList } = useTemplatesActions();
 
   // input 관련
   const handleKeyDownEnter = (e) => {
@@ -19,10 +19,7 @@ export const SearchInput = () => {
         return;
       }
       setTemplateSearchText(text);
-      setAddTemplateTagList({
-        id: v4(),
-        text: text,
-      });
+      setToggleTemplateTagList(text);
       setText('');
     }
   };
@@ -33,10 +30,7 @@ export const SearchInput = () => {
       return;
     }
     setTemplateSearchText(text);
-    setAddTemplateTagList({
-      id: v4(),
-      text: text,
-    });
+    setToggleTemplateTagList(text);
     setText('');
   };
 

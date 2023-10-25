@@ -16,11 +16,11 @@ export const MyModify = ({ email }) => {
   return (
     <MyModify_container>
       <SianBoardCardHeader />
-      {data
-        .sort((a, b) => b.id - a.id)
-        ?.map((item) => (
-          <SianBoardCard key={item.id} item={item} />
-        ))}
+      {data.length > 0 ? (
+        data.sort((a, b) => b.id - a.id)?.map((item) => <SianBoardCard key={item.id} item={item} />)
+      ) : (
+        <h1 className="noData">시안이 없습니다</h1>
+      )}
     </MyModify_container>
   );
 };

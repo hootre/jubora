@@ -17,9 +17,19 @@ export const Read_TemplatesTag_container = styled.section`
     .top_box {
       display: flex;
       justify-content: space-between;
-      .title {
-        font-size: 25px;
+      .title_box {
+        display: flex;
+        align-items: end;
+        gap: 10px;
+        > .title {
+          font-size: 25px;
+        }
+        > span {
+          font-size: 14px;
+          color: ${Common.colors.primary100};
+        }
       }
+
       .btn_box {
         display: flex;
         gap: 10px;
@@ -46,12 +56,13 @@ export const Read_TemplatesTag_container = styled.section`
     }
     ul {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
       .tag_btn {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100px;
+        min-width: 100px;
         padding: 10px 15px;
         border: ${Common.colors.bd100};
         background: ${Common.colors.black};

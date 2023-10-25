@@ -4,7 +4,7 @@ import { Public_order_container } from '../style';
 import { memo } from 'react';
 import { usePathname } from 'next/navigation';
 
-export const Item_buttonNav = memo(({ item, order_setting }) => {
+export const Item_buttonNav = memo(({ itemName, order_setting }) => {
   // url
   const pathname = usePathname();
   // react hooks form
@@ -20,17 +20,17 @@ export const Item_buttonNav = memo(({ item, order_setting }) => {
   };
   return (
     <Public_order_container className="name_box">
-      <h2>{order_setting[item].title}</h2>
+      <h2>{order_setting[itemName].title}</h2>
       {/* {item === 'item_1' && <Link href={`${pathname}?bannerType=${item}`}></Link>} */}
       <div className="type_btn_box">
-        {order_setting[item].list.map((text, index) => (
+        {order_setting[itemName].list.map((text, index) => (
           <button
             key={index}
-            className={watch(item)?.content === text ? 'from_item_btn active' : `from_item_btn`}
+            className={watch(itemName)?.content === text ? 'from_item_btn active' : `from_item_btn`}
             type="button"
             value={text}
             onClick={(e) =>
-              setValue(item, { title: order_setting[item].title, content: e.target.value })
+              setValue(itemName, { title: order_setting[itemName].title, content: e.target.value })
             }
           >
             {text}

@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { Search_input_box } from './style.jsx';
 export const HeaderSearchInput = () => {
   const [text, setText] = useState('');
-  const { setTemplateSearchText, setAddTemplateTagList } = useTemplatesActions();
+  const { setTemplateSearchText, setTemplateTagList } = useTemplatesActions();
   const router = useRouter();
   // input 관련
   const handleKeyDownEnter = (e) => {
@@ -20,12 +20,9 @@ export const HeaderSearchInput = () => {
         return;
       }
       setTemplateSearchText(text);
-      setAddTemplateTagList({
-        id: v4(),
-        text: text,
-      });
+      setTemplateTagList(text);
       setText('');
-      router.push('/templates/banner_row');
+      router.push('/home/templates/banner');
     }
   };
 

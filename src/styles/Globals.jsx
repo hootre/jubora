@@ -4,19 +4,28 @@ import { Common } from './Common';
 
 const style = css`
   ${reset};
-  * {
-    box-sizing: border-box;
-    -webkit-scrollbar {
-      width: 5px;
-    }
-    -webkit-scrollbar-thumb {
-      background: #666;
-    }
+  /* 스크롤바 설정*/
+  *::-webkit-scrollbar {
+    width: 10px;
   }
+
+  /* 스크롤바 막대 설정*/
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.6);
+    /* 스크롤바 둥글게 설정    */
+    border-radius: 10px;
+  }
+
+  /* 스크롤바 뒷 배경 설정*/
+  *::-webkit-scrollbar-track {
+  }
+
   html {
     padding: 0;
     margin: 0;
-    font-family: 'GmarketSans';
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+      Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
     list-style: none;
     font-size: 15px;
     box-sizing: border-box;

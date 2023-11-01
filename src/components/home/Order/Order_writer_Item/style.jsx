@@ -213,7 +213,7 @@ export const Public_order_container = styled.div`
       }
       .type_btn_box {
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
         gap: 10px;
       }
       &.name_box {
@@ -405,6 +405,21 @@ export const Public_order_container = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+
+    .btn_box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .etc_box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      h3 {
+        font-weight: 300;
+        color: ${Common.colors.text300};
+      }
+    }
   }
   &.name_box {
     > h2:not(:first-of-type) {

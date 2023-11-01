@@ -78,9 +78,11 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
 
   const router = useRouter();
   const onSubmit = (data) => {
-    createOrder(data);
-    router.push(`/home/mypage/my_modify`);
+    console.log(data);
+    // createOrder(data);
+    // router.push(`/home/mypage/my_modify`);
   };
+
   if (userLoading) {
     return <h1>Loading</h1>;
   }
@@ -100,8 +102,8 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
                 <div className="active_btn_box">
                   {order_setting_for.map(
                     (item, idx) =>
-                      order_setting[item] !== null && (
-                        <Item_buttonNav key={idx} item={item} order_setting={order_setting} />
+                      order_setting[item].title.length > 0 && (
+                        <Item_buttonNav key={idx} itemName={item} order_setting={order_setting} />
                       )
                   )}
                 </div>

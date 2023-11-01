@@ -8,9 +8,6 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 export const Item_orderSetting = ({ valueName, index }) => {
   // react hooks form
   const { watch, setValue, register, reset } = useFormContext();
-  useEffect(() => {
-    setValue(`${valueName}_${index}`, []);
-  }, []);
   const [text, setText] = useState('');
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -19,31 +16,41 @@ export const Item_orderSetting = ({ valueName, index }) => {
         setText('');
         return;
       }
-      const id = v4();
-      setValue(`${valueName}_${index}`, [...watch(`${valueName}_${index}`), id]);
-      setValue(`list_${id}`, text);
+      setValue(
+        `${valueName}_${index}`,
+        watch(`${valueName}_${index}`) ? [...watch(`${valueName}_${index}`), text] : [text]
+      );
+      setValue(`list_${text}`, text);
       setText('');
     }
   };
 
-  const [imagePreview, setImagePreview] = useState('');
-  const onChangeImage = (e, id) => {
+  const onChangeImage = (e, text) => {
     e.preventDefault();
     const image = e.target.files[0];
-    setValue(`image_${id}`, image);
+    setValue(`image_${text}`, image);
     if (typeof image !== 'string' > 0) {
       if (image.size > 10485760) {
-        setValue(`image_${id}`, '');
+        setValue(`image_${text}`, '');
         toast.error('이미지 사이즈가 10mb보다 큽니다');
       } else {
-        setValue(`image_preview_${id}`, URL.createObjectURL(image));
+        setValue(`image_preview_${text}`, URL.createObjectURL(image));
       }
     }
   };
-  const deleteCategory = (id) => {
+  const deleteCategory = async (text) => {
+    if (typeof watch(`public_id_${text}`) === 'string') {
+      setValue(
+        'delete_images',
+        watch(`delete_images`)
+          ? [...watch(`delete_images`), watch(`public_id_${text}`)]
+          : [watch(`public_id_${text}`)]
+      );
+    }
+
     setValue(
       `${valueName}_${index}`,
-      watch(`${valueName}_${index}`).filter((item) => item != id)
+      watch(`${valueName}_${index}`).filter((item) => item != text)
     );
   };
 
@@ -64,44 +71,41 @@ export const Item_orderSetting = ({ valueName, index }) => {
         />
         <ul className="category_tag_list">
           {watch(`${valueName}_${index}`) &&
-            watch(`${valueName}_${index}`).map((id) => (
-              <li key={id} className="tag_btn">
+            watch(`${valueName}_${index}`).map((text) => (
+              <li key={text} className="tag_btn">
                 <div className="tag_content">
-                  <span>{watch(`list_${id}`)}</span>
+                  <span>{watch(`list_${text}`)}</span>
                   <div className="icon_box">
-                    <label htmlFor={`file_${id}`}>
+                    <label htmlFor={`file_${text}`}>
                       <FileUploadIcon className="icon" />
                     </label>
                     <input
-                      id={`file_${id}`}
+                      id={`file_${text}`}
                       className="upload_input"
                       type="file"
                       accept="image/*"
                       name="file"
-                      onChange={(e) => onChangeImage(e, id)}
+                      required
+                      onChange={(e) => onChangeImage(e, text)}
                     />
-                    <AiOutlineClose className="icon" onClick={() => deleteCategory(id)} />
+                    <AiOutlineClose
+                      className="icon"
+                      onClick={() => deleteCategory(watch(`list_${text}`))}
+                    />
                   </div>
                 </div>
-                {watch(`image_preview_${id}`) ? (
-                  <img src={watch(`image_preview_${id}`)} alt="preview" />
+                {watch(`image_preview_${text}`) ? (
+                  <img src={watch(`image_preview_${text}`)} alt="preview" />
                 ) : (
                   <img src="https://placehold.co/150x150" alt="mainImage" />
                 )}
-                {watch(`image_${id}`)?.[0]?.name && (
-                  <div className="file_text">
-                    <span className="file_name">{watch(`image_${id}`)[0].name}</span>
-                    <div className="delete_btn" onClick={() => deleteData(`image_${id}`)}>
-                      삭제
-                    </div>
-                  </div>
-                )}
+
                 <div className="description">
                   <h3>설명</h3>
                   <textarea
                     type="text"
                     className=" tag_textarea"
-                    {...register(`description_${id}`)}
+                    {...register(`description_${text}`)}
                   />
                 </div>
               </li>

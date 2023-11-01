@@ -89,21 +89,21 @@ export const Showcase = ({ bannerState = 'banner' }) => {
                   {bannerType === 'banner_row' ? (
                     <ImageItem
                       img_src={item.img_row}
-                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}`}
+                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                       text={'구매하기'}
                       bannerType={'banner_row'}
                     />
                   ) : bannerType === 'banner_col' ? (
                     <ImageItem
                       img_src={item.img_col}
-                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}`}
+                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                       text={'구매하기'}
                       bannerType={'banner_col'}
                     />
                   ) : (
                     <ImageItem
                       img_src={item.img_square}
-                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}`}
+                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                       text={'구매하기'}
                       bannerType={'banner_square'}
                     />

@@ -18,13 +18,7 @@ export const Item_select = memo(({ title, valueName, list }) => {
     <Public_order_container className="contents">
       <h2>{title}</h2>
       <div className="C_basic_flex">
-        <select
-          className="C_basic_input"
-          name="category"
-          required
-          {...register(valueName)}
-          value={watch(valueName) ?? '선택'}
-        >
+        <select className="C_basic_input" name="category" required {...register(valueName)}>
           {list.map((item, idx) => (
             <option key={idx} value={item}>
               {item}

@@ -9,7 +9,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Item_select } from 'components/home/Order/Order_writer_Item/Item_select';
+import { MainLoading } from 'components/Loading/MainLoading';
 export const Templates_Banner = ({ bannerState }) => {
+  let tagList = [];
   // 제품 목록 생성
   const { useCreateTemplate } = useTemplates();
   const { mutate: handleCreateBanner } = useCreateTemplate();
@@ -40,6 +42,7 @@ export const Templates_Banner = ({ bannerState }) => {
     setValue('category', []);
   }, [bannerState]);
   const onSubmit = (data) => {
+    console.log(data);
     setIsUploading(true);
     handleCreateBanner(data, {
       onSettled: () => {
@@ -51,14 +54,14 @@ export const Templates_Banner = ({ bannerState }) => {
   if (tag_loading) {
     return <MainLoading />;
   }
-  const bannerTypeList = templatesTagData.map((item) => {
+  tagList = templatesTagData.map((item) => {
     return item.title;
   });
   return (
     <>
       <FormProvider {...methods}>
         <main>
-          <Item_select title="제품 항목" valueName="bannerType" list={bannerTypeList} />
+          <Item_select title="제품 항목" valueName="categoryName" list={tagList} />
           <Item_upload title="가로형(기본)" valueName="img_row" />
           <Item_upload title="세로형" valueName="img_col" />
           <Item_upload title="포스터형" valueName="img_square" />

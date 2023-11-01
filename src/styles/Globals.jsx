@@ -4,6 +4,9 @@ import { Common } from './Common';
 
 const style = css`
   ${reset};
+  * {
+    box-sizing: border-box;
+  }
   /* 스크롤바 설정*/
   *::-webkit-scrollbar {
     width: 10px;
@@ -28,7 +31,6 @@ const style = css`
       'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
     list-style: none;
     font-size: 15px;
-    box-sizing: border-box;
   }
   body {
     position: relative;

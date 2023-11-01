@@ -18,7 +18,7 @@ export const TemplatesSixContent = ({ templatesList, bannerType }) => {
                         ? item.public_id_col
                         : item.public_id_square
                     }
-                    href={`/home/templates/${item.bannerType}/detail/${item.id}?bannerType=${bannerType}`}
+                    href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text={'구매하기'}
                     bannerType={bannerType}
                   />

@@ -11,6 +11,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { Item_select } from 'components/home/Order/Order_writer_Item/Item_select';
 import { MainLoading } from 'components/Loading/MainLoading';
 export const Templates_Real = ({ bannerState }) => {
+  let tagList = [];
   // 제품 목록 생성
   const { useCreateTemplate } = useTemplates();
   const { mutate: handleCreateBanner } = useCreateTemplate();
@@ -42,6 +43,7 @@ export const Templates_Real = ({ bannerState }) => {
     setValue('category', []);
   }, [bannerState]);
   const onSubmit = (data) => {
+    console.log(data);
     setIsUploading(true);
     handleCreateBanner(data, {
       onSettled: () => {
@@ -53,14 +55,14 @@ export const Templates_Real = ({ bannerState }) => {
   if (tag_loading) {
     return <MainLoading />;
   }
-  const bannerTypeList = templatesTagData.map((item) => {
-    item.title;
+  tagList = templatesTagData.map((item) => {
+    return item.title;
   });
   return (
     <>
       <FormProvider {...methods}>
         <main>
-          <Item_select title="제품 항목" valueName="bannerType" list={[bannerTypeList]} />
+          <Item_select title="제품 항목" valueName="categoryName" list={tagList} />
           <Item_upload title="이미지" valueName="img_row" />
           <div className="option_container">
             <h2>태그목록</h2>

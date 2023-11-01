@@ -12,6 +12,9 @@ const useCreateTemplatesTag = () => {
       tagList: list,
       from_nav,
     });
+    await supabase_client.from('orderSetting').insert({
+      category_name: title,
+    });
     return new Promise(async (resolve, reject) => {
       if (error) {
         toast.error(`CODE : ${error.code}`);

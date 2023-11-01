@@ -134,17 +134,15 @@ const useGetTemplates = () => {
 const useCreateTemplate = () => {
   const handleCreateTemplate = async ({
     bannerState,
-    bannerType,
+    categoryName,
     img_row,
     img_col,
     img_square,
     category,
-    tag,
-    tag_detail,
   }) => {
     const randomText = Math.random().toString(16).substring(2, 8);
-    const title = `${tag}_${tag_detail}_${randomText}`;
-    const categoryList = { list: category };
+    const title = `${categoryName}_${randomText}`;
+    const categoryList = { list: [...category] };
     if (bannerState === 'banner') {
       const { url: img_url_row, public_id: public_id_row } = await uploadImage(
         img_row[0],
@@ -160,7 +158,7 @@ const useCreateTemplate = () => {
       );
       const { data, error } = await supabase_client.from('templates').insert({
         bannerState,
-        bannerType,
+        categoryName,
         img_row: img_url_row,
         img_col: img_url_col,
         img_square: img_url_square,
@@ -169,9 +167,7 @@ const useCreateTemplate = () => {
         public_id_square,
         title,
         category: categoryList,
-        tag,
-        tag_detail,
-        view: 0,
+        views: 0,
         sales: 0,
       });
 
@@ -195,12 +191,13 @@ const useCreateTemplate = () => {
       );
       const { data, error } = await supabase_client.from('templates').insert({
         bannerState,
+        categoryName,
         img_row: img_url_row,
         public_id_row,
         title,
         category: categoryList,
-        tag,
-        tag_detail,
+        views: 0,
+        sales: 0,
       });
 
       return new Promise(async (resolve, reject) => {

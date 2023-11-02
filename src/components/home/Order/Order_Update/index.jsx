@@ -7,6 +7,7 @@ import PriceCalculate from 'utils/PriceCalculate';
 import toast from 'react-hot-toast';
 import { BasicModal } from 'components/common/Modal/BasicModal';
 import { Select_Showcase } from '../Order_Detail/Select_Showcase';
+import { MainLoading } from 'components/Loading/MainLoading';
 export const Order_Update = ({ data, role }) => {
   // order from 셋팅
   const order_setting_for = ['item_1', 'item_2', 'item_3', 'item_4', 'item_5', 'item_6', 'item_7'];
@@ -22,6 +23,27 @@ export const Order_Update = ({ data, role }) => {
     setOpen((prev) => !prev);
   };
 
+  const onChangeItemInput = (e, itemName) => {
+    setValue(itemName, {
+      title: data[itemName].title,
+      content: e.target.value,
+    });
+  };
+  const onChangeItem = (e, itemName) => {
+    if (e.target.value === '기타') {
+      setValue(`${itemName}_etc`, true);
+      setValue(itemName, {
+        title: data[itemName].title,
+        content: data[itemName]?.content,
+      });
+    } else {
+      setValue(`${itemName}_etc`, false);
+    }
+    setValue(itemName, {
+      title: orderSettingData[itemName]?.title,
+      content: e.target.value,
+    });
+  };
   // 초기값 설정
   useEffect(() => {
     if (orderSettingData) {
@@ -40,6 +62,7 @@ export const Order_Update = ({ data, role }) => {
     setValue('address_1', data.address_1);
     setValue('address_2', data.address_2);
     setValue('address_3', data.address_3);
+    setValue('zonecode', data.zonecode);
     setValue('row', data.row);
     setValue('col', data.col);
     setValue('count', data.count);
@@ -83,7 +106,7 @@ export const Order_Update = ({ data, role }) => {
   }, []);
 
   if (isLoading) {
-    return;
+    return <MainLoading />;
   }
   return (
     <Order_Update_container>
@@ -98,12 +121,12 @@ export const Order_Update = ({ data, role }) => {
           <tr>
             <td>
               <img src={watch('image')} alt="select_img" className="select_img" />
-              <button onClick={toaggleModal} className="sample_btn" type="button" value="샘플선택">
+              {/* <button onClick={toaggleModal} className="sample_btn" type="button" value="샘플선택">
                 샘플선택 +
               </button>
               <BasicModal state={open} onClose={toaggleModal}>
                 <Select_Showcase category={data.category_type} toaggleModal={toaggleModal} />
-              </BasicModal>
+              </BasicModal> */}
             </td>
             <td>
               {role === 'admin' ? (
@@ -116,6 +139,7 @@ export const Order_Update = ({ data, role }) => {
                   >
                     <MenuItem value="확인전">확인전</MenuItem>
                     <MenuItem value="시안제작중">시안확인</MenuItem>
+                    <MenuItem value="출력승인">출력승인</MenuItem>
                     <MenuItem value="인쇄중">인쇄중</MenuItem>
                     <MenuItem value="배송중">배송중</MenuItem>
                     <MenuItem value="배송완료">배송완료</MenuItem>
@@ -159,6 +183,7 @@ export const Order_Update = ({ data, role }) => {
             <th>이름/교회명</th>
             <th>전화번호</th>
             <th>주소</th>
+            <th>우편번호</th>
             <th>사이즈</th>
             <th>수량</th>
           </tr>
@@ -186,6 +211,11 @@ export const Order_Update = ({ data, role }) => {
               </div>
               <div>
                 <input type="text" {...register('address_3')} />
+              </div>
+            </td>
+            <td>
+              <div>
+                <input type="text" {...register('zonecode')} />
               </div>
             </td>
             <td>
@@ -236,23 +266,42 @@ export const Order_Update = ({ data, role }) => {
         <tbody>
           <tr>
             {order_setting_for.map(
-              (item, idx) =>
-                data[item]?.content && (
+              (itemName, idx) =>
+                data[itemName]?.title && (
                   <td key={idx}>
-                    <FormControl sx={{ minWidth: 150 }} size="small">
-                      <Select
-                        labelId="demo-select-small-label"
-                        id="demo-select-small"
-                        defaultValue={data[item].content}
-                        {...register(item)}
-                      >
-                        {orderSettingData[item]?.list.map((item, idx) => (
-                          <MenuItem key={idx} value={item}>
-                            {item}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <div className="selete_box">
+                      <FormControl sx={{ minWidth: 150 }} size="small">
+                        <Select
+                          labelId="demo-select-small-label"
+                          id="demo-select-small"
+                          defaultValue={
+                            orderSettingData[itemName]?.list.includes(data[itemName].content)
+                              ? data[itemName].content
+                              : '기타'
+                          }
+                          onChange={(e) => onChangeItem(e, itemName)}
+                        >
+                          {orderSettingData[itemName].title !== '' &&
+                            orderSettingData[itemName]?.list.map((item, idx) => {
+                              return (
+                                <MenuItem key={idx} value={item}>
+                                  {item}
+                                </MenuItem>
+                              );
+                            })}
+
+                          <MenuItem value={'기타'}>기타</MenuItem>
+                        </Select>
+                      </FormControl>
+                      {watch(`${itemName}_etc`) && (
+                        <input
+                          type="text"
+                          className="C_basic_input"
+                          value={watch(itemName).content}
+                          onChange={(e) => onChangeItemInput(e, itemName)}
+                        />
+                      )}
+                    </div>
                   </td>
                 )
             )}

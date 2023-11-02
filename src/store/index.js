@@ -11,6 +11,8 @@ const useTemplatesStore = create((set) => ({
   isCurrentFilter: false,
   // header 스크롤 이벤트 상태저장
   isHeaderScrollActive: false,
+  // 제품 상세보기 데이터 저장
+  orderPreview: {},
 
   actions: {
     // 제품 태그 리셋 후 추가
@@ -18,6 +20,14 @@ const useTemplatesStore = create((set) => ({
       set(() => {
         return {
           templateTagList: [state],
+        };
+      });
+    },
+    //  제품 상세보기 데이터
+    setOrderPreview: (state) => {
+      set(() => {
+        return {
+          orderPreview: state,
         };
       });
     },
@@ -58,6 +68,7 @@ export const useTemplateSearchText = () => useTemplatesStore((state) => state.te
 export const useTemplateTagList = () => useTemplatesStore((state) => state.templateTagList);
 export const useIsHeaderScrollActive = () =>
   useTemplatesStore((state) => state.isHeaderScrollActive);
+export const useOrderPreivew = () => useTemplatesStore((state) => state.orderPreview);
 
 // action
 export const useTemplatesActions = () => useTemplatesStore((state) => state.actions);

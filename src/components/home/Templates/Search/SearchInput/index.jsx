@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import { Search_input_box } from './style.jsx';
 export const SearchInput = () => {
   const [text, setText] = useState('');
+  // zustand
   const { setTemplateSearchText, setToggleTemplateTagList } = useTemplatesActions();
 
   // input 관련

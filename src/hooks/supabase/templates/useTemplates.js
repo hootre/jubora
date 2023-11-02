@@ -251,6 +251,7 @@ const useUpdateTemplates = () => {
   return useMutation(handleUpdateTemplate, {
     onSuccess: async () => {
       await client.invalidateQueries(gatherKeys.templates);
+      await client.invalidateQueries(gatherKeys.templates_six);
     },
   });
 };

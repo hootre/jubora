@@ -20,10 +20,12 @@ export const Side_datail_container = styled.div`
       font-weight: bold;
       padding: 10px 0;
     }
-    > p {
+    > .description {
       color: ${Common.colors.text200};
       line-height: 25px;
       margin-bottom: 10px;
+      white-space: pre-line;
+      line-height: 20px;
     }
     .price {
       border-top: 1px solid#000;

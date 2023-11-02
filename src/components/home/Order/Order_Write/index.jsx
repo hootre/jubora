@@ -10,7 +10,6 @@ import { useRouter } from 'next/navigation.js';
 import { useUser } from 'hooks/supabase/auth/useUser.js';
 import { useOrder } from 'hooks/supabase/order/useOrder.js';
 import { Side_detail } from 'components/home/Order/Side_detail/index.jsx';
-import { useOrderItemPreview } from 'hooks/supabase/order/orderItemPreview/useOrderItemPreview.js';
 import { Item_selectImg } from '../Order_writer_Item/Item_selectImg/index.jsx';
 import { Item_privacy } from '../Order_writer_Item/Item_privacy/index.jsx';
 import { Item_size } from '../Order_writer_Item/Item_size/index.jsx';
@@ -20,12 +19,13 @@ import { Item_upload } from '../Order_writer_Item/Item_upload/index.jsx';
 import { Item_buttonNav } from '../Order_writer_Item/Item_buttonNav/index.jsx';
 import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
 import { order_setting_for } from 'assets/data.js';
+import { useTemplatesActions } from 'store/index.js';
+import { MainLoading } from 'components/Loading/MainLoading/index.jsx';
 
-const Order_Write = ({ detail_data, order_setting, bannerType }) => {
+const Order_Write = ({ detail_data, order_setting, bannerType, categoryName }) => {
   // 제품 조회수 증가
   const { useUpdateView } = useTemplates();
   const { mutate: updateViews } = useUpdateView(detail_data.views, detail_data.id);
-
   // user상태관리
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -34,12 +34,15 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
   const { useCreateOrder } = useOrder();
   const { mutate: createOrder } = useCreateOrder(user?.email);
 
+  // zsutand
+  const { setOrderPreview } = useTemplatesActions();
+
   // form 데이터 관리
   const methods = useForm();
   const { handleSubmit, setValue } = methods;
-
   // 첫 로딩 시
   useEffect(() => {
+    setOrderPreview(order_setting['item_1'].preview[0]);
     updateViews();
   }, []);
   // 로그인 로그아웃 상태
@@ -50,6 +53,7 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
       setValue('address_1', user.address_1);
       setValue('address_2', user.address_2);
       setValue('address_3', user.address_3);
+      setValue('zonecode', user.zonecode);
     }
     // 기본 값
     if (detail_data && order_setting) {
@@ -70,7 +74,7 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
           : detail_data.img_square
       );
     }
-    setValue('template_type', bannerType);
+    setValue('template_type', categoryName);
     setValue('category_type', detail_data?.category);
     setValue('state', '확인전');
     setValue('price', 20000);
@@ -79,12 +83,12 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
   const router = useRouter();
   const onSubmit = (data) => {
     console.log(data);
-    // createOrder(data);
-    // router.push(`/home/mypage/my_modify`);
+    createOrder(data);
+    router.push(`/home/mypage/my_modify`);
   };
 
   if (userLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <Order_Write_container>
@@ -120,7 +124,6 @@ const Order_Write = ({ detail_data, order_setting, bannerType }) => {
               </div>
             </div>
           </div>
-
           <Side_detail />
         </form>
       </FormProvider>

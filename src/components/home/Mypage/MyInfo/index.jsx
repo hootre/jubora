@@ -28,6 +28,7 @@ export const MyInfo = () => {
       setValue('address_1', userData.address_1);
       setValue('address_2', userData.address_2);
       setValue('address_3', userData.address_3);
+      setValue('zonecode', userData.zonecode);
     }
   }, [userData]);
 

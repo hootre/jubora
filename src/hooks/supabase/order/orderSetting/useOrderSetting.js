@@ -8,12 +8,12 @@ import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 
 // 특정 type 제품 상세
-const useGetOnlyOrderSetting = (type) => {
+const useGetOnlyOrderSetting = (category_name) => {
   const handleGetOnlyOrderSetting = async () => {
     const { data, error } = await supabase_client
       .from('orderSetting')
       .select('*')
-      .eq('type', type)
+      .eq('category_name', category_name)
       .single();
 
     return new Promise((resolve, reject) => {
@@ -27,7 +27,7 @@ const useGetOnlyOrderSetting = (type) => {
   return useQuery(
     [
       `OrderSetting_
-  ${type}`,
+  ${category_name}`,
     ],
     handleGetOnlyOrderSetting
   );

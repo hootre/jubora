@@ -31,6 +31,7 @@ function Providers({ children }) {
 
   return (
     <QueryClientProvider client={client}>
+      <script src="https://cdn.iamport.kr/v1/iamport.js" />
       <GoogleAnalytics />
       <GlobalStyle />
       <AuthModal />

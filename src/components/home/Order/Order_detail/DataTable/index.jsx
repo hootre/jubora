@@ -49,6 +49,7 @@ export const DataTable = ({ data }) => {
             <th>이름/교회명</th>
             <th>전화번호</th>
             <th>주소</th>
+            <th>우편번호</th>
             <th>사이즈</th>
             <th>수량</th>
           </tr>
@@ -58,7 +59,8 @@ export const DataTable = ({ data }) => {
             <td>{data.id}</td>
             <td>{data.name}</td>
             <td>{data.phone}</td>
-            <td>{`${data.address_1} ${data.address_2} ${data.address_3}`}</td>
+            <td>{`${data.address_1} ${data.address_2} ${data.address_3} `}</td>
+            <td>{`${data.zonecode}`}</td>
             <td>{`${data.row}cm X ${data.col}cm`}</td>
             <td>{data.count}</td>
           </tr>

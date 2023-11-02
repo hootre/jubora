@@ -7,7 +7,7 @@ import { Skeleton_SianUpdate } from 'components/common/Skeleton/Skeleton_SianUpd
 import { Sian_Admin_Skeleton } from 'components/admin/Board/Admin_Write_Item/Sian_Admin_Skeleton';
 import { confirmAlert } from 'react-confirm-alert';
 
-export const SianUpdateList = ({ order_id, role }) => {
+export const SianUpdateList = ({ order_id, role, state }) => {
   // sian Data
   const { useGetOnlySian, useCreateEmptySian, useDeleteSian } = useSian();
   const { data: sianData } = useGetOnlySian(order_id);
@@ -71,6 +71,7 @@ export const SianUpdateList = ({ order_id, role }) => {
               type="checkbox"
               onChange={(e) => onCheckedElement(e.target.checked, item.id)}
               checked={checkedList.includes(item.id) ? true : false}
+              disabled
             />
             <SianUpdate
               key={item.id}
@@ -78,6 +79,7 @@ export const SianUpdateList = ({ order_id, role }) => {
               index={index}
               expand={index === sianData.length - 1}
               role={role}
+              disabled={state !== '확인전' && state !== '시안확인'}
             />
           </li>
         ))

@@ -24,6 +24,7 @@ function DaumPost(props) {
 
       props.setValue('address_1', localAddress);
       props.setValue('address_2', (fullAddress += extraAddress !== '' ? `(${extraAddress})` : ''));
+      props.setValue('zonecode', data.zonecode);
       //주소 검색이 완료된 후 결과를 매개변수로 전달
     }
   };

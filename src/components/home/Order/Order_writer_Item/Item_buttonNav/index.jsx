@@ -3,6 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import { Public_order_container } from '../style';
 import { memo } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTemplatesActions } from 'store';
 
 export const Item_buttonNav = memo(({ itemName, order_setting }) => {
   // react hooks form
@@ -13,6 +14,8 @@ export const Item_buttonNav = memo(({ itemName, order_setting }) => {
     register,
   } = useFormContext();
 
+  // zsutand
+  const { setOrderPreview } = useTemplatesActions();
   const [etc, setEtc] = useState(false);
   const onChangeText = (e) => {
     setValue(itemName, {
@@ -23,6 +26,10 @@ export const Item_buttonNav = memo(({ itemName, order_setting }) => {
   const handleEtc = () => {
     setValue(itemName, '');
     setEtc((prev) => !prev);
+  };
+  const handleMouseOver = (index) => {
+    const preview = order_setting[itemName].preview[index];
+    setOrderPreview(preview);
   };
   const handleBtn = (e) => {
     setValue(itemName, {
@@ -46,6 +53,7 @@ export const Item_buttonNav = memo(({ itemName, order_setting }) => {
               type="button"
               value={text}
               onClick={(e) => handleBtn(e)}
+              onMouseOver={() => handleMouseOver(index)}
             >
               {text}
             </button>

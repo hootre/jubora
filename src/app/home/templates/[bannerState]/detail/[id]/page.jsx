@@ -12,7 +12,12 @@ const page = async ({ params: { id }, searchParams: { bannerType, categoryName }
   const order_setting = await serverGetTypeOrderSetting(categoryName);
   // user 상태
   return (
-    <Order_Write detail_data={detail_data} order_setting={order_setting} bannerType={bannerType} />
+    <Order_Write
+      detail_data={detail_data}
+      order_setting={order_setting}
+      bannerType={bannerType}
+      categoryName={categoryName}
+    />
   );
 };
 export default page;

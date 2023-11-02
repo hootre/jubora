@@ -58,7 +58,6 @@ export const SianUpdate_container = styled.div`
         }
         .textarea_box {
           border: 1px solid ${Common.colors.bd100};
-          padding: 10px 0;
           textarea,
           pre {
             width: 100%;
@@ -96,6 +95,7 @@ export const SianUpdate_container = styled.div`
         }
       }
       .caution_text {
+        margin-top: 20px;
       }
     }
   }

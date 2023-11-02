@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
 export const MypageSideBar_container = styled.div`
-  width: 200px;
+  flex: 0 0 120px;
   margin-right: 20px;
   .nav_box {
     .name_box {

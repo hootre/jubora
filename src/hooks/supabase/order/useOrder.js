@@ -66,6 +66,7 @@ const useCreateOrder = (email) => {
     item_5,
     item_6,
     item_7,
+    zonecode,
   }) => {
     let fileData = null;
     if (file.length) {
@@ -98,6 +99,7 @@ const useCreateOrder = (email) => {
       item_5,
       item_6,
       item_7,
+      zonecode,
     });
     return new Promise((resolve, reject) => {
       if (error) {
@@ -131,6 +133,34 @@ const useGetOrder = () => {
   };
   return useQuery(gatherKeys.order, handleGetOrder);
 };
+
+// ORDER state -> 출력 승인
+const useUpdateOrderState = (id) => {
+  const handleUpdateOrderState = async () => {
+    const { data, error } = await supabase_client
+      .from('order')
+      .update({
+        state: '출력승인',
+      })
+      .eq('id', id);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`주문 상태수정 오류 :  ${error.message}`);
+      } else {
+        toast.success('성공적으로 수정하였습니다');
+        resolve(data);
+      }
+    });
+  };
+
+  const client = useQueryClient();
+  return useMutation(handleUpdateOrderState, {
+    onSuccess: async () => {
+      await client.invalidateQueries([`order_${id}`]);
+    },
+  });
+};
+
 // ORDER 수정
 const useUpdateOrder = (id) => {
   const handleUpdateOrder = async ({
@@ -262,6 +292,7 @@ export const useOrder = () => {
     useGetUserOrder,
     useCreateOrder,
     useGetOrder,
+    useUpdateOrderState,
     useUpdateOrder,
     useDeleteOrder,
   };

@@ -53,10 +53,6 @@ export const Item_orderSetting = ({ valueName, index }) => {
       watch(`${valueName}_${index}`).filter((item) => item != text)
     );
   };
-
-  const deleteData = (name) => {
-    setValue(name, '');
-  };
   return (
     <Public_order_container className="orderSetting_container">
       <div className="category_box">

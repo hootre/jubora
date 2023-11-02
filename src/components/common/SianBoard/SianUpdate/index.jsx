@@ -5,20 +5,45 @@ import { SianUpdate_container } from './style';
 import { useForm } from 'react-hook-form';
 import { useSian } from 'hooks/supabase/sian/useSian';
 
-export const SianUpdate = ({ data, index, expand, role }) => {
+export const SianUpdate = ({ data, index, expand, role, disabled }) => {
+  console.log(disabled);
   // sian 관련
   const { useUpdateSian } = useSian();
   const { mutate: updateSian } = useUpdateSian();
   const [expanded, setExpanded] = useState(expand);
-
+  // image 미리보기
+  const onChangeImage = (e) => {
+    e.preventDefault();
+    const image = e.target.files[0];
+    setValue(`main_img`, image);
+    if (typeof image !== 'string' > 0) {
+      if (image.size > 10485760) {
+        setValue(`main_img`, '');
+        toast.error('이미지 사이즈가 10mb보다 큽니다');
+      } else {
+        setValue(`image_preview`, URL.createObjectURL(image));
+      }
+    }
+  };
   const handleChange = () => () => {
     setExpanded((prev) => !prev);
   };
   useEffect(() => {
-    setValue('id', data.id);
+    if (data.id) {
+      setValue('id', data.id);
+      setValue(`main_img`, data.main_img);
+      setValue(`image_preview`, data.main_img);
+    }
   }, []);
+  const [isUploading, setIsUploading] = useState(false);
   const onSubmit = (data) => {
-    updateSian(data);
+    setIsUploading(true);
+    updateSian(data, {
+      onSettled: () => {
+        setIsUploading(false);
+        reset();
+      },
+    });
   };
   // react hooks form
   const { register, setValue, handleSubmit, watch } = useForm();
@@ -34,9 +59,9 @@ export const SianUpdate = ({ data, index, expand, role }) => {
         </AccordionSummary>
         <AccordionDetails>
           <form className="sian_modify_box">
-            {data.main_img ? (
+            {watch(`image_preview`) ? (
               <div className="skeleton_main_img">
-                <img src={data.main_img} className="main_image" alt="" />
+                <img src={watch(`image_preview`)} className="main_image" alt="" />
               </div>
             ) : (
               <div className="skeleton_main_img">
@@ -49,7 +74,11 @@ export const SianUpdate = ({ data, index, expand, role }) => {
                 {data.admin_text ? (
                   <pre>{data.admin_text}</pre>
                 ) : (
-                  <textarea placeholder={'전달사항을 입력해주세요'} {...register('admin_text')} />
+                  <textarea
+                    placeholder={'전달사항을 입력해주세요'}
+                    {...register('admin_text')}
+                    disabled={disabled}
+                  />
                 )}
               </div>
               <div className="modify_text">
@@ -59,6 +88,7 @@ export const SianUpdate = ({ data, index, expand, role }) => {
                     <pre>{data.user_text}</pre>
                   ) : (
                     <textarea
+                      disabled={!data.admin_text || disabled}
                       placeholder="시안을 보시고 수정사항을 적어주세요"
                       {...register('user_text')}
                     />
@@ -76,16 +106,17 @@ export const SianUpdate = ({ data, index, expand, role }) => {
                       type="file"
                       accept="image/*"
                       name="file"
-                      {...register('main_img')}
+                      onChange={(e) => onChangeImage(e)}
                     />
                   </div>
                 ) : (
                   <div></div>
                 )}
-
-                <div className="sian_btn" onClick={handleSubmit(onSubmit)}>
-                  등록하기
-                </div>
+                {!disabled && (
+                  <div className="sian_btn" disabled={isUploading} onClick={handleSubmit(onSubmit)}>
+                    {isUploading ? '업로드중...' : '등록하기'}
+                  </div>
+                )}
               </div>
               <div className="caution_text">
                 <h2>★확인사항★</h2>

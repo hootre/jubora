@@ -41,6 +41,7 @@ export const Order_Update_container = styled.div`
           font-size: 14px;
           font-weight: 500;
           line-height: 22px;
+          text-align: center;
           border: none;
           resize: none;
           outline: none;
@@ -49,7 +50,7 @@ export const Order_Update_container = styled.div`
           border: none;
           padding: 5px 5px;
           margin: 10px;
-          box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
         }
         .select_img {
           max-width: 500px;

@@ -75,17 +75,43 @@ const useCreateSian = () => {
 };
 // 수정
 const useUpdateSian = () => {
-  const handleUpdateSian = async ({ id, user_text }) => {
-    const { data, error } = await supabase_client.from('sian').update({ user_text }).eq('id', id);
-
-    return new Promise((resolve, reject) => {
-      if (error) {
-        reject(`시안확인 수정 오류 :  ${error.message}`);
-      } else {
-        toast.success('성공적으로 수정하였습니다');
-        resolve(data);
-      }
-    });
+  const handleUpdateSian = async ({ id, admin_text, user_text, main_img }) => {
+    if (typeof main_img === 'object') {
+      const { url, public_id } = await uploadImage(main_img, cloudFolderList.order);
+      const { data, error } = await supabase_client
+        .from('sian')
+        .update({
+          admin_text,
+          user_text,
+          main_img: url,
+          public_id,
+        })
+        .eq('id', id);
+      return new Promise((resolve, reject) => {
+        if (error) {
+          reject(`시안확인 수정 오류 :  ${error.message}`);
+        } else {
+          toast.success('성공적으로 수정하였습니다');
+          resolve(data);
+        }
+      });
+    } else {
+      const { data, error } = await supabase_client
+        .from('sian')
+        .update({
+          admin_text,
+          user_text,
+        })
+        .eq('id', id);
+      return new Promise((resolve, reject) => {
+        if (error) {
+          reject(`시안확인 수정 오류 :  ${error.message}`);
+        } else {
+          toast.success('성공적으로 수정하였습니다');
+          resolve(data);
+        }
+      });
+    }
   };
 
   const client = useQueryClient();

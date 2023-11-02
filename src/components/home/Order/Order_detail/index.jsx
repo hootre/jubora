@@ -7,13 +7,15 @@ import { DataTable } from './DataTable';
 import { Order_Update } from '../Order_Update';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useOrder } from 'hooks/supabase/order/useOrder';
+import { order_setting_for } from 'assets/data';
 export const Order_Detail = ({ data }) => {
   // 현재 user 등급
   const { useGetUserInfo } = useUser();
   const { data: userData, isLoading: userLoading } = useGetUserInfo();
   // order 수정하기
-  const { useUpdateOrder } = useOrder();
-  const { mutate: UpdateOrder } = useUpdateOrder(data.id);
+  const { useUpdateOrder, useUpdateOrderState } = useOrder();
+  const { mutate: updateOrder } = useUpdateOrder(data.id);
+  const { mutate: updateOrderState } = useUpdateOrderState(data.id);
   // 수정하기 State
   const [sianUpdate, setSianUpdate] = useState();
   const toggleSianUpdate = () => {
@@ -22,9 +24,10 @@ export const Order_Detail = ({ data }) => {
 
   // form 데이터 관리
   const methods = useForm();
-  const { handleSubmit } = methods;
+  const { handleSubmit, watch } = methods;
   const onSubmit = (data) => {
-    UpdateOrder(data);
+    console.log(data);
+    updateOrder(data);
     toggleSianUpdate();
   };
   if (userLoading) {
@@ -65,14 +68,12 @@ export const Order_Detail = ({ data }) => {
         </FormProvider>
       </section>
       <section className="sian_data">
-        <SianUpdateList order_id={data.id} role={userData.role} />
-        {userData.role === 'admin' ? (
-          <></>
-        ) : (
-          <div className="submit_box">
-            <button className="modify_byn">출력승인</button>
-          </div>
-        )}
+        <SianUpdateList order_id={data.id} role={userData.role} state={data.state} />
+        <div className="submit_box">
+          <button className="modify_byn C_basic_button" onClick={updateOrderState}>
+            출력승인
+          </button>
+        </div>
       </section>
     </Order_Detail_container>
   );

@@ -108,7 +108,8 @@ export const Public_order_container = styled.div`
             height: 150px;
             object-fit: contain;
           }
-          .description {
+          .description,
+          .add_price {
             width: 100%;
             > h3 {
               padding: 10px 0 5px 10px;
@@ -122,6 +123,9 @@ export const Public_order_container = styled.div`
               border: none;
               outline: none;
               resize: none;
+            }
+            > input {
+              padding: 5px;
             }
           }
         }

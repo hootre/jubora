@@ -8,8 +8,7 @@ export const Read_TemplatesTag = () => {
   const { useGetTemplatesTag, useUpdateTemplatesTag, useDeleteTemplatesTag } = useTemplatesTag();
   const { data: templatesTagData, isLoading } = useGetTemplatesTag();
   const { mutate: updateTemplatesTag } = useUpdateTemplatesTag();
-  const { mutate: delteTemplatesTag } = useDeleteTemplatesTag();
-
+  const { mutate: deleteTemplatesTag } = useDeleteTemplatesTag();
   if (isLoading) {
     return;
   }
@@ -20,7 +19,7 @@ export const Read_TemplatesTag = () => {
           key={item.id}
           item={item}
           updateTemplatesTag={updateTemplatesTag}
-          delteTemplatesTag={delteTemplatesTag}
+          deleteTemplatesTag={deleteTemplatesTag}
         />
       ))}
     </Read_TemplatesTag_container>

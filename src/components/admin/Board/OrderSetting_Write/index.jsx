@@ -25,9 +25,9 @@ export const OrderSetting_Write = () => {
       <h2 className="main_title">항목 삭제같은 경우 제품 필터목록에서 삭제가능합니다</h2>
       {tagList.map((item) => {
         let useOrderSetting = orderSettingData.filter(
-          (data) => data.category_name === item.title
+          (data) => data.category_name.trim() === item.title.trim()
         )[0];
-        let isOrderSetting = typeof useOrderSetting === 'object';
+        let isOrderSetting = useOrderSetting.item_1 !== null;
         return (
           <EmptyCard
             key={item.id}

@@ -16,12 +16,17 @@ export const Item_orderSetting = ({ valueName, index }) => {
         setText('');
         return;
       }
-      setValue(
-        `${valueName}_${index}`,
-        watch(`${valueName}_${index}`) ? [...watch(`${valueName}_${index}`), text] : [text]
-      );
-      setValue(`list_${text}`, text);
-      setText('');
+      if (watch(`${valueName}_${index}`)?.includes(text)) {
+        toast.error('이미 존재하는 값입니다');
+        setText('');
+      } else {
+        setValue(
+          `${valueName}_${index}`,
+          watch(`${valueName}_${index}`) ? [...watch(`${valueName}_${index}`), text] : [text]
+        );
+        setValue(`list_${text}`, text);
+        setText('');
+      }
     }
   };
 
@@ -102,6 +107,14 @@ export const Item_orderSetting = ({ valueName, index }) => {
                     type="text"
                     className=" tag_textarea"
                     {...register(`description_${text}`)}
+                  />
+                </div>
+                <div className="add_price">
+                  <h3>추가금액</h3>
+                  <input
+                    type="number"
+                    placeholder="ex) 3000,4000 숫자만"
+                    {...register(`add_price_${text}`)}
                   />
                 </div>
               </li>

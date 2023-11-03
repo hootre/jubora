@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Read_Template_container } from './styles';
 import { useState } from 'react';
 import { useCallback } from 'react';
-import Link from 'next/link';
-import { useNotice } from 'hooks/supabase/notice/useNotice';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css

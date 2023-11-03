@@ -78,7 +78,7 @@ export const Templates_Real = ({ bannerState }) => {
                 <AccordionDetails>
                   <ul>
                     {templatesTagData.map((item) => (
-                      <li className="tag_box">
+                      <li key={item.id} className="tag_box">
                         <h2>{item.title}</h2>
                         {Array.isArray(item.tagList.list) &&
                           item.tagList.list?.map((item) => (
@@ -101,7 +101,7 @@ export const Templates_Real = ({ bannerState }) => {
               </Accordion>
               <div className="tag_box">
                 {watch('category')?.map((item) => (
-                  <div className="tag_btn active">
+                  <div key={item} className="tag_btn active">
                     {item}
                     <AiOutlineClose className="icon" onClick={() => toggleCategory(item)} />
                   </div>

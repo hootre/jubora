@@ -103,40 +103,54 @@ const useGetOrderSetting = () => {
 // ORDER 수정
 const useUpdateOrderSetting = () => {
   const handleUpdateOrderSetting = async (orderSetting_data) => {
+    let await_images = [];
+    let upload_images = [];
     const resultData = cloneDeep(orderSetting_data);
     if (typeof resultData.id !== 'number') {
       return;
     }
     if (resultData.delete_images?.length > 0) {
-      resultData.delete_images.map(async (image) => {
-        await deleteImage(image);
+      resultData.delete_images.map((image) => {
+        deleteImage(image);
       });
     }
     await new Promise((resolve, reject) => {
-      let upload_images = [];
-      let await_images = [];
-      order_setting_for.map((itemName, idx) => {
-        resultData[itemName].preview.map(async (item, idx) => {
-          if (typeof item.image === 'object') {
-            upload_images.push(idx);
-          }
-          if (typeof item.image === 'object') {
-            if (typeof item.public_id === 'string') {
-              await deleteImage(item.public_id);
-            }
-            const { url, public_id } = await uploadImage(item.image, cloudFolderList.board);
-            resultData[itemName].preview[idx].image = url;
-            resultData[itemName].preview[idx].public_id = public_id;
-            await_images.push(idx);
+      try {
+        order_setting_for.map((itemName, idx) => {
+          if (resultData[itemName]) {
+            resultData[itemName].preview.map(async (item, idx) => {
+              if (typeof item.image === 'object') {
+                upload_images.push(idx);
+              }
+              if (typeof item.image === 'object') {
+                if (typeof item.public_id === 'string') {
+                  deleteImage(item.public_id);
+                }
+                const { url, public_id } = await uploadImage(item.image, cloudFolderList.board);
+                resultData[itemName].preview[idx].image = url;
+                resultData[itemName].preview[idx].public_id = public_id;
+                await_images.push(public_id);
+              }
+            });
           }
         });
-      });
-      let timer = setInterval(() => {
-        if (upload_images.length === await_images.length) {
-          clearInterval(timer);
-          resolve('완료!');
-        }
-      }, 100);
+        let timer = setInterval(() => {
+          if (upload_images.length === await_images.length) {
+            clearInterval(timer);
+            resolve('완료!');
+          }
+        }, 100);
+      } catch (e) {
+        let timer = setInterval(() => {
+          if (upload_images.length === await_images.length) {
+            await_images.map((public_id) => {
+              deleteImage(public_id);
+            });
+            clearInterval(timer);
+            reject(`오류 : ${e.message}`);
+          }
+        }, 100);
+      }
     });
 
     const { data, error } = await supabase_client
@@ -153,6 +167,9 @@ const useUpdateOrderSetting = () => {
       .eq('id', resultData.id);
     return new Promise((resolve, reject) => {
       if (error) {
+        await_images.map((public_id) => {
+          deleteImage(public_id);
+        });
         reject(`Order Setting 수정 오류 :  ${error.message}`);
       } else {
         toast.success('성공적으로 수정하였습니다');
@@ -168,26 +185,7 @@ const useUpdateOrderSetting = () => {
     },
   });
 };
-// Templates DELETE
-const useDeleteOrderSetting = () => {
-  const handleDeleteOrderSetting = async ({ id }) => {
-    const { data, error } = await supabase_client.from('orderSetting').delete().eq('id', id);
-    return new Promise((resolve, reject) => {
-      if (error) {
-        reject(`Order Setting 수정 오류 :  ${error.message}`);
-      } else {
-        toast.success('성공적으로 삭제하였습니다');
-        resolve(data);
-      }
-    });
-  };
-  const client = useQueryClient();
-  return useMutation(handleDeleteOrderSetting, {
-    onSuccess: () => {
-      client.removeQueries(gatherKeys.orderSetting);
-    },
-  });
-};
+
 export const useOrderSetting = () => {
   return {
     useGetOnlyOrderSetting,
@@ -195,6 +193,5 @@ export const useOrderSetting = () => {
     useCreateOrderSetting,
     useGetOrderSetting,
     useUpdateOrderSetting,
-    useDeleteOrderSetting,
   };
 };

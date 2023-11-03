@@ -63,11 +63,7 @@ export const Header = () => {
   let logoImage, topImage;
 
   if (tagLoading || userLoading || imageLoading) {
-    return (
-      <Skeleton variant="rectangular" width="100%">
-        <div style={{ height: '200px' }} />
-      </Skeleton>
-    );
+    return;
   }
   MainSettingImageData.map((item) => {
     if (item.position === 'logo') {
@@ -236,7 +232,7 @@ export const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/home/mypage/my_modify" className="C_basic_flex">
+                  <Link href="/home/mypage/my_payment" className="C_basic_flex">
                     <PaymentOutlinedIcon />
                     개인결제
                   </Link>

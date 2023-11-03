@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const SianBoardCard_container = styled.div`
+export const PaymentListItem_container = styled.div`
   display: flex;
   justify-content: center;
 
@@ -45,7 +45,7 @@ export const SianBoardCard_container = styled.div`
         }
       }
       &.orderId {
-        flex: 0 0 70px;
+        flex: 0 0 100px;
         text-align: center;
         &.active {
           color: ${Common.colors.text200};
@@ -53,11 +53,11 @@ export const SianBoardCard_container = styled.div`
       }
       &.state {
         color: ${Common.colors.primary100};
-        flex: 0 0 70px;
+        flex: 0 0 100px;
         text-align: center;
       }
       &.delivery {
-        flex: 0 0 70px;
+        flex: 0 0 100px;
         text-align: center;
       }
       &.price_box {
@@ -65,7 +65,7 @@ export const SianBoardCard_container = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        flex: 0 0 100px;
+        flex: 0 0 200px;
         > span {
           margin-bottom: 5px;
         }

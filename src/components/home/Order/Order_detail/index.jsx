@@ -1,17 +1,12 @@
 import { SianUpdateList } from 'components/common/SianBoard/SianUpdateList';
 import { DiBrackets } from 'react-icons/di';
 import { Order_Detail_container } from './style';
-import { useUser } from 'hooks/supabase/auth/useUser';
 import { useState } from 'react';
 import { DataTable } from './DataTable';
 import { Order_Update } from '../Order_Update';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useOrder } from 'hooks/supabase/order/useOrder';
-import { order_setting_for } from 'assets/data';
-export const Order_Detail = ({ data }) => {
-  // 현재 user 등급
-  const { useGetUserInfo } = useUser();
-  const { data: userData, isLoading: userLoading } = useGetUserInfo();
+export const Order_Detail = ({ data, userData }) => {
   // order 수정하기
   const { useUpdateOrder, useUpdateOrderState } = useOrder();
   const { mutate: updateOrder } = useUpdateOrder(data.id);
@@ -30,9 +25,6 @@ export const Order_Detail = ({ data }) => {
     updateOrder(data);
     toggleSianUpdate();
   };
-  if (userLoading) {
-    return;
-  }
   return (
     <Order_Detail_container>
       <section className="order_data">

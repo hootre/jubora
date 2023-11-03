@@ -1,7 +1,7 @@
-import { MyModify } from 'components/home/Mypage/MyModify';
 import { PasswordCheckModal } from 'components/common/Modal/PasswordCheckModal';
 import supabase_server from 'lib/supabase-server';
 import React from 'react';
+import { MyPayment } from 'components/home/Mypage/MyPayment';
 
 const MyPay = async () => {
   const {
@@ -9,7 +9,7 @@ const MyPay = async () => {
   } = await supabase_server.auth.getSession();
 
   if (session?.user) {
-    return <MyModify />;
+    return <MyPayment email={session.user.email} />;
   }
   return <PasswordCheckModal table="order" />;
 };

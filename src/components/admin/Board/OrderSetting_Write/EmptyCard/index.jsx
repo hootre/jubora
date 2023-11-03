@@ -44,6 +44,7 @@ export const EmptyCard = ({ title, order_setting, isOrderSetting, updataData }) 
             image: watch(`image_${text}`),
             public_id: watch(`public_id_${text}`),
             description: watch(`description_${text}`),
+            add_price: watch(`add_price_${text}`),
           });
         });
         setValue(item, {
@@ -87,17 +88,6 @@ export const EmptyCard = ({ title, order_setting, isOrderSetting, updataData }) 
       }
     );
   };
-  // useEffect(() => {
-  //   if (typeof image !== 'string' && image?.length > 0) {
-  //     if (watch('image')?.[0].size > 10485760) {
-  //       setValue('image', '');
-  //       toast.error('이미지 사이즈가 10mb보다 큽니다');
-  //     } else {
-  //       const file = image[0];
-  //       setImagePreview(URL.createObjectURL(file));
-  //     }
-  //   }
-  // }, [image]);
 
   return (
     <EmptyCard_container>
@@ -113,7 +103,7 @@ export const EmptyCard = ({ title, order_setting, isOrderSetting, updataData }) 
           <AccordionDetails>
             <div className="accordion_content">
               <form>
-                <div className="btn_box">
+                <div className="update_btn_box">
                   {update ? (
                     <>
                       <div className="update_order" onClick={handleSubmit(onSubmit)}>
@@ -151,7 +141,7 @@ export const EmptyCard = ({ title, order_setting, isOrderSetting, updataData }) 
                   <div className="option_container">
                     <div className="orderSetting_box">
                       {order_setting_for.map((itemName, idx) =>
-                        order_setting[itemName].title !== '' ? (
+                        order_setting[itemName]?.title ? (
                           <Item_buttonNav
                             key={idx}
                             itemName={itemName}

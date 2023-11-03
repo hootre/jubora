@@ -21,8 +21,6 @@ export const SianBoardCard = ({ item: { id, title, state, price, created_at } })
             <span className="price">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>{' '}
             원
           </span>
-          <button>영수증</button>
-          <button>견적서</button>
         </span>
       </div>
     </SianBoardCard_container>

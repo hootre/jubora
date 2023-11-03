@@ -4,6 +4,7 @@ import { MypageSideBar_container } from './style';
 import Link from 'next/link';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { usePathname } from 'next/navigation';
+import { MainLoading } from 'components/Loading/MainLoading';
 
 export const MypageSideBar = () => {
   // 유저 정보
@@ -13,7 +14,7 @@ export const MypageSideBar = () => {
   // path 관련
   const pathName = usePathname().substring(1).split('/')[2];
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <MypageSideBar_container>
@@ -44,8 +45,8 @@ export const MypageSideBar = () => {
               <h1>시안확인</h1>
             </Link>
           </div>
-          <div className={pathName === 'my_pay' ? 'active' : ''}>
-            <Link href="/home/mypage/my_pay">
+          <div className={pathName === 'my_payment' ? 'active' : ''}>
+            <Link href="/home/mypage/my_payment">
               <h1>결제내역</h1>
             </Link>
           </div>

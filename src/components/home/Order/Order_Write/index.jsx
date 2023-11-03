@@ -57,10 +57,11 @@ const Order_Write = ({ detail_data, order_setting, bannerType, categoryName }) =
     }
     // 기본 값
     if (detail_data && order_setting) {
-      order_setting_for.map((item) => {
+      order_setting_for.map((item, idx) => {
         setValue(item, {
           title: order_setting[item]?.title,
           content: order_setting[item]?.list[0],
+          add_price: order_setting[item].preview[idx]?.add_price,
         });
       });
       setValue('title', detail_data?.title);
@@ -77,12 +78,12 @@ const Order_Write = ({ detail_data, order_setting, bannerType, categoryName }) =
     setValue('template_type', categoryName);
     setValue('category_type', detail_data?.category);
     setValue('state', '확인전');
+    setValue('product_price', 20000);
     setValue('price', 20000);
   }, [user]);
 
   const router = useRouter();
   const onSubmit = (data) => {
-    console.log(data);
     createOrder(data);
     router.push(`/home/mypage/my_modify`);
   };

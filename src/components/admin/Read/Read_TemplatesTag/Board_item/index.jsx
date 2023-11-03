@@ -5,9 +5,9 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { FormProvider, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-export const Board_item = ({ item, updateTemplatesTag, delteTemplatesTag }) => {
+export const Board_item = ({ item, updateTemplatesTag, deleteTemplatesTag }) => {
   // 수정하기 State
   const [update, setUpdate] = useState();
   const toggleUpdate = () => {
@@ -21,12 +21,22 @@ export const Board_item = ({ item, updateTemplatesTag, delteTemplatesTag }) => {
     toggleUpdate();
   };
   const deleteItem = () => {
-    toast(() => (
-      <div className="confirm_box">
-        Custom and <b>bold</b>
-        <button onClick={() => toast.dismiss(t.id)}>Dismiss</button>
-      </div>
-    ));
+    confirmAlert({
+      title: '정말로 삭제하시겠습니까?',
+      message: '복구 불가능합니다',
+      buttons: [
+        {
+          label: '삭제',
+          onClick: () => {
+            deleteTemplatesTag({ id: item.id, category_name: item.title });
+          },
+        },
+        {
+          label: '취소',
+          onClick: () => {},
+        },
+      ],
+    });
   };
   useEffect(() => {
     setValue('id', item.id);
@@ -66,7 +76,7 @@ export const Board_item = ({ item, updateTemplatesTag, delteTemplatesTag }) => {
         {update ? (
           <div className="updata_box">
             <FormProvider {...methods}>
-              <Item_text title={'제목'} valueName={'title'} />
+              <Item_text title={'제목'} valueName={'title'} required />
               <Item_category title={'태그'} valueName={'tagList'} placeholder={item.tagList.list} />
             </FormProvider>
           </div>

@@ -12,6 +12,7 @@ export const gatherKeys = {
   notice: ['notice'],
   question: ['question'],
   qna: ['qna'],
+  payment: ['payment'],
   orderSetting: ['orderSetting'],
   orderItemPreview: ['orderItemPreview'],
   comment: ['comment'],

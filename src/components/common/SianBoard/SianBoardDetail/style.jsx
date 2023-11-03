@@ -23,9 +23,12 @@ export const SianBoardDetail_container = styled.div`
       }
       .payment_box {
         width: 100%;
+        border-top: 2px solid ${Common.colors.primary100};
+        margin-top: 10px;
+        padding-top: 20px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: start;
       }
       .btn_box {
         width: 100%;

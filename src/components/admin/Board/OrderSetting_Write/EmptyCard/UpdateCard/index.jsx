@@ -24,6 +24,7 @@ export const UpdateCard = ({ data = null }) => {
             setValue(`public_id_${item}`, data[itemName].preview[idx].public_id);
           }
           setValue(`description_${item}`, data[itemName].preview[idx].description);
+          setValue(`add_price_${item}`, data[itemName].preview[idx].add_price);
         });
       }
     });

@@ -20,7 +20,7 @@ export const EmptyCard_container = styled.div`
     form {
       flex: 1;
     }
-    .btn_box {
+    .update_btn_box {
       display: flex;
       justify-content: end;
       gap: 10px;

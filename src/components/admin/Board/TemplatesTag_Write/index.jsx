@@ -9,6 +9,7 @@ import { Item_text } from 'components/home/Order/Order_writer_Item/Item_text';
 import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
 import { Read_TemplatesTag } from 'components/admin/Read/Read_TemplatesTag';
 import { Item_select } from 'components/home/Order/Order_writer_Item/Item_select';
+import toast from 'react-hot-toast';
 
 export const TemplatesTag_Write = () => {
   // 제품 목록 생성
@@ -20,13 +21,19 @@ export const TemplatesTag_Write = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const onSubmit = (data) => {
-    setIsUploading(true);
-    handleCreateTemplatesTag(data, {
-      onSettled: () => {
-        reset();
-        setIsUploading(false);
-      },
-    });
+    if (!data.title) {
+      toast.error('제목은 필수입니다.');
+    } else if (!data.tagList) {
+      toast.error('태그는 필수입니다.');
+    } else {
+      setIsUploading(true);
+      handleCreateTemplatesTag(data, {
+        onSettled: () => {
+          reset();
+          setIsUploading(false);
+        },
+      });
+    }
   };
   return (
     <TemplatesTag_Write_container>

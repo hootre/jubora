@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Common } from 'styles/Common';
 
-export const SianBoardCardHeader_container = styled.div`
+export const PaymentListHeader_container = styled.div`
   display: flex;
   justify-content: center;
   > div {
@@ -23,20 +23,20 @@ export const SianBoardCardHeader_container = styled.div`
         text-align: center;
       }
       &.orderId {
-        flex: 0 0 70px;
+        flex: 0 0 100px;
         text-align: center;
       }
 
       &.state {
-        flex: 0 0 70px;
+        flex: 0 0 100px;
         text-align: center;
       }
       &.delivery {
-        flex: 0 0 70px;
+        flex: 0 0 100px;
         text-align: center;
       }
       &.price {
-        flex: 0 0 100px;
+        flex: 0 0 200px;
         text-align: center;
       }
     }

@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import PriceCalculate from 'utils/PriceCalculate';
 import { memo } from 'react';
 import { useCallback } from 'react';
+import { order_setting_for } from 'assets/data';
 
 export const Item_size = memo(({ title, row, col, count }) => {
   // react hooks form
@@ -21,6 +22,16 @@ export const Item_size = memo(({ title, row, col, count }) => {
       e.preventDefault();
       handleSizeOnChange();
     }
+  };
+  // 가격 합
+  const sumPrice = () => {
+    let sum_add_price = 0;
+    order_setting_for.map((item, idx) => {
+      if (watch(item)?.add_price) {
+        sum_add_price += watch(item).add_price;
+      }
+    });
+    setValue('price', watch('product_price') + sum_add_price);
   };
   // Size 체크
   const handleSizeOnChange = useCallback(() => {
@@ -53,7 +64,11 @@ export const Item_size = memo(({ title, row, col, count }) => {
       setValue(count, 1);
       toast.error('1개 이상을 선택해주세요');
     }
-    setValue('price', PriceCalculate(Number(watch(row)), Number(watch(col)), Number(watch(count))));
+    setValue(
+      'product_price',
+      PriceCalculate(Number(watch(row)), Number(watch(col)), Number(watch(count)))
+    );
+    sumPrice();
   }, []);
   return (
     <Public_order_container>

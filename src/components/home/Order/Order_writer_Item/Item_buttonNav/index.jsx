@@ -4,6 +4,7 @@ import { Public_order_container } from '../style';
 import { memo } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTemplatesActions } from 'store';
+import { order_setting_for } from 'assets/data';
 
 export const Item_buttonNav = memo(({ itemName, order_setting }) => {
   // react hooks form
@@ -23,28 +24,40 @@ export const Item_buttonNav = memo(({ itemName, order_setting }) => {
       content: e.target.value,
     });
   };
+  const sumPrice = () => {
+    let sum_add_price = 0;
+    order_setting_for.map((item, idx) => {
+      if (watch(item)?.add_price) {
+        sum_add_price += watch(item).add_price;
+      }
+    });
+    setValue('price', watch('product_price') + sum_add_price);
+  };
   const handleEtc = () => {
     setValue(itemName, '');
     setEtc((prev) => !prev);
+    sumPrice();
   };
   const handleMouseOver = (index) => {
     const preview = order_setting[itemName].preview[index];
     setOrderPreview(preview);
   };
-  const handleBtn = (e) => {
+  const handleBtn = (e, index) => {
     setValue(itemName, {
       title: order_setting[itemName].title,
       content: e.target.value,
+      add_price: order_setting[itemName].preview[index].add_price,
     });
     setEtc(false);
+    sumPrice();
   };
   return (
     <Public_order_container className="name_box">
-      <h2>{order_setting[itemName].title}</h2>
+      <h2>{order_setting[itemName]?.title}</h2>
       {/* {item === 'item_1' && <Link href={`${pathname}?bannerType=${item}`}></Link>} */}
       <div className="type_btn_box">
         <div className="btn_box">
-          {order_setting[itemName].list.map((text, index) => (
+          {order_setting[itemName]?.list.map((text, index) => (
             <button
               key={index}
               className={
@@ -52,7 +65,7 @@ export const Item_buttonNav = memo(({ itemName, order_setting }) => {
               }
               type="button"
               value={text}
-              onClick={(e) => handleBtn(e)}
+              onClick={(e) => handleBtn(e, index)}
               onMouseOver={() => handleMouseOver(index)}
             >
               {text}

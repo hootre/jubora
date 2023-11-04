@@ -8,42 +8,59 @@ export const AdminUserPage_container = styled.div`
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 10px;
-    .title {
-      padding: 20px;
-      font-size: 20px;
-    }
-
-    .search_box {
-      width: 300px;
+    .search_container {
       display: flex;
-
-      .search_term {
-        width: 100%;
-        border: 3px solid ${Common.colors.primary100};
-        border-right: none;
-        padding: 5px;
-        height: 36px;
-        line-height: 36px;
-        border-radius: 5px 0 0 5px;
-        outline: none;
-        color: #9dbfaf;
-      }
-
-      .search_term:focus {
-        color: ${Common.colors.primary100};
-      }
-
-      .search_button {
-        width: 40px;
-        height: 36px;
-        border: 1px solid ${Common.colors.primary100};
-        background: ${Common.colors.primary100};
-        text-align: center;
-        color: #fff;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
+      align-items: center;
+      .title {
+        padding: 20px;
         font-size: 20px;
+      }
+
+      .search_box {
+        width: 300px;
+        display: flex;
+
+        .search_term {
+          width: 100%;
+          border: 3px solid ${Common.colors.primary100};
+          border-right: none;
+          padding: 5px;
+          height: 36px;
+          line-height: 36px;
+          border-radius: 5px 0 0 5px;
+          outline: none;
+          color: #9dbfaf;
+        }
+
+        .search_term:focus {
+          color: ${Common.colors.primary100};
+        }
+
+        .search_button {
+          width: 40px;
+          height: 36px;
+          border: 1px solid ${Common.colors.primary100};
+          background: ${Common.colors.primary100};
+          text-align: center;
+          color: #fff;
+          border-radius: 0 5px 5px 0;
+          cursor: pointer;
+          font-size: 20px;
+        }
+      }
+    }
+    .button_box {
+      display: flex;
+      gap: 10px;
+      .update_btn {
+        border: 1px solid ${Common.colors.text200};
+        background: ${Common.colors.white};
+        color: ${Common.colors.text100};
+      }
+      .delete_btn {
+        background: ${Common.colors.red};
       }
     }
   }
@@ -62,7 +79,7 @@ export const AdminUserPage_container = styled.div`
 
     &-row {
       display: grid;
-      grid-template-columns: 50px 400px repeat(6, 1fr);
+      grid-template-columns: 50px 350px repeat(6, 1fr);
 
       @media (max-width: 800px) {
         grid-template-columns: 3fr 1fr 3fr;

@@ -8,7 +8,7 @@ import { useUser } from 'hooks/supabase/auth/useUser';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { useMainSlides } from 'hooks/supabase/main/slides/useMainSlides';
-export const Read_Mainslides = () => {
+export const Read_Mainslides = ({ view }) => {
   // user상태관리
   const { useGetUserInfo } = useUser();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -77,75 +77,81 @@ export const Read_Mainslides = () => {
   return (
     <Read_Mainslides_container>
       <Main_Slides />
-      <div className="top_box">
-        {user.role === 'admin' ? (
-          <div className="btn_box">
-            <div className="C_basic_button">
-              <Link href="/admin/board/write">글쓰기</Link>
-            </div>
-            <div
-              className="C_basic_button delete_btn"
-              onClick={() => (checkedList.length > 0 ? deleteNotice() : '')}
-            >
-              선택 삭제
+      {!view && (
+        <>
+          <div className="top_box">
+            {user.role === 'admin' ? (
+              <div className="btn_box">
+                <div className="C_basic_button">
+                  <Link href="/admin/board/write">글쓰기</Link>
+                </div>
+                <div
+                  className="C_basic_button delete_btn"
+                  onClick={() => (checkedList.length > 0 ? deleteNotice() : '')}
+                >
+                  선택 삭제
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div className="board_header">
+            <div>
+              {user.role === 'admin' ? (
+                <span>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => onCheckedAll(e.target.checked)}
+                    checked={
+                      checkedList.length === 0
+                        ? false
+                        : checkedList.length === noticeData.length
+                        ? true
+                        : false
+                    }
+                  />
+                </span>
+              ) : (
+                <></>
+              )}
+
+              <span className="id">번호</span>
+              <span className="title">제목</span>
+              <span className="date">날짜</span>
             </div>
           </div>
-        ) : (
-          <></>
-        )}
-      </div>
-      <div className="board_header">
-        <div>
-          {user.role === 'admin' ? (
-            <span>
-              <input
-                type="checkbox"
-                onChange={(e) => onCheckedAll(e.target.checked)}
-                checked={
-                  checkedList.length === 0
-                    ? false
-                    : checkedList.length === noticeData.length
-                    ? true
-                    : false
-                }
-              />
-            </span>
-          ) : (
-            <></>
-          )}
+          <ul>
+            {noticeData
+              .sort((item) => item.state === '공지')
+              ?.map((item) => (
+                <li className="board_item" key={item.id}>
+                  <div>
+                    {user.role === 'admin' ? (
+                      <span>
+                        <input
+                          type="checkbox"
+                          onChange={(e) =>
+                            onCheckedElement(e.target.checked, { id: item.id, images: item.images })
+                          }
+                          checked={
+                            checkedList.filter((el) => el.id === item.id).length ? true : false
+                          }
+                        />
+                      </span>
+                    ) : (
+                      <></>
+                    )}
 
-          <span className="id">번호</span>
-          <span className="title">제목</span>
-          <span className="date">날짜</span>
-        </div>
-      </div>
-      <ul>
-        {noticeData
-          .sort((item) => item.state === '공지')
-          ?.map((item) => (
-            <li className="board_item" key={item.id}>
-              <div>
-                {user.role === 'admin' ? (
-                  <span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) =>
-                        onCheckedElement(e.target.checked, { id: item.id, images: item.images })
-                      }
-                      checked={checkedList.filter((el) => el.id === item.id).length ? true : false}
-                    />
-                  </span>
-                ) : (
-                  <></>
-                )}
-
-                <span className="id">{item.id}</span>
-                <span className="title">{item.subtitle}</span>
-                <span className="date">{String(item.created_at).substring(5, 10)}</span>
-              </div>
-            </li>
-          ))}
-      </ul>
+                    <span className="id">{item.id}</span>
+                    <span className="title">{item.subtitle}</span>
+                    <span className="date">{String(item.created_at).substring(5, 10)}</span>
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </>
+      )}
     </Read_Mainslides_container>
   );
 };

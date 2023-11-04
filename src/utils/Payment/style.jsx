@@ -7,7 +7,6 @@ export const Payments_container = styled.div`
 
   gap: 10px;
   > div {
-    border: 1px solid #000;
     width: 100px;
     height: 50px;
     display: flex;

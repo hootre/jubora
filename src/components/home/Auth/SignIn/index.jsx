@@ -106,7 +106,7 @@ const SignIn = ({ authType, setAuthType }) => {
             <span>로그인</span>
           </button>
 
-          <div className="social_login_box">
+          {/* <div className="social_login_box">
             <button type="button" className="googleBtn" onClick={googleLogin}>
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                 <g id="logo_google" transform="translate(5 3.973)">
@@ -174,7 +174,7 @@ const SignIn = ({ authType, setAuthType }) => {
                 </g>
               </svg>
             </button>
-          </div>
+          </div> */}
         </form>
       </main>
     </div>

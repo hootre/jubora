@@ -8,25 +8,40 @@ import { Read_userList } from '../Read/Read_userList';
 import { DashboardFrame } from './DashboardFrame';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import Read_OrderList from '../Read/Read_OrderList';
+import { usePayment } from 'hooks/supabase/payment/usePayment';
+import { MainLoading } from 'components/Loading/MainLoading';
 
 export const Dashboard = () => {
   //유저 데이터
   const { useGetUserList } = useUser();
-  const { data, isLoading } = useGetUserList();
-  if (isLoading) {
-    return <h1>로딩중</h1>;
+  const { data: userList, isLoading: userLoading } = useGetUserList();
+  // 주문 건수
+  const { useGetPayment } = usePayment();
+  const { data: payList, isLoading: payLoading } = useGetPayment();
+  if (userLoading || payLoading) {
+    return <MainLoading />;
   }
   return (
     <Dashboard_container>
       <section>
-        <SmallCard title="월 매출" lastText="건" value={1234} icon={<RiMoneyEuroBoxLine />} />
-        <SmallCard title="월 방문자 수" lastText="건" value={12} icon={<RiLogoutBoxRLine />} />
-        <SmallCard title="월 주문 수" lastText="건" value={123} icon={<RiStackLine />} />
-        <SmallCard title="사용자 수" lastText="명" value={data.length} icon={<RiUserAddLine />} />
+        <SmallCard
+          title="매출 건수"
+          lastText="건"
+          value={payList.length}
+          icon={<RiMoneyEuroBoxLine />}
+        />
+        <SmallCard title="방문자 수" lastText="건" value={12} icon={<RiLogoutBoxRLine />} />
+        <SmallCard title="주문 수" lastText="건" value={payList.length} icon={<RiStackLine />} />
+        <SmallCard
+          title="사용자 수"
+          lastText="명"
+          value={userList.length}
+          icon={<RiUserAddLine />}
+        />
       </section>
       <section>
         <DashboardFrame title="메인 슬라이드" flexSize={3}>
-          <Read_Mainslides />
+          <Read_Mainslides view />
         </DashboardFrame>
 
         <DashboardFrame title="슬라이드 목록" flexSize={1}>

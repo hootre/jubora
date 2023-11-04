@@ -100,13 +100,6 @@ export const Header = () => {
                   {user?.id && (
                     <>
                       <li className="item">
-                        <a onClick={toggleIsPayment}>결제정보</a>
-                        {isPayment && <PaymentModal toggleIsPayment={toggleIsPayment} />}
-                      </li>
-                      <li className="item">
-                        <span></span>
-                      </li>
-                      <li className="item">
                         <a onClick={toggleIsMypage}>마이페이지</a>
                         {isMypage && (
                           <MypageModal

@@ -10,7 +10,7 @@ import { memo } from 'react';
 import { useForm } from 'react-hook-form';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-export const AdminUserPage = memo(({ data, handleDelete }) => {
+export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
   //유저 데이터
   const [userData, setUserData] = useState(data);
   useEffect(() => {
@@ -33,6 +33,37 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
         { label: '취소' },
       ],
     });
+  }; // form 데이터 관리
+  const methods = useForm();
+  const { handleSubmit, getValues, register, watch } = methods;
+  // update 목록
+  const [updateId, setUpdateId] = useState([]);
+  // 수정하기 State
+  const [sianUpdate, setSianUpdate] = useState();
+  const toggleSianUpdate = () => {
+    setSianUpdate((prev) => !prev);
+  };
+  // 수정완료
+  const onUserUpdate = () => {
+    checkedList.map((id) => {
+      updateRole({ id: id, role: watch(`role_${id}`) });
+    });
+    toggleSianUpdate();
+    setCheckedLists([]);
+    setUpdateId([]);
+  };
+  // 수정 취소
+  const updateCancle = () => {
+    setSianUpdate(false);
+    setCheckedLists([]);
+    setUpdateId([]);
+  };
+  // 선택 수정
+  const updateUser = () => {
+    if (checkedList.length > 0) {
+      setUpdateId(checkedList);
+      setSianUpdate(true);
+    }
   };
   // user check 관리
   const [selectState, setSelectState] = useState('email');
@@ -69,10 +100,6 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
     [checkedList]
   );
 
-  // form 데이터 관리
-  const methods = useForm();
-  const { handleSubmit, getValues, register } = methods;
-
   // 검색창 비어있을경우 리스트 리셋
   const handleKeyDownEnter = (e) => {
     if (e.key === 'Backspace' && getValues('searchText') === '') setUserData(data);
@@ -88,44 +115,60 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
   return (
     <AdminUserPage_container>
       <div className="top_box">
+        <div className="search_container">
+          <div className="title">
+            <h1>사용자 관리</h1>
+          </div>
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small"
+              value={selectState}
+              onChange={handleChange}
+            >
+              <MenuItem value="email">이메일</MenuItem>
+              <MenuItem value="role">권한</MenuItem>
+              <MenuItem value="name">이름/업체명</MenuItem>
+              <MenuItem value="phone">전화번호</MenuItem>
+              <MenuItem value="address">주소</MenuItem>
+            </Select>
+          </FormControl>
+          <form onSubmit={handleSubmit(onSubmit)} className="search_box">
+            <input
+              type="text"
+              className="search_term"
+              placeholder="검색 내용"
+              onKeyDown={handleKeyDownEnter}
+              {...register('searchText')}
+            />
+            <button type="submit" className="search_button">
+              <RiSearchLine />
+            </button>
+          </form>
+        </div>
         <div className="button_box">
+          {sianUpdate ? (
+            <>
+              <button className="C_basic_button update_btn" onClick={onUserUpdate}>
+                수정완료
+              </button>
+              <button className="C_basic_button update_btn" onClick={updateCancle}>
+                수정취소
+              </button>
+            </>
+          ) : (
+            <button className="C_basic_button update_btn" onClick={updateUser}>
+              선택 수정
+            </button>
+          )}
+
           <button
-            className="C_basic_button"
+            className="C_basic_button delete_btn"
             onClick={() => (checkedList.length > 0 ? deleteUser() : null)}
           >
             선택 삭제
           </button>
         </div>
-        <div className="title">
-          <h1>사용자 관리</h1>
-        </div>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-          <Select
-            labelId="demo-select-small-label"
-            id="demo-select-small"
-            value={selectState}
-            onChange={handleChange}
-          >
-            <MenuItem value="email">이메일</MenuItem>
-            <MenuItem value="role">권한</MenuItem>
-            <MenuItem value="name">이름/업체명</MenuItem>
-            <MenuItem value="phone">전화번호</MenuItem>
-            <MenuItem value="address">주소</MenuItem>
-          </Select>
-        </FormControl>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="search_box">
-          <input
-            type="text"
-            className="search_term"
-            placeholder="검색 내용"
-            onKeyDown={handleKeyDownEnter}
-            {...register('searchText')}
-          />
-          <button type="submit" className="search_button">
-            <RiSearchLine />
-          </button>
-        </form>
       </div>
       <div className="grid-table">
         <div className="grid-table-row">
@@ -150,39 +193,92 @@ export const AdminUserPage = memo(({ data, handleDelete }) => {
           <div className="grid-table-cell">최종접속일</div>
           <div className="grid-table-cell">생성일</div>
         </div>
-        {userData?.map((item) => (
-          <div className="grid-table-row" key={item.id}>
-            <div className="grid-table-cell" data-title="Title">
-              <input
-                type="checkbox"
-                onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-                checked={checkedList.includes(item.id) ? true : false}
-              />
-            </div>
-            <div className="grid-table-cell" data-title="Number">
-              {item.email}
-            </div>
+        {userData?.map((item) => {
+          console.log(item.email);
+          if (updateId.includes(item.id)) {
+            return (
+              <div className="grid-table-row" key={item.id}>
+                <div className="grid-table-cell" data-title="Title">
+                  {item.email !== 'zxv7295@naver.com' && (
+                    <input
+                      type="checkbox"
+                      onChange={(e) => onCheckedElement(e.target.checked, item.id)}
+                      checked={checkedList.includes(item.id) ? true : false}
+                    />
+                  )}
+                </div>
+                <div className="grid-table-cell" data-title="Number">
+                  {item.email}
+                </div>
 
-            <div className="grid-table-cell" data-title="Number">
-              {item.role}
-            </div>
-            <div className="grid-table-cell" data-title="Series">
-              {item.name}
-            </div>
-            <div className="grid-table-cell" data-title="Air Date">
-              {item.phone}
-            </div>
-            <div className="grid-table-cell" data-title="Number">
-              {`${item.address_1} ${item.address_2}`}
-            </div>
-            <div className="grid-table-cell" data-title="Series">
-              {SimpleDate(item.updated_at, 'y')}
-            </div>
-            <div className="grid-table-cell" data-title="Air Date">
-              {SimpleDate(item.created_at, 'y')}
-            </div>
-          </div>
-        ))}
+                <div className="grid-table-cell" data-title="Number">
+                  <FormControl sx={{ minWidth: 150 }} size="small">
+                    <Select
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
+                      defaultValue={item.role}
+                      {...register(`role_${item.id}`)}
+                    >
+                      <MenuItem value="admin">관리자</MenuItem>
+                      <MenuItem value="member">회원</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="grid-table-cell" data-title="Series">
+                  {item.name}
+                </div>
+                <div className="grid-table-cell" data-title="Air Date">
+                  {item.phone}
+                </div>
+                <div className="grid-table-cell" data-title="Number">
+                  {`${item.address_1} ${item.address_2}`}
+                </div>
+                <div className="grid-table-cell" data-title="Series">
+                  {SimpleDate(item.updated_at, 'y')}
+                </div>
+                <div className="grid-table-cell" data-title="Air Date">
+                  {SimpleDate(item.created_at, 'y')}
+                </div>
+              </div>
+            );
+          } else {
+            return (
+              <div className="grid-table-row" key={item.id}>
+                <div className="grid-table-cell" data-title="Title">
+                  {item.email !== 'zxv7295@naver.com' && item.email !== 'mm1895@naver.com' && (
+                    <input
+                      type="checkbox"
+                      onChange={(e) => onCheckedElement(e.target.checked, item.id)}
+                      checked={checkedList.includes(item.id) ? true : false}
+                    />
+                  )}
+                </div>
+                <div className="grid-table-cell" data-title="Number">
+                  {item.email}
+                </div>
+
+                <div className="grid-table-cell" data-title="Number">
+                  {item.role}
+                </div>
+                <div className="grid-table-cell" data-title="Series">
+                  {item.name}
+                </div>
+                <div className="grid-table-cell" data-title="Air Date">
+                  {item.phone}
+                </div>
+                <div className="grid-table-cell" data-title="Number">
+                  {`${item.address_1} ${item.address_2}`}
+                </div>
+                <div className="grid-table-cell" data-title="Series">
+                  {SimpleDate(item.updated_at, 'y')}
+                </div>
+                <div className="grid-table-cell" data-title="Air Date">
+                  {SimpleDate(item.created_at, 'y')}
+                </div>
+              </div>
+            );
+          }
+        })}
       </div>
     </AdminUserPage_container>
   );

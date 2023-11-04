@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { DeleteAuthBtn } from 'components/common/DeleteAuthBtn';
 import { Item_text } from 'components/home/Order/Order_writer_Item/Item_text';
 import { Item_address } from 'components/home/Order/Order_writer_Item/Item_address';
+import { MainLoading } from 'components/Loading/MainLoading';
 
 export const MyInfo = () => {
   // 유저 정보
@@ -43,7 +44,7 @@ export const MyInfo = () => {
   const handleClose = () => setOpenState(false);
 
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <MyInfo_container>
@@ -56,7 +57,7 @@ export const MyInfo = () => {
                   <Item_text title="이름/회사명" valueName="name" />
                   <Item_text title="아이디" valueName="email" disabled />
                   <Item_text title="전화번호" valueName="phone" />
-                  <Item_text title="비밀번호" valueName="password" />
+                  {/* <Item_text title="비밀번호" valueName="password" /> */}
                 </div>
                 <Item_address title="주소" />
                 <div className="btn_box">

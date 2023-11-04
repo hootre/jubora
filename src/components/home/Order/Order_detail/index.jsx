@@ -61,11 +61,13 @@ export const Order_Detail = ({ data, userData }) => {
       </section>
       <section className="sian_data">
         <SianUpdateList order_id={data.id} role={userData.role} state={data.state} />
-        <div className="submit_box">
-          <button className="modify_byn C_basic_button" onClick={updateOrderState}>
-            출력승인
-          </button>
-        </div>
+        {userData.role !== 'admin' && (
+          <div className="submit_box">
+            <button className="modify_byn C_basic_button" onClick={updateOrderState}>
+              출력승인
+            </button>
+          </div>
+        )}
       </section>
     </Order_Detail_container>
   );

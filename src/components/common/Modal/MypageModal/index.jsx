@@ -1,5 +1,6 @@
 import React from 'react';
 import { MyPageModal_container } from './style';
+import { Link } from '@mui/material';
 
 export const MypageModal = ({ user, signOut, toggleIsMypage }) => {
   return (
@@ -12,8 +13,9 @@ export const MypageModal = ({ user, signOut, toggleIsMypage }) => {
         </div>
         <div className="content">
           <ul>
-            <li>내가 본 상품</li>
-            <li>주문/배송 내역</li>
+            <li>
+              <Link href="/home/mypage/my_info">내 정보</Link>
+            </li>
             <li onClick={signOut}>로그아웃</li>
           </ul>
         </div>

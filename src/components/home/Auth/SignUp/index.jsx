@@ -28,7 +28,7 @@ const SignUp = ({ authType, setAuthType }) => {
             회원가입
           </li>
         </ul>
-        {signUpType === 'SignUpSocial' ? (
+        {/* {signUpType === 'SignUpSocial' ? (
           <main>
             <SignUpSocial setSignUpType={setSignUpType} />
           </main>
@@ -38,7 +38,10 @@ const SignUp = ({ authType, setAuthType }) => {
           </main>
         ) : (
           ''
-        )}
+        )} */}
+        <main>
+          <SignUpEmail />
+        </main>
       </div>
     </div>
   );

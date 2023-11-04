@@ -51,13 +51,16 @@ export const MyPageModal_container = styled.article`
       }
     }
     .content {
-      margin-top: 20px;
       > ul {
         li {
           position: relative;
           cursor: pointer;
           padding: 10px 0;
           display: block;
+          > a {
+            color: ${Common.colors.text200};
+            text-decoration: none;
+          }
           &:hover {
             font-weight: bold;
             &:before {

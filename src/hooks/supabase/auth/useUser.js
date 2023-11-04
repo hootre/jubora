@@ -214,6 +214,34 @@ const useCreateUser = () => {
   });
 };
 
+// 어드민 계정에서 회원 권한 수정
+const useUpdateUserRole = () => {
+  const handleUpdateUserRole = async ({ id, role }) => {
+    const { data, error } = await supabase_client
+      .from('profiles')
+      .update({
+        role,
+      })
+      .eq('id', id);
+    return new Promise((resolve, reject) => {
+      if (error) {
+        reject(`유저 정보 수정 오류 :  ${error.message}`);
+      } else {
+        toast.success('수정완료 하였습니다');
+        resolve(data);
+      }
+    });
+  };
+  const client = useQueryClient();
+  const router = useRouter();
+  return useMutation(handleUpdateUserRole, {
+    onSuccess: async () => {
+      router.refresh();
+      await client.invalidateQueries(gatherKeys.current_userList);
+    },
+  });
+};
+
 // 회원 정보 업데이트
 const useUpdateUser = () => {
   const handleUpdateUser = async ({
@@ -344,6 +372,7 @@ export const useUser = () => {
     useGetUserList,
     useGetUserInfo,
     useCreateUser,
+    useUpdateUserRole,
     useUpdateUser,
     useSignIn,
     useSignInGoogle,

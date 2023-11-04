@@ -2,9 +2,9 @@
 import React from 'react';
 import { Question_Write_container } from './styles';
 // Toast UI Editor
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/i18n/ko-kr';
+dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
+const { Editor } = dynamic(() => import('@toast-ui/react-editor'), { ssr: false });
+dynamic(() => import('@toast-ui/editor/dist/i18n/ko-kr'), { ssr: false });
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormControl, MenuItem, Select, TextField } from '@mui/material';
@@ -15,6 +15,7 @@ import { useQuestion } from 'hooks/supabase/question/useQuestion';
 import Link from 'next/link';
 import Question_Read from 'components/home/Center/Question/Question_Read';
 import { useUser } from 'hooks/supabase/auth/useUser';
+import dynamic from 'next/dynamic';
 const Question_Write = () => {
   // 어드민 유저정보 확인
   const { useGetUserInfo } = useUser();

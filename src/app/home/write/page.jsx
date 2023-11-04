@@ -1,4 +1,5 @@
 'use client';
+import { MainLoading } from 'components/Loading/MainLoading';
 import { Write } from 'components/home/Write';
 import { useUser } from 'hooks/supabase/auth/useUser';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ const page = () => {
   const router = useRouter();
 
   if (isLoading) {
-    return <h1>검사중</h1>;
+    return <MainLoading />;
   }
   if (data.id) {
     return <Write name={data.name} />;

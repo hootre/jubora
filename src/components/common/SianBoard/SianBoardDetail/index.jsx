@@ -1,8 +1,8 @@
 import React from 'react';
 import { SianBoardDetail_container } from './style';
 import { DiBrackets } from 'react-icons/di';
-import { Order_Detail } from 'components/home/Order/Order_Detail';
 import { Payments } from 'utils/Payment';
+import { Order_Detail } from 'components/home/Order/Order_detail';
 export const SianBoardDetail = ({ data, userData }) => {
   return (
     <SianBoardDetail_container>

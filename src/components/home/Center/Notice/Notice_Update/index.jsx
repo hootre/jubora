@@ -4,12 +4,13 @@ import { Notice_Update_container } from './styles';
 import { SimpleDate } from 'utils/SimpleDate';
 import { useNotice } from 'hooks/supabase/notice/useNotice';
 // Toast UI Editor
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/i18n/ko-kr';
+dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
+const { Editor } = dynamic(() => import('@toast-ui/react-editor'), { ssr: false });
+dynamic(() => import('@toast-ui/editor/dist/i18n/ko-kr'), { ssr: false });
 import { useFormContext } from 'react-hook-form';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import { Select_Admin_Write } from 'components/admin/Board/Admin_Write_Item/Select_Admin_Write';
+import dynamic from 'next/dynamic';
 
 export const Notice_Update = ({ id }) => {
   // notice 업데이트

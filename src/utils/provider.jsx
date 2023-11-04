@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient, QueryCache } from '@tanstack/react-query';
 import { Toaster, toast } from 'react-hot-toast';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import GlobalStyle from 'styles/globals';
+
 import { AuthModal } from 'components/home/Auth/AuthModal';
 import GoogleAnalytics from 'app/GoogleAnalytics';
+import GlobalStyle from 'styles/Globals';
 
 function Providers({ children }) {
   const [client] = useState(

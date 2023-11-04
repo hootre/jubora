@@ -2,9 +2,9 @@
 import React from 'react';
 import { QnA_Write_container } from './styles';
 // Toast UI Editor
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/i18n/ko-kr';
+dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
+const { Editor } = dynamic(() => import('@toast-ui/react-editor'), { ssr: false });
+dynamic(() => import('@toast-ui/editor/dist/i18n/ko-kr'), { ssr: false });
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormControl, MenuItem, Select, TextField } from '@mui/material';
@@ -13,6 +13,7 @@ import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
 import Link from 'next/link';
 import { useQnA } from 'hooks/supabase/qna/useQnA';
+import dynamic from 'next/dynamic';
 const QnA_Write = ({ name }) => {
   // notice 생성함수
   const { useCreateQnA } = useQnA();

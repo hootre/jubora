@@ -2,9 +2,9 @@
 import React from 'react';
 import { Notice_Write_container } from './styles';
 // Toast UI Editor
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/i18n/ko-kr';
+dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
+const { Editor } = dynamic(() => import('@toast-ui/react-editor'), { ssr: false });
+dynamic(() => import('@toast-ui/editor/dist/i18n/ko-kr'), { ssr: false });
 import { useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { Select_Admin_Write } from '../Admin_Write_Item/Select_Admin_Write';
 import { Title_Admin_Write } from '../Admin_Write_Item/Title_Admin_Write';
 import { useUser } from 'hooks/supabase/auth/useUser';
+import dynamic from 'next/dynamic';
 const Notice_Write = () => {
   // 어드민 유저정보 확인
   const { useGetUserInfo } = useUser();

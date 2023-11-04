@@ -14,20 +14,30 @@ const pretendard = localFont({
   ],
 });
 export const metadata = {
-  title: 'JUBORA',
-  description: 'JUBORA 홈페이지 입니다',
-  generator: 'JUBORA',
-  applicationName: 'JUBORA',
-  referrer: 'origin-when-cross-origin',
-  keywords: ['Next.js', 'React', 'JavaScript'],
-  authors: [{ name: 'Seb' }, { name: 'Josh', url: 'https://nextjs.org' }],
-  colorScheme: 'light',
-  creator: 'Jiachi Liu',
-  publisher: 'Sebastian Markbåge',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
+  title: {
+    template: '%s | JUBORA',
+    default: 'JUBORA',
+  },
+  description: '교회 현수막, 판촉, 전도지 등 교회용품 업체입니다',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f5f5f5' },
+    { media: '(prefers-color-scheme: dark)', color: '#000' },
+  ],
+  openGraph: {
+    title: 'JUBORA',
+    description: '교회 현수막, 판촉, 전도지 등 교회용품 업체입니다',
+    url: 'https://jubora.com',
+    siteName: 'JUBORA',
+    locale: 'ko_kr',
+    type: 'website',
+    images: [
+      {
+        url: `https://maxleiter.com/api/og?title=${encodeURIComponent("Max Leiter's site")}`,
+        width: 1200,
+        height: 630,
+        alt: '',
+      },
+    ],
   },
 };
 

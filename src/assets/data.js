@@ -1,128 +1,77 @@
-export const categoryList = [
-  [0, '현수막/배너'],
-  [1, '포스터/전단'],
-  [2, '명함'],
-  [3, '스티커/포장'],
-  [4, '어깨띠/깃발'],
-  [5, '실사/광고물'],
-  [6, '교회용품'],
+import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import WebIcon from '@mui/icons-material/Web';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import DatasetIcon from '@mui/icons-material/Dataset';
+
+// 주문페이지 기본 셋팅
+export const order_setting_for = [
+  'item_1',
+  'item_2',
+  'item_3',
+  'item_4',
+  'item_5',
+  'item_6',
+  'item_7',
 ];
-export const filterList = [
-  [0, '최신순'],
-  [1, '조회순'],
-  [2, '판매순'],
+
+// 어드민 사용
+export const crudlist = [
+  {
+    icon: <DatasetIcon className="icon orderSetting" />,
+    pathname: 'orderSetting',
+    text: '주문 구성',
+  },
+  { icon: <ViewWeekIcon className="icon templates" />, pathname: 'templates', text: '제품등록' },
+  {
+    icon: <ViewWeekIcon className="icon templates" />,
+    pathname: 'templatesTag',
+    text: '제품 필터목록',
+  },
+  { icon: <WebIcon className="icon main" />, pathname: 'mainSlides', text: '메인 슬라이드' },
+  { icon: <WebIcon className="icon main" />, pathname: 'mainTemplatesCard', text: '메인 상품카드' },
+  {
+    icon: <WebIcon className="icon main" />,
+    pathname: 'mainSettingImage',
+    text: '메인 구성이미지',
+  },
+  { icon: <ContentPasteIcon className="icon board" />, pathname: 'notice', text: '공지사항' },
+  {
+    icon: <ContentPasteIcon className="icon board" />,
+    pathname: 'question',
+    text: '자주묻는 질문',
+  },
+  { icon: <ContentPasteIcon className="icon board" />, pathname: 'sian', text: '시안확인' },
 ];
-export const filterItemList = [
-  { title: '분류', items: ['절기', '예배', '행사'] },
-  { title: '특성', items: ['에이스', '이건', '재밌다'] },
-  { title: '그냥', items: ['우와', '필터', '볼링'] },
-];
-export const slides = [
-  'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F1857626894ca14340ddcf.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-08.jpg?alt=media&token=8f638804-4fd7-4acf-aaec-e004c5360d20',
-  'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F1857625ab044559ac3675.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-07.jpg?alt=media&token=ef3390ff-8b91-4ed4-ab89-3fad6c15b99c',
-  'https://firebasestorage.googleapis.com/v0/b/weenidy-subscribe-prod.appspot.com/o/settings%2Fmain-banner%2F18576203692ea07fba06a.%E1%84%8B%E1%85%B1%E1%84%82%E1%85%B5%E1%84%83%E1%85%B5%20%E1%84%91%E1%85%B5%E1%86%A8_230103-01.jpg?alt=media&token=f0ef1c27-7c9b-4527-9d8d-84c017646e04',
-];
-export const showCaseList = [
+// 헤더 사용
+export const headerNoticeTextList = [
   {
-    id: 1,
-    class: 0,
-    date: '2023-03-30',
-    views: 3,
-    sales: 6,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
+    text: '공지사항',
+    href: '/home/center/notice',
   },
+
   {
-    id: 2,
-    class: 0,
-    date: '2023-01-08',
-    views: 7,
-    sales: 8,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
+    text: '자주 묻는 질문',
+    href: '/home/center/question',
   },
+
   {
-    id: 3,
-    class: 0,
-    date: '2023-01-10',
-    views: 1,
-    sales: 7,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 4,
-    class: 0,
-    date: '2023-03-15',
-    views: 1,
-    sales: 3,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 5,
-    class: 0,
-    date: '2023-03-10',
-    views: 87,
-    sales: 43,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 6,
-    class: 0,
-    date: '2023-02-30',
-    views: 12,
-    sales: 1,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 7,
-    class: 0,
-    date: '2023-03-30',
-    views: 2,
-    sales: 4,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 8,
-    class: 5,
-    date: '2023-03-30',
-    views: 2,
-    sales: 4,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 9,
-    class: 1,
-    date: '2023-03-30',
-    views: 2,
-    sales: 4,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 10,
-    class: 3,
-    date: '2023-03-30',
-    views: 2,
-    sales: 4,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 11,
-    class: 2,
-    date: '2023-03-06',
-    views: 6,
-    sales: 2,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
-  },
-  {
-    id: 12,
-    class: 0,
-    date: '2023-03-30',
-    views: 2,
-    sales: 4,
-    img: 'https://file.miricanvas.com/template_thumb/2023/02/17/14/00/kgfdtetok83rh9rh/thumb.png?size=800',
+    text: 'Q&A',
+    href: '/home/center/qna',
   },
 ];
-export const noticeList = [
-  ['[공지]오류 및 보완 조치사항 안내', 'notice'],
-  ['[공지]리소스 검색 기능 안내', 'notice'],
-  ['[공지]그냥 이렇게 만들어보자', 'notice'],
-  ['[이벤트]오류 및 보완 조치사항 안내', 'event'],
+export const headerMainNavList = [
+  {
+    text: '현수막',
+    pathname: 'banner',
+  },
+
+  {
+    text: '인쇄물',
+    pathname: 'print',
+  },
+
+  {
+    text: '실사',
+    pathname: 'real',
+  },
 ];

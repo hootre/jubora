@@ -1,6 +1,4 @@
-import { OrderSetting_Write } from 'components/admin/Board/OrderSetting_Write';
+import OrderSettingWrite from 'components/admin/Board/OrderSettingWrite';
 
-const page = () => {
-  return <OrderSetting_Write />;
-};
+const page = () => <OrderSettingWrite />;
 export default page;

@@ -1,28 +1,26 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { PaymentModal } from 'components/common/Modal/PaymentModal';
-import { MypageModal } from 'components/common/Modal/MypageModal';
+import MypageModal from 'components/common/Modal/MypageModal';
 import { usePathname } from 'next/navigation';
-import { HeaderSearchInput } from './HeaderSearchInput';
-import { Header_container } from './style.jsx';
 import LibraryAddCheckOutlinedIcon from '@mui/icons-material/LibraryAddCheckOutlined';
 import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
 
-import { useScroll } from 'hooks/custom/useScroll';
-import { useEffect } from 'react';
-import { useUser } from 'hooks/supabase/auth/useUser';
-import { useProductsTag } from 'hooks/supabase/public/useProductsCategory';
+import useScroll from 'hooks/custom/useScroll';
+import User from 'hooks/supabase/auth/useUser';
 import { useTemplatesActions } from 'store';
-import { TextDropdown } from 'components/common/TextDropdown';
-import { useMainSettingImage } from 'hooks/supabase/main/settingImage/useSettingImage';
-import { Skeleton } from '@mui/material';
+import TextDropdown from 'components/common/TextDropdown';
 import { headerMainNavList, headerNoticeTextList } from 'assets/data';
-import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
+import useTemplatesTag from 'hooks/supabase/templatesTag/useTemplatesTag';
+import useMainSettingImage from 'hooks/supabase/main/settingImage/useSettingImage';
+import MainLoading from 'components/Loading/MainLoading';
+import HeaderSearchInput from './HeaderSearchInput';
+import HeaderContainer from './style';
 
-export const Header = () => {
+export default function Header() {
   // user상태관리
-  const { useGetUserInfo, useLogOut } = useUser();
+  const { useGetUserInfo, useLogOut } = User();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   const { mutate } = useLogOut();
   // useTemplatesTag 관리
@@ -30,21 +28,15 @@ export const Header = () => {
   const { data: tag, isLoading: tagLoading } = useGetTemplatesTag();
   // path 관련
   const pathname = usePathname().substring(1).split('/')[1];
-  let navCutLine =
+  const navCutLine =
     pathname === 'banner' ? 0 : pathname === 'print' ? 1 : pathname === 'real' ? 2 : -3;
   // 로그인on상태에서 toggle Nav
-  const [isPayment, setIsPayment] = useState(false);
   const [isMypage, setIsMypage] = useState(false);
-  const toggleIsPayment = () => {
-    setIsMypage(false);
-    setIsPayment((prev) => !prev);
-  };
   const toggleIsMypage = () => {
-    setIsPayment(false);
     setIsMypage((prev) => !prev);
   };
 
-  //Auth Modal 관련
+  // Auth Modal 관련
   // zustand
   const { setAuthState, setTemplateTagList } = useTemplatesActions();
   // scroll event
@@ -60,10 +52,11 @@ export const Header = () => {
   // 해더 이미지 가져오기
   const { useGetMainSettingImage } = useMainSettingImage();
   const { data: MainSettingImageData, isLoading: imageLoading } = useGetMainSettingImage();
-  let logoImage, topImage;
+  let logoImage;
+  let topImage;
 
   if (tagLoading || userLoading || imageLoading) {
-    return;
+    return <MainLoading />;
   }
   MainSettingImageData.map((item) => {
     if (item.position === 'logo') {
@@ -71,20 +64,21 @@ export const Header = () => {
     } else if (item.position === 'top') {
       topImage = item.image;
     }
+    return false;
   });
   return (
-    <Header_container ScrollActive={ScrollActive}>
+    <HeaderContainer ScrollActive={ScrollActive}>
       <div className="prev_site">
         <img src={topImage} alt="topImage" />
       </div>
-      <div className="header C_container">
-        <div className="nav_container">
+      <div className="header CContainer">
+        <div className="navContainer">
           <div className="header_top">
             <Link href="/">
               <img src={logoImage} alt="logo" />
             </Link>
             <HeaderSearchInput />
-            <div className="sub_container">
+            <div className="subContainer">
               <div className="login">
                 <ul>
                   {user?.role === 'admin' && (
@@ -93,33 +87,29 @@ export const Header = () => {
                         <Link href="/admin/dashboard">관리자페이지</Link>
                       </li>
                       <li className="item">
-                        <span></span>
+                        <span />
                       </li>
                     </>
                   )}
                   {user?.id && (
-                    <>
-                      <li className="item">
-                        <a onClick={toggleIsMypage}>마이페이지</a>
-                        {isMypage && (
-                          <MypageModal
-                            user={user}
-                            signOut={mutate}
-                            toggleIsMypage={toggleIsMypage}
-                          />
-                        )}
-                      </li>
-                    </>
+                    <li className="item">
+                      <button type="button" onClick={toggleIsMypage}>
+                        마이페이지
+                      </button>
+                      {isMypage && (
+                        <MypageModal user={user} signOut={mutate} toggleIsMypage={toggleIsMypage} />
+                      )}
+                    </li>
                   )}
                   {!user?.id && (
-                    <>
-                      <li className="item">
-                        <a onClick={setAuthState}>로그인/회원가입</a>
-                      </li>
-                    </>
+                    <li className="item">
+                      <button type="button" onClick={setAuthState}>
+                        로그인/회원가입
+                      </button>
+                    </li>
                   )}
                   <li className="item">
-                    <span></span>
+                    <span />
                   </li>
                   <li className="item">
                     <TextDropdown title="고객센터" dropdownText={headerNoticeTextList} />
@@ -127,9 +117,9 @@ export const Header = () => {
                 </ul>
               </div>
             </div>
-            <div className="full_line"></div>
+            <div className="full_line" />
           </div>
-          {ScrollActive && <div className="temp_nav"></div>}
+          {ScrollActive && <div className="temp_nav" />}
           <div className="nav_box">
             <div>
               <ul className="nav">
@@ -146,25 +136,26 @@ export const Header = () => {
                 <div
                   className={navCutLine >= 0 ? 'lineBox ' : 'lineBox non'}
                   style={{ left: `${navCutLine * 160}px` }}
-                ></div>
+                />
 
-                {/*메뉴 출력  */}
-                <div className="drop_down_container">
+                {/* 메뉴 출력  */}
+                <div className="drop_downContainer">
                   <div className="nav_item menu_benner">
                     {tag
-                      .filter((item) => item.from_nav === 'banner')
+                      .filter((item) => item.fromNav === 'banner')
                       .map((item) => (
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
                             {item.tagList.list.map((text) => (
                               <li
+                                role="presentation"
                                 key={text}
                                 onClick={() => {
                                   setTemplateTagList(text);
                                 }}
                               >
-                                <Link href={'/home/templates/banner'}>{text}</Link>
+                                <Link href="/home/templates/banner">{text}</Link>
                               </li>
                             ))}
                           </ul>
@@ -174,19 +165,20 @@ export const Header = () => {
 
                   <div className="nav_item menu_print">
                     {tag
-                      .filter((item) => item.from_nav === 'print')
+                      .filter((item) => item.fromNav === 'print')
                       .map((item) => (
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
                             {item.tagList.list.map((text) => (
                               <li
+                                role="presentation"
                                 key={text}
                                 onClick={() => {
                                   setTemplateTagList(text);
                                 }}
                               >
-                                <Link href={'/home/templates/print'}>{text}</Link>
+                                <Link href="/home/templates/print">{text}</Link>
                               </li>
                             ))}
                           </ul>
@@ -196,19 +188,20 @@ export const Header = () => {
 
                   <div className="nav_item menu_real">
                     {tag
-                      .filter((item) => item.from_nav === 'real')
+                      .filter((item) => item.fromNav === 'real')
                       .map((item) => (
                         <div key={item.id} className="nav_menu_item">
                           <h1>{item.title}</h1>
                           <ul>
                             {item.tagList.list.map((text) => (
                               <li
+                                role="presentation"
                                 key={text}
                                 onClick={() => {
                                   setTemplateTagList(text);
                                 }}
                               >
-                                <Link href={'/home/templates/real'}>{text}</Link>
+                                <Link href="/home/templates/real">{text}</Link>
                               </li>
                             ))}
                           </ul>
@@ -235,6 +228,6 @@ export const Header = () => {
           </div>
         </div>
       </div>
-    </Header_container>
+    </HeaderContainer>
   );
-};
+}

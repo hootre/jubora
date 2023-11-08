@@ -1,24 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { order_setting_for } from 'assets/data';
-import supabase_client from 'lib/supabase_client';
+import { orderSettingFor } from 'assets/data';
+import supabaseClient from 'lib/supabaseClient';
 import { cloneDeep } from 'lodash';
 import { toast } from 'react-hot-toast';
-import { gatherKeys } from 'utils/gatherKeys';
-import { cloudFolderList } from 'utils/imageUpload/cloudFolderList';
+import gatherKeys from 'utils/gatherKeys';
+import cloudFolderList from 'utils/imageUpload/cloudFolderList';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 
 // 특정 type 제품 상세
-const useGetOnlyOrderSetting = (category_name) => {
+const useGetOnlyOrderSetting = (categoryName) => {
   const handleGetOnlyOrderSetting = async () => {
-    const { data, error } = await supabase_client
+    const { data, error } = await supabaseClient
       .from('orderSetting')
       .select('*')
-      .eq('category_name', category_name)
+      .eq('categoryName', categoryName)
       .single();
 
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`OrderSetting single 가져오기 오류 :  ${error.message}`);
+        reject(new Error(`OrderSetting single 가져오기 오류 :  ${error.message}`));
       } else {
         resolve(data);
       }
@@ -27,7 +27,7 @@ const useGetOnlyOrderSetting = (category_name) => {
   return useQuery(
     [
       `OrderSetting_
-  ${category_name}`,
+  ${categoryName}`,
     ],
     handleGetOnlyOrderSetting
   );
@@ -35,10 +35,10 @@ const useGetOnlyOrderSetting = (category_name) => {
 // 원하는 항목 불러오기
 const useGetWantOrderSetting = (wantList) => {
   const handleGetWantOrderSetting = async () => {
-    const { data, error } = await supabase_client.from('orderSetting').select(wantList.join());
+    const { data, error } = await supabaseClient.from('orderSetting').select(wantList.join());
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`원하는 항목 불러오기 오류 :  ${error.message}`);
+        reject(new Error(`원하는 항목 불러오기 오류 :  ${error.message}`));
       } else {
         resolve(data);
       }
@@ -49,29 +49,31 @@ const useGetWantOrderSetting = (wantList) => {
 
 // ORDER 생성
 const useCreateOrderSetting = () => {
-  const handleCreateOrderSetting = async (orderSetting_data) => {
-    order_setting_for.map((itemName) => {
-      if (orderSetting_data[itemName].preview.length > 0) {
-        orderSetting_data[itemName].preview.map(async (image, idx) => {
-          const { url, public_id } = await uploadImage(image, cloudFolderList.board);
-          orderSetting_data[itemName].preview[idx] = { url: url, public_id: public_id };
+  const handleCreateOrderSetting = async (orderSettingData) => {
+    const cloneData = cloneDeep(orderSettingData);
+    orderSettingFor.map((itemName) => {
+      if (cloneData[itemName].preview.length > 0) {
+        cloneData[itemName].preview.map(async (image, idx) => {
+          const { url, publicId } = await uploadImage(image, cloudFolderList.board);
+          cloneData[itemName].preview[idx] = { url, publicId };
         });
       }
+      return false;
     });
-    const { data, error } = await supabase_client.from('orderSetting').insert({
-      category_name: orderSetting_data.category_name,
-      item_1: orderSetting_data.item_1,
-      item_2: orderSetting_data.item_2,
-      item_3: orderSetting_data.item_3,
-      item_4: orderSetting_data.item_4,
-      item_5: orderSetting_data.item_5,
-      item_6: orderSetting_data.item_6,
-      item_7: orderSetting_data.item_7,
+    const { data, error } = await supabaseClient.from('orderSetting').insert({
+      categoryName: cloneData.categoryName,
+      item1: cloneData.item1,
+      item2: cloneData.item2,
+      item3: cloneData.item3,
+      item4: cloneData.item4,
+      item5: cloneData.item5,
+      item6: cloneData.item6,
+      item7: cloneData.item7,
     });
 
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`Order Setting 생성 오류 :  ${error.message}`);
+        reject(new Error(`Order Setting 생성 오류 :  ${error.message}`));
       } else {
         toast.success('성공적으로 생성하였습니다');
         resolve(data);
@@ -89,10 +91,10 @@ const useCreateOrderSetting = () => {
 // ORDER 목록
 const useGetOrderSetting = () => {
   const handleGetOrderSetting = async () => {
-    const { data, error } = await supabase_client.from('orderSetting').select('*');
+    const { data, error } = await supabaseClient.from('orderSetting').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`Order Setting 불러오기 오류 :  ${error.message}`);
+        reject(new Error(`Order Setting 불러오기 오류 :  ${error.message}`));
       } else {
         resolve(data);
       }
@@ -102,77 +104,67 @@ const useGetOrderSetting = () => {
 };
 // ORDER 수정
 const useUpdateOrderSetting = () => {
-  const handleUpdateOrderSetting = async (orderSetting_data) => {
-    let await_images = [];
-    let upload_images = [];
-    const resultData = cloneDeep(orderSetting_data);
-    if (typeof resultData.id !== 'number') {
-      return;
-    }
-    if (resultData.delete_images?.length > 0) {
-      resultData.delete_images.map((image) => {
-        deleteImage(image);
-      });
+  const handleUpdateOrderSetting = async (orderSettingData) => {
+    const awaitImages = [];
+    const uploadImages = [];
+    const cloneData = cloneDeep(orderSettingData);
+    if (cloneData.delete_images?.length > 0) {
+      cloneData.delete_images.map((image) => deleteImage(image));
     }
     await new Promise((resolve, reject) => {
       try {
-        order_setting_for.map((itemName, idx) => {
-          if (resultData[itemName]) {
-            resultData[itemName].preview.map(async (item, idx) => {
+        orderSettingFor.map((itemName) => {
+          if (cloneData[itemName]) {
+            cloneData[itemName].preview.map(async (item, idx) => {
               if (typeof item.image === 'object') {
-                upload_images.push(idx);
+                uploadImages.push(idx);
               }
               if (typeof item.image === 'object') {
-                if (typeof item.public_id === 'string') {
-                  deleteImage(item.public_id);
+                if (typeof item.publicId === 'string') {
+                  deleteImage(item.publicId);
                 }
-                const { url, public_id } = await uploadImage(item.image, cloudFolderList.board);
-                resultData[itemName].preview[idx].image = url;
-                resultData[itemName].preview[idx].public_id = public_id;
-                await_images.push(public_id);
+                const { url, publicId } = await uploadImage(item.image, cloudFolderList.board);
+                cloneData[itemName].preview[idx].image = url;
+                cloneData[itemName].preview[idx].publicId = publicId;
+                awaitImages.push(publicId);
               }
             });
           }
+          return false;
         });
-        let timer = setInterval(() => {
-          if (upload_images.length === await_images.length) {
+        const timer = setInterval(() => {
+          if (uploadImages.length === awaitImages.length) {
             clearInterval(timer);
             resolve('완료!');
           }
         }, 100);
       } catch (e) {
-        let timer = setInterval(() => {
-          if (upload_images.length === await_images.length) {
-            await_images.map((public_id) => {
-              deleteImage(public_id);
-            });
+        const timer = setInterval(() => {
+          if (uploadImages.length === awaitImages.length) {
+            awaitImages.map((publicId) => deleteImage(publicId));
             clearInterval(timer);
-            reject(`오류 : ${e.message}`);
+            reject(new Error(`오류 : ${e.message}`));
           }
         }, 100);
       }
     });
 
-    const { data, error } = await supabase_client
+    const { data, error } = await supabaseClient
       .from('orderSetting')
       .update({
-        item_1: resultData['item_1'],
-        item_2: resultData['item_2'],
-        item_3: resultData['item_3'],
-        item_4: resultData['item_4'],
-        item_5: resultData['item_5'],
-        item_6: resultData['item_6'],
-        item_7: resultData['item_7'],
+        item1: cloneData.item1,
+        item2: cloneData.item2,
+        item3: cloneData.item3,
+        item4: cloneData.item4,
+        item5: cloneData.item5,
+        item6: cloneData.item6,
+        item7: cloneData.item7,
       })
-      .eq('id', resultData.id);
+      .eq('id', cloneData.id);
     return new Promise((resolve, reject) => {
       if (error) {
-        await_images.map((public_id) => {
-          deleteImage(public_id);
-        });
-        reject(`Order Setting 수정 오류 :  ${error.message}`);
+        reject(new Error(`Order Setting 불러오기 오류 :  ${error.message}`));
       } else {
-        toast.success('성공적으로 수정하였습니다');
         resolve(data);
       }
     });
@@ -186,12 +178,12 @@ const useUpdateOrderSetting = () => {
   });
 };
 
-export const useOrderSetting = () => {
-  return {
-    useGetOnlyOrderSetting,
-    useGetWantOrderSetting,
-    useCreateOrderSetting,
-    useGetOrderSetting,
-    useUpdateOrderSetting,
-  };
-};
+const useOrderSetting = () => ({
+  useGetOnlyOrderSetting,
+  useGetWantOrderSetting,
+  useCreateOrderSetting,
+  useGetOrderSetting,
+  useUpdateOrderSetting,
+});
+
+export default useOrderSetting;

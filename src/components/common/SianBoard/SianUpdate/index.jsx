@@ -1,12 +1,15 @@
-import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
-import { SianUpdate_container } from './style';
 import { useForm } from 'react-hook-form';
-import { useSian } from 'hooks/supabase/sian/useSian';
+import useSian from 'hooks/supabase/sian/useSian';
+import toast from 'react-hot-toast';
+import SianUpdateContainer from './style';
 
-export const SianUpdate = ({ data, index, expand, role, disabled }) => {
-  console.log(disabled);
+export default function SianUpdate({ data, index, expand, role, disabled }) {
+  // react hooks form
+  const { register, setValue, handleSubmit, watch, reset } = useForm();
+  const [isUploading, setIsUploading] = useState(false);
   // sian 관련
   const { useUpdateSian } = useSian();
   const { mutate: updateSian } = useUpdateSian();
@@ -15,10 +18,10 @@ export const SianUpdate = ({ data, index, expand, role, disabled }) => {
   const onChangeImage = (e) => {
     e.preventDefault();
     const image = e.target.files[0];
-    setValue(`main_img`, image);
-    if (typeof image !== 'string' > 0) {
+    setValue(`mainImg`, image);
+    if (typeof image !== 'string') {
       if (image.size > 10485760) {
-        setValue(`main_img`, '');
+        setValue(`mainImg`, '');
         toast.error('이미지 사이즈가 10mb보다 큽니다');
       } else {
         setValue(`image_preview`, URL.createObjectURL(image));
@@ -31,52 +34,49 @@ export const SianUpdate = ({ data, index, expand, role, disabled }) => {
   useEffect(() => {
     if (data.id) {
       setValue('id', data.id);
-      setValue(`main_img`, data.main_img);
-      setValue(`image_preview`, data.main_img);
+      setValue(`mainImg`, data.mainImg);
+      setValue(`image_preview`, data.mainImg);
     }
   }, []);
-  const [isUploading, setIsUploading] = useState(false);
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     setIsUploading(true);
-    updateSian(data, {
+    updateSian(formData, {
       onSettled: () => {
         setIsUploading(false);
         reset();
       },
     });
   };
-  // react hooks form
-  const { register, setValue, handleSubmit, watch } = useForm();
   return (
-    <SianUpdate_container>
+    <SianUpdateContainer>
       <Accordion expanded={expanded} onChange={handleChange()}>
         <AccordionSummary
           expandIcon={<FiChevronDown />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <h1>{`시안_${index + 1} ${data.user_text ? '(고객요청 등록완료)' : ''}`}</h1>
+          <h1>{`시안_${index + 1} ${data.userText ? '(고객요청 등록완료)' : ''}`}</h1>
         </AccordionSummary>
         <AccordionDetails>
           <form className="sian_modify_box">
             {watch(`image_preview`) ? (
-              <div className="skeleton_main_img">
+              <div className="skeleton_mainImg">
                 <img src={watch(`image_preview`)} className="main_image" alt="" />
               </div>
             ) : (
-              <div className="skeleton_main_img">
+              <div className="skeleton_mainImg">
                 <h2>이미지를 등록해주세요</h2>
               </div>
             )}
             <div className="modify_box">
               <div className="sell_text">
                 <h2>판매자 전달사항</h2>
-                {data.admin_text ? (
-                  <pre>{data.admin_text}</pre>
+                {data.adminText ? (
+                  <pre>{data.adminText}</pre>
                 ) : (
                   <textarea
-                    placeholder={'전달사항을 입력해주세요'}
-                    {...register('admin_text')}
+                    placeholder="전달사항을 입력해주세요"
+                    {...register('adminText')}
                     disabled={disabled}
                   />
                 )}
@@ -84,13 +84,13 @@ export const SianUpdate = ({ data, index, expand, role, disabled }) => {
               <div className="modify_text">
                 <h2>구매자 수정요청</h2>
                 <div className="textarea_box">
-                  {data.user_text ? (
-                    <pre>{data.user_text}</pre>
+                  {data.userText ? (
+                    <pre>{data.userText}</pre>
                   ) : (
                     <textarea
-                      disabled={!data.admin_text || disabled}
+                      disabled={!data.adminText || disabled}
                       placeholder="시안을 보시고 수정사항을 적어주세요"
-                      {...register('user_text')}
+                      {...register('userText')}
                     />
                   )}
                 </div>
@@ -110,12 +110,17 @@ export const SianUpdate = ({ data, index, expand, role, disabled }) => {
                     />
                   </div>
                 ) : (
-                  <div></div>
+                  <div />
                 )}
                 {!disabled && (
-                  <div className="sian_btn" disabled={isUploading} onClick={handleSubmit(onSubmit)}>
+                  <button
+                    type="button"
+                    className="sian_btn"
+                    disabled={isUploading}
+                    onClick={handleSubmit(onSubmit)}
+                  >
                     {isUploading ? '업로드중...' : '등록하기'}
-                  </div>
+                  </button>
                 )}
               </div>
               <div className="caution_text">
@@ -134,6 +139,6 @@ export const SianUpdate = ({ data, index, expand, role, disabled }) => {
           </form>
         </AccordionDetails>
       </Accordion>
-    </SianUpdate_container>
+    </SianUpdateContainer>
   );
-};
+}

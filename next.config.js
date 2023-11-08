@@ -1,4 +1,5 @@
 const path = require('path');
+
 const nextConfig = {
   swcMinify: true,
   reactStrictMode: false,

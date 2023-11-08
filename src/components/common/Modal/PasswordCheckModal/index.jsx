@@ -1,24 +1,19 @@
 'use client';
-import React from 'react';
-import { PasswordCheck_container } from './style';
+
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { useBoardPasswordCheck } from 'hooks/custom/usePasswordCheck';
-import { useEffect } from 'react';
+import BoardPasswordCheck from 'hooks/custom/usePasswordCheck';
+import PasswordCheckContainer from './style';
 
-export const PasswordCheckModal = ({ table }) => {
+export default function PasswordCheckModal({ table }) {
   // form 데이터 관리
-  const {
-    handleSubmit,
-    formState: {},
-    register,
-    setFocus,
-  } = useForm();
+  const { handleSubmit, register, setFocus } = useForm();
   const router = useRouter();
   const pathName = usePathname();
   const onSubmit = async ({ name, password }) => {
-    const data = await useBoardPasswordCheck(table, name, password);
+    const data = await BoardPasswordCheck(table, name, password);
     if (data?.id) {
       router.push(`${pathName}/${data.id}`);
     } else {
@@ -29,7 +24,7 @@ export const PasswordCheckModal = ({ table }) => {
     setFocus('name');
   }, [setFocus]);
   return (
-    <PasswordCheck_container>
+    <PasswordCheckContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1>이름 / 비밀번호 입력</h1>
         <div className="input_box">
@@ -40,9 +35,11 @@ export const PasswordCheckModal = ({ table }) => {
             maxLength={4}
             {...register('password')}
           />
-          <button className="C_basic_button">확인</button>
+          <button type="button" className="C_basic_button">
+            확인
+          </button>
         </div>
       </form>
-    </PasswordCheck_container>
+    </PasswordCheckContainer>
   );
-};
+}

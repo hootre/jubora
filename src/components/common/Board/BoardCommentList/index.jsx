@@ -1,40 +1,41 @@
 import React from 'react';
-import { BoardCommentList_container } from './style';
-import { useComment } from 'hooks/supabase/comment/useComment';
-import { SimpleDate } from 'utils/SimpleDate';
-import { useUser } from 'hooks/supabase/auth/useUser';
+import useComment from 'hooks/supabase/comment/useComment';
+import simpleDate from 'utils/simpleDate';
+import User from 'hooks/supabase/auth/useUser';
 import { BiX } from 'react-icons/bi';
+import BoardCommentListContainer from './style';
 
-export const BoardCommentList = ({ from_table, from_table_id }) => {
+export default function BoardCommentList({ fromTable, fromTableId }) {
   // user상태관리
-  const { useGetUserInfo } = useUser();
+  const { useGetUserInfo } = User();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   // 댓글 목록
   const { useGetComment, useDeleteComment } = useComment();
   const { mutate: deleteComment } = useDeleteComment();
-  const { data, isLoading } = useGetComment(from_table, from_table_id);
+  const { data, isLoading } = useGetComment(fromTable, fromTableId);
   if (isLoading || userLoading) {
     return <h1>Loading</h1>;
   }
   return (
-    <BoardCommentList_container>
+    <BoardCommentListContainer>
       {data?.map((item) => (
         <li key={item.id}>
           <div className="comment_header">
             <span className="name">{item.writer}</span>
-            <span className="date">{SimpleDate(item.created_at, 'm')}</span>
+            <span className="date">{simpleDate(item.createdAt, 'm')}</span>
           </div>
           <span className="contents">{item.contents}</span>
           {(user.name === item.writer || user.role === 'admin') && (
-            <div
+            <button
+              type="button"
               className="delete_btn"
-              onClick={() => deleteComment({ id: item.id, from_table_id })}
+              onClick={() => deleteComment({ id: item.id, fromTableId })}
             >
               <BiX />
-            </div>
+            </button>
           )}
         </li>
       ))}
-    </BoardCommentList_container>
+    </BoardCommentListContainer>
   );
-};
+}

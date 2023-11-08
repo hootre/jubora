@@ -1,11 +1,12 @@
 'use client';
-import { BoardCommentInput } from 'components/common/Board/BoardCommentInput';
-import { BoardCommentList } from 'components/common/Board/BoardCommentList';
-import { BoardDetail } from 'components/common/Board/BoardDetail';
-import { useOrder } from 'hooks/supabase/order/useOrder';
+
+import BoardCommentInput from 'components/common/Board/BoardCommentInput';
+import BoardCommentList from 'components/common/Board/BoardCommentList';
+import BoardDetail from 'components/common/Board/BoardDetail';
+import useOrder from 'hooks/supabase/order/useOrder';
 import React from 'react';
 
-const order_detail = ({ params: { id } }) => {
+const page = ({ params: { id } }) => {
   const { useGetOnlyOrder } = useOrder();
   const { data, isLoading } = useGetOnlyOrder(id);
   if (isLoading) {
@@ -14,9 +15,9 @@ const order_detail = ({ params: { id } }) => {
   return (
     <>
       <BoardDetail data={data} />
-      <BoardCommentList from_table={'order'} from_table_id={id} />
-      <BoardCommentInput from_table={'order'} from_table_id={id} writer={data.name} />
+      <BoardCommentList fromTable="order" fromTableId={id} />
+      <BoardCommentInput fromTable="order" fromTableId={id} writer={data.name} />
     </>
   );
 };
-export default order_detail;
+export default page;

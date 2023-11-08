@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const PaymentListItem_container = styled.div`
+const PaymentListItemContainer = styled.div`
   display: flex;
   justify-content: center;
 
@@ -100,3 +100,4 @@ export const PaymentListItem_container = styled.div`
     }
   }
 `;
+export default PaymentListItemContainer;

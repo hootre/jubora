@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
 
-export const Payments_container = styled.div`
+const PaymentsContainer = styled.div`
   display: flex;
   align-items: center;
 
   gap: 10px;
-  > div {
+  > button {
     width: 100px;
     height: 50px;
     display: flex;
@@ -24,3 +23,4 @@ export const Payments_container = styled.div`
     }
   }
 `;
+export default PaymentsContainer;

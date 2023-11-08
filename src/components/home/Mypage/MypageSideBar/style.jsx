@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const MypageSideBar_container = styled.div`
+const MypageSideBarContainer = styled.div`
   flex: 0 0 120px;
   margin-right: 20px;
   .nav_box {
@@ -68,3 +68,4 @@ export const MypageSideBar_container = styled.div`
     }
   }
 `;
+export default MypageSideBarContainer;

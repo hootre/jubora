@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
-import { Option_container } from './style';
-export const Option = () => {
+import OptionContainer from './style';
+
+export default function Option() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleIsOpen = () => {
     setIsOpen((prev) => !prev);
   };
   return (
-    <Option_container>
+    <OptionContainer>
       <div className="option_box">
-        <div className={isOpen ? 'open option_title' : 'option_title'} onClick={toggleIsOpen}>
+        <button
+          type="button"
+          className={isOpen ? 'open option_title' : 'option_title'}
+          onClick={toggleIsOpen}
+        >
           <span>열재단</span>
           <AiFillCaretDown className="icon" />
           <div className="open_content">
@@ -32,8 +37,8 @@ export const Option = () => {
               </li>
             </ul>
           </div>
-        </div>
+        </button>
       </div>
-    </Option_container>
+    </OptionContainer>
   );
-};
+}

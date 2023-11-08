@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Footer_container = styled.footer`
+const FooterContainer = styled.footer`
   position: absolute;
   width: 100%;
   height: 200px;
@@ -66,3 +66,4 @@ export const Footer_container = styled.footer`
     }
   }
 `;
+export default FooterContainer;

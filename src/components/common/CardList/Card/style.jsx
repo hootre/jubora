@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Card_container = styled.div`
+const CardContainer = styled.div`
   margin: 0 auto;
   img {
     width: 500px;
@@ -23,3 +23,4 @@ export const Card_container = styled.div`
     color: ${Common.colors.text300};
   }
 `;
+export default CardContainer;

@@ -1,9 +1,9 @@
 import React from 'react';
-import { BoardCardHeader_container } from './style';
+import BoardCardHeaderContainer from './style';
 
-export const BoardCardHeader = ({ boardHeaderText }) => {
+export default function BoardCardHeader() {
   return (
-    <BoardCardHeader_container>
+    <BoardCardHeaderContainer>
       <div>
         <span className="id">번호</span>
         <span className="state">상태</span>
@@ -11,6 +11,6 @@ export const BoardCardHeader = ({ boardHeaderText }) => {
         <span className="name">작성자</span>
         <span className="date">날짜</span>
       </div>
-    </BoardCardHeader_container>
+    </BoardCardHeaderContainer>
   );
-};
+}

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Accordion_container = styled.div`
+const AccordionContainer = styled.div`
   .main {
+    width: 100%;
     &:hover,
     &.active {
       background: ${Common.colors.bg300};
@@ -19,3 +20,4 @@ export const Accordion_container = styled.div`
     }
   }
 `;
+export default AccordionContainer;

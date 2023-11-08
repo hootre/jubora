@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { BoardSmallCard_container } from './style';
-import { SimpleDate } from 'utils/SimpleDate';
+import simpleDate from 'utils/simpleDate';
+import BoardSmallCardContainer from './style';
 
-export const BoardSmallCard = ({ title, subTitle, created_at }) => {
+export default function BoardSmallCard({ title, subTitle, createdAt }) {
   return (
-    <BoardSmallCard_container>
+    <BoardSmallCardContainer>
       <div className="main_text">
         <h1 className="C_ellipsis">{title}</h1>
         <h2 className="C_ellipsis">{subTitle}</h2>
       </div>
-      <span className="date">{SimpleDate(created_at, 'y')}</span>
-    </BoardSmallCard_container>
+      <span className="date">{simpleDate(createdAt, 'y')}</span>
+    </BoardSmallCardContainer>
   );
-};
+}

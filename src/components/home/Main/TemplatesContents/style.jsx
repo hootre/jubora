@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const TemplatesContents_container = styled.section`
+const TemplatesContentsContainer = styled.section`
   position: relative;
   margin: 100px auto;
   transition: all 0.2s;
@@ -57,3 +57,4 @@ export const TemplatesContents_container = styled.section`
     }
   }
 `;
+export default TemplatesContentsContainer;

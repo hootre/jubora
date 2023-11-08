@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Option_container = styled.div`
+const OptionContainer = styled.div`
   display: flex;
   -webkit-box-align: baseline;
   align-items: baseline;
@@ -86,3 +86,4 @@ export const Option_container = styled.div`
     }
   }
 `;
+export default OptionContainer;

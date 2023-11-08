@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
-import { useUser } from 'hooks/supabase/auth/useUser.js';
+import User from 'hooks/supabase/auth/useUser';
 
-const SignUpSocial = ({ setSignUpType }) => {
-  //auth
-  const { useSignInGoogle } = useUser();
+function SignUpSocial({ setSignUpType }) {
+  // auth
+  const { useSignInGoogle } = User();
   const { mutate: googleLogin } = useSignInGoogle();
   return (
     <main>
@@ -85,6 +84,6 @@ const SignUpSocial = ({ setSignUpType }) => {
       </div>
     </main>
   );
-};
+}
 
 export default SignUpSocial;

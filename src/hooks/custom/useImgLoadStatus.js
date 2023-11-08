@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
  * @param ref load 상태를 파악하고자 하는 대상
  * @returns 이미지 load 상태
  */
-export function useImgLoadStatus(ref) {
+function useImgLoadStatus(ref) {
   const [isImgLoaded, setIsImgLoaded] = useState(false);
 
   // ref가 아닌 src를 dependency로 가진다.
@@ -31,3 +31,5 @@ export function useImgLoadStatus(ref) {
 
   return isImgLoaded;
 }
+
+export default useImgLoadStatus;

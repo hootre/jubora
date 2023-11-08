@@ -1,20 +1,19 @@
-import React from 'react';
-import { Dashboard_container } from './styles';
-import { SmallCard } from './SmallCard';
-import { Read_Mainslides } from '../Read/Read_Mainslides';
-import { Read_MainslidesList } from '../Read/Read_MainslidesList';
 import { RiMoneyEuroBoxLine, RiLogoutBoxRLine, RiStackLine, RiUserAddLine } from 'react-icons/ri';
-import { Read_userList } from '../Read/Read_userList';
-import { DashboardFrame } from './DashboardFrame';
-import { useUser } from 'hooks/supabase/auth/useUser';
-import Read_OrderList from '../Read/Read_OrderList';
-import { usePayment } from 'hooks/supabase/payment/usePayment';
-import { MainLoading } from 'components/Loading/MainLoading';
+import User from 'hooks/supabase/auth/useUser';
+import usePayment from 'hooks/supabase/payment/usePayment';
+import MainLoading from 'components/Loading/MainLoading';
+import DashboardContainer from './styles';
+import SmallCard from './SmallCard';
+import ReadMainslides from '../Read/ReadMainslides';
+import ReadMainslidesList from '../Read/ReadMainslidesList';
+import DashboardFrame from './DashboardFrame';
+import ReadOrderList from '../Read/ReadOrderList';
+import ReadUserList from '../Read/ReadUserList';
 
-export const Dashboard = () => {
-  //유저 데이터
-  const { useGetUserList } = useUser();
-  const { data: userList, isLoading: userLoading } = useGetUserList();
+export default function Dashboard() {
+  // 유저 데이터
+  const { GetUserList } = User();
+  const { data: userList, isLoading: userLoading } = GetUserList();
   // 주문 건수
   const { useGetPayment } = usePayment();
   const { data: payList, isLoading: payLoading } = useGetPayment();
@@ -22,7 +21,7 @@ export const Dashboard = () => {
     return <MainLoading />;
   }
   return (
-    <Dashboard_container>
+    <DashboardContainer>
       <section>
         <SmallCard
           title="매출 건수"
@@ -41,21 +40,21 @@ export const Dashboard = () => {
       </section>
       <section>
         <DashboardFrame title="메인 슬라이드" flexSize={3}>
-          <Read_Mainslides view />
+          <ReadMainslides view />
         </DashboardFrame>
 
         <DashboardFrame title="슬라이드 목록" flexSize={1}>
-          <Read_MainslidesList />
+          <ReadMainslidesList />
         </DashboardFrame>
       </section>
       <section>
         <DashboardFrame title="시안확인 목록" flexSize={3}>
-          <Read_OrderList />
+          <ReadOrderList />
         </DashboardFrame>
         <DashboardFrame title="사용자 목록" flexSize={1}>
-          <Read_userList />
+          <ReadUserList />
         </DashboardFrame>
       </section>
-    </Dashboard_container>
+    </DashboardContainer>
   );
-};
+}

@@ -1,6 +1,4 @@
-import { MainTemplatesCard_Write } from 'components/admin/Board/MainTemplatesCard_Write';
+import MainTemplatesCardWrite from 'components/admin/Board/MainTemplatesCardWrite';
 
-const page = () => {
-  return <MainTemplatesCard_Write />;
-};
+const page = () => <MainTemplatesCardWrite />;
 export default page;

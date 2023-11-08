@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const AdminUserPage_container = styled.div`
+const AdminUserPageContainer = styled.div`
   flex: 1;
   padding: 50px;
   .top_box {
@@ -10,7 +10,7 @@ export const AdminUserPage_container = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-    .search_container {
+    .searchContainer {
       display: flex;
       align-items: center;
       .title {
@@ -145,3 +145,5 @@ export const AdminUserPage_container = styled.div`
     }
   }
 `;
+
+export default AdminUserPageContainer;

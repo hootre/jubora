@@ -1,8 +1,6 @@
 'use client';
 
-import { Dashboard } from 'components/admin/Dashboard';
+import Dashboard from 'components/admin/Dashboard';
 
-const page = () => {
-  return <Dashboard />;
-};
+const page = () => <Dashboard />;
 export default page;

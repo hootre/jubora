@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
 
-export const PasswordConfirm_container = styled.section`
+const PasswordConfirmContainer = styled.section`
   display: flex;
 `;
+export default PasswordConfirmContainer;

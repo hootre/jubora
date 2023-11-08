@@ -1,12 +1,13 @@
 'use client';
-import React from 'react';
+
+import React, { useState } from 'react';
 import { GoSearch } from 'react-icons/go';
 import { useTemplatesActions } from 'store';
-import { useState } from 'react';
-import { v4 } from 'uuid';
+
 import { toast } from 'react-hot-toast';
-import { Search_input_box } from './style.jsx';
-export const SearchInput = () => {
+import SearchInputContainer from './style';
+
+export default function SearchInput() {
   const [text, setText] = useState('');
   // zustand
   const { setTemplateSearchText, setToggleTemplateTagList } = useTemplatesActions();
@@ -40,7 +41,7 @@ export const SearchInput = () => {
     setText(e.target.value);
   };
   return (
-    <Search_input_box>
+    <SearchInputContainer>
       <div className="search_input">
         <GoSearch className="icon" />
         <input
@@ -50,10 +51,10 @@ export const SearchInput = () => {
           onKeyDown={handleKeyDownEnter}
           onChange={handleSearchInput}
         />
-        <button className="submit" onClick={handleSubmit}>
+        <button type="button" className="submit" onClick={handleSubmit}>
           검색
         </button>
       </div>
-    </Search_input_box>
+    </SearchInputContainer>
   );
-};
+}

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SianBoardDetail_container = styled.div`
+const SianBoardDetailContainer = styled.div`
   section {
     margin: 30px 0;
     display: flex;
@@ -72,3 +72,4 @@ export const SianBoardDetail_container = styled.div`
     }
   }
 `;
+export default SianBoardDetailContainer;

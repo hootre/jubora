@@ -1,8 +1,8 @@
 import { Backdrop, Box, Fade, Modal } from '@mui/material';
 import React from 'react';
-import { Modal_container } from './style';
+import ModalContainer from './style';
 
-export const BasicModal = ({ state, onClose, children }) => {
+export default function BasicModal({ state, onClose, children }) {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -19,9 +19,9 @@ export const BasicModal = ({ state, onClose, children }) => {
     >
       <Fade in={state}>
         <Box>
-          <Modal_container width={1280}>{children}</Modal_container>
+          <ModalContainer width={1280}>{children}</ModalContainer>
         </Box>
       </Fade>
     </Modal>
   );
-};
+}

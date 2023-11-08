@@ -1,12 +1,10 @@
-import React from 'react';
-import { QuickBar_container } from './style';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { useTemplatesActions } from 'store';
-import { useScroll } from 'hooks/custom/useScroll';
+import React, { useState, useEffect } from 'react';
 
-export const QuickBar = () => {
+import { usePathname } from 'next/navigation';
+import useScroll from 'hooks/custom/useScroll';
+import QuickBarContainer from './style';
+
+export default function QuickBar() {
   // path 이름
   const pathName = usePathname().substring(1).split('/')[0];
   // scroll event
@@ -20,7 +18,7 @@ export const QuickBar = () => {
     }
   }, [scrollY]);
   return (
-    <QuickBar_container ScrollActive={ScrollActive}>
+    <QuickBarContainer ScrollActive={ScrollActive}>
       <div>
         <ul>
           <li>가격계산기</li>
@@ -33,6 +31,6 @@ export const QuickBar = () => {
           <img src="http://jubora.co.kr/img/quick_top3.png" alt="" />
         </div>
       </div>
-    </QuickBar_container>
+    </QuickBarContainer>
   );
-};
+}

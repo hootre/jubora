@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SortDropdown_container = styled.div`
+const SortDropdownContainer = styled.div`
   position: relative;
   height: 50px;
   padding: 15px;
@@ -11,9 +11,11 @@ export const SortDropdown_container = styled.div`
   align-items: center;
   color: ${Common.colors.white};
   cursor: pointer;
-  div {
+  .sort_title {
     display: flex;
     align-items: center;
+    gap: 5px;
+    color: ${Common.colors.white};
     span {
       margin-right: 5px;
       height: 100%;
@@ -64,3 +66,4 @@ export const SortDropdown_container = styled.div`
     }
   }
 `;
+export default SortDropdownContainer;

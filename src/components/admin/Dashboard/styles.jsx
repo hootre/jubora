@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Dashboard_container = styled.div`
+const DashboardContainer = styled.div`
   background-color: ${Common.colors.bg300};
   flex: 1;
   padding: 30px;
@@ -12,3 +12,4 @@ export const Dashboard_container = styled.div`
     gap: 10px;
   }
 `;
+export default DashboardContainer;

@@ -1,7 +1,5 @@
-import { QnA_detail } from 'components/home/Center/QnA/QnA_Detail';
+import QnADetail from 'components/home/Center/QnA/Qnadetail';
 import React from 'react';
 
-const page = ({ params: { id } }) => {
-  return <QnA_detail id={id} />;
-};
+const page = ({ params: { id } }) => <QnADetail id={id} />;
 export default page;

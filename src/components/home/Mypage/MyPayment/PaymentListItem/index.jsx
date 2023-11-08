@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { PaymentListItem_container } from './style';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import PaymentListItemContainer from './style';
 
-export const PaymentListItem = ({ item: { id, name, pg, amount, created_at } }) => {
+export default function PaymentListItem({ item: { id, name, pg, amount, createdAt } }) {
   const pathName = usePathname();
 
   return (
-    <PaymentListItem_container>
+    <PaymentListItemContainer>
       <div>
-        <span className="date">{String(created_at).substring(0, 10)}</span>
+        <span className="date">{String(createdAt).substring(0, 10)}</span>
         <span className="title">
           <Link href={`${pathName}/${id}`}>{name}</Link>
         </span>
@@ -19,10 +18,10 @@ export const PaymentListItem = ({ item: { id, name, pg, amount, created_at } }) 
             <span className="price">{amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>{' '}
             원
           </span>
-          <button>영수증</button>
-          <button>견적서</button>
+          <button type="button">영수증</button>
+          <button type="button">견적서</button>
         </span>
       </div>
-    </PaymentListItem_container>
+    </PaymentListItemContainer>
   );
-};
+}

@@ -1,8 +1,8 @@
 import Providers from 'utils/provider';
-import GoogleAnalytics from './GoogleAnalytics';
-
 // layout.tsx
 import localFont from 'next/font/local';
+
+export const dynamic = 'force-dynamic';
 
 const pretendard = localFont({
   src: [
@@ -14,6 +14,7 @@ const pretendard = localFont({
   ],
 });
 export const metadata = {
+  metadataBase: new URL('http://localhost:2000'),
   title: {
     template: '%s | JUBORA',
     default: 'JUBORA',

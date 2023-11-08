@@ -1,9 +1,9 @@
 'use client';
 
 import Script from 'next/script';
-import * as gtag from '../lib/gtag.js';
+import * as gtag from '../lib/gtag';
 
-const GoogleAnalytics = () => {
+function GoogleAnalytics() {
   return (
     <>
       <Script
@@ -26,6 +26,6 @@ const GoogleAnalytics = () => {
       />
     </>
   );
-};
+}
 
 export default GoogleAnalytics;

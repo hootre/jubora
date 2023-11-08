@@ -1,21 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from 'lib/supabase';
-import supabase_client from 'lib/supabase_client';
+import supabase from 'lib/supabase';
+import supabaseClient from 'lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useTemplatesActions } from 'store';
-import { gatherKeys } from 'utils/gatherKeys';
-import { koreaDate } from 'utils/koreaDate';
+import gatherKeys from 'utils/gatherKeys';
+import koreaDate from 'utils/koreaDate';
 
 const useIsUser = () => {
   const client = useQueryClient();
-  const user = client.getQueryData(gatherKeys.current_user);
-  return user ? true : false;
+  const user = client.getQueryData(gatherKeys.currentUser);
+  return user;
 };
 
 // 존재하는 이메일인지 확인
 const checkEmail = async ({ email }) => {
-  const { data, error } = await supabase_client
+  const { data } = await supabaseClient
     .from('profiles')
     .select('email')
     .eq('email', email)
@@ -24,7 +24,7 @@ const checkEmail = async ({ email }) => {
 };
 // 비밀번호 재설정 메일
 const sendResetEmail = async ({ email }) => {
-  const { data, error } = await supabase_client.auth.resetPasswordForEmail(email, {
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
     redirectTo: 'http://localhost:3000/home/mypage/my_info',
   });
   if (error) {
@@ -41,67 +41,65 @@ const sendResetEmail = async ({ email }) => {
 };
 
 // cookie에서 jwt 가져오기
-const useGetSession = async () => {
+const GetSession = async () => {
   const {
     data: { session },
     error,
-  } = await supabase_client.auth.getSession();
+  } = await supabaseClient.auth.getSession();
   if (error) {
-    throw `유저 session 가져오기 오류 : ${error.message}`;
+    toast.error(`유저 session 가져오기 오류 : ${error.message}`);
   }
   return session;
 };
 
 // userList 가져오기
-const useGetUserList = () => {
+const GetUserList = () => {
   const handleGetUserList = async () => {
-    const session = await useGetSession();
+    const session = await GetSession();
     if (session) {
-      const { data, error } = await supabase_client.from('profiles').select('*');
+      const { data, error } = await supabaseClient.from('profiles').select('*');
       return new Promise((resolve, reject) => {
         if (error) {
-          reject(`유저 리스트 불러오기 오류 :  ${error.message}`);
+          reject(new Error(`유저 리스트 불러오기 오류 :  ${error.message}`));
         } else {
           resolve(data);
         }
       });
-    } else {
-      return [];
     }
+    return [];
   };
-  return useQuery(gatherKeys.current_userList, handleGetUserList);
+  return useQuery(gatherKeys.currentUserList, handleGetUserList);
 };
 
 // session 확인하여 유저정보 출력
 const useGetUserInfo = () => {
   const handleGetUser = async () => {
-    const session = await useGetSession();
+    const session = await GetSession();
     if (session) {
-      let { data, error } = await supabase_client
+      const { data, error } = await supabaseClient
         .from('profiles')
         .select('*')
         .eq('id', session?.user.id)
         .single();
       return new Promise((resolve, reject) => {
         if (error) {
-          reject(`유저 정보 출력 오류 :  ${error.message}`);
+          reject(new Error(`유저 정보 출력 오류 :  ${error.message}`));
         } else {
           resolve(data);
         }
       });
-    } else {
-      return [];
     }
+    return [];
   };
-  return useQuery(gatherKeys.current_user, handleGetUser);
+  return useQuery(gatherKeys.currentUser, handleGetUser);
 };
 
 // 로그아웃
 const useLogOut = () => {
   const handleLogout = async () => {
-    const { error } = await supabase_client.auth.signOut();
+    const { error } = await supabaseClient.auth.signOut();
     if (error) {
-      throw `유저 로그아웃 오류 : ${error.message}`;
+      throw new Error(`유저 로그아웃 오류 : ${error.message}`);
     } else {
       toast.success('로그아웃');
     }
@@ -110,21 +108,21 @@ const useLogOut = () => {
   const router = useRouter();
   return useMutation(handleLogout, {
     onSuccess: () => {
-      client.removeQueries(gatherKeys.current_user);
+      client.removeQueries(gatherKeys.currentUser);
       router.refresh();
     },
   });
 };
 
-//회원퇄퇴
+// 회원퇄퇴
 const useDelete = () => {
   const handleDelete = async (id) => {
-    const { error: profiles_error } = await supabase_client.from('profiles').delete().eq('id', id);
+    const { error: profilesError } = await supabaseClient.from('profiles').delete().eq('id', id);
 
-    if (profiles_error) {
-      throw `회원탈퇴 오류 : ${profiles_error.message}`;
+    if (profilesError) {
+      throw new Error(`회원탈퇴 오류 : ${profilesError.message}`);
     } else {
-      const { error } = await supabase_client.auth.admin.deleteUser(id);
+      const { error } = await supabaseClient.auth.admin.deleteUser(id);
       if (!error) toast.success('회원퇄퇴 성공');
     }
   };
@@ -133,32 +131,32 @@ const useDelete = () => {
   return useMutation(handleDelete, {
     onSuccess: () => {
       router.push('/');
-      client.removeQueries(gatherKeys.current_user);
+      client.removeQueries(gatherKeys.currentUser);
     },
   });
 };
-//회원삭제
-const useAdminDelete = () => {
+// 회원삭제
+const AdminDelete = () => {
   const handleAdminDelete = async (id) => {
-    const { error: profiles_error } = await supabase_client.from('profiles').delete().eq('id', id);
+    const { error: profilesError } = await supabaseClient.from('profiles').delete().eq('id', id);
 
-    if (profiles_error) {
-      throw `회원삭제 오류 : ${profiles_error.message}`;
+    if (profilesError) {
+      throw new Error(`회원삭제 오류 : ${profilesError.message}`);
     } else {
-      const { error } = await supabase_client.auth.admin.deleteUser(id);
+      const { error } = await supabaseClient.auth.admin.deleteUser(id);
       if (!error) toast.success('회원삭제 성공');
     }
   };
   const client = useQueryClient();
   return useMutation(handleAdminDelete, {
     onSuccess: () => {
-      client.removeQueries(gatherKeys.current_userList);
+      client.removeQueries(gatherKeys.currentUserList);
     },
   });
 };
 // 회원가입
 const useCreateUser = () => {
-  const handleCreateUser = async ({ name, email, password, privacy_check }) => {
+  const handleCreateUser = async ({ name, email, password, privacyCheck }) => {
     const { data: auth, error } = await supabase.auth.signUp({
       email,
       password,
@@ -168,32 +166,30 @@ const useCreateUser = () => {
       switch (error.message) {
         case 'Invalid login credentials':
           toast.error('이미 사용중인 이메일입니다.');
-          throw `유저 회원가입 오류 : ${error.message}`;
+          throw new Error(`유저 회원가입 오류 : ${error.message}`);
         case 'User already registered':
           toast.error('이미 사용중인 이메일입니다.');
-          throw `유저 회원가입 오류 : ${error.message}`;
+          throw new Error(`유저 회원가입 오류 : ${error.message}`);
         default:
           toast.error(error.message);
-          throw `유저 회원가입 오류 : ${error.message}`;
+          throw new Error(`유저 회원가입 오류 : ${error.message}`);
       }
     } else if (auth.user.id) {
-      const { data: insertData, error: insertError } = await supabase_client
-        .from('profiles')
-        .insert({
-          id: auth.user.id,
-          email,
-          name,
-          role: 'member',
-          privacy_check,
-        });
+      const { error: insertError } = await supabaseClient.from('profiles').insert({
+        id: auth.user.id,
+        email,
+        name,
+        role: 'member',
+        privacyCheck,
+      });
       if (insertError) {
-        const { error } = await supabase_client.auth.admin.deleteUser(auth.user.id);
-        if (error) {
-          throw `유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`;
+        const { error: deleteError } = await supabaseClient.auth.admin.deleteUser(auth.user.id);
+        if (deleteError) {
+          throw new Error(`유저 정보 기입 오류로 인한 유저 삭제 실패 : ${insertError.message}`);
         }
-        throw `유저 정보 기입 오류 : ${insertError.message}`;
+        throw new Error(`유저 정보 기입 오류 : ${insertError.message}`);
       } else {
-        const { data, error } = await supabase_client.auth.signInWithPassword({
+        await supabaseClient.auth.signInWithPassword({
           email,
           password,
         });
@@ -207,7 +203,7 @@ const useCreateUser = () => {
   const { setAuthState } = useTemplatesActions();
   return useMutation(handleCreateUser, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.current_user);
+      await client.invalidateQueries(gatherKeys.currentUser);
       setAuthState();
       router.refresh();
     },
@@ -215,9 +211,9 @@ const useCreateUser = () => {
 };
 
 // 어드민 계정에서 회원 권한 수정
-const useUpdateUserRole = () => {
+const UpdateUserRole = () => {
   const handleUpdateUserRole = async ({ id, role }) => {
-    const { data, error } = await supabase_client
+    const { data, error } = await supabaseClient
       .from('profiles')
       .update({
         role,
@@ -225,7 +221,7 @@ const useUpdateUserRole = () => {
       .eq('id', id);
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`유저 정보 수정 오류 :  ${error.message}`);
+        reject(new Error(`유저 정보 수정 오류 :  ${error.message}`));
       } else {
         toast.success('수정완료 하였습니다');
         resolve(data);
@@ -237,24 +233,16 @@ const useUpdateUserRole = () => {
   return useMutation(handleUpdateUserRole, {
     onSuccess: async () => {
       router.refresh();
-      await client.invalidateQueries(gatherKeys.current_userList);
+      await client.invalidateQueries(gatherKeys.currentUserList);
     },
   });
 };
 
 // 회원 정보 업데이트
 const useUpdateUser = () => {
-  const handleUpdateUser = async ({
-    id,
-    name,
-    phone,
-    password,
-    address_1,
-    address_2,
-    address_3,
-  }) => {
+  const handleUpdateUser = async ({ id, name, phone, password, address1, address2, address3 }) => {
     if (password) {
-      const { data, error } = await supabase_client.auth.updateUser({
+      const { error } = await supabaseClient.auth.updateUser({
         password,
       });
       if (error) {
@@ -263,19 +251,19 @@ const useUpdateUser = () => {
         toast.success('비밀변호 변경완료');
       }
     }
-    const { data, error } = await supabase_client
+    const { data, error } = await supabaseClient
       .from('profiles')
       .update({
         name,
         phone,
-        address_1,
-        address_2,
-        address_3,
+        address1,
+        address2,
+        address3,
       })
       .eq('id', id);
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`유저 정보 수정 오류 :  ${error.message}`);
+        reject(new Error(`유저 정보 수정 오류 :  ${error.message}`));
       } else {
         toast.success('수정완료 하였습니다');
         resolve(data);
@@ -287,7 +275,7 @@ const useUpdateUser = () => {
   return useMutation(handleUpdateUser, {
     onSuccess: async () => {
       router.refresh();
-      await client.invalidateQueries(gatherKeys.current_user);
+      await client.invalidateQueries(gatherKeys.currentUser);
     },
   });
 };
@@ -295,7 +283,7 @@ const useUpdateUser = () => {
 // 유저 로그인
 const useSignIn = () => {
   const handleLogin = async ({ email, password }) => {
-    const { data: loginData, error: loginError } = await supabase_client.auth.signInWithPassword({
+    const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -303,18 +291,18 @@ const useSignIn = () => {
       switch (loginError.message) {
         case 'Invalid login credentials':
           toast.error('로그인정보가 올바르지 않습니다.');
-          throw '로그인정보가 올바르지 않습니다.';
+          throw new Error('로그인정보가 올바르지 않습니다.');
         default:
           toast.error('로그인 오류입니다');
-          throw `로그인 오류 : ${loginError.message}`;
+          throw new Error(`로그인 오류 : ${loginError.message}`);
       }
     } else {
-      const { data, error } = await supabase_client
+      const { error } = await supabaseClient
         .from('profiles')
-        .update({ updated_at: koreaDate() })
+        .update({ updatedAt: koreaDate() })
         .eq('id', loginData.user.id);
       if (error) {
-        throw '유저 상태 업데이트 오류' + error.message;
+        throw new Error(`유저 상태 업데이트 오류${error.message}`);
       }
       toast.success('로그인 성공하였습니다!');
     }
@@ -326,7 +314,7 @@ const useSignIn = () => {
   const { setAuthState } = useTemplatesActions();
   return useMutation(handleLogin, {
     onSuccess: async () => {
-      await client.invalidateQueries(gatherKeys.current_user);
+      await client.invalidateQueries(gatherKeys.currentUser);
       setAuthState();
       router.push('/');
     },
@@ -335,12 +323,12 @@ const useSignIn = () => {
 // 구글 로그인
 const useSignInGoogle = () => {
   const handleGoogleLogin = async () => {
-    const { data, error } = await supabase_client.auth.signInWithOAuth({
+    const { data } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
     });
     // if (data) {
     //   console.log(data.provider);
-    //   const { data: insertData, error: insertError } = await supabase_client
+    //   const { data: insertData, error: insertError } = await supabaseClient
     //     .from('profiles')
     //     .insert({
     //       id: data.id,
@@ -349,35 +337,34 @@ const useSignInGoogle = () => {
     //       privacy_check: 'true',
     //     });
     //   if (insertError) {
-    //      console.error(`유저 정보 기입 오류 : ${insertError.message}`);
+    //      console.error(`유저 정보 기입 오류 : ${insertError.message}`));
     //   } else {
-    //     client.setQueryData(gatherKeys.current_user, getUser(data?.user.id));
+    //     client.setQueryData(gatherKeys.currentUser, getUser(data?.user.id));
     //     return insertData;
     //   }
     // }
     // if (error) {
-    //    toast.econsole.error(`GoogleLogin : ${error.message}`);
+    //    toast.econsole.error(`GoogleLogin : ${error.message}`));
     // }
     return data;
   };
   return useMutation(handleGoogleLogin);
 };
 
-export const useUser = () => {
-  return {
-    useIsUser,
-    checkEmail,
-    sendResetEmail,
-    useGetSession,
-    useGetUserList,
-    useGetUserInfo,
-    useCreateUser,
-    useUpdateUserRole,
-    useUpdateUser,
-    useSignIn,
-    useSignInGoogle,
-    useLogOut,
-    useAdminDelete,
-    useDelete,
-  };
-};
+const User = () => ({
+  useIsUser,
+  checkEmail,
+  sendResetEmail,
+  GetSession,
+  GetUserList,
+  useGetUserInfo,
+  useCreateUser,
+  UpdateUserRole,
+  useUpdateUser,
+  useSignIn,
+  useSignInGoogle,
+  useLogOut,
+  AdminDelete,
+  useDelete,
+});
+export default User;

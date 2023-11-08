@@ -1,16 +1,16 @@
 import React from 'react';
-import { SideNav } from './SideNav';
-import { AdminLayout_container } from './style';
-import { TopHeader } from './TopHeader';
+import SideNav from './SideNav';
+import AdminLayoutContainer from './style';
+import TopHeader from './TopHeader';
 
-export const AdminLayout = ({ children }) => {
+export default function AdminLayout({ children }) {
   return (
-    <AdminLayout_container>
+    <AdminLayoutContainer>
       <TopHeader />
       <main>
         <SideNav />
         {children}
       </main>
-    </AdminLayout_container>
+    </AdminLayoutContainer>
   );
-};
+}

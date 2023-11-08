@@ -1,9 +1,9 @@
 import React from 'react';
-import { ItemTypeGroup_container } from './style';
+import ItemTypeGroupContainer from './style';
 
-export const ItemTypeGroup = ({ bannerType, handleBannerType }) => {
+export default function ItemTypeGroup({ bannerType, handleBannerType }) {
   return (
-    <ItemTypeGroup_container>
+    <ItemTypeGroupContainer>
       <button
         className={bannerType === 'banner_row' ? 'from_item_btn active' : `from_item_btn`}
         type="button"
@@ -28,6 +28,6 @@ export const ItemTypeGroup = ({ bannerType, handleBannerType }) => {
       >
         포스터형
       </button>
-    </ItemTypeGroup_container>
+    </ItemTypeGroupContainer>
   );
-};
+}

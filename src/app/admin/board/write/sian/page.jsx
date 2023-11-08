@@ -1,6 +1,4 @@
-import Read_OrderList from 'components/admin/Read/Read_OrderList';
+import ReadOrderList from 'components/admin/Read/ReadOrderList';
 
-const page = () => {
-  return <Read_OrderList />;
-};
+const page = () => <ReadOrderList />;
 export default page;

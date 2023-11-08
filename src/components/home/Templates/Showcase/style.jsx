@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Showcase_container = styled.section`
+const ShowcaseContainer = styled.section`
   margin-top: 30px;
-  width: ${Common.size.container_width};
+  width: ${Common.size.containerWidth};
   .filter_nav {
     display: flex;
     align-items: center;
@@ -128,3 +128,4 @@ export const Showcase_container = styled.section`
     justify-content: center;
   }
 `;
+export default ShowcaseContainer;

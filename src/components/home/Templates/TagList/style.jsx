@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const TagList_container = styled.section`
+const TagListContainer = styled.section`
   display: flex;
   ul {
     display: flex;
@@ -24,3 +24,4 @@ export const TagList_container = styled.section`
     }
   }
 `;
+export default TagListContainer;

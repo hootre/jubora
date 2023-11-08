@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { CenterLayout_container } from './style';
 import { usePathname } from 'next/navigation';
+import CenterLayoutContainer from './style';
 
-const CenterLayout = ({ children }) => {
+function CenterLayout({ children }) {
   const pathName = usePathname().substring(1).split('/')[2];
   return (
-    <CenterLayout_container className="C_container">
+    <CenterLayoutContainer className="CContainer">
       <div className="header">
         <Link href="/home/center/notice" className="title">
           고객센터
@@ -31,7 +31,7 @@ const CenterLayout = ({ children }) => {
         </div>
       </div>
       {children}
-    </CenterLayout_container>
+    </CenterLayoutContainer>
   );
-};
+}
 export default CenterLayout;

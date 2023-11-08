@@ -1,11 +1,11 @@
 'use client';
-import { PC, Mobile } from 'hooks/custom/useMediaQuery';
-import React from 'react';
-import { Header } from './Header';
-import { Footer } from './Footer';
-import { QuickBar } from 'components/home/Main/QuickBar';
 
-const HomeLayout = ({ children, logoImage, topImage }) => {
+import React from 'react';
+import QuickBar from 'components/home/Main/QuickBar';
+import Header from './Header';
+import Footer from './Footer';
+
+function HomeLayout({ children, logoImage, topImage }) {
   return (
     <>
       {/* <PC> */}
@@ -20,5 +20,5 @@ const HomeLayout = ({ children, logoImage, topImage }) => {
       </Mobile> */}
     </>
   );
-};
+}
 export default HomeLayout;

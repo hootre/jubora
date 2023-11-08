@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
-export const Modal_container = styled.div`
+import Common from 'styles/Common';
+
+const ModalContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -9,3 +10,4 @@ export const Modal_container = styled.div`
   padding: 30px;
   background: ${Common.colors.white};
 `;
+export default ModalContainer;

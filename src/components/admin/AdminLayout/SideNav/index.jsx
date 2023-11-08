@@ -1,16 +1,16 @@
 import React from 'react';
-import { SideNav_container } from './style';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
-import ViewWeekIcon from '@mui/icons-material/ViewWeek';
 import { crudlist } from 'assets/data';
-export const SideNav = () => {
+import SideNavContainer from './style';
+
+function SideNav() {
   // path 관련
   const pathname = usePathname().substring(1).split('/')[3];
   return (
-    <SideNav_container>
+    <SideNavContainer>
       <div className="nav_list">
         <div className="community">
           <h1>종합 관리</h1>
@@ -25,14 +25,15 @@ export const SideNav = () => {
         </div>
         <div className="community">
           <h1>게시글 관리</h1>
-          {crudlist.map((item, idx) => (
-            <div key={idx} className={pathname === item.pathname ? 'item active' : 'item'}>
+          {crudlist.map((item) => (
+            <div key={item} className={pathname === item.pathname ? 'item active' : 'item'}>
               {item.icon}
               <Link href={`/admin/board/write/${item.pathname}`}>{item.text}</Link>
             </div>
           ))}
         </div>
       </div>
-    </SideNav_container>
+    </SideNavContainer>
   );
-};
+}
+export default SideNav;

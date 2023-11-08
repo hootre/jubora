@@ -1,12 +1,12 @@
-import { PasswordCheckModal } from 'components/common/Modal/PasswordCheckModal';
-import supabase_server from 'lib/supabase-server';
+import PasswordCheckModal from 'components/common/Modal/PasswordCheckModal';
+import supabaseServer from 'lib/supabaseServer';
 import React from 'react';
-import { MyPayment } from 'components/home/Mypage/MyPayment';
+import MyPayment from 'components/home/Mypage/MyPayment';
 
 const MyPay = async () => {
   const {
     data: { session },
-  } = await supabase_server.auth.getSession();
+  } = await supabaseServer.auth.getSession();
 
   if (session?.user) {
     return <MyPayment email={session.user.email} />;

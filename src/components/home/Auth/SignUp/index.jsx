@@ -1,12 +1,8 @@
 'use client';
 
-import React from 'react';
-import SignUpSocial from '../SignUpSocial/index.jsx';
-import { useState } from 'react';
-import SignUpEmail from '../SignUpEmail/index.jsx';
+import SignUpEmail from '../SignUpEmail';
 
-const SignUp = ({ authType, setAuthType }) => {
-  const [signUpType, setSignUpType] = useState('SignUpSocial');
+function SignUp({ authType, setAuthType }) {
   return (
     <div>
       <div className="title">
@@ -16,12 +12,14 @@ const SignUp = ({ authType, setAuthType }) => {
       <div className="form_box">
         <ul className="login_util">
           <li
+            role="presentation"
             className={authType === 'signIn' ? 'active' : ''}
             onClick={() => setAuthType('signIn')}
           >
             로그인
           </li>
           <li
+            role="presentation"
             className={authType === 'signUp' ? 'active' : ''}
             onClick={() => setAuthType('signUp')}
           >
@@ -45,6 +43,6 @@ const SignUp = ({ authType, setAuthType }) => {
       </div>
     </div>
   );
-};
+}
 
 export default SignUp;

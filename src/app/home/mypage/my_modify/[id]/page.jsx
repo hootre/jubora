@@ -1,8 +1,9 @@
 'use client';
-import { MainLoading } from 'components/Loading/MainLoading';
-import { SianBoardDetail } from 'components/common/SianBoard/SianBoardDetail';
-import { useUser } from 'hooks/supabase/auth/useUser';
-import { useOrder } from 'hooks/supabase/order/useOrder';
+
+import MainLoading from 'components/Loading/MainLoading';
+import SianBoardDetail from 'components/common/SianBoard/SianBoardDetail';
+import User from 'hooks/supabase/auth/useUser';
+import useOrder from 'hooks/supabase/order/useOrder';
 import React from 'react';
 
 const detail = ({ params: { id } }) => {
@@ -10,7 +11,7 @@ const detail = ({ params: { id } }) => {
   const { useGetOnlyOrder } = useOrder();
   const { data, isLoading } = useGetOnlyOrder(id);
   // 현재 user 등급
-  const { useGetUserInfo } = useUser();
+  const { useGetUserInfo } = User();
   const { data: userData, isLoading: userLoading } = useGetUserInfo();
   if (isLoading || userLoading) {
     return <MainLoading />;

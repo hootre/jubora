@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const ImageItem_container = styled.div`
+const ImageItemContainer = styled.div`
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -63,3 +63,4 @@ export const ImageItem_container = styled.div`
     transition: all 0.2s ease;
   }
 `;
+export default ImageItemContainer;

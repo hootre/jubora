@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const BoardDetail_container = styled.div`
+const BoardDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,3 +29,4 @@ export const BoardDetail_container = styled.div`
     }
   }
 `;
+export default BoardDetailContainer;

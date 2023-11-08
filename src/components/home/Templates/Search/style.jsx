@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Search_container = styled.section`
+const SearchContainer = styled.section`
   display: flex;
   align-items: center;
   padding: 15px 0;
@@ -44,3 +44,4 @@ export const Search_container = styled.section`
     }
   }
 `;
+export default SearchContainer;

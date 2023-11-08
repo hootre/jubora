@@ -1,13 +1,13 @@
 'use client';
-import React from 'react';
-import { MypageLayout_container } from './style';
-import { MypageSideBar } from '../MypageSideBar';
 
-export const MypageLayout = ({ children }) => {
+import MypageLayoutContainer from './style';
+import MypageSideBar from '../MypageSideBar';
+
+export default function MypageLayout({ children }) {
   return (
-    <MypageLayout_container className="C_container">
+    <MypageLayoutContainer className="CContainer">
       <MypageSideBar />
       <main>{children}</main>
-    </MypageLayout_container>
+    </MypageLayoutContainer>
   );
-};
+}

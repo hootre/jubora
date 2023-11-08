@@ -1,11 +1,12 @@
-export const SimpleDate = (created_at, style = 'm') => {
+const simpleDate = (createdAt, style = 'm') => {
   let dateText = '';
   if (style === 'y') {
-    dateText = String(created_at).substring(2, 10);
+    dateText = String(createdAt).substring(2, 10);
   } else if (style === 'm') {
-    dateText = String(created_at).substring(5, 10);
+    dateText = String(createdAt).substring(5, 10);
   } else if (style === 'd') {
-    dateText = String(created_at).substring(8, 10);
+    dateText = String(createdAt).substring(8, 10);
   }
   return dateText;
 };
+export default simpleDate;

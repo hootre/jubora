@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Auth_container = styled.section`
+const AuthContainer = styled.section`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -291,14 +291,14 @@ export const Auth_container = styled.section`
         50% {
           width: 20px;
           height: 20px;
-          background: ${Common.colors.success_text};
+          background: ${Common.colors.successText};
           border: 0;
           opacity: 0.6;
         }
         100% {
           width: 20px;
           height: 20px;
-          background: ${Common.colors.success_text};
+          background: ${Common.colors.successText};
           border: 0;
           opacity: 1;
         }
@@ -306,3 +306,4 @@ export const Auth_container = styled.section`
     }
   }
 `;
+export default AuthContainer;

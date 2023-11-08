@@ -1,37 +1,47 @@
-import supabase_server from 'lib/supabase-server';
+import supabaseServer from 'lib/supabaseServer';
 
 // 모든 제품목록
 const serverGetOrderSetting = async () => {
-  const { data } = await supabase_server.from('orderSetting').select('*');
-  if (error) {
-    console.error(`order_setting 불러오기 오류 : ${error.message}`);
-  } else {
-    return data;
-  }
+  const { data, error } = await supabaseServer.from('orderSetting').select('*');
+  return new Promise((resolve, reject) => {
+    if (error) {
+      reject(new Error(`Order Setting 모두 불러오기 오류 :  ${error.message}`));
+    } else {
+      resolve(data);
+    }
+  });
 };
 
 // 특정 항목 제품 상세
-const serverGetTypeOrderSetting = async (category_name) => {
-  const { data, error } = await supabase_server
+const serverGetTypeOrderSetting = async (categoryName) => {
+  const { data, error } = await supabaseServer
     .from('orderSetting')
     .select('*')
-    .eq('category_name', category_name)
+    .eq('categoryName', categoryName)
     .single();
-  if (error) {
-    console.error(`orderSetting type 불러오기 오류: ${error.message}`);
-  } else {
-    return data;
-  }
+
+  return new Promise((resolve, reject) => {
+    if (error) {
+      reject(new Error(`Order Setting 특정항목 불러오기 오류 :  ${error.message}`));
+    } else {
+      resolve(data);
+    }
+  });
 };
 // 원하는 항목 불러오기
 const serverGetWantListOrderSetting = async (wantList) => {
-  const { data, error } = await supabase_server.from('orderSetting').select(wantList.join());
-  if (error) {
-    console.error(`orderSetting 원하는 항목 불러오기 오류: ${error.message}`);
-  } else {
-    return data;
-  }
+  const { data, error } = await supabaseServer.from('orderSetting').select(wantList.join());
+  return new Promise((resolve, reject) => {
+    if (error) {
+      reject(new Error(`Order Setting 원하는 것 불러오기 오류 :  ${error.message}`));
+    } else {
+      resolve(data);
+    }
+  });
 };
-export const serverOrderSetting = () => {
-  return { serverGetOrderSetting, serverGetTypeOrderSetting, serverGetWantListOrderSetting };
-};
+const serverOrderSetting = () => ({
+  serverGetOrderSetting,
+  serverGetTypeOrderSetting,
+  serverGetWantListOrderSetting,
+});
+export default serverOrderSetting;

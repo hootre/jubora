@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const PasswordCheck_container = styled.div`
+const PasswordCheckContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -35,3 +35,4 @@ export const PasswordCheck_container = styled.div`
     }
   }
 `;
+export default PasswordCheckContainer;

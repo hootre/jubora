@@ -1,6 +1,6 @@
-import Notice_Write from 'components/admin/Board/Notice_Write';
+import dynamic from 'next/dynamic';
 
-const page = () => {
-  return <Notice_Write />;
-};
+const NoticeWrite = dynamic(() => import('components/admin/Board/NoticeWrite'), { ssr: false });
+
+const page = () => <NoticeWrite />;
 export default page;

@@ -1,16 +1,16 @@
-import { SearchInput } from 'components/home/Templates/Search/SearchInput';
+import SearchInput from 'components/home/Templates/Search/SearchInput';
+import SortDropdown from 'components/common/SortDropdown';
+import SearchContainer from './style';
 
-import { Search_container } from './style';
-import { SortDropdown } from 'components/common/SortDropdown';
-export const Search = () => {
+export default function Search() {
   return (
-    <Search_container>
+    <SearchContainer>
       <div className="search_box">
         <div className="search">
           <SortDropdown />
           <SearchInput />
         </div>
       </div>
-    </Search_container>
+    </SearchContainer>
   );
-};
+}

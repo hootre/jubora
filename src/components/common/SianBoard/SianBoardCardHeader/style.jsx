@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SianBoardCardHeader_container = styled.div`
+const SianBoardCardHeaderContainer = styled.div`
   display: flex;
   justify-content: center;
   > div {
@@ -42,3 +42,4 @@ export const SianBoardCardHeader_container = styled.div`
     }
   }
 `;
+export default SianBoardCardHeaderContainer;

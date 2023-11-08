@@ -1,12 +1,12 @@
-import React from 'react';
-import { SianBoardDetail_container } from './style';
 import { DiBrackets } from 'react-icons/di';
-import { Payments } from 'utils/Payment';
-import { Order_Detail } from 'components/home/Order/Order_detail';
-export const SianBoardDetail = ({ data, userData }) => {
+import Payments from 'utils/Payment';
+import OrderDetail from 'components/home/Order/OrderDetail';
+import SianBoardDetailContainer from './style';
+
+export default function SianBoardDetail({ data, userData }) {
   return (
-    <SianBoardDetail_container>
-      <Order_Detail data={data} userData={userData} />
+    <SianBoardDetailContainer>
+      <OrderDetail data={data} userData={userData} />
       <section>
         <div className="title_box">
           <div className="title">
@@ -18,6 +18,6 @@ export const SianBoardDetail = ({ data, userData }) => {
           </div>
         </div>
       </section>
-    </SianBoardDetail_container>
+    </SianBoardDetailContainer>
   );
-};
+}

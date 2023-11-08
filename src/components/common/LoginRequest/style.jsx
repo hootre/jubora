@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const LoginRequest_container = styled.div`
+const LoginRequestContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -52,3 +52,4 @@ export const LoginRequest_container = styled.div`
     }
   }
 `;
+export default LoginRequestContainer;

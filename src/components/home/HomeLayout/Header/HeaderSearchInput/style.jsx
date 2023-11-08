@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Search_input_box = styled.div`
+const SearchInputContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,3 +43,4 @@ export const Search_input_box = styled.div`
     }
   }
 `;
+export default SearchInputContainer;

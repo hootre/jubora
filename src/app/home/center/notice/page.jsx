@@ -1,6 +1,5 @@
-import Notice_Read from 'components/home/Center/Notice/Notice_Read';
+import NoticeRead from 'components/home/Center/Notice/NoticeRead';
 import * as React from 'react';
-const page = () => {
-  return <Notice_Read />;
-};
+
+const page = () => <NoticeRead />;
 export default page;

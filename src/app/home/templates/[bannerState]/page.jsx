@@ -1,7 +1,4 @@
-import { TemplatesList } from 'components/home/Templates/TemplatesList';
+import TemplatesList from 'components/home/Templates/TemplatesList';
 
-const page = ({ params: { bannerState }, searchParams }) => {
-  console.log(searchParams);
-  return <TemplatesList bannerState={bannerState} />;
-};
+const page = ({ params: { bannerState } }) => <TemplatesList bannerState={bannerState} />;
 export default page;

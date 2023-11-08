@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -p 2000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "stylelint": "stylelint --ignore-path .gitignore '**/*.(js|jsx)' --fix"
   },
   "dependencies": {
     "@egjs/react-flicking": "^4.10.8",
@@ -46,6 +46,7 @@
     "react-spinners": "^0.13.8",
     "react-tabs": "^6.0.0",
     "react-toastify": "^9.0.4",
+    "sharp": "^0.32.6",
     "tui-color-picker": "^2.2.8",
     "uuid": "^9.0.0",
     "zustand": "^4.3.8"
@@ -56,7 +57,7 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "^13.4.4",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
     "prettier": "^2.6.2",

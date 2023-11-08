@@ -1,9 +1,9 @@
 import React from 'react';
-import { SianBoardCardHeader_container } from './style';
+import SianBoardCardHeaderContainer from './style';
 
-export const SianBoardCardHeader = () => {
+export default function SianBoardCardHeader() {
   return (
-    <SianBoardCardHeader_container>
+    <SianBoardCardHeaderContainer>
       <div>
         <span className="date">주문일</span>
         <span className="title">제품이름</span>
@@ -12,6 +12,6 @@ export const SianBoardCardHeader = () => {
         <span className="delivery">배송방법</span>
         <span className="price">총 결제금액</span>
       </div>
-    </SianBoardCardHeader_container>
+    </SianBoardCardHeaderContainer>
   );
-};
+}

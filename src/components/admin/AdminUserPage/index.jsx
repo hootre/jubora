@@ -1,18 +1,22 @@
-import React from 'react';
-import { AdminUserPage_container } from './styles';
-import { RiSearchLine, RiLoopRightFill } from 'react-icons/ri';
-import { SimpleDate } from 'utils/SimpleDate';
+import React, { useState, useCallback, useEffect, memo } from 'react';
+import { RiSearchLine } from 'react-icons/ri';
 import { FormControl, MenuItem, Select } from '@mui/material';
-import { useState } from 'react';
-import { useCallback } from 'react';
-import { useEffect } from 'react';
-import { memo } from 'react';
 import { useForm } from 'react-hook-form';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
-  //유저 데이터
+import simpleDate from 'utils/simpleDate';
+import MainLoading from 'components/Loading/MainLoading';
+import AdminUserPageContainer from './styles';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+// Import css
+const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
+  // 유저 데이터
   const [userData, setUserData] = useState(data);
+  const [selectState, setSelectState] = useState('email');
+  const [checkedList, setCheckedLists] = useState([]);
+  // form 데이터 관리
+  const methods = useForm();
+  const { handleSubmit, getValues, register, watch } = methods;
   useEffect(() => {
     setUserData(data);
   }, [data]);
@@ -25,17 +29,13 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
         {
           label: '삭제',
           onClick: () => {
-            checkedList.map((id) => {
-              handleDelete(id);
-            });
+            checkedList.map((id) => handleDelete(id));
           },
         },
         { label: '취소' },
       ],
     });
-  }; // form 데이터 관리
-  const methods = useForm();
-  const { handleSubmit, getValues, register, watch } = methods;
+  };
   // update 목록
   const [updateId, setUpdateId] = useState([]);
   // 수정하기 State
@@ -45,9 +45,7 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
   };
   // 수정완료
   const onUserUpdate = () => {
-    checkedList.map((id) => {
-      updateRole({ id: id, role: watch(`role_${id}`) });
-    });
+    checkedList.map((id) => updateRole({ id, role: watch(`role_${id}`) }));
     toggleSianUpdate();
     setCheckedLists([]);
     setUpdateId([]);
@@ -66,11 +64,9 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
     }
   };
   // user check 관리
-  const [selectState, setSelectState] = useState('email');
   const handleChange = (event) => {
     setSelectState(event.target.value);
   };
-  const [checkedList, setCheckedLists] = useState([]);
 
   // 전체 체크 클릭 시 발생하는 함수
   const onCheckedAll = useCallback(
@@ -110,12 +106,12 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
     setUserData(data.filter((user) => user[selectState].includes(formData.searchText)));
   };
   if (!userData) {
-    return;
+    return <MainLoading />;
   }
   return (
-    <AdminUserPage_container>
+    <AdminUserPageContainer>
       <div className="top_box">
-        <div className="search_container">
+        <div className="searchContainer">
           <div className="title">
             <h1>사용자 관리</h1>
           </div>
@@ -149,20 +145,21 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
         <div className="button_box">
           {sianUpdate ? (
             <>
-              <button className="C_basic_button update_btn" onClick={onUserUpdate}>
+              <button type="button" className="C_basic_button update_btn" onClick={onUserUpdate}>
                 수정완료
               </button>
-              <button className="C_basic_button update_btn" onClick={updateCancle}>
+              <button type="button" className="C_basic_button update_btn" onClick={updateCancle}>
                 수정취소
               </button>
             </>
           ) : (
-            <button className="C_basic_button update_btn" onClick={updateUser}>
+            <button type="button" className="C_basic_button update_btn" onClick={updateUser}>
               선택 수정
             </button>
           )}
 
           <button
+            type="button"
             className="C_basic_button delete_btn"
             onClick={() => (checkedList.length > 0 ? deleteUser() : null)}
           >
@@ -176,13 +173,7 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
             <input
               type="checkbox"
               onChange={(e) => onCheckedAll(e.target.checked)}
-              checked={
-                checkedList.length === 0
-                  ? false
-                  : checkedList.length === userData.length
-                  ? true
-                  : false
-              }
+              checked={checkedList.length === 0 ? false : checkedList.length === userData.length}
             />
           </div>
           <div className="grid-table-cell">이메일</div>
@@ -194,7 +185,6 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
           <div className="grid-table-cell">생성일</div>
         </div>
         {userData?.map((item) => {
-          console.log(item.email);
           if (updateId.includes(item.id)) {
             return (
               <div className="grid-table-row" key={item.id}>
@@ -203,7 +193,7 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
                     <input
                       type="checkbox"
                       onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-                      checked={checkedList.includes(item.id) ? true : false}
+                      checked={!!checkedList.includes(item.id)}
                     />
                   )}
                 </div>
@@ -231,55 +221,55 @@ export const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
                   {item.phone}
                 </div>
                 <div className="grid-table-cell" data-title="Number">
-                  {`${item.address_1} ${item.address_2}`}
+                  {`${item.address1} ${item.address2}`}
                 </div>
                 <div className="grid-table-cell" data-title="Series">
-                  {SimpleDate(item.updated_at, 'y')}
+                  {simpleDate(item.updated_at, 'y')}
                 </div>
                 <div className="grid-table-cell" data-title="Air Date">
-                  {SimpleDate(item.created_at, 'y')}
-                </div>
-              </div>
-            );
-          } else {
-            return (
-              <div className="grid-table-row" key={item.id}>
-                <div className="grid-table-cell" data-title="Title">
-                  {item.email !== 'zxv7295@naver.com' && item.email !== 'mm1895@naver.com' && (
-                    <input
-                      type="checkbox"
-                      onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-                      checked={checkedList.includes(item.id) ? true : false}
-                    />
-                  )}
-                </div>
-                <div className="grid-table-cell" data-title="Number">
-                  {item.email}
-                </div>
-
-                <div className="grid-table-cell" data-title="Number">
-                  {item.role}
-                </div>
-                <div className="grid-table-cell" data-title="Series">
-                  {item.name}
-                </div>
-                <div className="grid-table-cell" data-title="Air Date">
-                  {item.phone}
-                </div>
-                <div className="grid-table-cell" data-title="Number">
-                  {`${item.address_1} ${item.address_2}`}
-                </div>
-                <div className="grid-table-cell" data-title="Series">
-                  {SimpleDate(item.updated_at, 'y')}
-                </div>
-                <div className="grid-table-cell" data-title="Air Date">
-                  {SimpleDate(item.created_at, 'y')}
+                  {simpleDate(item.createdAt, 'y')}
                 </div>
               </div>
             );
           }
+          return (
+            <div className="grid-table-row" key={item.id}>
+              <div className="grid-table-cell" data-title="Title">
+                {item.email !== 'zxv7295@naver.com' && item.email !== 'mm1895@naver.com' && (
+                  <input
+                    type="checkbox"
+                    onChange={(e) => onCheckedElement(e.target.checked, item.id)}
+                    checked={!!checkedList.includes(item.id)}
+                  />
+                )}
+              </div>
+              <div className="grid-table-cell" data-title="Number">
+                {item.email}
+              </div>
+
+              <div className="grid-table-cell" data-title="Number">
+                {item.role}
+              </div>
+              <div className="grid-table-cell" data-title="Series">
+                {item.name}
+              </div>
+              <div className="grid-table-cell" data-title="Air Date">
+                {item.phone}
+              </div>
+              <div className="grid-table-cell" data-title="Number">
+                {`${item.address1} ${item.address2}`}
+              </div>
+              <div className="grid-table-cell" data-title="Series">
+                {simpleDate(item.updated_at, 'y')}
+              </div>
+              <div className="grid-table-cell" data-title="Air Date">
+                {simpleDate(item.createdAt, 'y')}
+              </div>
+            </div>
+          );
         })}
       </div>
-    </AdminUserPage_container>
+    </AdminUserPageContainer>
   );
 });
+export default AdminUserPage;

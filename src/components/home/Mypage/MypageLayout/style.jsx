@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
 
-export const MypageLayout_container = styled.section`
+const MypageLayoutContainer = styled.section`
   display: flex;
   margin-top: 20px;
   > main {
@@ -9,3 +8,4 @@ export const MypageLayout_container = styled.section`
     position: relative;
   }
 `;
+export default MypageLayoutContainer;

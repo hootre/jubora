@@ -4,13 +4,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ImCheckmark2 } from 'react-icons/im';
 import Link from 'next/link';
-import { Auth_container } from '../style.jsx';
-import { useUser } from 'hooks/supabase/auth/useUser.js';
-import { useRouter } from 'next/navigation.js';
+import { useRouter } from 'next/navigation';
+import User from 'hooks/supabase/auth/useUser';
 
-const SignUpEmail = () => {
+function SignUpEmail() {
   const router = useRouter();
-  const { useCreateUser } = useUser();
+  const { useCreateUser } = User();
   const { mutate: createUser, isLoading, isSuccess } = useCreateUser();
   if (isSuccess) {
     router.refresh();
@@ -32,7 +31,7 @@ const SignUpEmail = () => {
             type="name"
             placeholder="이름/회사명"
             className={`input form-control ${errors.name && 'invalid'}`}
-            required={true}
+            required
             defaultValue=""
             {...register('name', { required: '이름/회사명을 입력해주세요.' })}
             onKeyUp={() => {
@@ -46,7 +45,7 @@ const SignUpEmail = () => {
             className={`input ${errors.email && 'invalid'}`}
             name="email"
             type="email"
-            required={true}
+            required
             {...register('email', {
               required: '이메일은 필수입니다',
               pattern: {
@@ -57,7 +56,7 @@ const SignUpEmail = () => {
             onKeyUp={() => {
               trigger('email');
             }}
-          ></input>
+          />
           <p className={`point_text ${errors.password && 'active'}`}>{errors.password?.message} </p>
           <input
             name="password"
@@ -66,7 +65,7 @@ const SignUpEmail = () => {
             type="password"
             autoComplete="off"
             className={`input form-control ${errors.password && 'invalid'}`}
-            required={true}
+            required
             {...register('password', {
               required: '비밀번호는 필수입니다.',
               pattern: {
@@ -85,7 +84,7 @@ const SignUpEmail = () => {
             onKeyUp={() => {
               trigger('password');
             }}
-          ></input>
+          />
           <p className={`point_text ${errors.confirmPassword && 'active'}`}>
             {errors.confirmPassword?.message}
           </p>
@@ -104,7 +103,7 @@ const SignUpEmail = () => {
               return false;
             }}
             className={`input form-control ${errors.confirmPassword && 'invalid'}`}
-            required={true}
+            required
             onKeyUp={() => {
               trigger('confirmPassowrd');
             }}
@@ -118,7 +117,7 @@ const SignUpEmail = () => {
                   {...register('privacy_check', {
                     required: '약관에 동의 해주세요',
                   })}
-                  required={true}
+                  required
                   type="checkbox"
                   onKeyUp={() => {
                     trigger('privacy_check');
@@ -147,6 +146,6 @@ const SignUpEmail = () => {
       </div>
     </div>
   );
-};
+}
 
 export default SignUpEmail;

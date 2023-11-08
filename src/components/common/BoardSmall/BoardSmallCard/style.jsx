@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const BoardSmallCard_container = styled.div`
+const BoardSmallCardContainer = styled.div`
   display: flex;
   padding: 10px 5px;
   justify-content: space-between;
@@ -26,3 +26,4 @@ export const BoardSmallCard_container = styled.div`
     color: ${Common.colors.text200};
   }
 `;
+export default BoardSmallCardContainer;

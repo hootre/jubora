@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { BoardCommentInput_container } from './style';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useUser } from 'hooks/supabase/auth/useUser';
-import { useComment } from 'hooks/supabase/comment/useComment';
+import User from 'hooks/supabase/auth/useUser';
+import useComment from 'hooks/supabase/comment/useComment';
+import MainLoading from 'components/Loading/MainLoading';
+import BoardCommentInputContainer from './style';
 
-export const BoardCommentInput = ({ from_table, from_table_id, from_comment = null, writer }) => {
+export default function BoardCommentInput({ fromTable, fromTableId, fromComment = null, writer }) {
   // user상태관리
-  const { useGetUserInfo } = useUser();
+  const { useGetUserInfo } = User();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
   // comment 생성
   const [disabled, setDisabled] = useState();
@@ -14,19 +15,13 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
   const { mutate: createComment } = useCreateComment();
 
   // form 데이터 관리
-  const {
-    handleSubmit,
-    formState: {},
-    setValue,
-    register,
-    reset,
-  } = useForm();
+  const { handleSubmit, setValue, register, reset } = useForm();
   // 로그인 로그아웃 상태
   useEffect(() => {
     if (user) {
       setValue('writer', user.name ? user.name : writer);
     }
-    reset({ from_table, from_table_id, from_comment });
+    reset({ fromTable, fromTableId, fromComment });
   }, [user, reset]);
   const onSubmit = (data) => {
     setDisabled(true);
@@ -38,11 +33,11 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
     });
   };
   if (userLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
 
   return (
-    <BoardCommentInput_container>
+    <BoardCommentInputContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
@@ -52,6 +47,6 @@ export const BoardCommentInput = ({ from_table, from_table_id, from_comment = nu
           disabled={disabled}
         />
       </form>
-    </BoardCommentInput_container>
+    </BoardCommentInputContainer>
   );
-};
+}

@@ -1,4 +1,4 @@
-export const Common = {
+const Common = {
   colors: {
     primaryBg: '#d9ecfa',
     primary100: '#4286f4',
@@ -19,12 +19,13 @@ export const Common = {
     black: '#25252c',
     white: '#fff',
     red: '#f03c32',
-    await_text: '#e97777',
+    awaitText: '#e97777',
     await_bd: '#ff9f9f',
-    success_text: '#2c9e4b',
-    success_bd: '#9ed763',
+    successText: '#2c9e4b',
+    successBd: '#9ed763',
   },
   size: {
-    container_width: '1280px',
+    containerWidth: '1280px',
   },
 };
+export default Common;

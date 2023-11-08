@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SmallCard_container = styled.div`
+const SmallCardContainer = styled.div`
   flex: 1;
   background: ${Common.colors.adminBg};
   box-shadow: 0 -3px 31px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.02);
@@ -52,3 +52,4 @@ export const SmallCard_container = styled.div`
     }
   }
 `;
+export default SmallCardContainer;

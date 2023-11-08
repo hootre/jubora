@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 const useTemplatesStore = create((set) => ({
   // 로그인/로그아웃 상태관리
   authState: false,
@@ -17,19 +18,15 @@ const useTemplatesStore = create((set) => ({
   actions: {
     // 제품 태그 리셋 후 추가
     setTemplateTagList: (state) => {
-      set(() => {
-        return {
-          templateTagList: [state],
-        };
-      });
+      set(() => ({
+        templateTagList: [state],
+      }));
     },
     //  제품 상세보기 데이터
     setOrderPreview: (state) => {
-      set(() => {
-        return {
-          orderPreview: state,
-        };
-      });
+      set(() => ({
+        orderPreview: state,
+      }));
     },
     // 제품 태그 추가/삭제
     setToggleTemplateTagList: (state) => {
@@ -37,7 +34,7 @@ const useTemplatesStore = create((set) => ({
         const DuplicateCheck = prev.templateTagList.filter((item) => item === state).length > 0;
         if (DuplicateCheck) {
           return {
-            templateTagList: prev.templateTagList.filter((item) => item != state),
+            templateTagList: prev.templateTagList.filter((item) => item !== state),
           };
         }
         return {

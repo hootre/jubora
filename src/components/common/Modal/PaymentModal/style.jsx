@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const PaymentModal_container = styled.article`
+const PaymentModalContainer = styled.article`
   .back {
     position: fixed;
     top: 0;
@@ -94,19 +94,19 @@ export const PaymentModal_container = styled.article`
             }
             .state {
               border: 1px solid ${Common.colors.await_bd};
-              color: ${Common.colors.await_text};
+              color: ${Common.colors.awaitText};
             }
           }
           // 배송중
           &.ac_delivery_ing {
             filter: grayscale(0);
-            box-shadow: 0 0 4px ${Common.colors.success_bd};
+            box-shadow: 0 0 4px ${Common.colors.successBd};
             &:hover {
-              box-shadow: 0 0 8px ${Common.colors.success_bd};
+              box-shadow: 0 0 8px ${Common.colors.successBd};
             }
             .state {
-              border: 1px solid ${Common.colors.success_bd};
-              color: ${Common.colors.success_text};
+              border: 1px solid ${Common.colors.successBd};
+              color: ${Common.colors.successText};
             }
           }
         }
@@ -184,3 +184,4 @@ export const PaymentModal_container = styled.article`
     }
   }
 `;
+export default PaymentModalContainer;

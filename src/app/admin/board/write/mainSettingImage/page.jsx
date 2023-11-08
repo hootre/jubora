@@ -1,6 +1,4 @@
-import { MainSettingImage_Write } from 'components/admin/Board/MainSettingImage_Write';
+import MainSettingImageWrite from 'components/admin/Board/MainSettingImageWrite';
 
-const page = () => {
-  return <MainSettingImage_Write />;
-};
+const page = () => <MainSettingImageWrite />;
 export default page;

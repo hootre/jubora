@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SianUpdate_container = styled.div`
+const SianUpdateContainer = styled.div`
   .sian_modify_box {
     display: flex;
     justify-content: center;
     gap: 20px;
     padding: 40px;
-    .skeleton_main_img {
+    .skeleton_mainImg {
       width: 500px;
       height: 500px;
       background: ${Common.colors.bg200};
@@ -100,3 +100,4 @@ export const SianUpdate_container = styled.div`
     }
   }
 `;
+export default SianUpdateContainer;

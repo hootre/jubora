@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SianUpdateList_container = styled.ul`
+const SianUpdateListContainer = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -10,7 +10,7 @@ export const SianUpdateList_container = styled.ul`
     justify-content: end;
     gap: 10px;
     margin-bottom: 10px;
-    > div {
+    > button {
       padding: 10px 15px;
       border-radius: 5px;
 
@@ -40,3 +40,4 @@ export const SianUpdateList_container = styled.ul`
     }
   }
 `;
+export default SianUpdateListContainer;

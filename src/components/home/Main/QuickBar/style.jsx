@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const QuickBar_container = styled.aside`
+const QuickBarContainer = styled.aside`
   position: ${(props) => (props.ScrollActive ? 'fixed' : 'absolute')};
   top: ${(props) => (props.ScrollActive ? '80px' : '24%')};
   left: 50%;
@@ -37,3 +37,4 @@ export const QuickBar_container = styled.aside`
     }
   }
 `;
+export default QuickBarContainer;

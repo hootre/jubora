@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const BoardCommentList_container = styled.ul`
+const BoardCommentListContainer = styled.ul`
   > li {
     position: relative;
     padding: 10px 0;
@@ -28,3 +28,4 @@ export const BoardCommentList_container = styled.ul`
     }
   }
 `;
+export default BoardCommentListContainer;

@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { SianBoardCard_container } from './style';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import SianBoardCardContainer from './style';
 
-export const SianBoardCard = ({ item: { id, title, state, price, created_at } }) => {
+export default function SianBoardCard({ item: { id, title, state, price, createdAt } }) {
   const pathName = usePathname();
 
   return (
-    <SianBoardCard_container>
+    <SianBoardCardContainer>
       <div>
-        <span className="date">{String(created_at).substring(0, 10)}</span>
+        <span className="date">{String(createdAt).substring(0, 10)}</span>
         <span className="title">
           <Link href={`${pathName}/${id}`}>{title}</Link>
         </span>
@@ -23,6 +22,6 @@ export const SianBoardCard = ({ item: { id, title, state, price, created_at } })
           </span>
         </span>
       </div>
-    </SianBoardCard_container>
+    </SianBoardCardContainer>
   );
-};
+}

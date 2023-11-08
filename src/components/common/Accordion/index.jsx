@@ -1,18 +1,23 @@
 'use client';
-import React, { useState } from 'react';
-import { Accordion_container } from './style';
 
-export const Accordion = ({ children, contents }) => {
+import React, { useState } from 'react';
+import AccordionContainer from './style';
+
+export default function Accordion({ children, contents }) {
   const [state, setState] = useState(false);
   return (
-    <Accordion_container>
-      <div className={state ? 'main active' : 'main'} onClick={() => setState((prev) => !prev)}>
+    <AccordionContainer>
+      <button
+        type="button"
+        className={state ? 'main active' : 'main'}
+        onClick={() => setState((prev) => !prev)}
+      >
         {children}
-      </div>
+      </button>
       <div
         className={state ? 'content active' : 'content'}
         dangerouslySetInnerHTML={{ __html: contents }}
-      ></div>
-    </Accordion_container>
+      />
+    </AccordionContainer>
   );
-};
+}

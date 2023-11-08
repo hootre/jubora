@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SelectTextBox_container = styled.ul`
+const SelectTextBoxContainer = styled.ul`
   position: relative;
   height: 50px;
   padding: 15px;
@@ -61,3 +61,4 @@ export const SelectTextBox_container = styled.ul`
     }
   }
 `;
+export default SelectTextBoxContainer;

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
 
-export const Write_contaier = styled.section`
+const WriteContaier = styled.section`
   padding: 50px 0;
 `;
+export default WriteContaier;

@@ -1,23 +1,24 @@
 import React from 'react';
-import { Footer_container } from './style.jsx';
-export const Footer = ({ logoImage }) => {
+import FooterContainer from './style';
+
+export default function Footer({ logoImage }) {
   return (
-    <Footer_container>
-      <div className="footer C_container">
+    <FooterContainer>
+      <div className="footer CContainer">
         <div className="footerContent">
           <nav>
             <ul>
               <li>공지사항</li>
               <li>
-                <span></span>
+                <span />
               </li>
               <li>이용안내</li>
               <li>
-                <span></span>
+                <span />
               </li>
               <li>개인정보취급방침</li>
               <li>
-                <span></span>
+                <span />
               </li>
               <li>라이선스</li>
             </ul>
@@ -46,6 +47,6 @@ export const Footer = ({ logoImage }) => {
           <p>평일 09:00~20:00 토/일 휴무</p>
         </div>
       </div>
-    </Footer_container>
+    </FooterContainer>
   );
-};
+}

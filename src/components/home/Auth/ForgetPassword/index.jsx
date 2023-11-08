@@ -1,15 +1,11 @@
 'use client';
 
-import logo from 'assets/MainPage/logo.png';
-import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Auth_container } from '../style.jsx';
-import { useUser } from 'hooks/supabase/auth/useUser.js';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
-const ForgetPassword = ({ setAuthType }) => {
+import User from 'hooks/supabase/auth/useUser';
+
+function ForgetPassword({ setAuthType }) {
   // form
   const {
     register,
@@ -18,8 +14,8 @@ const ForgetPassword = ({ setAuthType }) => {
     setValue,
     formState: { isValid, errors },
   } = useForm();
-  //auth
-  const { checkEmail, sendResetEmail } = useUser();
+  // auth
+  const { checkEmail, sendResetEmail } = User();
   const [buttonState, setButtonState] = useState(false);
   const onSubmit = async (data) => {
     setButtonState(true);
@@ -28,7 +24,6 @@ const ForgetPassword = ({ setAuthType }) => {
       const state = await sendResetEmail(data);
       if (state) {
         toast.success('재설정 메일을 전송하였습니다.');
-      } else {
       }
     } else {
       toast.error('존재하지 않는 이메일입니다.');
@@ -50,7 +45,7 @@ const ForgetPassword = ({ setAuthType }) => {
             className={`input ${errors.email && 'invalid'}`}
             name="email"
             type="email"
-            required={true}
+            required
             {...register('email', {
               required: '이메일은 필수입니다',
               pattern: {
@@ -61,13 +56,13 @@ const ForgetPassword = ({ setAuthType }) => {
             onKeyUp={() => {
               trigger('email');
             }}
-          ></input>
+          />
           <ul className="alert_box">
             <li>메일이 확인되지 않을 경우 스팸 메일함을 확인 부탁드립니다.</li>
           </ul>
-          <div className="go_login" onClick={() => setAuthType('signIn')}>
+          <button type="button" className="go_login" onClick={() => setAuthType('signIn')}>
             로그인하러가기
-          </div>
+          </button>
           <button
             type={isValid ? 'submit' : 'button'}
             className={`submit ${isValid && !buttonState ? 'possible' : ''}`}
@@ -79,6 +74,6 @@ const ForgetPassword = ({ setAuthType }) => {
       </main>
     </div>
   );
-};
+}
 
 export default ForgetPassword;

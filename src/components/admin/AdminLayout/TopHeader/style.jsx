@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
 
-export const TopHeader_container = styled.div`
+const TopHeaderContainer = styled.div`
   width: 100%;
   .logo {
     display: flex;
@@ -10,3 +9,4 @@ export const TopHeader_container = styled.div`
   }
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
 `;
+export default TopHeaderContainer;

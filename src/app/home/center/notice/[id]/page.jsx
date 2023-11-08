@@ -1,7 +1,5 @@
-import { Notice_detail } from 'components/home/Center/Notice/Notice_detail';
+import NoticeDetail from 'components/home/Center/Notice/NoticeDetail';
 import React from 'react';
 
-const page = ({ params: { id } }) => {
-  return <Notice_detail id={id} />;
-};
+const page = ({ params: { id } }) => <NoticeDetail id={id} />;
 export default page;

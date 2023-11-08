@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SideNav_container = styled.div`
+const SideNavContainer = styled.div`
   flex: 0 0 200px;
   border-right: 1px solid ${Common.colors.bd100};
   .nav_list {
@@ -54,13 +54,13 @@ export const SideNav_container = styled.div`
           }
           .icon {
             &.orderSetting {
-              color: ${Common.colors.await_text};
+              color: ${Common.colors.awaitText};
             }
             &.templates {
               color: ${Common.colors.accent100};
             }
             &.main {
-              color: ${Common.colors.success_text};
+              color: ${Common.colors.successText};
             }
             &.board {
               color: ${Common.colors.primary100};
@@ -71,3 +71,4 @@ export const SideNav_container = styled.div`
     }
   }
 `;
+export default SideNavContainer;

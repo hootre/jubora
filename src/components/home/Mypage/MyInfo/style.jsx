@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const MyInfo_container = styled.div`
+const MyInfoContainer = styled.div`
   padding: 10px;
   .address_content {
     width: 100%;
@@ -62,3 +62,4 @@ export const MyInfo_container = styled.div`
     }
   }
 `;
+export default MyInfoContainer;

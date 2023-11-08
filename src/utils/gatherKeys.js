@@ -1,11 +1,11 @@
-export const gatherKeys = {
-  current_user: ['current_user'],
-  current_userList: ['current_userList'],
+const gatherKeys = {
+  currentUser: ['currentUser'],
+  currentUserList: ['currentUserList'],
   templates: ['templates'],
   templatesTag: ['templatesTag'],
-  templates_six: ['templates_six'],
-  templates_page: ['templates_page'],
-  templates_count: ['templates_count'],
+  templatesSix: ['templatesSix'],
+  templatesPage: ['templatesPage'],
+  templatesCount: ['templatesCount'],
   productsTag: ['productsTag'],
   sian: ['sian'],
   order: ['order'],
@@ -20,8 +20,5 @@ export const gatherKeys = {
   mainSlides: ['mainSlides'],
   mainSettingImage: ['mainSettingImage'],
   mainTemplatesCard: ['mainTemplatesCard'],
-  //   lists: () => [...todoKeys.all, 'list'],
-  //   list: (filters) => [...todoKeys.lists(), { filters }],
-  //   details: () => [...todoKeys.all, 'detail'],
-  //   detail: (id) => [...todoKeys.details(), id],
 };
+export default gatherKeys;

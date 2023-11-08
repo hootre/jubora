@@ -1,6 +1,4 @@
-import { TemplatesTag_Write } from 'components/admin/Board/TemplatesTag_Write';
+import TemplatesTagWrite from 'components/admin/Board/TemplatesTagWrite';
 
-const page = () => {
-  return <TemplatesTag_Write />;
-};
+const page = () => <TemplatesTagWrite />;
 export default page;

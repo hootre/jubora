@@ -1,30 +1,30 @@
 'use client';
+
 import React from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useTemplateTagList } from 'store';
-import { useTemplatesActions } from 'store';
-import { TagList_container } from './style';
+import { useTemplateTagList, useTemplatesActions } from 'store';
 
-export const TagList = () => {
+import TagListContainer from './style';
+
+export default function TagList() {
   // zustand
-  const TagList = useTemplateTagList();
+  const TagData = useTemplateTagList();
   const { setToggleTemplateTagList } = useTemplatesActions();
   const handleDeleteTag = (item) => {
     setToggleTemplateTagList(item);
   };
+
   return (
-    <TagList_container className="tagList_container">
+    <TagListContainer className="tagListContainer">
       <ul>
-        {TagList &&
-          TagList.map((item) => {
-            return (
-              <li key={item} className="tag_btn">
-                {item}
-                <AiOutlineClose className="icon" onClick={() => handleDeleteTag(item)} />
-              </li>
-            );
-          })}
+        {TagData &&
+          TagData.map((item) => (
+            <li key={item} className="tag_btn">
+              {item}
+              <AiOutlineClose className="icon" onClick={() => handleDeleteTag(item)} />
+            </li>
+          ))}
       </ul>
-    </TagList_container>
+    </TagListContainer>
   );
-};
+}

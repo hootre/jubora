@@ -1,14 +1,16 @@
 'use client';
+
 import React from 'react';
-import { useTemplatesActions } from 'store';
-import { useTemplateTagList } from 'store';
-import { SideCategory_container } from './style';
-import { useTemplatesTag } from 'hooks/supabase/templatesTag/useTemplatesTag';
-import { MainLoading } from 'components/Loading/MainLoading';
+import { useTemplatesActions, useTemplateTagList } from 'store';
+
+import useTemplatesTag from 'hooks/supabase/templatesTag/useTemplatesTag';
+import MainLoading from 'components/Loading/MainLoading';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { usePathname } from 'next/navigation';
-export const SideCategory = () => {
+import SideCategoryContainer from './style';
+
+export default function SideCategory() {
   // useTemplatesTag 관리
   const { useGetTemplatesTag } = useTemplatesTag();
   const { data: tag, isLoading: tagLoading } = useGetTemplatesTag();
@@ -20,14 +22,13 @@ export const SideCategory = () => {
   };
   // path 관련
   const pathname = usePathname().substring(1).split('/')[2];
-  console.log(pathname);
   if (tagLoading) {
     return <MainLoading />;
   }
   return (
-    <SideCategory_container>
+    <SideCategoryContainer>
       {tag
-        ?.filter((item) => item.from_nav === pathname)
+        ?.filter((item) => item.fromNav === pathname)
         .map((item) => (
           <div key={item.id} className="category_box">
             <Accordion className="accordion">
@@ -42,24 +43,23 @@ export const SideCategory = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <ul>
-                  {item.tagList.list.map((item) => {
-                    return (
-                      <li
-                        key={item}
-                        className={`${
-                          TagList.includes(item) ? 'category_btn active' : 'category_btn'
-                        }`}
-                        onClick={() => handleCategory(item)}
-                      >
-                        {item}
-                      </li>
-                    );
-                  })}
+                  {item.tagList.list.map((item2) => (
+                    <li
+                      role="presentation"
+                      key={item2}
+                      className={`${
+                        TagList.includes(item2) ? 'category_btn active' : 'category_btn'
+                      }`}
+                      onClick={() => handleCategory(item2)}
+                    >
+                      {item2}
+                    </li>
+                  ))}
                 </ul>
               </AccordionDetails>
             </Accordion>
           </div>
         ))}
-    </SideCategory_container>
+    </SideCategoryContainer>
   );
-};
+}

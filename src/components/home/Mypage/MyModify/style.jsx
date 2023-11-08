@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const MyModify_container = styled.div`
+const MyModifyContainer = styled.div`
   padding: 10px;
   .noData {
     font-size: 20px;
@@ -12,3 +12,4 @@ export const MyModify_container = styled.div`
     transform: translate(-50%, -50%);
   }
 `;
+export default MyModifyContainer;

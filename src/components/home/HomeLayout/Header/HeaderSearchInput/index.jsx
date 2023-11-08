@@ -1,13 +1,14 @@
 'use client';
-import React from 'react';
+
+import React, { useState } from 'react';
 import { GoSearch } from 'react-icons/go';
 import { useTemplatesActions } from 'store';
-import { useState } from 'react';
-import { v4 } from 'uuid';
+
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { Search_input_box } from './style.jsx';
-export const HeaderSearchInput = () => {
+import SearchInputContainer from './style';
+
+function HeaderSearchInput() {
   const [text, setText] = useState('');
   const { setTemplateSearchText, setTemplateTagList } = useTemplatesActions();
   const router = useRouter();
@@ -31,7 +32,7 @@ export const HeaderSearchInput = () => {
     setText(e.target.value);
   };
   return (
-    <Search_input_box>
+    <SearchInputContainer>
       <input
         type="text"
         placeholder="상품 검색"
@@ -40,6 +41,7 @@ export const HeaderSearchInput = () => {
         onChange={handleSearchInput}
       />
       <GoSearch className="icon" />
-    </Search_input_box>
+    </SearchInputContainer>
   );
-};
+}
+export default HeaderSearchInput;

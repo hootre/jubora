@@ -1,18 +1,20 @@
 'use client';
-import React, { useCallback, useState } from 'react';
-import { SianUpdateList_container } from './style';
-import { useSian } from 'hooks/supabase/sian/useSian';
-import { SianUpdate } from '../SianUpdate';
-import { Skeleton_SianUpdate } from 'components/common/Skeleton/Skeleton_SianUpdate';
-import { Sian_Admin_Skeleton } from 'components/admin/Board/Admin_Write_Item/Sian_Admin_Skeleton';
-import { confirmAlert } from 'react-confirm-alert';
 
-export const SianUpdateList = ({ order_id, role, state }) => {
+import { useCallback, useState } from 'react';
+import useSian from 'hooks/supabase/sian/useSian';
+import SkeletonSianUpdate from 'components/common/Skeleton/SkeletonSianUpdate';
+
+import { confirmAlert } from 'react-confirm-alert';
+import SianAdminSkeleton from 'components/admin/Board/AdminWriteItem/SianAdminSkeleton';
+import SianUpdate from '../SianUpdate';
+import SianUpdateListContainer from './style';
+
+export default function SianUpdateList({ orderId, role, state }) {
   // sian Data
   const { useGetOnlySian, useCreateEmptySian, useDeleteSian } = useSian();
-  const { data: sianData } = useGetOnlySian(order_id);
-  const { mutate: DeleteSian } = useDeleteSian(order_id);
-  const { mutate: CreateEmptySian } = useCreateEmptySian(order_id);
+  const { data: sianData } = useGetOnlySian(orderId);
+  const { mutate: DeleteSian } = useDeleteSian(orderId);
+  const { mutate: CreateEmptySian } = useCreateEmptySian(orderId);
   const handleCreateSian = () => {
     CreateEmptySian();
   };
@@ -28,9 +30,7 @@ export const SianUpdateList = ({ order_id, role, state }) => {
         {
           label: '삭제',
           onClick: () => {
-            checkedList.map((id) => {
-              DeleteSian(id);
-            });
+            checkedList.map((id) => DeleteSian(id));
           },
         },
         { label: '취소' },
@@ -50,18 +50,19 @@ export const SianUpdateList = ({ order_id, role, state }) => {
     [checkedList]
   );
   return (
-    <SianUpdateList_container>
+    <SianUpdateListContainer>
       {role === 'admin' && (
         <div className="btn_box">
-          <div className="create_sian" onClick={handleCreateSian}>
+          <button type="button" className="create_sian" onClick={handleCreateSian}>
             시안등록하기
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             className="delete_sian"
             onClick={() => (checkedList.length > 0 ? deleteSian() : null)}
           >
             선택 삭제
-          </div>
+          </button>
         </div>
       )}
       {sianData?.length ? (
@@ -70,7 +71,7 @@ export const SianUpdateList = ({ order_id, role, state }) => {
             <input
               type="checkbox"
               onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-              checked={checkedList.includes(item.id) ? true : false}
+              checked={!!checkedList.includes(item.id)}
               disabled
             />
             <SianUpdate
@@ -84,10 +85,10 @@ export const SianUpdateList = ({ order_id, role, state }) => {
           </li>
         ))
       ) : role === 'admin' ? (
-        <Sian_Admin_Skeleton order_id={order_id} />
+        <SianAdminSkeleton orderId={orderId} />
       ) : (
-        <Skeleton_SianUpdate />
+        <SkeletonSianUpdate />
       )}
-    </SianUpdateList_container>
+    </SianUpdateListContainer>
   );
-};
+}

@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 
-export const AdminLayout_container = styled.section`
+const AdminLayoutContainer = styled.section`
   display: flex;
   flex-direction: column;
   > main {
     display: flex;
   }
 `;
+export default AdminLayoutContainer;

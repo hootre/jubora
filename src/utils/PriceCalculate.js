@@ -1,7 +1,7 @@
 const PriceCalculate = (row, col, count) => {
   let price = 0;
-  let tempRow = 0,
-    tempCol = 0;
+  let tempRow = 0;
+  let tempCol = 0;
   if (row > col) {
     tempRow = Math.floor(row / 100) - 2 >= 1 ? Math.floor(row / 100) - 2 : 1;
     if (col <= 70) {

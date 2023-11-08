@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const TextDropdown_container = styled.div`
+const TextDropdownContainer = styled.div`
   .dropdown_box {
     position: relative;
     .title {
@@ -41,3 +41,4 @@ export const TextDropdown_container = styled.div`
     }
   }
 `;
+export default TextDropdownContainer;

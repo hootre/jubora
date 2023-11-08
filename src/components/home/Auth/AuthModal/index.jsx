@@ -1,15 +1,15 @@
-import React from 'react';
 import { useState } from 'react';
-import { Auth_container } from '../style';
+
+import { AiOutlineClose } from 'react-icons/ai';
+import { useTemplatesActions, useAuthState } from 'store';
+import BasicModal from 'components/common/Modal/BasicModal';
+import AuthContainer from '../style';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import ForgetPassword from '../ForgetPassword';
-import { AiOutlineClose } from 'react-icons/ai';
-import { useTemplatesActions } from 'store';
-import { useAuthState } from 'store';
-import { BasicModal } from 'components/common/Modal/BasicModal';
-export const AuthModal = () => {
-  //Auth Modal 관련
+
+export default function AuthModal() {
+  // Auth Modal 관련
   // zustand
   const { setAuthState } = useTemplatesActions();
   const authState = useAuthState();
@@ -21,8 +21,8 @@ export const AuthModal = () => {
   };
   return (
     <BasicModal state={authState} onClose={onClose}>
-      <Auth_container>
-        <button className="closeBtn" onClick={onClose}>
+      <AuthContainer>
+        <button type="button" className="closeBtn" onClick={onClose}>
           <AiOutlineClose />
         </button>
         {authType === 'signIn' ? (
@@ -34,7 +34,7 @@ export const AuthModal = () => {
         ) : (
           <h1>Error</h1>
         )}
-      </Auth_container>
+      </AuthContainer>
     </BasicModal>
   );
-};
+}

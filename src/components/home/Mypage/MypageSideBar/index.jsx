@@ -1,14 +1,14 @@
 'use client';
-import React from 'react';
-import { MypageSideBar_container } from './style';
-import Link from 'next/link';
-import { useUser } from 'hooks/supabase/auth/useUser';
-import { usePathname } from 'next/navigation';
-import { MainLoading } from 'components/Loading/MainLoading';
 
-export const MypageSideBar = () => {
+import Link from 'next/link';
+import User from 'hooks/supabase/auth/useUser';
+import MainLoading from 'components/Loading/MainLoading';
+import { usePathname } from 'next/navigation';
+import MypageSideBarContainer from './style';
+
+export default function MypageSideBar() {
   // 유저 정보
-  const { useGetUserInfo } = useUser();
+  const { useGetUserInfo } = User();
   const { data: userData, isLoading } = useGetUserInfo();
 
   // path 관련
@@ -17,7 +17,7 @@ export const MypageSideBar = () => {
     return <MainLoading />;
   }
   return (
-    <MypageSideBar_container>
+    <MypageSideBarContainer>
       <div className="nav_box">
         {userData?.id ? (
           <div className="name_box">
@@ -52,6 +52,6 @@ export const MypageSideBar = () => {
           </div>
         </div>
       </div>
-    </MypageSideBar_container>
+    </MypageSideBarContainer>
   );
-};
+}

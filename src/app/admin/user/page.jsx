@@ -1,14 +1,14 @@
 'use client';
-import { MainLoading } from 'components/Loading/MainLoading';
-import { AdminUserPage } from 'components/admin/AdminUserPage';
-import { useUser } from 'hooks/supabase/auth/useUser';
+
+import MainLoading from 'components/Loading/MainLoading';
+import AdminUserPage from 'components/admin/AdminUserPage';
+import User from 'hooks/supabase/auth/useUser';
 
 const page = () => {
-  const { useGetUserList, useAdminDelete, useUpdateUserRole } = useUser();
-  const { mutate: deleteUser } = useAdminDelete();
-
-  const { mutate: updateRole } = useUpdateUserRole();
-  const { data, isLoading } = useGetUserList();
+  const { GetUserList, AdminDelete, UpdateUserRole } = User();
+  const { mutate: deleteUser } = AdminDelete();
+  const { mutate: updateRole } = UpdateUserRole();
+  const { data, isLoading } = GetUserList();
   if (isLoading) {
     return <MainLoading />;
   }

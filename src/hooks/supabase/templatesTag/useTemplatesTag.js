@@ -1,26 +1,26 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { order_setting_for } from 'assets/data';
-import supabase_client from 'lib/supabase_client';
+import { orderSettingFor } from 'assets/data';
+import supabaseClient from 'lib/supabaseClient';
 import { toast } from 'react-hot-toast';
-import { gatherKeys } from 'utils/gatherKeys';
+import gatherKeys from 'utils/gatherKeys';
 import { deleteImage } from 'utils/imageUpload/uploader';
 
 //  생성
 const useCreateTemplatesTag = () => {
-  const handleCreateTemplatesTag = async ({ title, tagList, from_nav }) => {
+  const handleCreateTemplatesTag = async ({ title, tagList, fromNav }) => {
     const list = { list: tagList };
-    const { data, error: templateTagErr } = await supabase_client.from('templatesTag').insert({
+    const { data, error: templateTagErr } = await supabaseClient.from('templatesTag').insert({
       title,
       tagList: list,
-      from_nav,
+      fromNav,
     });
-    const { error: orderSettingErr } = await supabase_client.from('orderSetting').insert({
-      category_name: title,
+    const { error: orderSettingErr } = await supabaseClient.from('orderSetting').insert({
+      categoryName: title,
     });
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (templateTagErr || orderSettingErr) {
-        toast.error(`CODE : ${error.code}`);
-        reject(`제품 태그 생성 오류 :  ${error.message}`);
+        toast.error(`제품 태그 생성 오류`);
+        reject(new Error(`제품 태그 생성 오류`));
       } else {
         toast.success('성공적으로 생성하였습니다');
         resolve(data);
@@ -39,13 +39,13 @@ const useCreateTemplatesTag = () => {
 // 목록
 const useGetTemplatesTag = () => {
   const handleGetTemplatesTag = async () => {
-    const { data, error } = await supabase_client.from('templatesTag').select('*');
+    const { data, error } = await supabaseClient.from('templatesTag').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
         toast.error(`CODE : ${error.code}`);
-        reject(`제품 태그 불러오기 오류 :  ${error.message}`);
+        reject(new Error(`제품 태그 불러오기 오류 :  ${error.message}`));
       } else {
-        resolve(data.sort((a, b) => b.from_nav - a.from_nav));
+        resolve(data.sort((a, b) => b.fromNav - a.fromNav));
       }
     });
   };
@@ -53,21 +53,21 @@ const useGetTemplatesTag = () => {
 };
 // 수정
 const useUpdateTemplatesTag = () => {
-  const handleUpdateTemplatesTag = async ({ id, title, tagList, from_nav }) => {
+  const handleUpdateTemplatesTag = async ({ id, title, tagList, fromNav }) => {
     const list = { list: tagList };
-    const { data, error } = await supabase_client
+    const { data, error } = await supabaseClient
       .from('templatesTag')
       .update({
         title,
         tagList: list,
-        from_nav,
+        fromNav,
       })
       .eq('id', id);
 
     return new Promise((resolve, reject) => {
       if (error) {
         toast.error(`CODE : ${error.code}`);
-        reject(`제품 태그 수정 오류 :  ${error.message}`);
+        reject(new Error(`제품 태그 수정 오류 :  ${error.message}`));
       } else {
         toast.success('성공적으로 수정하였습니다');
         resolve(data);
@@ -83,41 +83,44 @@ const useUpdateTemplatesTag = () => {
   });
 };
 
-//삭제
+// 삭제
 const useDeleteTemplatesTag = () => {
-  const handleDeleteTemplatesTag = async ({ id, category_name }) => {
-    const { data: orderSettingData, error: readErr } = await supabase_client
+  const handleDeleteTemplatesTag = async ({ id, categoryName }) => {
+    const { data: orderSettingData, error: readErr } = await supabaseClient
       .from('orderSetting')
       .select('*')
-      .eq('category_name', category_name)
+      .eq('categoryName', categoryName)
       .single();
     if (!readErr) {
-      order_setting_for.map((itemName) => {
+      orderSettingFor.map((itemName) => {
         if (orderSettingData[itemName]) {
           orderSettingData[itemName].preview.map((item) => {
-            if (item.public_id) {
-              deleteImage(item.public_id);
+            if (item.publicId) {
+              deleteImage(item.publicId);
             }
+            return false;
           });
         }
+        return false;
       });
-      const { error: orderSettingErr } = await supabase_client
+      const { error: orderSettingErr } = await supabaseClient
         .from('orderSetting')
         .delete()
-        .eq('category_name', category_name);
-      const { error: templatesTagErr } = await supabase_client
+        .eq('categoryName', categoryName);
+      const { error: templatesTagErr } = await supabaseClient
         .from('templatesTag')
         .delete()
         .eq('id', id);
       return new Promise((resolve, reject) => {
         if (orderSettingErr || templatesTagErr) {
-          reject(`Order Setting 삭제 오류 :  ${error.message}`);
+          reject(new Error(`Order Setting 삭제 오류`));
         } else {
           toast.success('성공적으로 삭제하였습니다');
           resolve('삭제성공');
         }
       });
     }
+    return false;
   };
   const client = useQueryClient();
   return useMutation(handleDeleteTemplatesTag, {
@@ -127,11 +130,10 @@ const useDeleteTemplatesTag = () => {
     },
   });
 };
-export const useTemplatesTag = () => {
-  return {
-    useCreateTemplatesTag,
-    useGetTemplatesTag,
-    useUpdateTemplatesTag,
-    useDeleteTemplatesTag,
-  };
-};
+const useTemplatesTag = () => ({
+  useCreateTemplatesTag,
+  useGetTemplatesTag,
+  useUpdateTemplatesTag,
+  useDeleteTemplatesTag,
+});
+export default useTemplatesTag;

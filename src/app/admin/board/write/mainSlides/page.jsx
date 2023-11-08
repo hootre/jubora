@@ -1,7 +1,4 @@
-import { MainSlides_Wrtie } from 'components/admin/Board/MainSlides_Write';
-import Notice_Write from 'components/admin/Board/Notice_Write';
+import MainSlidesWrtie from 'components/admin/Board/MainSlidesWrite';
 
-const page = () => {
-  return <MainSlides_Wrtie />;
-};
+const page = () => <MainSlidesWrtie />;
 export default page;

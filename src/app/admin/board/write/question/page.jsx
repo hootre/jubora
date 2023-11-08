@@ -1,6 +1,4 @@
-import Question_Write from 'components/admin/Board/Question_Write';
+import QuestionWrite from 'components/admin/Board/QuestionWrite';
 
-const page = () => {
-  return <Question_Write />;
-};
+const page = () => <QuestionWrite />;
 export default page;

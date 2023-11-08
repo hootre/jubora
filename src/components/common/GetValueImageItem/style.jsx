@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const GetValueImageItem_container = styled.div`
+const GetValueImageItemContainer = styled.div`
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -33,7 +33,7 @@ export const GetValueImageItem_container = styled.div`
       color: ${Common.colors.white};
       border: 1px solid ${Common.colors.white};
       border-radius: 5px;
-      > div {
+      > button {
         color: ${Common.colors.primary100};
         font-weight: bold;
       }
@@ -63,3 +63,4 @@ export const GetValueImageItem_container = styled.div`
     transition: all 0.2s ease;
   }
 `;
+export default GetValueImageItemContainer;

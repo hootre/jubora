@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const MyPageModal_container = styled.article`
+const MyPageModalContainer = styled.article`
   .back {
     position: fixed;
     top: 0;
@@ -79,3 +79,4 @@ export const MyPageModal_container = styled.article`
     }
   }
 `;
+export default MyPageModalContainer;

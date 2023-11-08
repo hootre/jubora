@@ -1,7 +1,6 @@
 'use client';
+
 import React from 'react';
 
-const price = () => {
-  return <section className="page_container">price</section>;
-};
+const price = () => <section className="pageContainer">price</section>;
 export default price;

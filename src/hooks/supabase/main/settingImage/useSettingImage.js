@@ -1,28 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import supabase_client from 'lib/supabase_client';
+import supabaseClient from 'lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { gatherKeys } from 'utils/gatherKeys';
+import gatherKeys from 'utils/gatherKeys';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 
 // 생성
 const useCreateMainSettingImage = () => {
   const handleCreateMainSettingImage = async ({ image, position }) => {
-    const { url, public_id } = await uploadImage(image)
-      .then((data) => data)
-      .catch((error) => console.log(`메인 구성 이미지 업로드 오류 :  ${error.message}`));
-
-    const { data, error } = await supabase_client.from('mainSettingImage').insert({
+    const { url, publicId } = await uploadImage(image);
+    const { data, error } = await supabaseClient.from('mainSettingImage').insert({
       image: url,
-      public_id,
+      publicId,
       position,
     });
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (error) {
-        await deleteImage(public_id);
+        deleteImage(publicId);
         toast.error(`CODE : ${error.code}`);
-        reject(`메인 구성 이미지 생성 오류 :  ${error.message}`);
+        reject(new Error(`메인 구성 이미지 생성 오류 :  ${error.message}`));
       } else {
         toast.success('성공적으로 생성하였습니다');
         resolve(data);
@@ -40,10 +37,10 @@ const useCreateMainSettingImage = () => {
 // 목록
 const useGetMainSettingImage = () => {
   const handleGetMainSettingImage = async () => {
-    const { data, error } = await supabase_client.from('mainSettingImage').select('*');
+    const { data, error } = await supabaseClient.from('mainSettingImage').select('*');
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`메인 구성 이미지 불러오기 오류 :  ${error.message}`);
+        reject(new Error(`메인 구성 이미지 불러오기 오류 :  ${error.message}`));
       } else {
         resolve(data.sort((a, b) => a.id - b.id));
       }
@@ -53,36 +50,36 @@ const useGetMainSettingImage = () => {
 };
 // 수정
 const useUpdateMainSettingImage = () => {
-  const handleUpdateMainSettingImage = async ({ id, image, position, prev_public_id }) => {
-    if (prev_public_id) {
-      await deleteImage(prev_public_id);
+  const handleUpdateMainSettingImage = async ({ id, image, position, prevPublicId }) => {
+    if (prevPublicId) {
+      await deleteImage(prevPublicId);
     }
     if (typeof image !== 'string') {
-      const { url, public_id } = await uploadImage(image[0]);
+      const { url, publicId } = await uploadImage(image[0]);
 
       if (url.length > 0) {
-        const { data, error } = await supabase_client
+        const { data, error } = await supabaseClient
           .from('mainSettingImage')
           .update({
             image: url,
             position,
-            public_id,
+            publicId,
           })
           .eq('id', id);
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
           if (error) {
-            await deleteImage(public_id);
+            deleteImage(publicId);
             toast.error(`CODE : ${error.code}`);
-            reject(`메인 구성 이미지 수정 오류 :  ${error.message}`);
+            reject(new Error(`메인 구성 이미지 수정 오류 :  ${error.message}`));
           } else {
             toast.success('성공적으로 수정하였습니다');
             resolve(data);
           }
         });
-      } else {
-        toast.error(`이미지 업로드 실패`);
       }
+      toast.error(`이미지 업로드 실패`);
     }
+    return false;
   };
   const client = useQueryClient();
   const router = useRouter();
@@ -95,12 +92,12 @@ const useUpdateMainSettingImage = () => {
 };
 // 삭제
 const useDeleteMainSettingImage = () => {
-  const handleDeleteMainSettingImage = async ({ id, public_id }) => {
-    await deleteImage(public_id);
-    const { data, error } = await supabase_client.from('mainSettingImage').delete().eq('id', id);
+  const handleDeleteMainSettingImage = async ({ id, publicId }) => {
+    deleteImage(publicId);
+    const { data, error } = await supabaseClient.from('mainSettingImage').delete().eq('id', id);
     return new Promise((resolve, reject) => {
       if (error) {
-        reject(`메인 구성 이미지 수정 오류 :  ${error.message}`);
+        reject(new Error(`메인 구성 이미지 수정 오류 :  ${error.message}`));
       } else {
         toast.success('성공적으로 삭제하였습니다');
         resolve(data);
@@ -114,11 +111,10 @@ const useDeleteMainSettingImage = () => {
     },
   });
 };
-export const useMainSettingImage = () => {
-  return {
-    useCreateMainSettingImage,
-    useGetMainSettingImage,
-    useUpdateMainSettingImage,
-    useDeleteMainSettingImage,
-  };
-};
+const useMainSettingImage = () => ({
+  useCreateMainSettingImage,
+  useGetMainSettingImage,
+  useUpdateMainSettingImage,
+  useDeleteMainSettingImage,
+});
+export default useMainSettingImage;

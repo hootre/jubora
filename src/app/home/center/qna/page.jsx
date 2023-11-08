@@ -1,6 +1,5 @@
-import QnA_Read from 'components/home/Center/QnA/QnA_Read';
+import QnaRead from 'components/home/Center/QnA/QnaRead';
 import * as React from 'react';
-const page = () => {
-  return <QnA_Read />;
-};
+
+const page = () => <QnaRead />;
 export default page;

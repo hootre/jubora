@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const DataTable_container = styled.div`
+const DataTableContainer = styled.div`
   .title_box {
     display: flex;
     flex-direction: column;
@@ -95,3 +95,4 @@ export const DataTable_container = styled.div`
     text-align: center;
   }
 `;
+export default DataTableContainer;

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Header_container = styled.header`
+const HeaderContainer = styled.header`
   box-shadow: 0px 3px 3px 2px rgba(0, 0, 0, 0.05);
   background-color: ${Common.colors.white};
   .prev_site {
@@ -13,7 +13,7 @@ export const Header_container = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .nav_container {
+    .navContainer {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -38,7 +38,7 @@ export const Header_container = styled.header`
           margin-right: 60px;
           cursor: pointer;
         }
-        .sub_container {
+        .subContainer {
           display: flex;
           align-items: start;
           font-size: 12px;
@@ -58,7 +58,9 @@ export const Header_container = styled.header`
                   background-color: ${Common.colors.bg200};
                   margin: 0 10px;
                 }
-                > a {
+                > button {
+                  font-size: 13px;
+                  line-height: 14px;
                   cursor: pointer;
                   display: flex;
                   align-items: center;
@@ -89,7 +91,7 @@ export const Header_container = styled.header`
         justify-content: center;
         transition: all 0.2s ease;
         > div {
-          width: ${Common.size.container_width};
+          width: ${Common.size.containerWidth};
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -171,29 +173,29 @@ export const Header_container = styled.header`
                 color: ${Common.colors.accent100};
               }
             }
-            &.banner:hover ~ .drop_down_container {
+            &.banner:hover ~ .drop_downContainer {
               .menu_benner {
                 display: flex;
               }
             }
-            &.print:hover ~ .drop_down_container {
+            &.print:hover ~ .drop_downContainer {
               .menu_print {
                 display: flex;
               }
             }
-            &.real:hover ~ .drop_down_container {
+            &.real:hover ~ .drop_downContainer {
               .menu_real {
                 display: flex;
               }
             }
           }
-          .drop_down_container {
+          .drop_downContainer {
             position: absolute;
             overflow: auto;
             display: none;
             top: 45px;
             z-index: 5;
-            width: ${Common.size.container_width};
+            width: ${Common.size.containerWidth};
             height: 410px;
             background: #fff;
             box-shadow: 0px 3px 3px 2px rgba(0, 0, 0, 0.05);
@@ -239,7 +241,7 @@ export const Header_container = styled.header`
             }
           }
           &:hover {
-            .drop_down_container {
+            .drop_downContainer {
               display: block;
             }
           }
@@ -248,3 +250,4 @@ export const Header_container = styled.header`
     }
   }
 `;
+export default HeaderContainer;

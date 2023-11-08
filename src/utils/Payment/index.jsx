@@ -2,13 +2,39 @@
 
 import toast from 'react-hot-toast';
 import { v4 } from 'uuid';
-import { Payments_container } from './style';
-import Image from 'next/image';
-import { usePayment } from 'hooks/supabase/payment/usePayment';
+import usePayment from 'hooks/supabase/payment/usePayment';
+import PaymentsContainer from './style';
 
-export const Payments = ({ order_data }) => {
+function Payments({ orderData }) {
   const { useCreatePayment } = usePayment();
   const { mutate: createPayment } = useCreatePayment();
+  const callback = async (res, data, pg) => {
+    // eslint-disable-next-line camelcase
+    const { success, error_msg, merchant_uid, imp_uid } = res;
+    const payData = {
+      pg,
+      productImage: data.image,
+      name: data.title,
+      amount: data.price,
+      buyerEmail: data.writerUserEmail,
+      buyerName: data.name,
+      address: {
+        address1: data.address1,
+        address2: data.address2,
+        address3: data.address3,
+        zonecode: data.zonecode,
+      },
+      merchantUid: merchant_uid,
+      impUid: imp_uid,
+    };
+
+    if (success) {
+      createPayment(payData);
+    } else {
+      // eslint-disable-next-line camelcase
+      toast.error(`${error_msg}`);
+    }
+  };
   // 카카오페이
   const kakaopayHandler = () => {
     if (!window.IMP) return;
@@ -21,13 +47,13 @@ export const Payments = ({ order_data }) => {
       pg: 'kakaopay', // PG사 코드표 참조
       pay_method: 'card',
       merchant_uid: `mid_${v4()}`, // 주문번호
-      name: order_data.title,
-      amount: order_data.price,
-      buyer_email: order_data.writer_user_email,
-      buyer_name: order_data.name,
+      name: orderData.title,
+      amount: orderData.price,
+      buyerEmail: orderData.writerUserEmail,
+      buyerName: orderData.name,
     };
     /* 4. 결제 창 호출하기 */
-    IMP.request_pay(data, (res) => callback(res, order_data, 'kakaopay'));
+    IMP.request_pay(data, (res) => callback(res, orderData, 'kakaopay'));
   };
   // 토스페이먼츠
   const tosspayHandler = () => {
@@ -41,51 +67,30 @@ export const Payments = ({ order_data }) => {
       pg: 'tosspayments', // PG사 코드표 참조
       pay_method: 'card',
       merchant_uid: `mid_${v4()}`, // 주문번호
-      name: order_data.title,
-      amount: order_data.price,
-      buyer_email: order_data.writer_user_email,
-      buyer_name: order_data.name,
+      name: orderData.title,
+      amount: orderData.price,
+      buyerEmail: orderData.writerUserEmail,
+      buyerName: orderData.name,
     };
     /* 4. 결제 창 호출하기 */
-    IMP.request_pay(data, (res) => callback(res, order_data, 'tosspayments'));
-  };
-  const callback = async (res, order_data, pg) => {
-    const { success, error_msg, merchant_uid, imp_uid } = res;
-    const pay_data = {
-      pg,
-      product_image: order_data.image,
-      name: order_data.title,
-      amount: order_data.price,
-      buyer_email: order_data.writer_user_email,
-      buyer_name: order_data.name,
-      address: {
-        address_1: order_data.address_1,
-        address_2: order_data.address_2,
-        address_3: order_data.address_3,
-        zonecode: order_data.zonecode,
-      },
-      merchant_uid,
-      imp_uid,
-    };
-
-    if (success) {
-      createPayment(pay_data);
-    } else {
-      toast.error(`${error_msg}`);
-    }
+    IMP.request_pay(data, (res) => callback(res, orderData, 'tosspayments'));
   };
 
   return (
-    <Payments_container>
+    <PaymentsContainer>
       <div>
-        <button className="C_basic_button">카드결제</button>
+        <button type="button" className="C_basic_button">
+          카드결제
+        </button>
       </div>
-      <div className="tosspay" onClick={tosspayHandler}>
+      <button type="button" className="tosspay" onClick={tosspayHandler}>
         <img src="/image/tosspay.png" alt="토스페이" />
-      </div>
-      <div className="kakaopay" onClick={kakaopayHandler}>
+      </button>
+      <button type="button" className="kakaopay" onClick={kakaopayHandler}>
         <img src="/image/kakaopay.png" alt="카카오페이" />
-      </div>
-    </Payments_container>
+      </button>
+    </PaymentsContainer>
   );
-};
+}
+
+export default Payments;

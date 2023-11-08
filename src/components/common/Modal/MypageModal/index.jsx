@@ -1,11 +1,16 @@
 import React from 'react';
-import { MyPageModal_container } from './style';
 import { Link } from '@mui/material';
+import MyPageModalContainer from './style';
 
-export const MypageModal = ({ user, signOut, toggleIsMypage }) => {
+export default function MypageModal({ user, signOut, toggleIsMypage }) {
   return (
-    <MyPageModal_container>
-      <div className="back" onClick={toggleIsMypage}></div>
+    <MyPageModalContainer>
+      <div
+        role="presentation"
+        className="back"
+        onClick={toggleIsMypage}
+        onKeyDown={toggleIsMypage}
+      />
       <div className="content_box">
         <div className="head">
           <h1 className="name">{user?.name}</h1>
@@ -16,10 +21,12 @@ export const MypageModal = ({ user, signOut, toggleIsMypage }) => {
             <li>
               <Link href="/home/mypage/my_info">내 정보</Link>
             </li>
-            <li onClick={signOut}>로그아웃</li>
+            <li role="presentation" onClick={signOut}>
+              로그아웃
+            </li>
           </ul>
         </div>
       </div>
-    </MyPageModal_container>
+    </MyPageModalContainer>
   );
-};
+}

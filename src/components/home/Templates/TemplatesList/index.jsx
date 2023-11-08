@@ -1,22 +1,23 @@
 'use client';
-import { SideCategory } from 'components/home/Templates/SideCategory';
-import { Showcase } from 'components/home/Templates/Showcase';
-import { TagList } from 'components/home/Templates/TagList';
-import { TemplatesList_container } from './styles.jsx';
 
-export const TemplatesList = ({ bannerState }) => {
+import SideCategory from 'components/home/Templates/SideCategory';
+import Showcase from 'components/home/Templates/Showcase';
+import TagList from 'components/home/Templates/TagList';
+import TemplatesListContainer from './styles';
+
+export default function TemplatesList({ bannerState }) {
   return (
-    <TemplatesList_container className="C_container">
-      <section className="main_img_container">
-        <div className="img_box"></div>
+    <TemplatesListContainer className="CContainer">
+      <section className="mainImgContainer">
+        <div className="img_box" />
       </section>
-      <section className="templats_container">
+      <section className="templatsContainer">
         <SideCategory />
         <main>
           <TagList />
           <Showcase bannerState={bannerState} />
         </main>
       </section>
-    </TemplatesList_container>
+    </TemplatesListContainer>
   );
-};
+}

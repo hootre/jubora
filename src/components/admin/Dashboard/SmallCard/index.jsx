@@ -1,9 +1,9 @@
 import React from 'react';
-import { SmallCard_container } from './styles';
+import SmallCardContainer from './styles';
 
-export const SmallCard = ({ title, lastText, value, icon }) => {
+export default function SmallCard({ title, lastText, value, icon }) {
   return (
-    <SmallCard_container>
+    <SmallCardContainer>
       <div>
         <h2>{title}</h2>
         <h1>
@@ -16,6 +16,6 @@ export const SmallCard = ({ title, lastText, value, icon }) => {
         </div>
         <div className="logo">{icon}</div>
       </div>
-    </SmallCard_container>
+    </SmallCardContainer>
   );
-};
+}

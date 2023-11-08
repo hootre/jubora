@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const Order_container = styled.section`
-  width: ${Common.size.container_width};
+const OrderContainer = styled.section`
+  width: ${Common.size.containerWidth};
   margin: 0 auto;
   padding: 50px 0;
   .order_title {
@@ -14,3 +14,4 @@ export const Order_container = styled.section`
     }
   }
 `;
+export default OrderContainer;

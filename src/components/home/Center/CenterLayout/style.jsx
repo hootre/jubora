@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const CenterLayout_container = styled.section`
+const CenterLayoutContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,3 +44,4 @@ export const CenterLayout_container = styled.section`
     }
   }
 `;
+export default CenterLayoutContainer;

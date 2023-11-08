@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const TemplatesSixContent_container = styled.div`
+const TemplatesSixContentContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   .content {
     display: flex;
     justify-content: space-between;
-    max-width: ${Common.size.container_width};
+    max-width: ${Common.size.containerWidth};
     section {
       ul {
         display: grid;
@@ -44,3 +44,4 @@ export const TemplatesSixContent_container = styled.div`
     }
   }
 `;
+export default TemplatesSixContentContainer;

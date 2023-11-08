@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-hot-toast';
-import { PaymentModal_container } from './style.jsx';
-export const PaymentModal = ({ toggleIsPayment }) => {
-  const [currentAccount, setCurrentAccount] = useState(0);
+import PaymentModalContainer from './style';
+
+export default function PaymentModal({ toggleIsPayment }) {
   return (
-    <PaymentModal_container>
-      <div className="back" onClick={toggleIsPayment}></div>
+    <PaymentModalContainer>
+      <div
+        role="presentation"
+        className="back"
+        onClick={toggleIsPayment}
+        onKeyDown={toggleIsPayment}
+      />
       <div className="content_box">
         <div className="order_info">
           <div className="order_content">
@@ -22,13 +26,15 @@ export const PaymentModal = ({ toggleIsPayment }) => {
                 text="농협 352-1400-1028-63"
                 onCopy={() => toast.success('클립보드에 복사되었습니다.')}
               >
-                <button>복사</button>
+                <button type="button">복사</button>
               </CopyToClipboard>
             </div>
           </div>
-          <button className="C_basic_button">문자전송</button>
+          <button type="button" className="C_basic_button">
+            문자전송
+          </button>
         </div>
       </div>
-    </PaymentModal_container>
+    </PaymentModalContainer>
   );
-};
+}

@@ -1,6 +1,4 @@
-import { Templates_Write } from 'components/admin/Board/Templates_Write';
+import TemplatesWrite from 'components/admin/Board/TemplatesWrite';
 
-const page = () => {
-  return <Templates_Write />;
-};
+const page = () => <TemplatesWrite />;
 export default page;

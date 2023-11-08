@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const DeleteAuthBtn_container = styled.div`
+export const DeleteAuthBtnContainer = styled.div`
   .delete_user_btn {
     position: absolute;
     top: 10px;
@@ -11,7 +11,7 @@ export const DeleteAuthBtn_container = styled.div`
     color: ${Common.colors.text200};
   }
 `;
-export const Modal_Content = styled.div`
+export const ModalContent = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;

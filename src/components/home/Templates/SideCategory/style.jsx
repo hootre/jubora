@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Common } from 'styles/Common';
+import Common from 'styles/Common';
 
-export const SideCategory_container = styled.aside`
+const SideCategoryContainer = styled.aside`
   position: absolute;
   top: 0;
   left: -300px;
@@ -51,3 +51,4 @@ export const SideCategory_container = styled.aside`
     }
   }
 `;
+export default SideCategoryContainer;

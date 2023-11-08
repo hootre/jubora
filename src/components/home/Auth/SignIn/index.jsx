@@ -1,13 +1,10 @@
 'use client';
 
-import logo from 'assets/MainPage/logo.png';
-import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Auth_container } from '../style.jsx';
-import { useUser } from 'hooks/supabase/auth/useUser.js';
-const SignIn = ({ authType, setAuthType }) => {
+import User from 'hooks/supabase/auth/useUser';
+
+function SignIn({ authType, setAuthType }) {
   // form
   const {
     register,
@@ -15,10 +12,9 @@ const SignIn = ({ authType, setAuthType }) => {
     trigger,
     formState: { isValid, errors },
   } = useForm();
-  //auth
-  const { useSignIn, useSignInGoogle } = useUser();
+  // auth
+  const { useSignIn } = User();
   const { mutate: basicLogin, isLoading } = useSignIn();
-  const { mutate: googleLogin } = useSignInGoogle();
   const router = useRouter();
   return (
     <div>
@@ -27,10 +23,18 @@ const SignIn = ({ authType, setAuthType }) => {
         <h1>로그인이 필요합니다</h1>
       </div>
       <ul className="login_util">
-        <li className={authType === 'signIn' ? 'active' : ''} onClick={() => setAuthType('signIn')}>
+        <li
+          role="presentation"
+          className={authType === 'signIn' ? 'active' : ''}
+          onClick={() => setAuthType('signIn')}
+        >
           로그인
         </li>
-        <li className={authType === 'signUp' ? 'active' : ''} onClick={() => setAuthType('signUp')}>
+        <li
+          role="presentation"
+          className={authType === 'signUp' ? 'active' : ''}
+          onClick={() => setAuthType('signUp')}
+        >
           회원가입
         </li>
       </ul>
@@ -54,7 +58,7 @@ const SignIn = ({ authType, setAuthType }) => {
             className={`input ${errors.email && 'invalid'}`}
             name="email"
             type="email"
-            required={true}
+            required
             {...register('email', {
               required: '이메일은 필수입니다',
               pattern: {
@@ -65,7 +69,7 @@ const SignIn = ({ authType, setAuthType }) => {
             onKeyUp={() => {
               trigger('email');
             }}
-          ></input>
+          />
           <p className={`point_text ${errors.password && 'active'}`}>{errors.password?.message} </p>
           <input
             name="password"
@@ -74,7 +78,7 @@ const SignIn = ({ authType, setAuthType }) => {
             type="password"
             autoComplete="off"
             className={`input form-control ${errors.password && 'invalid'}`}
-            required={true}
+            required
             {...register('password', {
               required: '비밀번호는 필수입니다.',
               pattern: {
@@ -93,8 +97,12 @@ const SignIn = ({ authType, setAuthType }) => {
             onKeyUp={() => {
               trigger('password');
             }}
-          ></input>
-          <span className="passwordForget" onClick={() => setAuthType('forgetPassword')}>
+          />
+          <span
+            role="presentation"
+            className="passwordForget"
+            onClick={() => setAuthType('forgetPassword')}
+          >
             아이디/비밀번호 찾기
           </span>
 
@@ -179,6 +187,6 @@ const SignIn = ({ authType, setAuthType }) => {
       </main>
     </div>
   );
-};
+}
 
 export default SignIn;

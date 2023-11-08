@@ -1,24 +1,22 @@
+import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
 
-export function useScroll() {
+function useScroll() {
   const [scrollY, setScrollY] = useState(0);
-  const [loading, setLoading] = useState(true);
-
+  const listener = () => {
+    setScrollY(window.screenY);
+  };
+  const delay = 15;
   useEffect(() => {
-    let mounted = true;
-    window.addEventListener('scroll', () => {
-      if (mounted) {
-        setScrollY(window.scrollY);
-        setLoading(false);
-      }
-    });
+    window.addEventListener('scroll', debounce(listener, delay));
     return () => {
-      mounted = false;
-      //   window.removeEventListener('scroll', debounce(listener, delay));
+      window.removeEventListener('scroll', listener);
     };
-  }, []);
+  });
 
   return {
     scrollY,
   };
 }
+
+export default useScroll;

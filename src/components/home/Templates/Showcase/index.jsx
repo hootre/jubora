@@ -1,32 +1,30 @@
 'use client';
-import React from 'react';
-import 'react-awesome-button/dist/styles.css';
-import './style.jsx';
-import { useTemplateSortType } from 'store';
-import { useTemplateTagList } from 'store';
-import { Showcase_container } from './style.jsx';
-import { ImageItem } from 'components/common/ImageItem/index.jsx';
-import { Search } from '../Search/index.jsx';
-import { useState } from 'react';
-import { ItemTypeGroup } from './ItemTypeGroup/index.jsx';
-import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
-import { useUser } from 'hooks/supabase/auth/useUser.js';
-import { Pagination, Stack } from '@mui/material';
-import { MainLoading } from 'components/Loading/MainLoading/index.jsx';
 
-export const Showcase = ({ bannerState = 'banner' }) => {
+import React, { useState } from 'react';
+import 'react-awesome-button/dist/styles.css';
+import { useTemplateSortType, useTemplateTagList } from 'store';
+
+import { Pagination, Stack } from '@mui/material';
+import useTemplates from 'hooks/supabase/templates/useTemplates';
+import MainLoading from 'components/Loading/MainLoading';
+import ImageItem from 'components/common/ImageItem';
+import ShowcaseContainer from './style';
+import Search from '../Search';
+import ItemTypeGroup from './ItemTypeGroup';
+
+export default function Showcase({ bannerState = 'banner' }) {
   // 페이지 기본값
   const [page, setPage] = useState(1);
   const handleChange = (event, value) => {
     setPage(value);
   };
-  // user상태관리
-  const { useGetUserInfo } = useUser();
-  const { data: user, isLoading: userLoading } = useGetUserInfo();
   // template 목록
   const { useGetTemplatesPage, useGetCategoryCount } = useTemplates();
-  const { data: templatesList, isLoading } = useGetTemplatesPage(bannerState, page);
-  const { data: templatesCount } = useGetCategoryCount(bannerState);
+  const { data: templatesList, isLoading: templagesLoading } = useGetTemplatesPage(
+    bannerState,
+    page
+  );
+  const { data: templatesCount, isLoading: countLoading } = useGetCategoryCount(bannerState);
   // 가로,세로,포스터
   const [bannerType, setBannerType] = useState('banner_row');
   const handleBannerType = (e) => {
@@ -37,7 +35,7 @@ export const Showcase = ({ bannerState = 'banner' }) => {
   const SortType = useTemplateSortType();
   // 현재 적용된 태그
   const tagList = useTemplateTagList();
-  if (isLoading || userLoading) {
+  if (templagesLoading || countLoading) {
     return <MainLoading />;
   }
   let filterDataList = [];
@@ -46,32 +44,31 @@ export const Showcase = ({ bannerState = 'banner' }) => {
       .filter((item) => {
         if (tagList.filter((tag) => item.title.includes(tag.text)).length === tagList.length) {
           return item;
-        } else {
-          return false;
         }
+        return false;
       })
       .sort((a, b) => {
         if (SortType === '최신순') {
-          return new Date(b.created_at) - new Date(a.created_at);
-        } else if (SortType === '조회순') {
-          return new Date(b.views) - new Date(a.views);
-        } else {
-          return new Date(b.sales) - new Date(a.sales);
+          return new Date(b.createdAt) - new Date(a.createdAt);
         }
+        if (SortType === '조회순') {
+          return new Date(b.views) - new Date(a.views);
+        }
+        return new Date(b.sales) - new Date(a.sales);
       });
   } else {
     filterDataList = templatesList.sort((a, b) => {
       if (SortType === '최신순') {
-        return new Date(b.created_at) - new Date(a.created_at);
-      } else if (SortType === '조회순') {
-        return new Date(b.views) - new Date(a.views);
-      } else {
-        return new Date(b.sales) - new Date(a.sales);
+        return new Date(b.createdAt) - new Date(a.createdAt);
       }
+      if (SortType === '조회순') {
+        return new Date(b.views) - new Date(a.views);
+      }
+      return new Date(b.sales) - new Date(a.sales);
     });
   }
   return (
-    <Showcase_container>
+    <ShowcaseContainer>
       <div className="filter_nav">
         <Search />
         <ItemTypeGroup bannerType={bannerType} handleBannerType={handleBannerType} />
@@ -83,40 +80,38 @@ export const Showcase = ({ bannerState = 'banner' }) => {
       <div className="showcase">
         <ul className={bannerType}>
           {filterDataList &&
-            filterDataList.map((item) => {
-              return (
-                <li key={item.id}>
-                  {bannerType === 'banner_row' ? (
-                    <ImageItem
-                      img_src={item.img_row}
-                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
-                      text={'구매하기'}
-                      bannerType={'banner_row'}
-                    />
-                  ) : bannerType === 'banner_col' ? (
-                    <ImageItem
-                      img_src={item.img_col}
-                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
-                      text={'구매하기'}
-                      bannerType={'banner_col'}
-                    />
-                  ) : (
-                    <ImageItem
-                      img_src={item.img_square}
-                      href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
-                      text={'구매하기'}
-                      bannerType={'banner_square'}
-                    />
-                  )}
-                </li>
-              );
-            })}
+            filterDataList.map((item) => (
+              <li key={item.id}>
+                {bannerType === 'banner_row' ? (
+                  <ImageItem
+                    imgSrc={item.imgRow}
+                    href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
+                    text="구매하기"
+                    bannerType="banner_row"
+                  />
+                ) : bannerType === 'banner_col' ? (
+                  <ImageItem
+                    imgSrc={item.imgCol}
+                    href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
+                    text="구매하기"
+                    bannerType="banner_col"
+                  />
+                ) : (
+                  <ImageItem
+                    imgSrc={item.imgSquare}
+                    href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
+                    text="구매하기"
+                    bannerType="banner_square"
+                  />
+                )}
+              </li>
+            ))}
         </ul>
       </div>
       <div className="pagenation">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(templatesCount?.length / 50)}
+            count={Math.ceil(templatesCount.length / 50)}
             variant="outlined"
             shape="rounded"
             page={page}
@@ -124,6 +119,6 @@ export const Showcase = ({ bannerState = 'banner' }) => {
           />
         </Stack>
       </div>
-    </Showcase_container>
+    </ShowcaseContainer>
   );
-};
+}

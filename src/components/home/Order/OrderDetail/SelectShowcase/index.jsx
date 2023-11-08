@@ -2,26 +2,20 @@
 
 import React, { useState } from 'react';
 import 'react-awesome-button/dist/styles.css';
-import { useTemplateSortType, useTemplateTagList } from 'store';
 
-import { ImageItem } from 'components/common/ImageItem/index.jsx';
-
-import { useTemplates } from 'hooks/supabase/templates/useTemplates.js';
-import { User } from 'hooks/supabase/auth/User.js';
 import { Pagination, Stack } from '@mui/material';
-import { GetValueImageItem } from 'components/common/GetValueImageItem/index.jsx';
-import { Select_showcaseContainer } from './style.jsx';
-import { ItemTypeGroup } from './ItemTypeGroup/index.jsx';
+import useTemplates from 'hooks/supabase/templates/useTemplates';
+import MainLoading from 'components/Loading/MainLoading';
+import GetValueImageItem from 'components/common/GetValueImageItem';
+import SelectShowcaseContainer from './style';
+import ItemTypeGroup from './ItemTypeGroup';
 
-export function Select_showcase({ category = 'banner', toaggleModal }) {
+export default function SelectShowcase({ category = 'banner', toaggleModal }) {
   // 페이지 기본값
   const [page, setPage] = useState(1);
   const handleChange = (event, value) => {
     setPage(value);
   };
-  // user상태관리
-  const { useGetUserInfo } = User();
-  const { data: user, isLoading: userLoading } = useGetUserInfo();
   // template 목록
   const { useGetTemplatesPage, useGetCategoryCount } = useTemplates();
   const { data: templatesList, isLoading } = useGetTemplatesPage(category, page);
@@ -33,42 +27,42 @@ export function Select_showcase({ category = 'banner', toaggleModal }) {
   };
 
   // zustand
-  const SortType = useTemplateSortType();
-  const tagList = useTemplateTagList();
-  if (isLoading || userLoading) {
-    return <h1>Loading</h1>;
+  // const SortType = useTemplateSortType();
+  // const tagList = useTemplateTagList();
+  if (isLoading) {
+    return <MainLoading />;
   }
-  let filterDataList = [];
-  if (tagList.length > 0) {
-    filterDataList = templatesList
-      .filter((item) => {
-        if (tagList.filter((tag) => item.title.includes(tag.text)).length === tagList.length) {
-          return item;
-        }
-        return false;
-      })
-      .sort((a, b) => {
-        if (SortType === '최신순') {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        }
-        if (SortType === '조회순') {
-          return new Date(b.views) - new Date(a.views);
-        }
-        return new Date(b.sales) - new Date(a.sales);
-      });
-  } else {
-    filterDataList = templatesList.sort((a, b) => {
-      if (SortType === '최신순') {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      }
-      if (SortType === '조회순') {
-        return new Date(b.views) - new Date(a.views);
-      }
-      return new Date(b.sales) - new Date(a.sales);
-    });
-  }
+  // let filterDataList = [];
+  // if (tagList.length > 0) {
+  //   filterDataList = templatesList
+  //     .filter((item) => {
+  //       if (tagList.filter((tag) => item.title.includes(tag.text)).length === tagList.length) {
+  //         return item;
+  //       }
+  //       return false;
+  //     })
+  //     .sort((a, b) => {
+  //       if (SortType === '최신순') {
+  //         return new Date(b.createdAt) - new Date(a.createdAt);
+  //       }
+  //       if (SortType === '조회순') {
+  //         return new Date(b.views) - new Date(a.views);
+  //       }
+  //       return new Date(b.sales) - new Date(a.sales);
+  //     });
+  // } else {
+  //   filterDataList = templatesList.sort((a, b) => {
+  //     if (SortType === '최신순') {
+  //       return new Date(b.createdAt) - new Date(a.createdAt);
+  //     }
+  //     if (SortType === '조회순') {
+  //       return new Date(b.views) - new Date(a.views);
+  //     }
+  //     return new Date(b.sales) - new Date(a.sales);
+  //   });
+  // }
   return (
-    <Select_showcaseContainer>
+    <SelectShowcaseContainer>
       <div className="filter_nav">
         <ItemTypeGroup bannerType={bannerType} handleBannerType={handleBannerType} />
       </div>
@@ -110,7 +104,7 @@ export function Select_showcase({ category = 'banner', toaggleModal }) {
       <div className="pagenation">
         <Stack spacing={2}>
           <Pagination
-            count={Math.ceil(templatesCount?.length / 50)}
+            count={Math.ceil(templatesCount.length / 50)}
             variant="outlined"
             shape="rounded"
             page={page}
@@ -118,6 +112,6 @@ export function Select_showcase({ category = 'banner', toaggleModal }) {
           />
         </Stack>
       </div>
-    </Select_showcaseContainer>
+    </SelectShowcaseContainer>
   );
 }

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Common from 'styles/Common';
 
-export const ItemTypeGroupContainer = styled.div`
+const ItemTypeGroupContainer = styled.div`
   .from_item_btn {
     padding: 10px 40px;
     color: ${Common.colors.text300};
@@ -18,3 +18,4 @@ export const ItemTypeGroupContainer = styled.div`
     }
   }
 `;
+export default ItemTypeGroupContainer;

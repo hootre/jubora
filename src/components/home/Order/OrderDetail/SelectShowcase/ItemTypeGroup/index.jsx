@@ -1,7 +1,7 @@
 import React from 'react';
-import { ItemTypeGroupContainer } from './style';
+import ItemTypeGroupContainer from './style';
 
-export function ItemTypeGroup({ bannerType, handleBannerType }) {
+export default function ItemTypeGroup({ bannerType, handleBannerType }) {
   return (
     <ItemTypeGroupContainer>
       <button

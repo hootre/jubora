@@ -13,7 +13,7 @@ export default function TextDropdown({ title, dropdownText }) {
         </div>
         <div className="dropdownText_box">
           {dropdownText.map((item) => (
-            <div key={item}>
+            <div key={item.text}>
               <Link href={item.href}>{item.text}</Link>
             </div>
           ))}

@@ -15,6 +15,7 @@ import { headerMainNavList, headerNoticeTextList } from 'assets/data';
 import useTemplatesTag from 'hooks/supabase/templatesTag/useTemplatesTag';
 import useMainSettingImage from 'hooks/supabase/main/settingImage/useSettingImage';
 import MainLoading from 'components/Loading/MainLoading';
+import { v4 } from 'uuid';
 import HeaderSearchInput from './HeaderSearchInput';
 import HeaderContainer from './style';
 
@@ -150,7 +151,7 @@ export default function Header() {
                             {item.tagList.list.map((text) => (
                               <li
                                 role="presentation"
-                                key={text}
+                                key={`${text}_${() => v4()}`}
                                 onClick={() => {
                                   setTemplateTagList(text);
                                 }}
@@ -173,7 +174,7 @@ export default function Header() {
                             {item.tagList.list.map((text) => (
                               <li
                                 role="presentation"
-                                key={text}
+                                key={`${text}_${() => v4()}`}
                                 onClick={() => {
                                   setTemplateTagList(text);
                                 }}
@@ -196,7 +197,7 @@ export default function Header() {
                             {item.tagList.list.map((text) => (
                               <li
                                 role="presentation"
-                                key={text}
+                                key={`${text}_${() => v4()}`}
                                 onClick={() => {
                                   setTemplateTagList(text);
                                 }}

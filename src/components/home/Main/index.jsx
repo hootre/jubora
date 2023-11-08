@@ -1,10 +1,7 @@
 'use client';
 
-import MainSlides from 'components/home/Main/MainSlides';
-import MainNotice from 'components/home/Main/MainNotice';
 import TemplatesContents from 'components/home/Main/TemplatesContents';
 import HomeLayout from 'components/home/HomeLayout';
-import MainTemplatesCardList from 'components/home/Main/MainTemplatesCardList';
 import useTemplates from 'hooks/supabase/templates/useTemplates';
 import useMainSettingImage from 'hooks/supabase/main/settingImage/useSettingImage';
 import MainLoading from 'components/Loading/MainLoading';
@@ -17,7 +14,7 @@ export default function Main() {
   const { data: MainSettingImageData, isLoading: imageLoading } = useGetMainSettingImage();
   let centerImage;
   let center2Image;
-  let noticeImage;
+  // let noticeImage;
   if (imageLoading || templateLoadgin) {
     return <MainLoading />;
   }
@@ -27,17 +24,19 @@ export default function Main() {
     } else if (item.position === 'center2') {
       center2Image = item.image;
     } else if (item.position === 'notice') {
-      noticeImage = item.image;
+      // noticeImage = item.image;
     }
     return false;
   });
   return (
     <MainContainer>
       <HomeLayout>
-        <MainSlides />
+        {/* <MainSlides /> */}
+        <TemplatesContents sixData={sixData} />
         <img src={centerImage} alt="centerImage" className="mainImage" />
+        {/* <MainTemplatesCardList /> */}
         <img src={center2Image} alt="center2Image" className="mainImage" />
-        <MainNotice noticeImage={noticeImage} />
+        {/* <MainNotice noticeImage={noticeImage} /> */}
       </HomeLayout>
     </MainContainer>
   );

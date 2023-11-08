@@ -12,6 +12,9 @@
     "react/prop-types": "off",
     "no-nested-ternary": "off",
     "react-hooks/rules-of-hooks": "off",
+    "@next/next/no-img-element": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/no-danger": "off",
     "jsx-a11y/label-has-associated-control": [
       2,
       {

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Common from 'styles/Common';
 
-export const Select_showcaseContainer = styled.section`
+const SelectShowcaseContainer = styled.section`
   margin-top: 30px;
   width: ${Common.size.containerWidth};
   .filter_nav {
@@ -128,3 +128,4 @@ export const Select_showcaseContainer = styled.section`
     justify-content: center;
   }
 `;
+export default SelectShowcaseContainer;

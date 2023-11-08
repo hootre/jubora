@@ -119,7 +119,7 @@ export default function OrderUpdate({ data, role }) {
                 샘플선택 +
               </button>
               <BasicModal state={open} onClose={toaggleModal}>
-                <Select_showcase category={data.categoryType} toaggleModal={toaggleModal} />
+                <SelectShowcase category={data.categoryType} toaggleModal={toaggleModal} />
               </BasicModal> */}
             </td>
             <td>

@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import ReadMainslidesContainer from './style';
 import MainSlides from 'components/home/Main/MainSlides';
 
 import Link from 'next/link';
@@ -8,6 +7,8 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import useMainSlides from 'hooks/supabase/main/slides/useMainSlides';
 import MainLoading from 'components/Loading/MainLoading';
+
+import ReadMainslidesContainer from './style';
 
 export default function ReadMainslides({ view }) {
   // user check 관리

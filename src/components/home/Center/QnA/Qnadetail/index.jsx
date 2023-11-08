@@ -9,6 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { deleteImage } from 'utils/imageUpload/uploader';
 import MainLoading from 'components/Loading/MainLoading';
 import User from 'hooks/supabase/auth/useUser';
+import DOMPurify from 'dompurify';
 import QnaDetailContainer from './styles';
 import QnaUpdate from '../QnaUpdate';
 import QnaRead from '../QnaRead';
@@ -92,7 +93,10 @@ export default function QnADetail({ id }) {
               </div>
             </div>
             <div className="contents_body">
-              <div className="content" dangerouslySetInnerHTML={{ __html: qnaData.contents }} />
+              <div
+                className="content"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(qnaData.contents) }}
+              />
             </div>
           </>
         )}

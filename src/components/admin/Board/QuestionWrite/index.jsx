@@ -9,11 +9,12 @@ import useQuestion from 'hooks/supabase/question/useQuestion';
 import Link from 'next/link';
 import QuestionRead from 'components/home/Center/Question/QuestionRead';
 import User from 'hooks/supabase/auth/useUser';
-import QuestionWriteContainer from './styles';
 
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import { Editor } from '@toast-ui/react-editor';
+
+import QuestionWriteContainer from './styles';
 
 export default function QuestionWrite() {
   // 어드민 유저정보 확인

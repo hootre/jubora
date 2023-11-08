@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CardContainer } from './style';
+import CardContainer from './style';
 
 export default function Card() {
   return (

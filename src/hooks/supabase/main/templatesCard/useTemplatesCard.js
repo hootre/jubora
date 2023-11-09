@@ -62,7 +62,7 @@ const useUpdateMainTemplatesCard = () => {
     prevPublicId,
   }) => {
     if (prevPublicId) {
-      await deleteImage(prevPublicId);
+      deleteImage(prevPublicId);
     }
     if (typeof image !== 'string') {
       const { url, publicId } = await uploadImage(image[0]);

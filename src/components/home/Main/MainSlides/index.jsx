@@ -9,7 +9,7 @@ import MainSlidesContainer from './style';
 // 메인
 export default function MainSlides() {
   const { useGetMainSlides } = useMainSlides();
-  const { data: slides, isLoading } = useGetMainSlides();
+  const { data: slides } = useGetMainSlides();
   // 기본 변수
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -37,10 +37,9 @@ export default function MainSlides() {
       setIsSwiping(false);
     }, 1000);
   };
-
-  if (isLoading) {
-    return <MainSlides />;
-  }
+  // if (isLoading) {
+  //   return <MainSlides />;
+  // }
   return (
     <MainSlidesContainer>
       <div className="slide ">

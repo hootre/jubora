@@ -6,15 +6,14 @@ import useNotice from 'hooks/supabase/notice/useNotice';
 import { useFormContext } from 'react-hook-form';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 
-import dynamic from 'next/dynamic';
 import SelectAdminWrite from 'components/admin/Board/AdminWriteItem/SelectAdminWrite';
 import cloudFolderList from 'utils/imageUpload/cloudFolderList';
 import MainLoading from 'components/Loading/MainLoading';
+import { Editor } from '@toast-ui/react-editor';
 import NoticeUpdateContainer from './styles';
-// Toast UI Editor
-dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
-const { Editor } = dynamic(() => import('@toast-ui/react-editor'), { ssr: false });
-dynamic(() => import('@toast-ui/editor/dist/i18n/ko-kr'), { ssr: false });
+
+import '@toast-ui/editor/dist/toastui-editor.css';
+import '@toast-ui/editor/dist/i18n/ko-kr';
 
 export default function NoticeUpdate({ id }) {
   // notice 업데이트

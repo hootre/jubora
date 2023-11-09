@@ -15,7 +15,7 @@ export default function MainTemplatesCardList() {
   return (
     <MainTemplatesCardListContainer className="CContainer">
       {MainTemplatesCardData.map((item) => (
-        <Card key={item} item={item} />
+        <Card key={item.id} item={item} />
       ))}
     </MainTemplatesCardListContainer>
   );

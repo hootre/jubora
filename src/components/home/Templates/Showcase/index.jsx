@@ -82,28 +82,30 @@ export default function Showcase({ bannerState = 'banner' }) {
           {filterDataList &&
             filterDataList.map((item) => (
               <li key={item.id}>
-                {bannerType === 'banner_row' ? (
+                <div className={bannerType === 'banner_row' ? 'active' : 'none'}>
                   <ImageItem
                     imgSrc={item.imgRow}
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_row"
                   />
-                ) : bannerType === 'banner_col' ? (
+                </div>
+                <div className={bannerType === 'banner_col' ? 'active' : 'none'}>
                   <ImageItem
                     imgSrc={item.imgCol}
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_col"
                   />
-                ) : (
+                </div>
+                <div className={bannerType === 'banner_square' ? 'active' : 'none'}>
                   <ImageItem
                     imgSrc={item.imgSquare}
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_square"
                   />
-                )}
+                </div>
               </li>
             ))}
         </ul>

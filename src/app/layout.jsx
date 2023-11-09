@@ -4,7 +4,7 @@ import localFont from 'next/font/local';
 
 export const dynamic = 'force-dynamic';
 
-const pretendard = localFont({
+export const pretendard = localFont({
   src: [
     {
       path: './Pretendard-Medium.woff2',
@@ -44,7 +44,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="kr" className={pretendard.className}>
+    <html lang="kr">
       <body>
         <Providers>{children}</Providers>
       </body>

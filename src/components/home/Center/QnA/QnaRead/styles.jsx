@@ -64,6 +64,16 @@ const QnaReadContainer = styled.section`
       }
     }
   }
+  .main {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h1 {
+      margin-top: 50px;
+      color: ${Common.colors.text200};
+    }
+  }
   .BoardItem {
     display: flex;
     justify-content: space-between;

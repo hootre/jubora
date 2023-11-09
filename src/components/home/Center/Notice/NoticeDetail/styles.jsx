@@ -11,7 +11,7 @@ const NoticeDetailContainer = styled.section`
     display: flex;
     justify-content: end;
     gap: 10px;
-    > div {
+    > button {
       padding: 10px 15px;
       border-radius: 5px;
       border: 1px solid ${Common.colors.bd100};

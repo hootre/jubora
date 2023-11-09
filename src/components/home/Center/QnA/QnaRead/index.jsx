@@ -119,35 +119,39 @@ function QnaRead() {
           <span className="date">날짜</span>
         </div>
       </div>
-      <div>
-        {qnaData
-          .sort((a, b) => b.id - a.id)
-          ?.map((item) => (
-            <div className="BoardItem" key={item.id}>
-              <div>
-                {user.role === 'admin' && (
-                  <span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) =>
-                        onCheckedElement(e.target.checked, { id: item.id, images: item.images })
-                      }
-                      checked={!!checkedList.filter((el) => el.id === item.id).length}
-                    />
+      <div className="main">
+        {qnaData.length > 0 ? (
+          qnaData
+            .sort((a, b) => b.id - a.id)
+            ?.map((item) => (
+              <div className="BoardItem" key={item.id}>
+                <div>
+                  {user.role === 'admin' && (
+                    <span>
+                      <input
+                        type="checkbox"
+                        onChange={(e) =>
+                          onCheckedElement(e.target.checked, { id: item.id, images: item.images })
+                        }
+                        checked={!!checkedList.filter((el) => el.id === item.id).length}
+                      />
+                    </span>
+                  )}
+                  <span className="id">{item.id}</span>
+                  <span className="state">[{item.type}]</span>
+                  <span className="title">
+                    <Link href={`/home/center/qna/${item.id}`}>{item.title}</Link>
                   </span>
-                )}
-                <span className="id">{item.id}</span>
-                <span className="state">[{item.type}]</span>
-                <span className="title">
-                  <Link href={`/home/center/qna/${item.id}`}>{item.title}</Link>
-                </span>
 
-                <span className="name">{item.name}</span>
+                  <span className="name">{item.name}</span>
 
-                <span className="date">{String(item.createdAt).substring(5, 10)}</span>
+                  <span className="date">{String(item.createdAt).substring(5, 10)}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+        ) : (
+          <h1>게시된 글이 없습니다</h1>
+        )}
       </div>
     </QnaReadContainer>
   );

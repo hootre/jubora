@@ -58,8 +58,10 @@ const HeaderContainer = styled.header`
                   background-color: ${Common.colors.bg200};
                   margin: 0 10px;
                 }
-                > button {
-                  font-size: 13px;
+                > button,
+                > a,
+                > div {
+                  font-size: 12px;
                   line-height: 14px;
                   cursor: pointer;
                   display: flex;
@@ -101,15 +103,19 @@ const HeaderContainer = styled.header`
           display: flex;
           > li {
             &:hover {
-              > svg {
+              a {
+                > svg {
+                  color: ${Common.colors.primary100};
+                }
                 color: ${Common.colors.primary100};
               }
-              color: ${Common.colors.primary100};
               transform: translateY(-2px);
             }
-            > svg {
-              margin-right: 5px;
-              transition: all 0.2s ease;
+            a {
+              > svg {
+                margin-right: 5px;
+                transition: all 0.2s ease;
+              }
             }
             transition: all 0.2s ease;
             cursor: pointer;

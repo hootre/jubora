@@ -6,6 +6,9 @@ import useTemplates from 'hooks/supabase/templates/useTemplates';
 import useMainSettingImage from 'hooks/supabase/main/settingImage/useSettingImage';
 import MainLoading from 'components/Loading/MainLoading';
 import MainContainer from './style';
+import MainSlides from './MainSlides';
+import MainTemplatesCardList from './MainTemplatesCardList';
+import MainNotice from './MainNotice';
 
 export default function Main() {
   const { useGetSixTemplates } = useTemplates();
@@ -14,7 +17,7 @@ export default function Main() {
   const { data: MainSettingImageData, isLoading: imageLoading } = useGetMainSettingImage();
   let centerImage;
   let center2Image;
-  // let noticeImage;
+  let noticeImage;
   if (imageLoading || templateLoadgin) {
     return <MainLoading />;
   }
@@ -24,19 +27,19 @@ export default function Main() {
     } else if (item.position === 'center2') {
       center2Image = item.image;
     } else if (item.position === 'notice') {
-      // noticeImage = item.image;
+      noticeImage = item.image;
     }
     return false;
   });
   return (
     <MainContainer>
       <HomeLayout>
-        {/* <MainSlides /> */}
+        <MainSlides />
         <TemplatesContents sixData={sixData} />
         <img src={centerImage} alt="centerImage" className="mainImage" />
-        {/* <MainTemplatesCardList /> */}
+        <MainTemplatesCardList />
         <img src={center2Image} alt="center2Image" className="mainImage" />
-        {/* <MainNotice noticeImage={noticeImage} /> */}
+        <MainNotice noticeImage={noticeImage} />
       </HomeLayout>
     </MainContainer>
   );

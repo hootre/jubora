@@ -5,15 +5,13 @@ import simpleDate from 'utils/simpleDate';
 import { useFormContext } from 'react-hook-form';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import useQnA from 'hooks/supabase/qna/useQnA';
-import dynamic from 'next/dynamic';
 import cloudFolderList from 'utils/imageUpload/cloudFolderList';
 import MainLoading from 'components/Loading/MainLoading';
 import SelectAdminWrite from 'components/admin/Board/AdminWriteItem/SelectAdminWrite';
+import { Editor } from '@toast-ui/react-editor';
 import QnaUpdateContainer from './styles';
-// Toast UI Editor
-dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
-const { Editor } = dynamic(() => import('@toast-ui/react-editor'), { ssr: false });
-dynamic(() => import('@toast-ui/editor/dist/i18n/ko-kr'), { ssr: false });
+import '@toast-ui/editor/dist/toastui-editor.css';
+import '@toast-ui/editor/dist/i18n/ko-kr';
 
 export default function QnaUpdate({ id }) {
   // notice 업데이트

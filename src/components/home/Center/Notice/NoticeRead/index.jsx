@@ -114,36 +114,40 @@ function NoticeRead() {
           <span className="date">날짜</span>
         </div>
       </div>
-      <ul>
-        {noticeData
-          .sort((item) => item.state === '공지')
-          ?.map((item) => (
-            <li className="BoardItem" key={item.id}>
-              <div>
-                {user.role === 'admin' && (
-                  <span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) =>
-                        onCheckedElement(e.target.checked, { id: item.id, images: item.images })
-                      }
-                      checked={!!checkedList.filter((el) => el.id === item.id).length}
-                    />
-                  </span>
-                )}
+      <ul className="main">
+        {noticeData.length > 0 ? (
+          noticeData
+            .sort((item) => item.state === '공지')
+            ?.map((item) => (
+              <li className="BoardItem" key={item.id}>
+                <div>
+                  {user.role === 'admin' && (
+                    <span>
+                      <input
+                        type="checkbox"
+                        onChange={(e) =>
+                          onCheckedElement(e.target.checked, { id: item.id, images: item.images })
+                        }
+                        checked={!!checkedList.filter((el) => el.id === item.id).length}
+                      />
+                    </span>
+                  )}
 
-                <span className="id">{item.id}</span>
-                <span className={item.type === '공지' ? 'notice state' : 'state'}>
-                  [{item.type}]
-                </span>
-                <span className="title">
-                  <Link href={`/home/center/notice/${item.id}`}>{item.title}</Link>
-                </span>
-                <span className="name">{item.name}</span>
-                <span className="date">{String(item.createdAt).substring(5, 10)}</span>
-              </div>
-            </li>
-          ))}
+                  <span className="id">{item.id}</span>
+                  <span className={item.type === '공지' ? 'notice state' : 'state'}>
+                    [{item.type}]
+                  </span>
+                  <span className="title">
+                    <Link href={`/home/center/notice/${item.id}`}>{item.title}</Link>
+                  </span>
+                  <span className="name">{item.name}</span>
+                  <span className="date">{String(item.createdAt).substring(5, 10)}</span>
+                </div>
+              </li>
+            ))
+        ) : (
+          <h1>게시된 글이 없습니다</h1>
+        )}
       </ul>
     </NoticeReadContainer>
   );

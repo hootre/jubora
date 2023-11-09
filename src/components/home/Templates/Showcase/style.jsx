@@ -57,6 +57,12 @@ const ShowcaseContainer = styled.section`
         position: relative;
         overflow: hidden;
         transition: all 0.2s ease;
+        .none {
+          display: none;
+        }
+        .active {
+          display: block;
+        }
         .delete_btn {
           border: 1px solid #000;
         }

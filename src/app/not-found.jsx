@@ -1,25 +1,82 @@
-import Link from 'next/link';
+'use client';
+
+import styled from '@emotion/styled';
+import { useRouter } from 'next/navigation';
+import Common from 'styles/Common';
+
+const NotFoundContainer = styled.main`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    .logo {
+      margin-bottom: 50px;
+    }
+    .textBox {
+      text-align: center;
+      h1 {
+        font-size: 50px;
+
+        > span {
+          color: ${Common.colors.primary100};
+          font-weight: bold;
+        }
+      }
+    }
+    .subText {
+      font-size: 15px;
+      color: ${Common.colors.text200};
+      margin-bottom: 50px;
+    }
+    .btnBox {
+      display: flex;
+      gap: 10px;
+      > button {
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: 1px solid ${Common.colors.bd100};
+        cursor: pointer;
+        transition: all 0.2s ease;
+        &:hover {
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+`;
 
 export default function NotFound() {
+  const router = useRouter();
   return (
-    <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
-      <div className="text-center">
-        <p className="text-base font-semibold text-indigo-600">404</p>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Page not found
-        </h1>
-        <p className="mt-6 text-base leading-7 text-gray-600">
-          Sorry, we couldn’t find the page you’re looking for.
-        </p>
-        <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Link
-            href="/"
-            className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Go back home
-          </Link>
+    <NotFoundContainer>
+      <div>
+        <div className="logo">
+          <img src="/image/logo.png" alt="" />
+        </div>
+        <div className="textBox">
+          <h1>서비스이용에</h1>
+          <h1>
+            <span>불편을 드려서</span> 죄송합니다
+          </h1>
+        </div>
+        <div className="subText">
+          <h2>찾으시려는 페이지가 존재하지않거나, 현재 사용할 수 없는 페이지입니다</h2>
+        </div>
+        <div className="btnBox">
+          <button type="button" onClick={() => router.back()}>
+            이전 화면
+          </button>
+          <button type="button" onClick={() => router.push('/')}>
+            메인으로 가기
+          </button>
         </div>
       </div>
-    </main>
+    </NotFoundContainer>
   );
 }

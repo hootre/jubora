@@ -1,4 +1,5 @@
 import { Global, css } from '@emotion/react';
+import { pretendard } from 'app/layout';
 import reset from './reset';
 import Common from './Common';
 
@@ -6,6 +7,9 @@ const style = css`
   ${reset};
   * {
     box-sizing: border-box;
+  }
+  * {
+    font-family: ${pretendard.style.fontFamily};
   }
   /* 스크롤바 설정*/
   *::-webkit-scrollbar {
@@ -115,7 +119,6 @@ const style = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
     min-width: 50px;
     cursor: pointer;
     padding: 10px;
@@ -123,7 +126,6 @@ const style = css`
     transition: all 0.2s ease;
     background: ${Common.colors.primary100};
     color: ${Common.colors.white};
-    font-weight: bold;
     &:hover {
       background: ${Common.colors.primary300};
       transform: translateY(-2px);

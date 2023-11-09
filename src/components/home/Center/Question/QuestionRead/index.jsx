@@ -106,34 +106,38 @@ export default function QuestionRead() {
           </div>
         )}
       </div>
-      <div>
-        {questionData
-          .sort((a, b) => b.id - a.id)
-          ?.map((item) => (
-            <Accordion contents={item.contents} key={item.id}>
-              <div className="BoardItem" key={item.id}>
-                <div>
-                  {user.role === 'admin' && (
-                    <span>
-                      <input
-                        type="checkbox"
-                        onChange={(e) =>
-                          onCheckedElement(e.target.checked, { id: item.id, images: item.images })
-                        }
-                        checked={!!checkedList.filter((el) => el.id === item.id).length}
-                      />
-                    </span>
-                  )}
+      <div className="main">
+        {questionData.length > 0 ? (
+          questionData
+            .sort((a, b) => b.id - a.id)
+            ?.map((item) => (
+              <Accordion contents={item.contents} key={item.id}>
+                <div className="BoardItem" key={item.id}>
+                  <div>
+                    {user.role === 'admin' && (
+                      <span>
+                        <input
+                          type="checkbox"
+                          onChange={(e) =>
+                            onCheckedElement(e.target.checked, { id: item.id, images: item.images })
+                          }
+                          checked={!!checkedList.filter((el) => el.id === item.id).length}
+                        />
+                      </span>
+                    )}
 
-                  <span className="state">[{item.type}]</span>
-                  <span className="title">{item.title}</span>
+                    <span className="state">[{item.type}]</span>
+                    <span className="title">{item.title}</span>
+                  </div>
+                  <div className="icon">
+                    <BiChevronDown />
+                  </div>
                 </div>
-                <div className="icon">
-                  <BiChevronDown />
-                </div>
-              </div>
-            </Accordion>
-          ))}
+              </Accordion>
+            ))
+        ) : (
+          <h1>게시된 글이 없습니다</h1>
+        )}
       </div>
     </QuestionReadContainer>
   );

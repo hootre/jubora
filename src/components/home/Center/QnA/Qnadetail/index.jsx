@@ -61,7 +61,7 @@ export default function QnADetail({ id }) {
             </>
           ) : (
             <button type="button" className="modify_btn" onClick={toggleSianUpdate}>
-              주문수정하기
+              수정하기
             </button>
           ))}
       </div>

@@ -9,6 +9,7 @@ import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 import dynamic from 'next/dynamic';
 import SelectAdminWrite from 'components/admin/Board/AdminWriteItem/SelectAdminWrite';
 import cloudFolderList from 'utils/imageUpload/cloudFolderList';
+import MainLoading from 'components/Loading/MainLoading';
 import NoticeUpdateContainer from './styles';
 // Toast UI Editor
 dynamic(() => import('@toast-ui/editor/dist/toastui-editor.css'), { ssr: false });
@@ -51,7 +52,7 @@ export default function NoticeUpdate({ id }) {
     }
   };
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <NoticeUpdateContainer>

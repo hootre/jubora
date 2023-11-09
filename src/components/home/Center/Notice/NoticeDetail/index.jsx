@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import BoardCommentList from 'components/common/Board/BoardCommentList';
 import BoardCommentInput from 'components/common/Board/BoardCommentInput';
-import simpleDate from 'utils/simpleDate';
 import useNotice from 'hooks/supabase/notice/useNotice';
 import { FormProvider, useForm } from 'react-hook-form';
 import { deleteImage } from 'utils/imageUpload/uploader';
 import MainLoading from 'components/Loading/MainLoading';
 import User from 'hooks/supabase/auth/useUser';
+import simpleDate from 'utils/simpleDate';
 import NoticeDetailContainer from './styles';
 import NoticeUpdate from '../NoticeUpdate';
 import NoticeRead from '../NoticeRead';

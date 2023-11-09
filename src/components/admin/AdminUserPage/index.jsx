@@ -224,7 +224,7 @@ const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
                   {`${item.address1} ${item.address2}`}
                 </div>
                 <div className="grid-table-cell" data-title="Series">
-                  {simpleDate(item.updated_at, 'y')}
+                  {simpleDate(item.updatedAt, 'y')}
                 </div>
                 <div className="grid-table-cell" data-title="Air Date">
                   {simpleDate(item.createdAt, 'y')}
@@ -260,7 +260,7 @@ const AdminUserPage = memo(({ data, handleDelete, updateRole }) => {
                 {`${item.address1} ${item.address2}`}
               </div>
               <div className="grid-table-cell" data-title="Series">
-                {simpleDate(item.updated_at, 'y')}
+                {simpleDate(item.updatedAt, 'y')}
               </div>
               <div className="grid-table-cell" data-title="Air Date">
                 {simpleDate(item.createdAt, 'y')}

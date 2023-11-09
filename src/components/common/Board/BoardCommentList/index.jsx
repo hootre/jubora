@@ -3,6 +3,7 @@ import useComment from 'hooks/supabase/comment/useComment';
 import simpleDate from 'utils/simpleDate';
 import User from 'hooks/supabase/auth/useUser';
 import { BiX } from 'react-icons/bi';
+import MainLoading from 'components/Loading/MainLoading';
 import BoardCommentListContainer from './style';
 
 export default function BoardCommentList({ fromTable, fromTableId }) {
@@ -14,7 +15,7 @@ export default function BoardCommentList({ fromTable, fromTableId }) {
   const { mutate: deleteComment } = useDeleteComment();
   const { data, isLoading } = useGetComment(fromTable, fromTableId);
   if (isLoading || userLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <BoardCommentListContainer>

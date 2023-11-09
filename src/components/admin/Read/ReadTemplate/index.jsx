@@ -6,6 +6,7 @@ import User from 'hooks/supabase/auth/useUser';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import useTemplates from 'hooks/supabase/templates/useTemplates';
+import MainLoading from 'components/Loading/MainLoading';
 import BoardItem from './BoardItem';
 import ReadTemplateContainer from './styles';
 
@@ -78,7 +79,7 @@ export default function ReadTemplate() {
   );
 
   if (isLoading || userLoading) {
-    return <h1>Loading</h1>;
+    return <MainLoading />;
   }
   return (
     <ReadTemplateContainer>

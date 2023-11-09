@@ -15,38 +15,17 @@ export const pretendard = localFont({
     },
   ],
 });
-export const metadata = {
-  metadataBase: new URL('http://localhost:2000'),
-  title: {
-    template: '%s | JUBORA',
-    default: 'JUBORA',
-  },
-  description: '교회 현수막, 판촉, 전도지 등 교회용품 업체입니다',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f5f5f5' },
-    { media: '(prefers-color-scheme: dark)', color: '#000' },
-  ],
-  openGraph: {
-    title: 'JUBORA',
-    description: '교회 현수막, 판촉, 전도지 등 교회용품 업체입니다',
-    url: 'https://jubora.com',
-    siteName: 'JUBORA',
-    locale: 'ko_kr',
-    type: 'website',
-    images: [
-      {
-        url: `https://maxleiter.com/api/og?title=${encodeURIComponent("Max Leiter's site")}`,
-        width: 1200,
-        height: 630,
-        alt: '',
-      },
-    ],
-  },
-};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="kr">
+      <head>
+        <title>jubora</title>
+        <meta name="description" content="교회현수막 전문업체입니다" />
+        <meta property="og:title" content="주보라(JUBORA)" />
+        <meta property="og:image" content="/image/logo.png" />
+        <meta property="og:description" content="교회현수막 전문업체입니다" />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>

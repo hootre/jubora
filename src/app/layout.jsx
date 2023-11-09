@@ -1,3 +1,5 @@
+'use client';
+
 import Providers from 'utils/provider';
 // layout.tsx
 import localFont from 'next/font/local';

@@ -13,37 +13,37 @@ const TemplatesWriteContainer = styled.div`
       flex-direction: column;
       gap: 10px;
     }
-    .tag_box {
+  }
+  .tag_box {
+    display: flex;
+    > main {
+      flex: 1;
       display: flex;
-      > main {
-        flex: 1;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: start;
-        justify-content: start;
-        gap: 10px;
-        .tag_btn {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 10px 15px;
-          border: 1px solid ${Common.colors.bd100};
-          background: ${Common.colors.white};
-          border-radius: 10px;
-          font-size: 12px;
-          color: ${Common.colors.black};
-          cursor: pointer;
-          .icon {
-            margin-left: 5px;
-            cursor: pointer;
-          }
-          &:hover,
-          &.active {
-            color: ${Common.colors.white};
-            background: ${Common.colors.black};
-          }
-        }
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: start;
+      justify-content: start;
+      gap: 10px;
+    }
+    .tag_btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 15px;
+      border: 1px solid ${Common.colors.bd100};
+      background: ${Common.colors.white};
+      border-radius: 10px;
+      font-size: 12px;
+      color: ${Common.colors.black};
+      cursor: pointer;
+      .icon {
+        margin-left: 5px;
+        cursor: pointer;
+      }
+      &:hover,
+      &.active {
+        color: ${Common.colors.white};
+        background: ${Common.colors.black};
       }
     }
   }

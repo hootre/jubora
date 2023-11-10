@@ -8,7 +8,7 @@ import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 // 생성
 const useCreateMainSettingImage = () => {
   const handleCreateMainSettingImage = async ({ image, position }) => {
-    const { url, publicId } = await uploadImage(image);
+    const { url, public_id: publicId } = await uploadImage(image);
     const { data, error } = await supabaseClient.from('mainSettingImage').insert({
       image: url,
       publicId,
@@ -55,7 +55,7 @@ const useUpdateMainSettingImage = () => {
       await deleteImage(prevPublicId);
     }
     if (typeof image !== 'string') {
-      const { url, publicId } = await uploadImage(image[0]);
+      const { url, public_id: publicId } = await uploadImage(image[0]);
 
       if (url.length > 0) {
         const { data, error } = await supabaseClient

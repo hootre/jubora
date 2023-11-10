@@ -8,7 +8,7 @@ import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 // 생성
 const useCreateMainTemplatesCard = () => {
   const handleCreateMainTemplatesCard = async ({ image, title, subtitle, description }) => {
-    const { url, publicId } = await uploadImage(image);
+    const { url, public_id: publicId } = await uploadImage(image);
 
     const { data, error } = await supabaseClient.from('mainTemplatesCard ').insert({
       image: url,
@@ -65,7 +65,7 @@ const useUpdateMainTemplatesCard = () => {
       deleteImage(prevPublicId);
     }
     if (typeof image !== 'string') {
-      const { url, publicId } = await uploadImage(image[0]);
+      const { url, public_id: publicId } = await uploadImage(image[0]);
       if (url.length > 0) {
         const { data, error } = await supabaseClient
           .from('mainTemplatesCard ')

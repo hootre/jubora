@@ -11,6 +11,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import MainLoading from 'components/Loading/MainLoading';
 import ItemSelect from 'components/home/Order/OrderWriterItem/ItemSelect';
 import ItemUpload from 'components/home/Order/OrderWriterItem/ItemUpload';
+import toast from 'react-hot-toast';
 
 export default function TemplatesBanner({ bannerState }) {
   let tagList = [];
@@ -44,13 +45,17 @@ export default function TemplatesBanner({ bannerState }) {
     setValue('category', []);
   }, [bannerState]);
   const onSubmit = (data) => {
-    setIsUploading(true);
-    handleCreateBanner(data, {
-      onSettled: () => {
-        reset();
-        setIsUploading(false);
-      },
-    });
+    if (watch('category').length === 0) {
+      toast.error('태그도 작성 부탁드립니다');
+    } else {
+      setIsUploading(true);
+      handleCreateBanner(data, {
+        onSettled: () => {
+          reset();
+          setIsUploading(false);
+        },
+      });
+    }
   };
   if (tagLoading) {
     return <MainLoading />;

@@ -7,7 +7,7 @@ import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
 //  생성
 const useCreateMainSlides = () => {
   const handleCreateMainSlides = async ({ img, title1, title2, content1, content2, subtitle }) => {
-    const { url, publicId } = await uploadImage(img, 'jubora_board');
+    const { url, public_id: publicId } = await uploadImage(img, 'jubora_board');
 
     const { data, error } = await supabaseClient.from('mainSlides').insert({
       img: url,
@@ -65,7 +65,7 @@ const useUpdateMainSlides = () => {
     subtitle,
   }) => {
     deleteImage(prevPublicId);
-    const { url, publicId } = await uploadImage(img);
+    const { url, public_id: publicId } = await uploadImage(img);
     const { data, error } = await supabaseClient
       .from('mainSlides')
       .update({

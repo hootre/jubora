@@ -69,7 +69,7 @@ export default function QuestionWrite() {
   };
   const onUploadImage = async (blob, callback) => {
     if (typeof watch('images').ids === 'object') {
-      const { url, publicId } = await uploadImage(blob, cloudFolderList.board);
+      const { url, public_id: publicId } = await uploadImage(blob, cloudFolderList.board);
       setValue('images', { ids: [...watch('images').ids, publicId] });
       callback(url, 'alt text');
     }

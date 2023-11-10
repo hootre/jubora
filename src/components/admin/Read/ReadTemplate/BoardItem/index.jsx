@@ -17,7 +17,7 @@ function BoardItem({ user, item, checkedList, onCheckedElement }) {
               onChange={(e) =>
                 onCheckedElement(e.target.checked, {
                   id: item.id,
-                  images: [item.publicIdRow, item?.publicId_col, item?.publicId_square],
+                  images: [item.publicIdRow, item?.publicIdCol, item?.publicIdSquare],
                   bannerState: item.bannerState,
                 })
               }

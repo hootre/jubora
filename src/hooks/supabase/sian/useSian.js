@@ -77,7 +77,7 @@ const useCreateSian = () => {
 const useUpdateSian = () => {
   const handleUpdateSian = async ({ id, adminText, userText, mainImg }) => {
     if (typeof mainImg === 'object') {
-      const { url, publicId } = await uploadImage(mainImg, cloudFolderList.order);
+      const { url, public_id: publicId } = await uploadImage(mainImg, cloudFolderList.order);
       const { data, error } = await supabaseClient
         .from('sian')
         .update({

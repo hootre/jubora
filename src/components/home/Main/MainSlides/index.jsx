@@ -16,7 +16,7 @@ export default function MainSlides() {
   // 슬라이드 이동 함수
   const handleSlide = (index) => {
     // left
-    if (index >= slides.length) {
+    if (index >= slides?.length) {
       setCurrentIndex(0);
     } else {
       setCurrentIndex(index);

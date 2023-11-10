@@ -148,18 +148,19 @@ const useCreateTemplate = () => {
     const title = `${categoryName}_${randomText}`;
     const categoryList = { list: [...category] };
     if (bannerState === 'banner') {
-      const { url: imgUrlRow, publicId: publicIdRow } = await uploadImage(
+      const { url: imgUrlRow, public_id: publicIdRow } = await uploadImage(
         imgRow[0],
         cloudFolderList.templates
       );
-      const { url: imgUrlCol, publicId: publicIdCol } = await uploadImage(
+      const { url: imgUrlCol, public_id: publicIdCol } = await uploadImage(
         imgCol[0],
         cloudFolderList.templates
       );
-      const { url: imgUrlSquare, publicId: publicIdSquare } = await uploadImage(
+      const { url: imgUrlSquare, public_id: publicIdSquare } = await uploadImage(
         imgSquare[0],
         cloudFolderList.templates
       );
+
       const { data, error } = await supabaseClient.from('templates').insert({
         bannerState,
         categoryName,
@@ -189,7 +190,7 @@ const useCreateTemplate = () => {
         }
       });
     }
-    const { url: imgUrlRow, publicId: publicIdRow } = await uploadImage(
+    const { url: imgUrlRow, public_id: publicIdRow } = await uploadImage(
       imgRow[0],
       cloudFolderList.templates
     );

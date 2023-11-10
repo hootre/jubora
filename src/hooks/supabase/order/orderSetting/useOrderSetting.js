@@ -54,7 +54,7 @@ const useCreateOrderSetting = () => {
     orderSettingFor.map((itemName) => {
       if (cloneData[itemName].preview.length > 0) {
         cloneData[itemName].preview.map(async (image, idx) => {
-          const { url, publicId } = await uploadImage(image, cloudFolderList.board);
+          const { url, public_id: publicId } = await uploadImage(image, cloudFolderList.board);
           cloneData[itemName].preview[idx] = { url, publicId };
         });
       }
@@ -123,7 +123,10 @@ const useUpdateOrderSetting = () => {
                 if (typeof item.publicId === 'string') {
                   deleteImage(item.publicId);
                 }
-                const { url, publicId } = await uploadImage(item.image, cloudFolderList.board);
+                const { url, public_id: publicId } = await uploadImage(
+                  item.image,
+                  cloudFolderList.board
+                );
                 cloneData[itemName].preview[idx].image = url;
                 cloneData[itemName].preview[idx].publicId = publicId;
                 awaitImages.push(publicId);

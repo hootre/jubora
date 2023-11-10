@@ -45,7 +45,7 @@ export default function NoticeUpdate({ id }) {
   };
   const onUploadImage = async (blob, callback) => {
     if (watch('images').ids) {
-      const { url, publicId } = await uploadImage(blob, cloudFolderList.board);
+      const { url, public_id: publicId } = await uploadImage(blob, cloudFolderList.board);
       setValue('images', { ids: [...watch('images').ids, publicId] });
       callback(url, 'alt text');
     }

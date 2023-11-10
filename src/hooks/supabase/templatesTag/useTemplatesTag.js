@@ -45,7 +45,8 @@ const useGetTemplatesTag = () => {
         toast.error(`CODE : ${error.code}`);
         reject(new Error(`제품 태그 불러오기 오류 :  ${error.message}`));
       } else {
-        resolve(data.sort((a, b) => b.fromNav - a.fromNav));
+        const resultData = data.sort((a, b) => a.id - b.id);
+        resolve(resultData);
       }
     });
   };

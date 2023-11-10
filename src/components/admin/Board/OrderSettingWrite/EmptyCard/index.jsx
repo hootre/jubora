@@ -30,7 +30,8 @@ export default function EmptyCard({ title, orderSetting, isOrderSetting, updataD
   };
   // 기본 값 할당
 
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    if (e.key === 'Enter') e.preventDefault();
     setIsUploading(true);
     orderSettingFor.map((item, idx) => {
       if (watch(`${item}_${idx}`) !== undefined) {
@@ -127,7 +128,7 @@ export default function EmptyCard({ title, orderSetting, isOrderSetting, updataD
                         </button>
                       ) : (
                         <button
-                          type="button"
+                          type="submit"
                           className={
                             isUploading || !isValid ? `upload_btn uploading` : `upload_btn`
                           }

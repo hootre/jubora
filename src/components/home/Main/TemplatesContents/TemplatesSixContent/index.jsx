@@ -16,6 +16,7 @@ export default function TemplatesSixContent({ templatesList, bannerType }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_row"
+                    loadingType="eager"
                   />
                 </div>
                 <div className={bannerType === 'banner_col' ? 'active' : 'none'}>
@@ -24,6 +25,7 @@ export default function TemplatesSixContent({ templatesList, bannerType }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_col"
+                    loadingType="eager"
                   />
                 </div>
                 <div className={bannerType === 'banner_square' ? 'active' : 'none'}>
@@ -32,6 +34,7 @@ export default function TemplatesSixContent({ templatesList, bannerType }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_square"
+                    loadingType="eager"
                   />
                 </div>
               </li>

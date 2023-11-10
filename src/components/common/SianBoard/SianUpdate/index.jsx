@@ -114,7 +114,7 @@ export default function SianUpdate({ data, index, expand, role, disabled }) {
                 )}
                 {!disabled && (
                   <button
-                    type="button"
+                    type="submit"
                     className="sian_btn"
                     disabled={isUploading}
                     onClick={handleSubmit(onSubmit)}

@@ -107,7 +107,7 @@ export default function EmptyCard({ item, updataData }) {
               </div>
               <div className="C_basic_flex">
                 <button
-                  type="button"
+                  type="submit"
                   className={
                     isUploading || !isValid ? `C_basic_button uploading` : `C_basic_button `
                   }

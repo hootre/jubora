@@ -42,7 +42,7 @@ export default function Showcase({ bannerState = 'banner' }) {
   if (tagList.length > 0) {
     filterDataList = templatesList
       .filter((item) => {
-        if (tagList.filter((tag) => item.title.includes(tag.text)).length === tagList.length) {
+        if (tagList.filter((tag) => item.category.list.includes(tag)).length === tagList.length) {
           return item;
         }
         return false;
@@ -88,6 +88,7 @@ export default function Showcase({ bannerState = 'banner' }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_row"
+                    loadingType="eager"
                   />
                 </div>
                 <div className={bannerType === 'banner_col' ? 'active' : 'none'}>
@@ -96,6 +97,7 @@ export default function Showcase({ bannerState = 'banner' }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_col"
+                    loadingType="eager"
                   />
                 </div>
                 <div className={bannerType === 'banner_square' ? 'active' : 'none'}>
@@ -104,6 +106,7 @@ export default function Showcase({ bannerState = 'banner' }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_square"
+                    loadingType="eager"
                   />
                 </div>
               </li>

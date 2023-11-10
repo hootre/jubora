@@ -135,7 +135,7 @@ export default function MainSlidesWrtie() {
           </div>
         </div>
         <div className="C_basic_flex">
-          <button type="button" className="C_basic_button" disabled={isUploading}>
+          <button type="submit" className="C_basic_button" disabled={isUploading}>
             {isUploading ? '업로드중...' : '제품 등록하기'}
           </button>
         </div>

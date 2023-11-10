@@ -116,30 +116,39 @@ export default function ReadOrderList() {
         </div>
       </div>
       <div>
-        {orderData
-          .sort((a, b) => b.id - a.id)
-          ?.map((item) => (
-            <div className="BoardItem" key={item.id}>
-              <div>
-                {user.role === 'admin' && (
-                  <span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => onCheckedElement(e.target.checked, item.id)}
-                      checked={!!checkedList.includes(item.id)}
-                    />
+        {orderData.length > 0 ? (
+          orderData
+            .sort((a, b) => b.id - a.id)
+            ?.map((item) => (
+              <div
+                className={item.state === '배송완료' ? `BoardItem success` : `BoardItem`}
+                key={item.id}
+              >
+                <div>
+                  {user.role === 'admin' && (
+                    <span>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => onCheckedElement(e.target.checked, item.id)}
+                        checked={!!checkedList.includes(item.id)}
+                      />
+                    </span>
+                  )}
+                  <span className="id">{item.id}</span>
+                  <span className="state">[{item.state}]</span>
+                  <span className="title">
+                    <Link href={`/admin/board/write/sian/${item.id}`}>{item.title}</Link>
                   </span>
-                )}
-                <span className="id">{item.id}</span>
-                <span className="state">[{item.state}]</span>
-                <span className="title">
-                  <Link href={`/admin/board/write/sian/${item.id}`}>{item.title}</Link>
-                </span>
-                <span className="name">{item.name}</span>
-                <span className="date">{String(item.createdAt).substring(5, 10)}</span>
+                  <span className="name">{item.name}</span>
+                  <span className="date">{String(item.createdAt).substring(5, 10)}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+        ) : (
+          <div className="noBoard">
+            <h1>게시된 글이 없습니다</h1>
+          </div>
+        )}
       </div>
     </ReadOrderListContainer>
   );

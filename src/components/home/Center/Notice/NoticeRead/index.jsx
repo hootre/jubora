@@ -146,7 +146,9 @@ function NoticeRead() {
               </li>
             ))
         ) : (
-          <h1>게시된 글이 없습니다</h1>
+          <div className="noBoard">
+            <h1>게시된 글이 없습니다</h1>
+          </div>
         )}
       </ul>
     </NoticeReadContainer>

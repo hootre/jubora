@@ -26,7 +26,10 @@ function SideNav() {
         <div className="community">
           <h1>게시글 관리</h1>
           {crudlist.map((item) => (
-            <div key={item} className={pathname === item.pathname ? 'item active' : 'item'}>
+            <div
+              key={item.pathname}
+              className={pathname === item.pathname ? 'item active' : 'item'}
+            >
               {item.icon}
               <Link href={`/admin/board/write/${item.pathname}`}>{item.text}</Link>
             </div>

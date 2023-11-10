@@ -43,7 +43,7 @@ export default function TemplatesBanner({ bannerState }) {
   useEffect(() => {
     setValue('bannerState', bannerState);
     setValue('category', []);
-  }, [bannerState]);
+  }, [bannerState, reset]);
   const onSubmit = (data) => {
     if (watch('category').length === 0) {
       toast.error('태그도 작성 부탁드립니다');
@@ -51,7 +51,13 @@ export default function TemplatesBanner({ bannerState }) {
       setIsUploading(true);
       handleCreateBanner(data, {
         onSettled: () => {
-          reset();
+          reset({
+            bannerState,
+            category: [],
+            imgRow: '',
+            imgCol: '',
+            imgSquare: '',
+          });
           setIsUploading(false);
         },
       });

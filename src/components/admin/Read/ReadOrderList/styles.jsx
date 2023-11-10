@@ -65,7 +65,20 @@ const ReadOrderListContainer = styled.section`
       }
     }
   }
+  .noBoard {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h1 {
+      margin-top: 50px;
+      color: ${Common.colors.text200};
+    }
+  }
   .BoardItem {
+    &.success {
+      background-color: ${Common.colors.bd100};
+    }
     display: flex;
     justify-content: space-between;
     width: 100%;

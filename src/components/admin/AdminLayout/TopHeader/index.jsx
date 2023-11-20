@@ -1,7 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import logo from 'assets/MainPage/logo.png';
-import Image from 'next/image';
 import TopHeaderContainer from './style';
 
 export default function TopHeader() {
@@ -9,7 +7,7 @@ export default function TopHeader() {
     <TopHeaderContainer>
       <div className="logo">
         <Link href="/">
-          <Image src={logo} alt="admin_logo" width={100} />
+          <img src="/image/logo.png" alt="admin_logo" />
         </Link>
       </div>
     </TopHeaderContainer>

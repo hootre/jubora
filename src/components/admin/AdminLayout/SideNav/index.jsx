@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
-import { crudlist } from 'assets/data';
+import { crudlist } from '../../../../../public/data';
 import SideNavContainer from './style';
 
 function SideNav() {

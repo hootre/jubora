@@ -23,7 +23,7 @@ export default function MainNotice({ noticeImage }) {
             {data.map((item) => (
               <li key={item.id}>
                 <span className={item.type === '공지' ? 'notice state' : 'state'}>
-                  [{item.type}]
+                  {`[${item.type}]`}
                 </span>
                 <Link href={`/home/center/notice/${item.id}`}>
                   <h2>{item.title}</h2>

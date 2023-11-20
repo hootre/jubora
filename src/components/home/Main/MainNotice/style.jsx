@@ -57,7 +57,8 @@ const MainNoticeContainer = styled.section`
         > .state {
           color: ${Common.colors.black};
           flex: 0 0 50px;
-          text-align: center;
+          display: flex;
+          justify-content: center;
           font-size: 15px;
           &.notice {
             font-weight: bold;

@@ -1,4 +1,4 @@
-import { orderSettingFor } from 'assets/data';
+import { orderSettingFor } from '../../../../../../public/data';
 import OrderDataTableContainer from './style';
 
 export default function OrderDataTable({ data }) {

@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { orderSettingFor } from 'assets/data';
 import supabaseClient from 'lib/supabaseClient';
 import { cloneDeep } from 'lodash';
 import { toast } from 'react-hot-toast';
 import gatherKeys from 'utils/gatherKeys';
 import cloudFolderList from 'utils/imageUpload/cloudFolderList';
 import { deleteImage, uploadImage } from 'utils/imageUpload/uploader';
+import { orderSettingFor } from '../../../../../public/data';
 
 // 특정 type 제품 상세
 const useGetOnlyOrderSetting = (categoryName) => {

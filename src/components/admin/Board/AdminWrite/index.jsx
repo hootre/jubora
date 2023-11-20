@@ -1,9 +1,9 @@
 'use client';
 
-import { crudlist } from 'assets/data';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import WriteContainer from './styles';
+import { crudlist } from '../../../../../public/data';
 
 function AdminWrite({ children }) {
   // path 관련

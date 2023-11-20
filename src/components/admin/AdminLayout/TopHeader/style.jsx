@@ -6,6 +6,9 @@ const TopHeaderContainer = styled.div`
     display: flex;
     padding: 0 50px;
     margin: 15px 0;
+    img {
+      width: 120px;
+    }
   }
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
 `;

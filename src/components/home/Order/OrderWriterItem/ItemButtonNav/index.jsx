@@ -2,7 +2,7 @@ import React, { useState, memo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useTemplatesActions } from 'store';
-import { orderSettingFor } from 'assets/data';
+import { orderSettingFor } from '../../../../../../public/data';
 import PublicOrderContainer from '../style';
 
 const ItemButtonNav = memo(({ itemName, orderSetting }) => {

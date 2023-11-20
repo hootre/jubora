@@ -81,7 +81,7 @@ const useGetTemplatesPage = (bannerState, pageNum) => {
       }
     });
   };
-  return useQuery(gatherKeys.templatesPage, handleGetTemplatesPage);
+  return useQuery([`${gatherKeys.templatesPage}_${bannerState}`], handleGetTemplatesPage);
 };
 // 제품목록 6개만 가져오기
 const useGetSixTemplates = () => {

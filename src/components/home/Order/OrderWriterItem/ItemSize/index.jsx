@@ -4,7 +4,7 @@ import { TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
 import PriceCalculate from 'utils/PriceCalculate';
 
-import { orderSettingFor } from 'assets/data';
+import { orderSettingFor } from '../../../../../../public/data';
 import PublicOrderContainer from '../style';
 
 const ItemSize = memo(({ title, row, col, count }) => {

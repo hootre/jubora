@@ -12,7 +12,7 @@ import ShowcaseContainer from './style';
 import Search from '../Search';
 import ItemTypeGroup from './ItemTypeGroup';
 
-export default function Showcase({ bannerState = 'banner' }) {
+export default function Showcase({ bannerState }) {
   // 페이지 기본값
   const [page, setPage] = useState(1);
   const handleChange = (event, value) => {

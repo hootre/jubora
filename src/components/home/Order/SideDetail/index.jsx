@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { useOrderPreivew } from 'store';
-import { orderSettingFor } from 'assets/data';
+import { orderSettingFor } from '../../../../../public/data';
 import SideDatailContainer from './style';
 
 export default function SideDetail() {

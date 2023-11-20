@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormProvider, useForm } from 'react-hook-form';
-import { orderSettingFor } from 'assets/data';
+import { orderSettingFor } from '../../../../../../public/data';
 import ItemButtonNav from 'components/home/Order/OrderWriterItem/ItemButtonNav';
 
 import EmptyCardContainer from './style';

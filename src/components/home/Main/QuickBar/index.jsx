@@ -27,8 +27,8 @@ export default function QuickBar() {
           <li>고객센터</li>
         </ul>
         <div className="img_box">
-          <img src="http://jubora.co.kr/img/quick_top2.png" alt="" />
-          <img src="http://jubora.co.kr/img/quick_top3.png" alt="" />
+          <img src="/image/quickItem1.png" alt="quickItem1" />
+          <img src="/image/quickItem2.png" alt="quickItem2" />
         </div>
       </div>
     </QuickBarContainer>

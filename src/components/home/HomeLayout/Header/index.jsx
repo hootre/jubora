@@ -11,15 +11,15 @@ import useScroll from 'hooks/custom/useScroll';
 import User from 'hooks/supabase/auth/useUser';
 import { useTemplatesActions } from 'store';
 import TextDropdown from 'components/common/TextDropdown';
-import { headerMainNavList, headerNoticeTextList } from 'assets/data';
 import useTemplatesTag from 'hooks/supabase/templatesTag/useTemplatesTag';
-import useMainSettingImage from 'hooks/supabase/main/settingImage/useSettingImage';
+
 import MainLoading from 'components/Loading/MainLoading';
 import { v4 } from 'uuid';
+import { headerMainNavList, headerNoticeTextList } from '../../../../../public/data';
 import HeaderSearchInput from './HeaderSearchInput';
 import HeaderContainer from './style';
 
-export default function Header() {
+export default function Header({ logoImage, topImage }) {
   // user상태관리
   const { useGetUserInfo, useLogOut } = User();
   const { data: user, isLoading: userLoading } = useGetUserInfo();
@@ -28,7 +28,7 @@ export default function Header() {
   const { useGetTemplatesTag } = useTemplatesTag();
   const { data: tag, isLoading: tagLoading } = useGetTemplatesTag();
   // path 관련
-  const pathname = usePathname().substring(1).split('/')[1];
+  const pathname = usePathname().substring(1).split('/')[2];
   const navCutLine =
     pathname === 'banner' ? 0 : pathname === 'print' ? 1 : pathname === 'real' ? 2 : -3;
   // 로그인on상태에서 toggle Nav
@@ -50,23 +50,10 @@ export default function Header() {
       setScrollActive(false);
     }
   }, [scrollY]);
-  // 해더 이미지 가져오기
-  const { useGetMainSettingImage } = useMainSettingImage();
-  const { data: MainSettingImageData, isLoading: imageLoading } = useGetMainSettingImage();
-  let logoImage;
-  let topImage;
-
-  if (tagLoading || userLoading || imageLoading) {
+  if (tagLoading || userLoading) {
     return <MainLoading />;
   }
-  MainSettingImageData.map((item) => {
-    if (item.position === 'logo') {
-      logoImage = item.image;
-    } else if (item.position === 'top') {
-      topImage = item.image;
-    }
-    return false;
-  });
+
   return (
     <HeaderContainer ScrollActive={ScrollActive}>
       <div className="prev_site">

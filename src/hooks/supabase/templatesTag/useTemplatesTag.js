@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { orderSettingFor } from 'assets/data';
 import supabaseClient from 'lib/supabaseClient';
 import { toast } from 'react-hot-toast';
 import gatherKeys from 'utils/gatherKeys';
 import { deleteImage } from 'utils/imageUpload/uploader';
+import { orderSettingFor } from '../../../../public/data';
 
 //  생성
 const useCreateTemplatesTag = () => {

@@ -1,7 +1,7 @@
-import { orderSettingFor } from 'assets/data';
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import ItemOrderSetting from 'components/home/Order/OrderWriterItem/ItemOrderSetting';
+import { orderSettingFor } from '../../../../../../../public/data';
 import UpdateCardContainer from './style';
 
 export default function UpdateCard({ data = null }) {

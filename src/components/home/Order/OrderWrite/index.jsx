@@ -1,6 +1,5 @@
 'use client';
 
-import { orderSettingFor } from 'assets/data';
 import MainLoading from 'components/Loading/MainLoading';
 import useOrder from 'hooks/supabase/order/useOrder';
 import useTemplates from 'hooks/supabase/templates/useTemplates';
@@ -19,6 +18,7 @@ import ItemAddress from '../OrderWriterItem/ItemAddress';
 import ItemContent from '../OrderWriterItem/ItemContent';
 import ItemUpload from '../OrderWriterItem/ItemUpload';
 import SideDetail from '../SideDetail';
+import { orderSettingFor } from '../../../../../public/data';
 
 function OrderWrite({ detailData, orderSetting, bannerType, categoryName }) {
   // 제품 조회수 증가

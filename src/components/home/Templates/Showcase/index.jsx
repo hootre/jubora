@@ -88,7 +88,7 @@ export default function Showcase({ bannerState }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_row"
-                    loadingType="eager"
+                    loadingType="lazy"
                   />
                 </div>
                 <div className={bannerType === 'banner_col' ? 'active' : 'none'}>
@@ -97,7 +97,7 @@ export default function Showcase({ bannerState }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_col"
-                    loadingType="eager"
+                    loadingType="lazy"
                   />
                 </div>
                 <div className={bannerType === 'banner_square' ? 'active' : 'none'}>
@@ -106,7 +106,7 @@ export default function Showcase({ bannerState }) {
                     href={`/home/templates/${item.bannerState}/detail/${item.id}?bannerType=${bannerType}&categoryName=${item.categoryName}`}
                     text="구매하기"
                     bannerType="banner_square"
-                    loadingType="eager"
+                    loadingType="lazy"
                   />
                 </div>
               </li>

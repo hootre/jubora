@@ -36,9 +36,9 @@ export default function Main() {
       <HomeLayout>
         <MainSlides />
         <TemplatesContents sixData={sixData} />
-        <img src={centerImage} alt="centerImage" className="mainImage" />
+        <img src={centerImage} alt="centerImage" className="mainImage" loading="eager" />
         <MainTemplatesCardList />
-        <img src={center2Image} alt="center2Image" className="mainImage" />
+        <img src={center2Image} alt="center2Image" className="mainImage" loading="eager" />
         <MainNotice noticeImage={noticeImage} />
       </HomeLayout>
     </MainContainer>

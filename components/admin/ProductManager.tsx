@@ -14,7 +14,7 @@ import {
   Plus, Pencil, Trash2, ChevronDown, ChevronRight,
   Loader2, Search, Package, Save, X, Upload,
   Database, AlertCircle, Check, Settings2,
-  ToggleLeft, ToggleRight, Image as ImageIcon,
+  ToggleLeft, ToggleRight, Image as ImageIcon, Star,
 } from "lucide-react";
 
 // ═══ 상수 ═══
@@ -609,11 +609,20 @@ function OrderFormPanel() {
             </div>
             {config ? (
               <div className="space-y-1.5 text-xs text-gray-600">
-                <p>입력 항목: <span className="font-semibold text-gray-900">{config.specs?.length ?? 0}개</span></p>
+                <p>입력 항목: <span className="font-semibold text-gray-900">{config.specs?.length ?? 0}개</span>
+                  {(config.specs ?? []).some(s => (s as any).inputType === "checkbox") && (
+                    <span className="ml-1 text-[10px] text-purple-600">(체크박스 포함)</span>
+                  )}
+                </p>
                 <p>수량 프리셋: <span className="font-mono">{config.quantityPresets?.join(", ") || "없음"}</span></p>
                 <p>기본 단가: <span className="font-semibold">{config.basePrice ? `${config.basePrice.toLocaleString()}원` : "없음"}</span></p>
+                {(config.specs ?? []).some(s => s.options?.some(o => (o as any).isDefault)) && (
+                  <p className="text-amber-600 flex items-center gap-1"><Star size={10} fill="currentColor" /> 기본값 설정됨</p>
+                )}
                 {config.priceNote && <p className="text-gray-400 truncate">안내: {config.priceNote}</p>}
-                {config.hasSizeInput && <span className="inline-block bg-blue-100 text-blue-600 text-[10px] font-bold px-1.5 py-0.5 rounded">사이즈 입력</span>}
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {config.hasSizeInput && <span className="inline-block bg-blue-100 text-blue-600 text-[10px] font-bold px-1.5 py-0.5 rounded">사이즈 입력</span>}
+                </div>
               </div>
             ) : (
               <p className="text-xs text-amber-600">아직 설정되지 않았습니다. &ldquo;초기 데이터 동기화&rdquo;를 실행하세요.</p>
@@ -822,25 +831,63 @@ function OrderFormEditModal({ type, config, onSave, onClose }: {
               {(form.specs ?? []).map((spec, sIdx) => (
                 <div key={sIdx} className="border border-gray-200 rounded-lg overflow-hidden">
                   {/* Spec 헤더 */}
-                  <div className="bg-gray-50 px-4 py-3 flex items-center gap-3">
-                    <div className="flex-1 grid grid-cols-2 gap-2">
-                      <input type="text" value={spec.id} onChange={(e) => updateSpec(sIdx, "id", e.target.value)}
-                        placeholder="spec ID" className="px-2 py-1 border border-gray-200 rounded text-xs font-mono focus:outline-none focus:border-primary-500" />
-                      <input type="text" value={spec.label} onChange={(e) => updateSpec(sIdx, "label", e.target.value)}
-                        placeholder="표시 이름" className="px-2 py-1 border border-gray-200 rounded text-xs focus:outline-none focus:border-primary-500" />
+                  <div className="bg-gray-50 px-4 py-3 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 grid grid-cols-2 gap-2">
+                        <input type="text" value={spec.id} onChange={(e) => updateSpec(sIdx, "id", e.target.value)}
+                          placeholder="spec ID" className="px-2 py-1 border border-gray-200 rounded text-xs font-mono focus:outline-none focus:border-primary-500" />
+                        <input type="text" value={spec.label} onChange={(e) => updateSpec(sIdx, "label", e.target.value)}
+                          placeholder="표시 이름" className="px-2 py-1 border border-gray-200 rounded text-xs focus:outline-none focus:border-primary-500" />
+                      </div>
+                      <button onClick={() => removeSpec(sIdx)}
+                        className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded">
+                        <Trash2 size={14} />
+                      </button>
                     </div>
-                    <button onClick={() => removeSpec(sIdx)}
-                      className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded">
-                      <Trash2 size={14} />
-                    </button>
+                    {/* 입력 유형 선택 */}
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-semibold text-gray-400 uppercase">입력 유형</span>
+                      <div className="flex gap-1">
+                        {([["select", "드롭다운"], ["checkbox", "체크박스"]] as const).map(([val, lbl]) => (
+                          <button key={val} type="button"
+                            onClick={() => updateSpec(sIdx, "inputType", val)}
+                            className={`px-2.5 py-1 text-[11px] rounded font-medium transition-colors ${
+                              (spec.inputType ?? "select") === val
+                                ? "bg-primary-600 text-white" : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
+                            }`}>
+                            {lbl}
+                          </button>
+                        ))}
+                      </div>
+                      {(spec.inputType ?? "select") === "select"
+                        ? <span className="text-[10px] text-gray-400">하나만 선택</span>
+                        : <span className="text-[10px] text-gray-400">복수 선택 가능</span>
+                      }
+                    </div>
                   </div>
 
                   {/* 옵션 리스트 */}
                   <div className="px-4 py-3 space-y-2">
                     {spec.options.map((opt, oIdx) => (
                       <div key={oIdx} className="flex items-center gap-2">
+                        {/* 기본값 토글 */}
+                        <button type="button" title={opt.isDefault ? "기본 선택 해제" : "기본으로 설정"}
+                          onClick={() => {
+                            if ((spec.inputType ?? "select") === "select") {
+                              // 드롭다운: 하나만 기본값
+                              spec.options.forEach((_, oi) => updateOption(sIdx, oi, "isDefault", oi === oIdx ? !opt.isDefault : false));
+                            } else {
+                              // 체크박스: 복수 기본값 가능
+                              updateOption(sIdx, oIdx, "isDefault", !opt.isDefault);
+                            }
+                          }}
+                          className={`p-1 rounded shrink-0 transition-colors ${
+                            opt.isDefault ? "text-amber-500 bg-amber-50" : "text-gray-300 hover:text-amber-400 hover:bg-amber-50"
+                          }`}>
+                          <Star size={14} fill={opt.isDefault ? "currentColor" : "none"} />
+                        </button>
                         <input type="text" value={opt.id} onChange={(e) => updateOption(sIdx, oIdx, "id", e.target.value)}
-                          placeholder="ID" className="w-24 px-2 py-1.5 border border-gray-200 rounded text-xs font-mono focus:outline-none focus:border-primary-500" />
+                          placeholder="ID" className="w-20 px-2 py-1.5 border border-gray-200 rounded text-xs font-mono focus:outline-none focus:border-primary-500" />
                         <input type="text" value={opt.label} onChange={(e) => updateOption(sIdx, oIdx, "label", e.target.value)}
                           placeholder="옵션명" className="flex-1 px-2 py-1.5 border border-gray-200 rounded text-xs focus:outline-none focus:border-primary-500" />
                         <input type="text" value={opt.pricePerUnit ?? ""} onChange={(e) => updateOption(sIdx, oIdx, "pricePerUnit", e.target.value || undefined)}

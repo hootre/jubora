@@ -9,12 +9,14 @@ export interface ProductOption {
   label: string;
   price?: number;           // 고정 가격 (원)
   pricePerUnit?: string;    // 가격 설명 (예: "m²당 5,000원")
+  isDefault?: boolean;      // 기본 선택 여부
 }
 
 export interface ProductSpec {
   id: string;
   label: string;
   options: ProductOption[];
+  inputType?: "select" | "checkbox";  // 입력 유형 (드롭다운 / 체크박스)
 }
 
 export interface ProductItem {

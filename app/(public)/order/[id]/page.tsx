@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { getOrder, respondToProof, savePayment } from "@/lib/firestore";
-import type { Order, OrderStatus } from "@/types/order";
+import { getOrder, respondToProof, savePayment, addConversation } from "@/lib/firestore";
+import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import { MATERIALS, OPTIONS, PRODUCT_TYPES } from "@/constants/pricing";
 import {
@@ -95,13 +95,23 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     try {
       await respondToProof(order.id, false, revisionNote.trim());
       setRevisionDone(true);
+      // 로컬 대화 히스토리에도 즉시 반영
+      const newMsg: ConversationMessage = {
+        id: `msg-${Date.now()}`,
+        sender: "customer",
+        type: "revision",
+        content: revisionNote.trim(),
+        createdAt: new Date().toISOString(),
+      };
       setOrder((prev) => prev ? {
         ...prev,
         status: "proof_revision",
+        conversations: [...(prev.conversations ?? []), newMsg],
         proof: prev.proof
           ? { ...prev.proof, revisionNote: revisionNote.trim() }
           : { imageUrl: "", sentAt: "", revisionNote: revisionNote.trim() },
       } : prev);
+      setRevisionNote("");
     } catch (e: any) {
       alert(`저장 실패: ${e?.message ?? "오류"}`);
     } finally {
@@ -116,7 +126,18 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     setApproving(true);
     try {
       await respondToProof(order.id, true);
-      setOrder((prev) => prev ? { ...prev, status: "proof_approved" } : prev);
+      const approveMsg: ConversationMessage = {
+        id: `msg-${Date.now()}`,
+        sender: "customer",
+        type: "approve",
+        content: "시안을 승인합니다.",
+        createdAt: new Date().toISOString(),
+      };
+      setOrder((prev) => prev ? {
+        ...prev,
+        status: "proof_approved",
+        conversations: [...(prev.conversations ?? []), approveMsg],
+      } : prev);
       setRevisionDone(false);
     } catch (e: any) {
       alert(`승인 실패: ${e?.message ?? "오류"}`);
@@ -395,69 +416,120 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-      {/* ── 시안 응답 섹션 (proof_sent / proof_revision) ── */}
-      {canRespondToProof && (
+      {/* ── 시안 대화 섹션 (conversations) ── */}
+      {(order.conversations?.length > 0 || canRespondToProof) && (
         <div className="card mb-6 border-2 border-primary-100">
-          <h2 className="font-bold text-gray-900 mb-1 flex items-center gap-2">
-            <Edit3 size={16} className="text-primary-500" />
-            시안 확인 · 응답
+          <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <MessageSquare size={16} className="text-primary-500" />
+            시안 수정 대화
+            {order.conversations?.length > 0 && (
+              <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                {order.conversations.length}개 메시지
+              </span>
+            )}
           </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            {order.status === "proof_revision"
-              ? "수정 요청이 접수되었어요. 내용을 수정하거나 그대로 시안 승인을 진행하세요."
-              : "시안을 확인하고, 수정이 필요하면 내용을 작성 후 저장하거나 바로 승인해 주세요."}
-          </p>
 
-          <div className="mb-3">
-            <label className="label flex items-center gap-1.5">
-              <MessageSquare size={13} className="text-orange-500" />
-              수정 요청사항
-              {order.status === "proof_revision" && (
-                <span className="ml-1 text-xs font-normal text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded">
-                  수정 요청 중
-                </span>
-              )}
-            </label>
-            <textarea
-              value={revisionNote}
-              onChange={(e) => { setRevisionNote(e.target.value); setRevisionDone(false); }}
-              rows={4}
-              placeholder={"수정이 필요한 내용을 구체적으로 작성해 주세요.\n예) 글씨 색상을 빨간색으로, 오른쪽 로고 위치를 조금 위로 올려주세요."}
-              className="input resize-none text-sm"
-            />
-          </div>
+          {/* 대화 히스토리 */}
+          {order.conversations?.length > 0 && (
+            <div className="space-y-3 mb-4 max-h-96 overflow-y-auto pr-1">
+              {order.conversations.map((msg: ConversationMessage) => (
+                <div key={msg.id} className={`flex ${msg.sender === "customer" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                    msg.sender === "customer"
+                      ? "bg-primary-600 text-white rounded-br-md"
+                      : msg.type === "system"
+                      ? "bg-gray-100 text-gray-500 text-center w-full text-xs py-2"
+                      : "bg-gray-100 text-gray-800 rounded-bl-md"
+                  }`}>
+                    {/* 발신자 표시 */}
+                    <p className={`text-[10px] font-bold mb-1 ${
+                      msg.sender === "customer" ? "text-primary-200" : "text-gray-400"
+                    }`}>
+                      {msg.sender === "admin" ? "🏢 주보라" : "👤 나"}
+                      {msg.type === "proof" && " · 시안 전달"}
+                      {msg.type === "revision" && " · 수정 요청"}
+                      {msg.type === "approve" && " · 시안 승인"}
+                    </p>
 
-          <div className="flex flex-col sm:flex-row gap-2">
-            <button
-              onClick={handleRevisionRequest}
-              disabled={revisionSaving || !revisionNote.trim()}
-              className="flex-1 flex items-center justify-center gap-2 border-2 border-orange-400 text-orange-600 hover:bg-orange-50 py-2.5 px-4 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
-            >
-              {revisionSaving
-                ? <><Loader2 size={14} className="animate-spin" /> 저장 중...</>
-                : revisionDone
-                ? <><CheckCircle2 size={14} className="text-green-500" /> 수정 요청 완료!</>
-                : <><Send size={14} /> 수정 요청 저장</>
-              }
-            </button>
+                    {/* 이미지 (시안) */}
+                    {msg.imageUrl && (
+                      <img src={msg.imageUrl} alt="시안"
+                        className="w-full rounded-lg mb-2 cursor-zoom-in border border-white/20 max-h-48 object-contain bg-white"
+                        onClick={() => setZoomImage(msg.imageUrl!)} />
+                    )}
 
-            <button
-              onClick={handleApproveProof}
-              disabled={approving}
-              className="flex-1 flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white py-2.5 px-4 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 shadow-sm"
-            >
-              {approving
-                ? <><Loader2 size={14} className="animate-spin" /> 승인 중...</>
-                : <><ThumbsUp size={14} /> 시안 승인 · 결제 진행</>
-              }
-            </button>
-          </div>
+                    {/* 텍스트 */}
+                    <p className={`text-sm whitespace-pre-wrap ${
+                      msg.type === "approve" ? "font-semibold" : ""
+                    }`}>{msg.content}</p>
 
-          {revisionDone && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-orange-700 bg-orange-50 border border-orange-200 rounded-lg px-4 py-3">
-              <AlertTriangle size={14} />
-              수정 요청이 저장되었어요. 담당자가 확인 후 새로운 시안을 보내드립니다.
+                    {/* 시간 */}
+                    <p className={`text-[10px] mt-1 ${
+                      msg.sender === "customer" ? "text-primary-300" : "text-gray-400"
+                    }`}>
+                      {new Date(msg.createdAt).toLocaleString("ko-KR", {
+                        month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
+          )}
+
+          {/* 메시지 입력 + 액션 (시안 응답 가능 상태일 때만) */}
+          {canRespondToProof && (
+            <>
+              <div className="flex gap-2 mb-3">
+                <textarea
+                  value={revisionNote}
+                  onChange={(e) => { setRevisionNote(e.target.value); setRevisionDone(false); }}
+                  rows={3}
+                  placeholder={"수정이 필요한 부분을 구체적으로 작성해 주세요.\n예) 글씨 색상을 빨간색으로, 로고를 좀 더 위로 올려주세요."}
+                  className="input resize-none text-sm flex-1"
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={handleRevisionRequest}
+                  disabled={revisionSaving || !revisionNote.trim()}
+                  className="flex-1 flex items-center justify-center gap-2 border-2 border-orange-400 text-orange-600 hover:bg-orange-50 py-2.5 px-4 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+                >
+                  {revisionSaving
+                    ? <><Loader2 size={14} className="animate-spin" /> 전송 중...</>
+                    : revisionDone
+                    ? <><CheckCircle2 size={14} className="text-green-500" /> 수정 요청 완료!</>
+                    : <><Send size={14} /> 수정 요청 보내기</>
+                  }
+                </button>
+
+                <button
+                  onClick={handleApproveProof}
+                  disabled={approving}
+                  className="flex-1 flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white py-2.5 px-4 rounded-lg text-sm font-bold transition-colors disabled:opacity-50 shadow-sm"
+                >
+                  {approving
+                    ? <><Loader2 size={14} className="animate-spin" /> 승인 중...</>
+                    : <><ThumbsUp size={14} /> 시안 승인 · 결제 진행</>
+                  }
+                </button>
+              </div>
+
+              {revisionDone && (
+                <div className="mt-3 flex items-center gap-2 text-sm text-orange-700 bg-orange-50 border border-orange-200 rounded-lg px-4 py-3">
+                  <AlertTriangle size={14} />
+                  수정 요청이 전달되었어요. 담당자가 확인 후 새로운 시안을 보내드립니다.
+                </div>
+              )}
+            </>
+          )}
+
+          {/* 시안 승인 완료 후에는 대화 히스토리만 보여줌 */}
+          {!canRespondToProof && order.conversations?.length > 0 && (
+            <p className="text-xs text-gray-400 text-center mt-2">
+              {order.status === "proof_approved" ? "✅ 시안 승인 완료" : "대화가 종료되었습니다."}
+            </p>
           )}
         </div>
       )}

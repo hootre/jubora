@@ -84,8 +84,11 @@ export interface Order {
     imageUrl: string;
     sentAt: string;
     approvedAt?: string;
-    revisionNote?: string;
+    revisionNote?: string;       // 레거시: 마지막 수정요청 (하위호환)
   };
+
+  // 시안 수정 대화 기록 (채팅형)
+  conversations?: ConversationMessage[];
 
   payment?: {
     method: string;
@@ -105,6 +108,16 @@ export interface Order {
 
   createdAt: string;
   updatedAt: string;
+}
+
+// ── 대화 메시지 타입 ──
+export interface ConversationMessage {
+  id: string;
+  sender: "admin" | "customer";
+  type: "text" | "image" | "proof" | "revision" | "approve" | "system";
+  content: string;             // 텍스트 메시지 또는 시스템 메시지
+  imageUrl?: string;           // 시안 이미지 URL (type이 proof/image일 때)
+  createdAt: string;
 }
 
 export interface Template {

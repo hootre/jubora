@@ -135,13 +135,21 @@ function OrderForm() {
   const [customWidth, setCustomWidth] = useState(50);
   const [customHeight, setCustomHeight] = useState(50);
 
-  // specs 초기값 설정
+  // specs 초기값 설정 (isDefault가 있으면 기본값, 없으면 첫 번째 옵션)
   useEffect(() => {
     if (formConfig.specs.length > 0) {
       const initial: Record<string, string> = {};
       formConfig.specs.forEach(spec => {
         if (spec.options.length > 0) {
-          initial[spec.id] = spec.options[0].id;
+          if (spec.inputType === "checkbox") {
+            // 체크박스: isDefault인 옵션들을 콤마로 연결
+            const defaults = spec.options.filter(o => o.isDefault).map(o => o.id);
+            initial[spec.id] = defaults.join(",");
+          } else {
+            // 드롭다운: isDefault 하나 또는 첫 번째
+            const defaultOpt = spec.options.find(o => o.isDefault);
+            initial[spec.id] = defaultOpt ? defaultOpt.id : spec.options[0].id;
+          }
         }
       });
       setSpecs(initial);
@@ -537,19 +545,46 @@ function OrderForm() {
               <div className="card">
                 <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Package size={18} /> 제품 옵션</h2>
 
-                {/* Spec 선택 드롭다운 */}
+                {/* Spec 선택 (드롭다운 또는 체크박스) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   {formConfig.specs.map((spec) => (
                     <div key={spec.id}>
                       <label className="label">{spec.label}</label>
-                      <select className="input" value={specs[spec.id] ?? ""}
-                        onChange={(e) => setSpecs(prev => ({ ...prev, [spec.id]: e.target.value }))}>
-                        {spec.options.map((opt) => (
-                          <option key={opt.id} value={opt.id}>
-                            {opt.label}{opt.pricePerUnit ? ` (${opt.pricePerUnit})` : ""}{opt.price !== undefined && opt.price > 0 ? ` (+${opt.price.toLocaleString()}원)` : ""}
-                          </option>
-                        ))}
-                      </select>
+                      {spec.inputType === "checkbox" ? (
+                        /* 체크박스 (복수 선택) */
+                        <div className="space-y-2 mt-1">
+                          {spec.options.map((opt) => {
+                            const selectedIds = (specs[spec.id] ?? "").split(",").filter(Boolean);
+                            const checked = selectedIds.includes(opt.id);
+                            return (
+                              <label key={opt.id} className={`flex items-center gap-2.5 p-2.5 border rounded-lg cursor-pointer transition-colors ${
+                                checked ? "border-primary-300 bg-primary-50" : "border-gray-200 hover:bg-gray-50"
+                              }`}>
+                                <input type="checkbox" checked={checked}
+                                  className="accent-primary-600 w-4 h-4"
+                                  onChange={() => {
+                                    const ids = (specs[spec.id] ?? "").split(",").filter(Boolean);
+                                    const next = checked ? ids.filter(id => id !== opt.id) : [...ids, opt.id];
+                                    setSpecs(prev => ({ ...prev, [spec.id]: next.join(",") }));
+                                  }} />
+                                <span className="text-sm text-gray-700">{opt.label}</span>
+                                {opt.pricePerUnit && <span className="text-xs text-gray-400">({opt.pricePerUnit})</span>}
+                                {opt.price !== undefined && opt.price > 0 && <span className="text-xs text-primary-600 ml-auto">+{opt.price.toLocaleString()}원</span>}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        /* 드롭다운 (단일 선택) */
+                        <select className="input" value={specs[spec.id] ?? ""}
+                          onChange={(e) => setSpecs(prev => ({ ...prev, [spec.id]: e.target.value }))}>
+                          {spec.options.map((opt) => (
+                            <option key={opt.id} value={opt.id}>
+                              {opt.label}{opt.pricePerUnit ? ` (${opt.pricePerUnit})` : ""}{opt.price !== undefined && opt.price > 0 ? ` (+${opt.price.toLocaleString()}원)` : ""}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                   ))}
                 </div>

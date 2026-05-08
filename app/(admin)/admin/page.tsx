@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import {
-  getAllOrders, updateOrderStatus, saveProof, createTestOrder
+  getAllOrders, updateOrderStatus, saveProof, createTestOrder, addConversation
 } from "@/lib/firestore";
-import type { Order, OrderStatus } from "@/types/order";
+import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import * as PortOne from "@portone/browser-sdk/v2";
 import {
@@ -294,15 +294,14 @@ function OrderManageModal({
           </div>
         )}
 
-        {/* ── 수정요청 내용 표시 (proof_revision 상태) ── */}
-        {order.status === "proof_revision" && order.proof?.revisionNote && (
+        {/* ── 대화 히스토리 (시안 수정 대화) ── */}
+        <ConversationPanel order={order} onOrderUpdate={(updated) => {
+          // 부모 상태 업데이트는 모달이 닫힐 때 reload로 처리
+        }} />
+
+        {/* ── 수정요청 빠른 액션 (proof_revision 상태) ── */}
+        {order.status === "proof_revision" && (
           <div className="bg-orange-50 border-2 border-orange-300 rounded-xl p-4">
-            <p className="text-sm font-bold text-orange-800 mb-2 flex items-center gap-2">
-              ✏️ 고객 수정요청 메시지
-            </p>
-            <div className="bg-white rounded-lg border border-orange-200 p-3 mb-3">
-              <p className="text-sm text-gray-800 whitespace-pre-wrap">{order.proof.revisionNote}</p>
-            </div>
             <p className="text-xs text-orange-600 mb-3">수정 내용을 반영한 시안을 아래에서 다시 업로드하거나, 바로 시안 제작 단계로 이동하세요.</p>
             <button
               onClick={() => {
@@ -538,6 +537,124 @@ function OrderManageModal({
   );
 }
 
+// ── 대화 히스토리 패널 (관리자용) ──
+function ConversationPanel({ order, onOrderUpdate }: { order: Order; onOrderUpdate: (o: Order) => void }) {
+  const [messages, setMessages] = useState<ConversationMessage[]>(order.conversations ?? []);
+  const [newMsg, setNewMsg] = useState("");
+  const [sending, setSending] = useState(false);
+  const [expanded, setExpanded] = useState(
+    order.status === "proof_revision" || order.status === "proof_sent" || (order.conversations?.length ?? 0) > 0
+  );
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // 스크롤 하단 고정
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages.length, expanded]);
+
+  const handleSend = async () => {
+    if (!newMsg.trim() || sending) return;
+    setSending(true);
+    try {
+      const msg = await addConversation(order.id, "admin", newMsg.trim());
+      setMessages(prev => [...prev, msg]);
+      setNewMsg("");
+    } catch {
+      alert("메시지 전송 실패");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const msgCount = messages.length;
+  const revisionCount = messages.filter(m => m.type === "revision").length;
+  const proofCount = messages.filter(m => m.type === "proof").length;
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      {/* 헤더 — 접기/펴기 */}
+      <button onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center gap-2 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
+        <MessageSquare size={14} className="text-primary-500" />
+        <span className="text-sm font-bold text-gray-700">시안 대화</span>
+        {msgCount > 0 && (
+          <span className="text-[10px] bg-primary-100 text-primary-600 px-1.5 py-0.5 rounded-full font-bold">{msgCount}</span>
+        )}
+        {revisionCount > 0 && (
+          <span className="text-[10px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full font-bold">수정 {revisionCount}회</span>
+        )}
+        {proofCount > 0 && (
+          <span className="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-bold">시안 {proofCount}차</span>
+        )}
+        <div className="ml-auto">
+          {expanded ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+        </div>
+      </button>
+
+      {expanded && (
+        <div className="border-t border-gray-100">
+          {/* 대화 목록 */}
+          <div ref={scrollRef} className="max-h-72 overflow-y-auto p-3 space-y-2.5 bg-gray-50">
+            {messages.length === 0 ? (
+              <p className="text-xs text-gray-400 text-center py-6">아직 대화가 없습니다.</p>
+            ) : (
+              messages.map((msg) => (
+                <div key={msg.id} className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 ${
+                    msg.sender === "admin"
+                      ? "bg-primary-600 text-white rounded-br-sm"
+                      : msg.type === "system"
+                      ? "bg-gray-200 text-gray-500 text-center w-full text-[10px] py-1.5 rounded-lg"
+                      : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm shadow-sm"
+                  }`}>
+                    <p className={`text-[10px] font-bold mb-0.5 ${
+                      msg.sender === "admin" ? "text-primary-200" : "text-gray-400"
+                    }`}>
+                      {msg.sender === "admin" ? "관리자" : "고객"}
+                      {msg.type === "proof" && " · 시안 전달"}
+                      {msg.type === "revision" && " · 수정 요청"}
+                      {msg.type === "approve" && " · ✅ 승인"}
+                    </p>
+                    {msg.imageUrl && (
+                      <img src={msg.imageUrl} alt="시안"
+                        className="w-full rounded-lg mb-1.5 cursor-zoom-in max-h-32 object-contain bg-gray-50 border border-white/20"
+                        onClick={() => window.open(msg.imageUrl!, "_blank")} />
+                    )}
+                    <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
+                    <p className={`text-[9px] mt-1 ${msg.sender === "admin" ? "text-primary-300" : "text-gray-400"}`}>
+                      {new Date(msg.createdAt).toLocaleString("ko-KR", {
+                        month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* 메시지 입력 */}
+          <div className="flex gap-2 p-3 border-t border-gray-100 bg-white">
+            <input
+              type="text" value={newMsg}
+              onChange={e => setNewMsg(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
+              placeholder="메시지를 입력하세요..."
+              className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-400 bg-gray-50"
+            />
+            <button onClick={handleSend} disabled={sending || !newMsg.trim()}
+              className="flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors shrink-0">
+              {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
+              전송
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // 정보 행 컴포넌트
 function InfoRow({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
   return (
@@ -767,11 +884,20 @@ export default function AdminDashboard() {
       showToast(kakaoOk
         ? "시안 전달 완료! 카카오 알림이 발송됐어요."
         : "시안 전달 완료! (카카오 알림 발송 실패)");
-      // 모달 내 order 즉시 반영 (시안 이미지 + 상태)
+      // 모달 내 order 즉시 반영 (시안 이미지 + 상태 + 대화 기록)
+      const proofMsg: ConversationMessage = {
+        id: `msg-${Date.now()}`,
+        sender: "admin",
+        type: "proof",
+        content: "시안을 전달합니다. 확인 후 승인 또는 수정 요청 부탁드립니다.",
+        imageUrl,
+        createdAt: new Date().toISOString(),
+      };
       const updatedOrder = {
         ...order,
         status: "proof_sent" as const,
         proof: { imageUrl, sentAt: new Date().toISOString() },
+        conversations: [...(order.conversations ?? []), proofMsg],
       };
       setModalOrder(prev => prev?.id === order.id ? updatedOrder : prev);
       setOrders(prev => prev.map(o => o.id === order.id ? updatedOrder : o));

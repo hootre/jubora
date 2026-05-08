@@ -1,9 +1,10 @@
 import {
   collection, doc, addDoc, updateDoc, getDoc, getDocs,
   query, where, orderBy, limit, serverTimestamp, Timestamp,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { Order, OrderStatus } from "@/types/order";
+import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 
 // ── 주문번호 생성 ──────────────────────────────
 function generateOrderNumber(): string {
@@ -80,30 +81,79 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus, ex
   });
 }
 
-// ── 시안 업로드 정보 저장 ──────────────────────
-export async function saveProof(orderId: string, imageUrl: string) {
+// ── 시안 업로드 정보 저장 + 대화 기록 ──────────────
+export async function saveProof(orderId: string, imageUrl: string, adminNote?: string) {
+  const now = new Date().toISOString();
+  const msg: ConversationMessage = {
+    id: `msg-${Date.now()}`,
+    sender: "admin",
+    type: "proof",
+    content: adminNote || "시안을 전달합니다. 확인 후 승인 또는 수정 요청 부탁드립니다.",
+    imageUrl,
+    createdAt: now,
+  };
   await updateDoc(doc(db, "orders", orderId), {
     status: "proof_sent",
-    proof: { imageUrl, sentAt: new Date().toISOString() },
+    proof: { imageUrl, sentAt: now },
+    conversations: arrayUnion(msg),
     updatedAt: serverTimestamp(),
   });
 }
 
-// ── 시안 승인/수정요청 ──────────────────────────
+// ── 시안 승인/수정요청 + 대화 기록 ────────────────
 export async function respondToProof(orderId: string, approved: boolean, revisionNote?: string) {
+  const now = new Date().toISOString();
   if (approved) {
+    const msg: ConversationMessage = {
+      id: `msg-${Date.now()}`,
+      sender: "customer",
+      type: "approve",
+      content: "시안을 승인합니다.",
+      createdAt: now,
+    };
     await updateDoc(doc(db, "orders", orderId), {
       status: "proof_approved",
-      "proof.approvedAt": new Date().toISOString(),
+      "proof.approvedAt": now,
+      conversations: arrayUnion(msg),
       updatedAt: serverTimestamp(),
     });
   } else {
+    const msg: ConversationMessage = {
+      id: `msg-${Date.now()}`,
+      sender: "customer",
+      type: "revision",
+      content: revisionNote || "수정 요청",
+      createdAt: now,
+    };
     await updateDoc(doc(db, "orders", orderId), {
       status: "proof_revision",
       "proof.revisionNote": revisionNote,
+      conversations: arrayUnion(msg),
       updatedAt: serverTimestamp(),
     });
   }
+}
+
+// ── 대화 메시지 추가 (일반 텍스트) ─────────────────
+export async function addConversation(
+  orderId: string,
+  sender: "admin" | "customer",
+  content: string,
+  imageUrl?: string,
+) {
+  const msg: ConversationMessage = {
+    id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    sender,
+    type: imageUrl ? "image" : "text",
+    content,
+    imageUrl,
+    createdAt: new Date().toISOString(),
+  };
+  await updateDoc(doc(db, "orders", orderId), {
+    conversations: arrayUnion(msg),
+    updatedAt: serverTimestamp(),
+  });
+  return msg;
 }
 
 // ── 테스트용 더미 주문 생성 ────────────────────

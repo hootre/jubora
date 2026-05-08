@@ -18,9 +18,10 @@ import {
   CalendarDays, User, Phone, MapPin, ClipboardList,
   ShieldCheck, X, ChevronDown, ChevronUp
 } from "lucide-react";
+import ProductManager from "@/components/admin/ProductManager";
 
 // ── 탭 타입 ──────────────────────────────────────
-type Tab = "dashboard" | "orders" | "test" | "payments";
+type Tab = "dashboard" | "orders" | "products" | "payments" | "test";
 
 // ── 상태별 다음 액션 ──────────────────────────────
 const STATUS_ACTIONS: Partial<Record<OrderStatus, { label: string; next: OrderStatus; color: string }[]>> = {
@@ -901,6 +902,7 @@ export default function AdminDashboard() {
           {([
             { id: "dashboard", label: "대시보드",   icon: "📊", badge: null },
             { id: "orders",    label: "주문관리",   icon: "📋", badge: stats.pending > 0 ? stats.pending : null },
+            { id: "products",  label: "제품관리",   icon: "📦", badge: null },
             { id: "payments",  label: "결제내역",   icon: "💳", badge: null },
             { id: "test",      label: "테스트",     icon: "🧪", badge: null },
           ] as const).map(({ id, label, icon, badge }) => (
@@ -1132,7 +1134,14 @@ export default function AdminDashboard() {
         )}
 
         {/* ══════════════════════════════════════════
-            탭 2: 결제 내역
+            탭 2: 제품 관리
+        ══════════════════════════════════════════ */}
+        {tab === "products" && (
+          <ProductManager />
+        )}
+
+        {/* ══════════════════════════════════════════
+            탭 3: 결제 내역
         ══════════════════════════════════════════ */}
         {tab === "payments" && (
           <>

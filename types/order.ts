@@ -45,12 +45,16 @@ export interface Order {
   userEmail: string;
 
   product: {
-    type: "horizontal" | "vertical";
-    material: string;
-    width: number;
-    height: number;
+    productId?: string;          // constants/products.ts 의 제품 ID
+    productName?: string;        // 제품명
+    orderType: string;           // "banner" | "poster" | "leaflet" | "sticker" | "namecard" | "envelope" | "inquiry"
+    type?: string;               // 레거시: "horizontal" | "vertical"
+    material?: string;
+    width?: number;
+    height?: number;
     quantity: number;
-    options: string[];
+    options?: string[];
+    specs?: Record<string, string>;  // 선택한 스펙 (size, paper, coating 등)
   };
 
   design: {

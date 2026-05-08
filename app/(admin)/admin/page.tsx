@@ -430,13 +430,18 @@ function OrderManageModal({
           <div className="bg-white rounded-xl border border-gray-100 p-4">
             <p className="text-xs font-bold text-gray-400 mb-3 flex items-center gap-1"><Package size={11} /> 제품 정보</p>
             <div className="space-y-1.5 text-xs">
-              <InfoRow label="종류" value={order.product.type} />
-              <InfoRow label="재질" value={order.product.material} />
-              <InfoRow label="사이즈" value={`${order.product.width}×${order.product.height}cm`} />
+              {order.product.productName && <InfoRow label="상품" value={order.product.productName} />}
+              {order.product.orderType && <InfoRow label="유형" value={order.product.orderType} />}
+              {order.product.type && <InfoRow label="종류" value={order.product.type} />}
+              {order.product.material && <InfoRow label="재질" value={order.product.material} />}
+              {order.product.width && order.product.height && <InfoRow label="사이즈" value={`${order.product.width}×${order.product.height}cm`} />}
               <InfoRow label="수량" value={`${order.product.quantity}개`} />
               {order.product.options?.length > 0 && (
                 <InfoRow label="옵션" value={order.product.options.join(", ")} />
               )}
+              {order.product.specs && Object.entries(order.product.specs).map(([k, v]) => (
+                <InfoRow key={k} label={k} value={String(v)} />
+              ))}
             </div>
           </div>
 
@@ -1095,8 +1100,8 @@ export default function AdminDashboard() {
                         <div className="text-xs text-gray-400">{order.userPhone}</div>
                       </td>
                       <td className="px-4 py-3 text-gray-600 text-xs">
-                        <div>{order.product.type}</div>
-                        <div className="text-gray-400">{order.product.width}×{order.product.height}cm × {order.product.quantity}개</div>
+                        <div>{order.product.productName ?? order.product.type ?? order.product.orderType}</div>
+                        <div className="text-gray-400">{order.product.width && order.product.height ? `${order.product.width}×${order.product.height}cm × ` : ""}{order.product.quantity}개</div>
                       </td>
                       <td className="px-4 py-3 font-bold text-gray-900">{order.pricing.totalPrice.toLocaleString()}원</td>
                       <td className="px-4 py-3"><StatusBadge status={order.status} /></td>

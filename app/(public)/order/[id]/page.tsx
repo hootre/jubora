@@ -169,10 +169,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   if (!order) return null;
 
   const currentIdx = getFlowIdx(order.status as OrderStatus);
-  const material = MATERIALS.find((m) => m.id === order.product.material);
-  const productType = PRODUCT_TYPES.find((p) => p.id === order.product.type);
-  const optionLabels = order.product.options
-    .map((oid) => OPTIONS.find((o) => o.id === oid)?.name)
+  const material = order.product.material ? MATERIALS.find((m) => m.id === order.product.material) : undefined;
+  const productType = order.product.type ? PRODUCT_TYPES.find((p) => p.id === order.product.type) : undefined;
+  const optionLabels = (order.product.options ?? [])
+    .map((oid: string) => OPTIONS.find((o) => o.id === oid)?.name)
     .filter(Boolean);
 
   const canRespondToProof = order.status === "proof_sent" || order.status === "proof_revision";
@@ -184,11 +184,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     const w = window.open("", "_blank", "width=800,height=1100,scrollbars=yes,resizable=yes");
     if (!w) { alert("팝업이 차단되어 있습니다. 팝업 허용 후 다시 시도해주세요."); return; }
 
-    const optLabels = order.product.options
-      .map((oid) => OPTIONS.find((o) => o.id === oid)?.name)
+    const optLabels = (order.product.options ?? [])
+      .map((oid: string) => OPTIONS.find((o) => o.id === oid)?.name)
       .filter(Boolean).join(", ") || "-";
-    const matName = MATERIALS.find((m) => m.id === order.product.material)?.name ?? order.product.material;
-    const typeName = PRODUCT_TYPES.find((p) => p.id === order.product.type)?.name ?? order.product.type;
+    const matName = order.product.material ? (MATERIALS.find((m) => m.id === order.product.material)?.name ?? order.product.material) : "-";
+    const typeName = order.product.productName ?? (order.product.type ? (PRODUCT_TYPES.find((p) => p.id === order.product.type)?.name ?? order.product.type) : "-");
 
     w.document.write(`<!DOCTYPE html>
 <html lang="ko">
@@ -285,8 +285,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     <div class="company">주보라 (JUBORA)</div>
     <div class="detail">
       보라미디어 | 대표: 전동찬<br/>
-      사업자등록번호: 000-00-00000<br/>
-      주소: 경기도 하남시<br/>
+      사업자등록번호: 593-56-00232<br/>
+      주소: 경기도 하남시 미사강변한강로 135, 다동 716호 1003호(망월동, 미사스카이폴리스)<br/>
       이메일: artinsky@boramedia.co.kr
     </div>
     <div class="stamp">결제완료</div>
@@ -530,13 +530,28 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <Package size={16} className="text-primary-500" /> 제품 정보
           </h2>
           <dl className="space-y-2 text-sm">
-            <Row label="제품 종류" value={productType?.name ?? order.product.type} />
-            <Row label="재질" value={material?.name ?? order.product.material} />
-            <Row label="사이즈" value={`${order.product.width} × ${order.product.height} cm`} />
+            {order.product.productName && (
+              <Row label="상품" value={order.product.productName} />
+            )}
+            {order.product.orderType && (
+              <Row label="주문유형" value={order.product.orderType} />
+            )}
+            {productType && (
+              <Row label="제품 종류" value={productType.name} />
+            )}
+            {material && (
+              <Row label="재질" value={material.name} />
+            )}
+            {order.product.width && order.product.height && (
+              <Row label="사이즈" value={`${order.product.width} × ${order.product.height} cm`} />
+            )}
             <Row label="수량" value={`${order.product.quantity}개`} />
             {optionLabels.length > 0 && (
               <Row label="마감 옵션" value={optionLabels.join(", ")} />
             )}
+            {order.product.specs && Object.entries(order.product.specs).map(([key, val]) => (
+              <Row key={key} label={key} value={String(val)} />
+            ))}
           </dl>
         </div>
 

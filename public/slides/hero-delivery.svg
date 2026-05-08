@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <defs>
+    <filter id="s3" x="-8%" y="-8%" width="120%" height="130%"><feDropShadow dx="3" dy="5" stdDeviation="6" flood-opacity="0.18"/></filter>
+  </defs>
+  <!-- 타임라인 -->
+  <g filter="url(#s3)">
+    <!-- 배경 카드 -->
+    <rect x="40" y="60" width="440" height="280" rx="16" fill="white" fill-opacity="0.95"/>
+    <!-- 상단 바 -->
+    <rect x="40" y="60" width="440" height="50" rx="16" fill="#0891b2"/>
+    <rect x="40" y="90" width="440" height="20" fill="#0891b2"/>
+    <text x="260" y="92" text-anchor="middle" fill="white" font-size="15" font-weight="bold" font-family="sans-serif">주문 → 제작 → 배송 프로세스</text>
+    <!-- 스텝 1 -->
+    <circle cx="130" cy="170" r="22" fill="#0ea5e9"/>
+    <text x="130" y="176" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">1</text>
+    <text x="130" y="210" text-anchor="middle" fill="#334155" font-size="12" font-weight="bold" font-family="sans-serif">주문접수</text>
+    <text x="130" y="228" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">오전 주문</text>
+    <!-- 화살표 -->
+    <line x1="160" y1="170" x2="210" y2="170" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,3"/>
+    <polygon points="210,165 220,170 210,175" fill="#cbd5e1"/>
+    <!-- 스텝 2 -->
+    <circle cx="260" cy="170" r="22" fill="#6366f1"/>
+    <text x="260" y="176" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">2</text>
+    <text x="260" y="210" text-anchor="middle" fill="#334155" font-size="12" font-weight="bold" font-family="sans-serif">당일제작</text>
+    <text x="260" y="228" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">48시간 이내</text>
+    <!-- 화살표 -->
+    <line x1="290" y1="170" x2="340" y2="170" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6,3"/>
+    <polygon points="340,165 350,170 340,175" fill="#cbd5e1"/>
+    <!-- 스텝 3 -->
+    <circle cx="390" cy="170" r="22" fill="#10b981"/>
+    <text x="390" y="176" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">3</text>
+    <text x="390" y="210" text-anchor="middle" fill="#334155" font-size="12" font-weight="bold" font-family="sans-serif">전국배송</text>
+    <text x="390" y="228" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">CJ대한통운</text>
+    <!-- 하단 배지 -->
+    <rect x="140" y="270" width="240" height="40" rx="20" fill="#f0fdfa"/>
+    <text x="260" y="295" text-anchor="middle" fill="#0d9488" font-size="13" font-weight="bold" font-family="sans-serif">⚡ 오전 주문 시 당일 발송</text>
+  </g>
+</svg>

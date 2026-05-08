@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 관리자 이메일
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == "mm1895@naver.com";
+    }
+
+    // ── orders 컬렉션 ──────────────────────────────
+    match /orders/{orderId} {
+      // 읽기: 본인 주문 or 관리자
+      allow read: if request.auth != null
+        && (resource.data.userId == request.auth.uid || isAdmin());
+
+      // 생성: 로그인된 사용자 (본인 userId 또는 관리자)
+      allow create: if request.auth != null
+        && (request.resource.data.userId == request.auth.uid || isAdmin());
+
+      // 수정: 본인 주문 or 관리자
+      allow update: if request.auth != null
+        && (resource.data.userId == request.auth.uid || isAdmin());
+
+      // 삭제: 관리자만
+      allow delete: if isAdmin();
+    }
+
+    // ── templates 컬렉션 ──────────────────────────
+    match /templates/{templateId} {
+      allow read: if true;              // 누구나 시안 열람
+      allow write: if isAdmin();        // 관리자만 수정
+    }
+
+    // ── 그 외 컬렉션: 관리자만 ──────────────────
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

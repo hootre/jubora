@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <defs>
+    <linearGradient id="qg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#047857"/></linearGradient>
+    <filter id="s4" x="-8%" y="-8%" width="120%" height="130%"><feDropShadow dx="3" dy="5" stdDeviation="6" flood-opacity="0.18"/></filter>
+  </defs>
+  <!-- 품질 특징 카드들 -->
+  <g filter="url(#s4)">
+    <!-- UV코팅 -->
+    <rect x="30" y="40" width="220" height="150" rx="14" fill="white" fill-opacity="0.95"/>
+    <rect x="30" y="40" width="220" height="6" rx="3" fill="#10b981"/>
+    <text x="140" y="90" text-anchor="middle" fill="#334155" font-size="28">🛡️</text>
+    <text x="140" y="125" text-anchor="middle" fill="#1e293b" font-size="15" font-weight="bold" font-family="sans-serif">UV코팅 처리</text>
+    <text x="140" y="148" text-anchor="middle" fill="#64748b" font-size="11" font-family="sans-serif">자외선 차단, 색상 유지</text>
+  </g>
+  <g filter="url(#s4)">
+    <!-- 방수 -->
+    <rect x="270" y="60" width="220" height="150" rx="14" fill="white" fill-opacity="0.95"/>
+    <rect x="270" y="60" width="220" height="6" rx="3" fill="#0ea5e9"/>
+    <text x="380" y="110" text-anchor="middle" fill="#334155" font-size="28">💧</text>
+    <text x="380" y="145" text-anchor="middle" fill="#1e293b" font-size="15" font-weight="bold" font-family="sans-serif">방수 코팅</text>
+    <text x="380" y="168" text-anchor="middle" fill="#64748b" font-size="11" font-family="sans-serif">비바람에도 끄떡없는 내구성</text>
+  </g>
+  <g filter="url(#s4)">
+    <!-- 고해상도 -->
+    <rect x="80" y="220" width="220" height="150" rx="14" fill="white" fill-opacity="0.95"/>
+    <rect x="80" y="220" width="220" height="6" rx="3" fill="#8b5cf6"/>
+    <text x="190" y="272" text-anchor="middle" fill="#334155" font-size="28">🖨️</text>
+    <text x="190" y="305" text-anchor="middle" fill="#1e293b" font-size="15" font-weight="bold" font-family="sans-serif">고해상도 인쇄</text>
+    <text x="190" y="328" text-anchor="middle" fill="#64748b" font-size="11" font-family="sans-serif">선명한 색감, 정밀한 출력</text>
+  </g>
+  <g filter="url(#s4)">
+    <!-- 다양한 인쇄물 -->
+    <rect x="320" y="240" width="170" height="130" rx="14" fill="white" fill-opacity="0.95"/>
+    <rect x="320" y="240" width="170" height="6" rx="3" fill="#f59e0b"/>
+    <text x="405" y="290" text-anchor="middle" fill="#334155" font-size="28">📋</text>
+    <text x="405" y="320" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold" font-family="sans-serif">전단지·스티커</text>
+    <text x="405" y="340" text-anchor="middle" fill="#64748b" font-size="10" font-family="sans-serif">다양한 인쇄물 제작</text>
+  </g>
+</svg>

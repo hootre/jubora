@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- 현수막 목업 -->
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#bfdbfe"/></linearGradient>
+    <linearGradient id="banner1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient>
+    <filter id="shadow1" x="-10%" y="-10%" width="130%" height="130%"><feDropShadow dx="4" dy="6" stdDeviation="8" flood-opacity="0.2"/></filter>
+  </defs>
+  <!-- 현수막 1 (메인) -->
+  <g filter="url(#shadow1)">
+    <rect x="60" y="40" width="380" height="140" rx="8" fill="url(#banner1)"/>
+    <text x="250" y="95" text-anchor="middle" fill="white" font-size="22" font-weight="bold" font-family="sans-serif">부활절 감사 예배</text>
+    <text x="250" y="125" text-anchor="middle" fill="#bfdbfe" font-size="13" font-family="sans-serif">2026년 4월 5일 주일 오전 11시</text>
+    <text x="250" y="155" text-anchor="middle" fill="#93c5fd" font-size="11" font-family="sans-serif">은혜교회</text>
+  </g>
+  <!-- 현수막 2 (작은) -->
+  <g filter="url(#shadow1)" opacity="0.85">
+    <rect x="90" y="210" width="320" height="100" rx="8" fill="#7c3aed"/>
+    <text x="250" y="252" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="sans-serif">성탄절 축하 공연</text>
+    <text x="250" y="280" text-anchor="middle" fill="#c4b5fd" font-size="12" font-family="sans-serif">12월 25일 오후 2시 대예배실</text>
+  </g>
+  <!-- 데코 요소들 -->
+  <circle cx="440" cy="340" r="30" fill="#3b82f6" opacity="0.15"/>
+  <circle cx="60" cy="350" r="20" fill="#6366f1" opacity="0.12"/>
+  <rect x="380" y="330" width="80" height="50" rx="6" fill="#eff6ff" opacity="0.5"/>
+  <text x="420" y="360" text-anchor="middle" fill="#3b82f6" font-size="10" font-family="sans-serif" font-weight="bold">시안 미리보기</text>
+</svg>

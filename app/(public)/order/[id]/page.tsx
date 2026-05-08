@@ -4,17 +4,25 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { getOrder, respondToProof } from "@/lib/firestore";
+import { getOrder, respondToProof, savePayment } from "@/lib/firestore";
 import type { Order, OrderStatus } from "@/types/order";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import { MATERIALS, OPTIONS, PRODUCT_TYPES } from "@/constants/pricing";
 import {
   Loader2, ArrowLeft, Package, MapPin, CreditCard,
-  MessageSquare, ImageIcon, Clock, Truck,
+  MessageSquare, ImageIcon, Clock, Truck, X,
   CheckCircle2, Edit3, ThumbsUp, Send, AlertTriangle,
+  Copy, Building2,
 } from "lucide-react";
 
-// ── 고객용 진행 단계 (proof_sent·paid 는 표시하지 않음) ──
+// ── 계좌 정보 ──
+const BANK_INFO = {
+  bank: "농협",
+  account: "352-1400-1028-63",
+  holder: "보라미디어/전동찬",
+};
+
+// ── 고객용 진행 단계 ──
 const FLOW_STEPS: { key: OrderStatus; label: string; emoji: string }[] = [
   { key: "pending",        label: "주문 접수",  emoji: "📥" },
   { key: "confirming",     label: "주문 확인",  emoji: "🔍" },
@@ -28,7 +36,6 @@ const FLOW_STEPS: { key: OrderStatus; label: string; emoji: string }[] = [
 ];
 const FLOW_STEP_KEYS = FLOW_STEPS.map((s) => s.key);
 
-// 숨겨진 상태를 가장 가까운 표시 단계 인덱스로 매핑
 function getFlowIdx(status: OrderStatus): number {
   const direct = FLOW_STEP_KEYS.indexOf(status);
   if (direct !== -1) return direct;
@@ -43,22 +50,27 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // 수정 요청 관련 상태
+  // 수정 요청 관련
   const [revisionNote, setRevisionNote] = useState("");
   const [revisionSaving, setRevisionSaving] = useState(false);
   const [revisionDone, setRevisionDone] = useState(false);
 
-  // 시안 승인 관련 상태
+  // 시안 승인 관련
   const [approving, setApproving] = useState(false);
 
-  // ── 주문 불러오기 ──
+  // 입금확인요청 관련
+  const [requesting, setRequesting] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // 이미지 확대 모달
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
+
   const loadOrder = async (uid: string) => {
     try {
       const o = await getOrder(id);
       if (!o) { setError("주문을 찾을 수 없어요."); return; }
       if (o.userId !== uid) { setError("접근 권한이 없어요."); return; }
       setOrder(o);
-      // 기존 수정 요청 메모가 있으면 textarea에 채워줌
       if (o.proof?.revisionNote) setRevisionNote(o.proof.revisionNote);
     } catch (e: any) {
       setError(`불러오기 실패: ${e?.message ?? "알 수 없는 오류"}`);
@@ -113,6 +125,34 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     }
   };
 
+  // ── 입금확인요청 ──
+  const handlePaymentRequest = async () => {
+    if (!order || requesting) return;
+    setRequesting(true);
+    try {
+      await savePayment(order.id, {
+        method: "계좌입금",
+        paymentId: `bank-${order.id}-${Date.now()}`,
+        paidAt: new Date().toISOString(),
+        amount: order.pricing.totalPrice,
+        pgProvider: "BANK_TRANSFER",
+      });
+      setOrder(prev => prev ? { ...prev, status: "paid" } : prev);
+      alert("입금확인 요청이 완료되었어요!\n담당자가 확인 후 출력을 시작합니다.");
+    } catch (e: any) {
+      alert(`입금확인 요청 중 오류가 발생했습니다.\n${e?.message ?? "알 수 없는 오류"}`);
+    } finally {
+      setRequesting(false);
+    }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(BANK_INFO.account).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   // ── 로딩 / 에러 ──
   if (loading) return (
     <div className="flex justify-center items-center min-h-[60vh]">
@@ -135,7 +175,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     .map((oid) => OPTIONS.find((o) => o.id === oid)?.name)
     .filter(Boolean);
 
-  // 시안 응답 가능 여부
   const canRespondToProof = order.status === "proof_sent" || order.status === "proof_revision";
 
   return (
@@ -193,6 +232,21 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
+      {/* ── 관리자 메시지 ── */}
+      {order.adminMessage && (
+        <div className="card mb-6 border border-purple-200 bg-purple-50">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center shrink-0">
+              <MessageSquare size={16} className="text-purple-600" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-purple-700 mb-1">담당자 메시지</p>
+              <p className="text-sm text-purple-900 whitespace-pre-wrap">{order.adminMessage}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── 시안 이미지 ── */}
       {(order.design.previewImageUrl || order.proof?.imageUrl) && (
         <div className="card mb-6">
@@ -205,7 +259,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <p className="text-xs text-gray-400 mb-1.5">주문 시 첨부 이미지</p>
                 <img src={order.design.previewImageUrl} alt="주문 이미지"
                   className="w-full rounded-lg border border-gray-200 object-contain max-h-48 bg-gray-50 cursor-zoom-in"
-                  onClick={() => window.open(order.design.previewImageUrl, "_blank")} />
+                  onClick={() => setZoomImage(order.design.previewImageUrl!)} />
               </div>
             )}
             {order.proof?.imageUrl && (
@@ -213,7 +267,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <p className="text-xs text-gray-400 mb-1.5">담당자 제작 시안</p>
                 <img src={order.proof.imageUrl} alt="담당자 시안"
                   className="w-full rounded-lg border border-gray-200 object-contain max-h-48 bg-gray-50 cursor-zoom-in"
-                  onClick={() => window.open(order.proof!.imageUrl, "_blank")} />
+                  onClick={() => setZoomImage(order.proof!.imageUrl)} />
               </div>
             )}
           </div>
@@ -233,7 +287,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               : "시안을 확인하고, 수정이 필요하면 내용을 작성 후 저장하거나 바로 승인해 주세요."}
           </p>
 
-          {/* 수정 요청 입력 */}
           <div className="mb-3">
             <label className="label flex items-center gap-1.5">
               <MessageSquare size={13} className="text-orange-500" />
@@ -254,7 +307,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2">
-            {/* 수정 요청 저장 */}
             <button
               onClick={handleRevisionRequest}
               disabled={revisionSaving || !revisionNote.trim()}
@@ -268,7 +320,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               }
             </button>
 
-            {/* 시안 승인 */}
             <button
               onClick={handleApproveProof}
               disabled={approving}
@@ -290,24 +341,48 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-      {/* ── 입금확인요청 배너 (proof_approved 상태) ── */}
+      {/* ── 입금 정보 + 입금확인요청 (proof_approved 상태 — 별도 페이지 없이 인라인) ── */}
       {order.status === "proof_approved" && (
         <div className="card mb-6 border-2 border-green-200 bg-green-50">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <div className="flex items-center gap-3 flex-1">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
-                <CreditCard size={20} className="text-green-600" />
-              </div>
-              <div>
-                <p className="font-bold text-green-800">시안이 승인되었어요!</p>
-                <p className="text-xs sm:text-sm text-green-600 mt-0.5">계좌 입금 후 입금확인요청을 눌러주세요.</p>
+          <p className="font-bold text-green-800 mb-1">시안이 승인되었어요!</p>
+          <p className="text-xs text-green-600 mb-4">아래 계좌로 입금 후 입금확인요청 버튼을 눌러주세요.</p>
+
+          {/* 계좌 정보 */}
+          <div className="bg-white rounded-lg p-4 border border-green-200 space-y-2 text-sm mb-4">
+            <div className="flex justify-between">
+              <span className="text-gray-500 flex items-center gap-1.5"><Building2 size={13} /> 은행</span>
+              <span className="font-semibold text-gray-800">{BANK_INFO.bank}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-500">계좌번호</span>
+              <div className="flex items-center gap-2">
+                <span className="font-mono font-bold text-gray-900">{BANK_INFO.account}</span>
+                <button onClick={handleCopy}
+                  className={`text-[10px] px-2 py-1 rounded-md transition-colors font-medium ${
+                    copied ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
+                  {copied ? <><CheckCircle2 size={10} className="inline" /> 복사됨</> : <><Copy size={10} className="inline" /> 복사</>}
+                </button>
               </div>
             </div>
-            <Link href={`/order/${order.id}/payment`}
-              className="bg-green-600 hover:bg-green-700 text-white py-2.5 px-6 rounded-lg text-sm font-bold transition-colors shadow-sm text-center w-full sm:w-auto">
-              입금확인요청
-            </Link>
+            <div className="flex justify-between">
+              <span className="text-gray-500">예금주</span>
+              <span className="font-semibold text-gray-800">{BANK_INFO.holder}</span>
+            </div>
+            <div className="border-t border-gray-100 pt-2 flex justify-between">
+              <span className="text-gray-500">입금금액</span>
+              <span className="font-bold text-primary-600 text-base">{order.pricing.totalPrice.toLocaleString()}원</span>
+            </div>
           </div>
+
+          <button
+            onClick={handlePaymentRequest}
+            disabled={requesting}
+            className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg text-sm font-bold transition-colors disabled:opacity-60 shadow-sm">
+            {requesting
+              ? <><Loader2 size={15} className="animate-spin" /> 요청 중...</>
+              : <><CheckCircle2 size={15} /> 입금확인요청</>
+            }
+          </button>
         </div>
       )}
 
@@ -339,7 +414,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <Row label="사이즈" value={`${order.product.width} × ${order.product.height} cm`} />
             <Row label="수량" value={`${order.product.quantity}개`} />
             {optionLabels.length > 0 && (
-              <Row label="추가 옵션" value={optionLabels.join(", ")} />
+              <Row label="마감 옵션" value={optionLabels.join(", ")} />
             )}
           </dl>
         </div>
@@ -408,6 +483,24 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           ← 주문 목록으로
         </Link>
       </div>
+
+      {/* ══ 이미지 확대 모달 ══ */}
+      {zoomImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setZoomImage(null)} />
+          <div className="relative max-w-3xl max-h-[90vh]">
+            <button onClick={() => setZoomImage(null)}
+              className="absolute -top-3 -right-3 z-10 bg-white hover:bg-gray-100 text-gray-700 rounded-full p-2 shadow-lg transition-colors">
+              <X size={20} />
+            </button>
+            <img
+              src={zoomImage}
+              alt="시안 확대"
+              className="max-w-full max-h-[80vh] rounded-lg shadow-2xl object-contain bg-white"
+            />
+          </div>
+        </div>
+      )}
 
     </div>
   );

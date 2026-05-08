@@ -7,7 +7,7 @@ import { onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, sig
 import { createOrder } from "@/lib/firestore";
 import { calcPrice, MATERIALS, OPTIONS, PRODUCT_TYPES } from "@/constants/pricing";
 import { SAMPLE_TEMPLATES, TEMPLATE_CATEGORIES } from "@/lib/templates";
-import { Package, MapPin, MessageSquare, CreditCard, Loader2, ImagePlus, RefreshCw, LayoutTemplate, X, Check, LogIn, Mail, Eye, EyeOff } from "lucide-react";
+import { Package, MapPin, MessageSquare, CreditCard, Loader2, ImagePlus, RefreshCw, LayoutTemplate, X, Check, LogIn, Mail, Eye, EyeOff, User, Phone, Search } from "lucide-react";
 
 const DRAFT_KEY = "jubora_order_drafts";
 
@@ -50,6 +50,7 @@ function OrderForm() {
   const draftId    = searchParams.get("draft") ?? `draft-${Date.now()}`;
 
   const replaceInputRef = useRef<HTMLInputElement>(null);
+  const attachInputRef = useRef<HTMLInputElement>(null);
 
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [modalCat, setModalCat] = useState("all");
@@ -62,14 +63,19 @@ function OrderForm() {
   const [selectedImage, setSelectedImage] = useState<string>(imgParam ? decodeURIComponent(imgParam) : "");
   const [selectedImageName, setSelectedImageName] = useState<string>(imgParam ? "선택한 시안" : "");
 
+  // 추가 첨부 이미지 (참고용)
+  const [attachedFiles, setAttachedFiles] = useState<{ name: string; dataUrl: string }[]>([]);
+
   // 폼 상태
   const [form, setForm] = useState({
     productType: "horizontal",
-    material: "waterproof",
+    material: "cloth",
     width: 200,
     height: 60,
     quantity: 1,
-    options: [] as string[],
+    options: ["punching"] as string[], // 펀칭 기본 선택
+    customerName: "",
+    customerPhone: "",
     address: "",
     addressDetail: "",
     zipCode: "",
@@ -90,7 +96,13 @@ function OrderForm() {
 
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u ?? null);
-      if (u) setShowLoginModal(false);
+      if (u) {
+        setShowLoginModal(false);
+        // 로그인 유저 이름 자동 채우기
+        if (!form.customerName && u.displayName) {
+          setForm(prev => ({ ...prev, customerName: u.displayName ?? "" }));
+        }
+      }
     });
 
     // ── 폼 데이터 복원 (우선순위: sessionStorage 백업 > localStorage draft) ──
@@ -107,37 +119,45 @@ function OrderForm() {
         height:      saved.height      ?? prev.height,
         quantity:    saved.quantity    ?? prev.quantity,
         options:     saved.options     ?? prev.options,
+        customerName: saved.customerName ?? prev.customerName,
+        customerPhone: saved.customerPhone ?? prev.customerPhone,
         address:     saved.address     ?? prev.address,
         addressDetail: saved.addressDetail ?? prev.addressDetail,
         zipCode:     saved.zipCode     ?? prev.zipCode,
         memo:        saved.memo        ?? prev.memo,
         requirements: saved.requirements ?? prev.requirements,
       }));
-      // 이미지 복원
       if (saved.selectedImage && !selectedImage) {
         setSelectedImage(saved.selectedImage);
         setSelectedImageName(saved.selectedImageName ?? "");
       }
     }
 
+    // 다음 주소검색 API 스크립트 로드
+    if (!document.getElementById("daum-postcode-script")) {
+      const script = document.createElement("script");
+      script.id = "daum-postcode-script";
+      script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+      script.async = true;
+      document.head.appendChild(script);
+    }
+
     return () => unsub();
   }, []);   // eslint-disable-line
 
-  // ── 폼 변경 시 항상 sessionStorage에 백업 (주소만 입력해도 저장) ──
+  // ── 폼 변경 시 항상 sessionStorage에 백업 ──
   useEffect(() => {
     const hasAnyInput = form.address || form.addressDetail || form.memo ||
-      form.requirements || form.width !== 200 || form.height !== 60;
+      form.requirements || form.customerName || form.customerPhone ||
+      form.width !== 200 || form.height !== 60;
     if (!hasAnyInput) return;
 
     const timer = setTimeout(() => {
-      // sessionStorage에 폼 + 이미지 백업 (redirect 복귀용)
       sessionStorage.setItem(ORDER_FORM_BACKUP_KEY, JSON.stringify({
         ...form,
         selectedImage,
         selectedImageName,
       }));
-
-      // localStorage에도 draft 저장 (이어서 작성용)
       saveDraft(draftId, {
         ...form,
         templateId,
@@ -153,6 +173,8 @@ function OrderForm() {
   );
 
   const toggleOption = (id: string) => {
+    // 펀칭은 항상 유지
+    if (id === "punching") return;
     setForm((prev) => ({
       ...prev,
       options: prev.options.includes(id)
@@ -161,21 +183,44 @@ function OrderForm() {
     }));
   };
 
+  // ── 다음 주소검색 ──
+  const openAddressSearch = () => {
+    const daum = (window as any).daum;
+    if (!daum?.Postcode) {
+      alert("주소 검색을 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+    new daum.Postcode({
+      oncomplete: (data: any) => {
+        const addr = data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
+        setForm(prev => ({
+          ...prev,
+          address: addr,
+          zipCode: data.zonecode,
+        }));
+      },
+    }).open();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 비회원이면 로그인 팝업 표시 (페이지 이동 없이)
     if (!user) {
       setShowLoginModal(true);
       return;
     }
+    if (!form.customerName.trim()) { alert("주문자 이름을 입력해주세요."); return; }
+    if (!form.customerPhone.trim()) { alert("연락처를 입력해주세요."); return; }
     if (!form.address) { alert("배송지를 입력해주세요."); return; }
     setLoading(true);
 
     try {
+      // 첨부 이미지들 URL 목록
+      const attachedImageUrls = attachedFiles.map(f => f.dataUrl);
+
       const orderId = await createOrder({
         userId: user.uid,
-        userName: user.displayName ?? user.email,
-        userPhone: "",
+        userName: form.customerName.trim(),
+        userPhone: form.customerPhone.trim(),
         userEmail: user.email,
         product: {
           type: form.productType as any,
@@ -189,6 +234,7 @@ function OrderForm() {
           templateId: templateId || undefined,
           previewImageUrl: selectedImage || undefined,
           userRequirements: form.requirements,
+          attachedImages: attachedImageUrls.length > 0 ? attachedImageUrls : undefined,
         },
         delivery: {
           address: form.address,
@@ -224,6 +270,30 @@ function OrderForm() {
     e.target.value = "";
   };
 
+  const handleAttachFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    Array.from(files).forEach(file => {
+      if (attachedFiles.length >= 5) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setAttachedFiles(prev => {
+          if (prev.length >= 5) return prev;
+          return [...prev, { name: file.name, dataUrl: ev.target?.result as string }];
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  };
+
+  const removeAttachedFile = (idx: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // 사방 끈처리 가격 표시용 둘레 계산
+  const perimeterM = 2 * (form.width + form.height) / 100;
+
   const set = (key: string, val: unknown) => setForm((p) => ({ ...p, [key]: val }));
 
   return (
@@ -242,7 +312,7 @@ function OrderForm() {
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
 
-          {/* ── 선택한 제품 이미지 (1개만 표시) ── */}
+          {/* ── 선택한 디자인 이미지 ── */}
           <div className="card">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-bold text-gray-900 flex items-center gap-2">
@@ -304,6 +374,49 @@ function OrderForm() {
               className="hidden"
               onChange={handleReplaceImage}
             />
+
+            {/* 추가 참고 이미지 첨부 */}
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-medium text-gray-700">참고 이미지 첨부 <span className="text-gray-400 font-normal">(최대 5장)</span></p>
+                {attachedFiles.length < 5 && (
+                  <button
+                    type="button"
+                    onClick={() => attachInputRef.current?.click()}
+                    className="text-xs px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
+                  >
+                    + 이미지 추가
+                  </button>
+                )}
+              </div>
+              {attachedFiles.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  {attachedFiles.map((f, i) => (
+                    <div key={i} className="relative group">
+                      <img src={f.dataUrl} alt={f.name}
+                        className="w-full h-20 rounded-lg border border-gray-200 object-cover bg-gray-50" />
+                      <button
+                        type="button"
+                        onClick={() => removeAttachedFile(i)}
+                        className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X size={10} />
+                      </button>
+                      <p className="text-[10px] text-gray-400 mt-0.5 truncate">{f.name}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <input
+                ref={attachInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                multiple
+                className="hidden"
+                onChange={handleAttachFiles}
+              />
+            </div>
+
             <p className="text-xs text-gray-400 mt-2">* 실제 시안은 담당자가 검토 후 카카오톡으로 전달됩니다.</p>
           </div>
 
@@ -320,7 +433,7 @@ function OrderForm() {
               <div>
                 <label className="label">재질</label>
                 <select className="input" value={form.material} onChange={(e) => set("material", e.target.value)}>
-                  {MATERIALS.map((m) => <option key={m.id} value={m.id}>{m.name} (㎡당 {m.pricePerM2.toLocaleString()}원)</option>)}
+                  {MATERIALS.map((m) => <option key={m.id} value={m.id}>{m.name} (m&sup2;당 {m.pricePerM2.toLocaleString()}원)</option>)}
                 </select>
               </div>
             </div>
@@ -342,16 +455,52 @@ function OrderForm() {
               </div>
             </div>
             <div>
-              <label className="label">추가 옵션</label>
+              <label className="label">마감 옵션</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {OPTIONS.map((opt) => (
-                  <label key={opt.id} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors
-                    ${form.options.includes(opt.id) ? "border-primary-500 bg-primary-50" : "border-gray-200 hover:bg-gray-50"}`}>
-                    <input type="checkbox" checked={form.options.includes(opt.id)}
-                      onChange={() => toggleOption(opt.id)} className="accent-primary-600" />
-                    <span className="text-sm">{opt.name} <span className="text-gray-400">(+{opt.price.toLocaleString()}원)</span></span>
-                  </label>
-                ))}
+                {OPTIONS.map((opt) => {
+                  const isPunching = opt.id === "punching";
+                  const priceLabel = opt.type === "perMeter"
+                    ? `m당 ${opt.price.toLocaleString()}원 ≈ ${Math.ceil(opt.price * perimeterM).toLocaleString()}원`
+                    : opt.price === 0 ? "무료" : `+${opt.price.toLocaleString()}원`;
+                  return (
+                    <label key={opt.id} className={`flex items-center gap-3 p-3 border rounded-lg transition-colors
+                      ${isPunching ? "border-primary-300 bg-primary-50 cursor-default" : "cursor-pointer"}
+                      ${!isPunching && form.options.includes(opt.id) ? "border-primary-500 bg-primary-50" : ""}
+                      ${!isPunching && !form.options.includes(opt.id) ? "border-gray-200 hover:bg-gray-50" : ""}`}>
+                      <input type="checkbox" checked={form.options.includes(opt.id)}
+                        onChange={() => toggleOption(opt.id)}
+                        disabled={isPunching}
+                        className="accent-primary-600" />
+                      <span className="text-sm">
+                        {opt.name}
+                        <span className="text-gray-400 ml-1">({priceLabel})</span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* 주문자 정보 */}
+          <div className="card">
+            <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><User size={18} /> 주문자 정보</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="label">이름 *</label>
+                <div className="relative">
+                  <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input type="text" className="input pl-9" value={form.customerName} placeholder="주문자 이름"
+                    onChange={(e) => set("customerName", e.target.value)} required />
+                </div>
+              </div>
+              <div>
+                <label className="label">연락처 *</label>
+                <div className="relative">
+                  <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input type="tel" className="input pl-9" value={form.customerPhone} placeholder="010-0000-0000"
+                    onChange={(e) => set("customerPhone", e.target.value)} required />
+                </div>
               </div>
             </div>
           </div>
@@ -362,8 +511,20 @@ function OrderForm() {
             <div className="space-y-3">
               <div>
                 <label className="label">주소 *</label>
-                <input type="text" className="input" value={form.address} placeholder="도로명 주소를 입력하세요"
-                  onChange={(e) => set("address", e.target.value)} required />
+                <div className="flex gap-2">
+                  <input type="text" className="input flex-1" value={form.address} placeholder="주소 검색을 눌러주세요"
+                    readOnly required />
+                  <button
+                    type="button"
+                    onClick={openAddressSearch}
+                    className="shrink-0 flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Search size={14} /> 주소 검색
+                  </button>
+                </div>
+                {form.zipCode && (
+                  <p className="text-xs text-gray-400 mt-1">우편번호: {form.zipCode}</p>
+                )}
               </div>
               <div>
                 <label className="label">상세 주소</label>
@@ -406,7 +567,7 @@ function OrderForm() {
               </div>
             </div>
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-yellow-800 mb-4">
-              ⚠️ 최종 금액은 시안 확인 후 결제가 진행됩니다. 지금은 주문만 접수돼요.
+              최종 금액은 시안 확인 후 결제가 진행됩니다. 지금은 주문만 접수돼요.
             </div>
 
             {/* 비회원 안내 */}
@@ -432,7 +593,6 @@ function OrderForm() {
           onClose={() => setShowLoginModal(false)}
           onLoginSuccess={() => {
             setShowLoginModal(false);
-            // 로그인 후 자동으로 주문 재시도하지 않음 (유저가 다시 버튼 누르도록)
           }}
         />
       )}
@@ -599,10 +759,7 @@ function LoginModal({ onClose, onLoginSuccess }: { onClose: () => void; onLoginS
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      // redirect 방식 사용 (모달 안에서 popup은 브라우저 차단됨)
-      // sessionStorage에 주문 정보가 이미 있으므로 redirect 후에도 유지됨
       await signInWithRedirect(auth, provider);
-      // redirect되므로 여기까지 도달하지 않음
     } catch (err: any) {
       const code = err?.code ?? "";
       console.error("[Google Login Error]", code, err);
@@ -613,12 +770,8 @@ function LoginModal({ onClose, onLoginSuccess }: { onClose: () => void; onLoginS
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      {/* 배경 */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-
-      {/* 모달 */}
       <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm overflow-hidden">
-        {/* 헤더 */}
         <div className="px-6 pt-6 pb-2 flex items-center justify-between">
           <div>
             <h2 className="font-bold text-gray-900 text-lg">로그인</h2>
@@ -630,14 +783,12 @@ function LoginModal({ onClose, onLoginSuccess }: { onClose: () => void; onLoginS
         </div>
 
         <div className="px-6 pb-6 pt-2">
-          {/* 에러 메시지 */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg px-3 py-2 mb-4">
               {error}
             </div>
           )}
 
-          {/* 이메일 로그인 폼 */}
           <form onSubmit={handleEmailLogin} className="space-y-3 mb-4">
             <div>
               <label className="text-xs font-medium text-gray-600 mb-1 block">이메일</label>
@@ -682,14 +833,12 @@ function LoginModal({ onClose, onLoginSuccess }: { onClose: () => void; onLoginS
             </button>
           </form>
 
-          {/* 구분선 */}
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-gray-200" />
             <span className="text-xs text-gray-400">또는</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
-          {/* Google 로그인 */}
           <button
             type="button"
             onClick={handleGoogleLogin}
@@ -705,7 +854,6 @@ function LoginModal({ onClose, onLoginSuccess }: { onClose: () => void; onLoginS
             Google 계정으로 로그인
           </button>
 
-          {/* 하단 링크 */}
           <div className="flex justify-center gap-3 mt-4 text-xs text-gray-400">
             <Link href="/register" className="hover:text-primary-600 transition-colors" onClick={onClose}>
               회원가입
@@ -716,7 +864,6 @@ function LoginModal({ onClose, onLoginSuccess }: { onClose: () => void; onLoginS
             </Link>
           </div>
 
-          {/* 안내 문구 */}
           <p className="text-[11px] text-gray-400 text-center mt-4 leading-relaxed">
             로그인 후에도 작성 중인 주문 정보가 그대로 유지됩니다.
           </p>

@@ -123,7 +123,11 @@ function OrderManageModal({
   const [shippingCourier, setShippingCourier] = useState(order.shipping?.courier ?? "CJ대한통운");
   const [trackingNumber, setTrackingNumber] = useState(order.shipping?.trackingNumber ?? "");
 
+  // 관리자 메시지 (시안제작중 등 상태 변경 시)
+  const [adminMessage, setAdminMessage] = useState(order.adminMessage ?? "");
+
   const needsTracking = pendingStatus === "shipping";
+  const needsMessage = pendingStatus === "designing" && isDirty;
 
   const handleSave = async () => {
     if (!isDirty) return;
@@ -134,13 +138,19 @@ function OrderManageModal({
     }
     setSaving(true);
     try {
-      const extra = needsTracking ? {
-        shipping: {
-          courier: shippingCourier,
-          trackingNumber: trackingNumber.trim(),
-          shippedAt: new Date().toISOString(),
-        },
-      } : undefined;
+      let extra: Partial<Order> | undefined;
+      if (needsTracking) {
+        extra = {
+          shipping: {
+            courier: shippingCourier,
+            trackingNumber: trackingNumber.trim(),
+            shippedAt: new Date().toISOString(),
+          },
+        };
+      }
+      if (adminMessage.trim()) {
+        extra = { ...(extra ?? {}), adminMessage: adminMessage.trim() };
+      }
       await onStatusChange(order.id, pendingStatus, extra);
     } finally {
       setSaving(false);
@@ -253,6 +263,33 @@ function OrderManageModal({
                 )}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ── 관리자 메시지 입력 (시안제작중 등 상태 변경 시) ── */}
+        {needsMessage && (
+          <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4">
+            <p className="text-sm font-bold text-purple-800 mb-2 flex items-center gap-2">
+              <MessageSquare size={15} /> 고객에게 전할 메시지
+            </p>
+            <p className="text-xs text-purple-600 mb-3">시안 제작을 시작하면서 고객에게 전달할 메시지를 입력하세요. (선택)</p>
+            <textarea
+              value={adminMessage}
+              onChange={e => setAdminMessage(e.target.value)}
+              rows={3}
+              placeholder={"예) 시안 제작을 시작합니다. 약 1~2일 내 시안을 전달드릴 예정이에요."}
+              className="w-full px-3 py-2.5 border border-purple-200 rounded-lg text-sm focus:outline-none focus:border-purple-400 bg-white resize-none"
+            />
+          </div>
+        )}
+
+        {/* 기존 관리자 메시지 표시 */}
+        {order.adminMessage && !needsMessage && (
+          <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+            <p className="text-xs font-bold text-purple-700 mb-2 flex items-center gap-2">
+              <MessageSquare size={13} /> 관리자 메시지
+            </p>
+            <p className="text-sm text-purple-900 whitespace-pre-wrap">{order.adminMessage}</p>
           </div>
         )}
 

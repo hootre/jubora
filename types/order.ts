@@ -45,7 +45,7 @@ export interface Order {
   userEmail: string;
 
   product: {
-    type: "horizontal" | "vertical" | "banner" | "rollup" | "print";
+    type: "horizontal" | "vertical";
     material: string;
     width: number;
     height: number;
@@ -57,6 +57,7 @@ export interface Order {
     templateId?: string;
     previewImageUrl?: string;
     userRequirements?: string;
+    attachedImages?: string[];   // 참고 이미지 (dataURL)
   };
 
   delivery: {
@@ -89,6 +90,8 @@ export interface Order {
     amount: number;
     pgProvider?: string;     // PG사 (KAKAOPAY, NAVERPAY, TOSSPAY, KG_INICIS 등)
   };
+
+  adminMessage?: string;     // 관리자 메시지 (시안제작중 등 상태 변경 시)
 
   shipping?: {
     courier: string;         // 택배사 (CJ대한통운, 한진택배 등)

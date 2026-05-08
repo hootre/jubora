@@ -12,7 +12,7 @@ import {
   Loader2, ArrowLeft, Package, MapPin, CreditCard,
   MessageSquare, ImageIcon, Clock, Truck, X,
   CheckCircle2, Edit3, ThumbsUp, Send, AlertTriangle,
-  Copy, Building2,
+  Copy, Building2, Printer,
 } from "lucide-react";
 
 // ── 계좌 정보 ──
@@ -176,6 +176,127 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     .filter(Boolean);
 
   const canRespondToProof = order.status === "proof_sent" || order.status === "proof_revision";
+  const hasPaid = !!order.payment;
+
+  // ── 영수증 팝업 ──
+  const openReceipt = () => {
+    if (!order || !order.payment) return;
+    const w = window.open("", "_blank", "width=800,height=1100,scrollbars=yes,resizable=yes");
+    if (!w) { alert("팝업이 차단되어 있습니다. 팝업 허용 후 다시 시도해주세요."); return; }
+
+    const optLabels = order.product.options
+      .map((oid) => OPTIONS.find((o) => o.id === oid)?.name)
+      .filter(Boolean).join(", ") || "-";
+    const matName = MATERIALS.find((m) => m.id === order.product.material)?.name ?? order.product.material;
+    const typeName = PRODUCT_TYPES.find((p) => p.id === order.product.type)?.name ?? order.product.type;
+
+    w.document.write(`<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>영수증 - ${order.orderNumber}</title>
+<style>
+  @page { size: A4; margin: 20mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; color: #222; background: #fff; padding: 40px; max-width: 210mm; margin: 0 auto; }
+  .receipt { border: 2px solid #333; padding: 32px; }
+  .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 24px; }
+  .header h1 { font-size: 28px; font-weight: 800; letter-spacing: 8px; margin-bottom: 4px; }
+  .header .sub { font-size: 12px; color: #888; }
+  .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; }
+  .info-row .label { color: #666; min-width: 80px; }
+  .info-row .value { font-weight: 600; text-align: right; }
+  .section { margin-bottom: 20px; }
+  .section-title { font-size: 14px; font-weight: 700; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table th { background: #f5f5f5; border: 1px solid #ddd; padding: 8px 10px; text-align: center; font-weight: 600; color: #555; }
+  table td { border: 1px solid #ddd; padding: 8px 10px; }
+  table td.right { text-align: right; }
+  table td.center { text-align: center; }
+  .total-row td { font-weight: 700; font-size: 15px; background: #fafafa; }
+  .footer { margin-top: 32px; text-align: center; padding-top: 20px; border-top: 2px solid #333; }
+  .footer .company { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .footer .detail { font-size: 11px; color: #888; line-height: 1.8; }
+  .stamp { display: inline-block; border: 3px solid #c0392b; color: #c0392b; border-radius: 50%; width: 80px; height: 80px; line-height: 80px; text-align: center; font-size: 15px; font-weight: 800; margin-top: 16px; transform: rotate(-15deg); opacity: 0.8; }
+  .print-btn { display: block; margin: 20px auto 0; padding: 10px 40px; font-size: 14px; font-weight: 600; background: #4338ca; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
+  .print-btn:hover { background: #3730a3; }
+  @media print {
+    body { padding: 0; }
+    .print-btn { display: none !important; }
+    .receipt { border-width: 1px; }
+  }
+</style>
+</head>
+<body>
+<div class="receipt">
+  <div class="header">
+    <h1>영 수 증</h1>
+    <div class="sub">RECEIPT</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">주문 정보</div>
+    <div class="info-row"><span class="label">주문번호</span><span class="value">${order.orderNumber}</span></div>
+    <div class="info-row"><span class="label">주문일</span><span class="value">${order.createdAt.slice(0, 10)}</span></div>
+    <div class="info-row"><span class="label">고객명</span><span class="value">${order.userName}</span></div>
+    <div class="info-row"><span class="label">연락처</span><span class="value">${order.userPhone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")}</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">결제 정보</div>
+    <div class="info-row"><span class="label">결제 방법</span><span class="value">${order.payment!.method}</span></div>
+    <div class="info-row"><span class="label">결제일</span><span class="value">${order.payment!.paidAt.slice(0, 10)}</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">주문 내역</div>
+    <table>
+      <thead>
+        <tr><th>항목</th><th>상세</th><th>수량</th><th>금액</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${typeName}</td>
+          <td>${matName} / ${order.product.width}×${order.product.height}cm<br/><span style="font-size:11px;color:#888;">마감: ${optLabels}</span></td>
+          <td class="center">${order.product.quantity}개</td>
+          <td class="right">${order.pricing.productPrice.toLocaleString()}원</td>
+        </tr>
+        <tr>
+          <td>배송비</td>
+          <td>-</td>
+          <td class="center">-</td>
+          <td class="right">${order.pricing.deliveryFee === 0 ? "무료" : order.pricing.deliveryFee.toLocaleString() + "원"}</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="3" style="text-align:center;">합계 (VAT 포함)</td>
+          <td class="right">${order.pricing.totalPrice.toLocaleString()}원</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">배송 정보</div>
+    <div class="info-row"><span class="label">배송지</span><span class="value">${order.delivery.address} ${order.delivery.addressDetail || ""}</span></div>
+    ${order.delivery.memo ? `<div class="info-row"><span class="label">배송 메모</span><span class="value">${order.delivery.memo}</span></div>` : ""}
+  </div>
+
+  <div class="footer">
+    <div class="company">주보라 (JUBORA)</div>
+    <div class="detail">
+      보라미디어 | 대표: 전동찬<br/>
+      사업자등록번호: 000-00-00000<br/>
+      주소: 경기도 하남시<br/>
+      이메일: artinsky@boramedia.co.kr
+    </div>
+    <div class="stamp">결제완료</div>
+  </div>
+</div>
+<button class="print-btn" onclick="window.print()">🖨️ 인쇄하기</button>
+</body>
+</html>`);
+    w.document.close();
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 sm:py-10">
@@ -438,6 +559,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </>
             )}
           </dl>
+          {hasPaid && (
+            <button onClick={openReceipt}
+              className="w-full mt-4 flex items-center justify-center gap-2 border-2 border-primary-200 text-primary-700 hover:bg-primary-50 py-2.5 rounded-lg text-sm font-semibold transition-colors">
+              <Printer size={15} />
+              영수증 출력
+            </button>
+          )}
         </div>
 
         {/* 배송 정보 */}

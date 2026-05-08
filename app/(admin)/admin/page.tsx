@@ -16,9 +16,10 @@ import {
   Send, Loader2, CircleCheck, AlertCircle, Home,
   BarChart2, Search, ArrowUpDown, Truck, Banknote,
   CalendarDays, User, Phone, MapPin, ClipboardList,
-  ShieldCheck, X, ChevronDown, ChevronUp
+  ShieldCheck, X, ChevronDown, ChevronUp, Paperclip, ImagePlus
 } from "lucide-react";
 import ProductManager from "@/components/admin/ProductManager";
+import ImageLightbox from "@/components/ImageLightbox";
 
 // ── 탭 타입 ──────────────────────────────────────
 type Tab = "dashboard" | "orders" | "products" | "payments" | "test";
@@ -101,21 +102,16 @@ function getFlowIdx(status: OrderStatus): number {
 
 // ── 주문 관리 모달 드로어 ────────────────────────────
 function OrderManageModal({
-  order, proofFile, proofUrlInput, uploading,
-  onStatusChange, onProofFileChange, onProofUrlChange, onProofUpload, onClose,
+  order, onStatusChange, onOrderUpdate, onClose,
 }: {
   order: Order;
-  proofFile: File | null;
-  proofUrlInput: string;
-  uploading: boolean;
   onStatusChange: (id: string, next: OrderStatus, extra?: Partial<Order>) => Promise<void>;
-  onProofFileChange: (f: File | null) => void;
-  onProofUrlChange: (url: string) => void;
-  onProofUpload: () => void;
+  onOrderUpdate: (updated: Order) => void;
   onClose: () => void;
 }) {
   const [pendingStatus, setPendingStatus] = useState<OrderStatus>(order.status);
   const [saving, setSaving] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
   const currentIdx = getFlowIdx(order.status);
   const pendingIdx = getFlowIdx(pendingStatus);
   const isDirty = pendingStatus !== order.status;
@@ -284,23 +280,15 @@ function OrderManageModal({
           </div>
         )}
 
-        {/* ── 대화 히스토리 (시안 수정 대화) ── */}
-        <ConversationPanel order={order} />
-
-        {/* ── 수정요청 빠른 액션 (proof_revision 상태) ── */}
-        {order.status === "proof_revision" && (
-          <div className="bg-orange-50 border-2 border-orange-300 rounded-xl p-4">
-            <p className="text-xs text-orange-600 mb-3">수정 내용을 반영한 시안을 아래에서 다시 업로드하거나, 바로 시안 제작 단계로 이동하세요.</p>
-            <button
-              onClick={() => {
-                setPendingStatus("designing");
-              }}
-              className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
-            >
-              <RotateCcw size={14} /> 수정 확인 → 시안 재제작 시작
-            </button>
-          </div>
-        )}
+        {/* ── 시안 대화 (채팅 + 이미지 첨부 + 시안 전달 통합) ── */}
+        <ConversationPanel
+          order={order}
+          onProofSent={(updatedOrder) => {
+            onOrderUpdate(updatedOrder);
+            setPendingStatus("proof_sent" as OrderStatus);
+          }}
+          onLightbox={setLightbox}
+        />
 
         {/* 기존 송장 정보 표시 */}
         {order.shipping && !needsTracking && (
@@ -318,74 +306,18 @@ function OrderManageModal({
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-        {/* ── 좌: 시안 이미지 & 업로드 ── */}
+        {/* ── 좌: 주문 첨부 이미지 & 요구사항 ── */}
         <div className="lg:col-span-2 space-y-4">
 
-          {/* 기존 시안 이미지 */}
-          {(order.design?.previewImageUrl || order.proof?.imageUrl) && (
+          {/* 주문 첨부 이미지 */}
+          {order.design?.previewImageUrl && (
             <div className="bg-white rounded-xl border border-gray-100 p-4">
               <p className="text-xs font-bold text-gray-400 mb-3 flex items-center gap-1">
-                <Eye size={11} /> 시안 이미지
+                <Eye size={11} /> 주문 첨부 이미지
               </p>
-              <div className="grid grid-cols-2 gap-3">
-                {order.design?.previewImageUrl && (
-                  <div>
-                    <p className="text-[10px] text-gray-400 mb-1">주문 첨부 이미지</p>
-                    <img src={order.design.previewImageUrl} alt="주문 이미지"
-                      className="w-full rounded-lg border border-gray-200 object-contain max-h-40 bg-gray-50 cursor-zoom-in"
-                      onClick={() => window.open(order.design.previewImageUrl, "_blank")} />
-                  </div>
-                )}
-                {order.proof?.imageUrl && (
-                  <div>
-                    <p className="text-[10px] text-gray-400 mb-1">전달한 시안</p>
-                    <img src={order.proof.imageUrl} alt="전달 시안"
-                      className="w-full rounded-lg border border-gray-200 object-contain max-h-40 bg-gray-50 cursor-zoom-in"
-                      onClick={() => window.open(order.proof!.imageUrl, "_blank")} />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* 시안 업로드 섹션 */}
-          {(["designing", "proof_revision", "confirming", "proof_sent"].includes(order.status)) && (
-            <div className="bg-white rounded-xl border border-dashed border-primary-300 p-4">
-              <p className="text-xs font-bold text-primary-600 mb-3 flex items-center gap-1">
-                <Upload size={11} /> 시안 전달 — 파일 업로드 또는 URL 입력
-              </p>
-
-              {/* 파일 선택 */}
-              <label className="flex items-center gap-2 mb-3 cursor-pointer group">
-                <div className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 group-hover:border-primary-400 transition-colors bg-gray-50">
-                  {proofFile ? proofFile.name : "이미지 파일 선택 (PNG, JPG, WEBP)"}
-                </div>
-                <span className="text-xs px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium text-gray-600 transition-colors shrink-0">
-                  파일 선택
-                </span>
-                <input type="file" accept="image/*" className="hidden"
-                  onChange={e => onProofFileChange(e.target.files?.[0] ?? null)} />
-              </label>
-
-              {/* URL 직접 입력 */}
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs text-gray-400 shrink-0">또는 URL:</span>
-                <input
-                  type="url"
-                  value={proofUrlInput}
-                  onChange={e => onProofUrlChange(e.target.value)}
-                  placeholder="https://... (이미지 URL 직접 입력)"
-                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-primary-400 bg-gray-50"
-                />
-              </div>
-
-              <button onClick={onProofUpload} disabled={uploading || (!proofFile && !proofUrlInput.trim())}
-                className="mt-3 w-full flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50">
-                {uploading
-                  ? <><Loader2 size={15} className="animate-spin" /> 업로드 중...</>
-                  : <><Send size={14} /> 시안 전달 + 카카오 알림 발송</>
-                }
-              </button>
+              <img src={order.design.previewImageUrl} alt="주문 이미지"
+                className="w-full rounded-lg border border-gray-200 object-contain max-h-48 bg-gray-50 cursor-zoom-in"
+                onClick={() => setLightbox(order.design!.previewImageUrl!)} />
             </div>
           )}
 
@@ -520,19 +452,29 @@ function OrderManageModal({
           </button>
         </div>
 
+        {/* ── 이미지 라이트박스 ── */}
+        {lightbox && <ImageLightbox src={lightbox} onClose={() => setLightbox(null)} />}
       </div>
     </div>
   );
 }
 
-// ── 대화 히스토리 패널 (관리자용) ──
-function ConversationPanel({ order }: { order: Order }) {
+// ── 대화 히스토리 패널 (관리자용 — 이미지 첨부 + 시안 전달 통합) ──
+function ConversationPanel({ order, onProofSent, onLightbox }: {
+  order: Order;
+  onProofSent?: (updatedOrder: Order) => void;
+  onLightbox?: (src: string) => void;
+}) {
   const [messages, setMessages] = useState<ConversationMessage[]>(order.conversations ?? []);
   const [newMsg, setNewMsg] = useState("");
   const [sending, setSending] = useState(false);
   const [expanded, setExpanded] = useState(
     order.status === "proof_revision" || order.status === "proof_sent" || (order.conversations?.length ?? 0) > 0
   );
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [attachPreview, setAttachPreview] = useState<string | null>(null);
+  const [proofSending, setProofSending] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // order prop이 바뀌면 메시지 동기화
@@ -547,14 +489,50 @@ function ConversationPanel({ order }: { order: Order }) {
     }
   }, [messages.length, expanded]);
 
+  // 파일 선택 핸들러
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAttachedFile(file);
+    const reader = new FileReader();
+    reader.onload = () => setAttachPreview(reader.result as string);
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const clearAttachment = () => {
+    setAttachedFile(null);
+    setAttachPreview(null);
+  };
+
+  // 이미지 업로드 헬퍼
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("orderId", order.id);
+    const res = await fetch("/api/upload/proof", { method: "POST", body: formData });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error ?? res.statusText);
+    }
+    const { url } = await res.json();
+    return url;
+  };
+
+  // 일반 메시지 전송 (텍스트 + 선택 이미지)
   const handleSend = async () => {
-    if (!newMsg.trim() || sending) return;
+    if ((!newMsg.trim() && !attachedFile) || sending) return;
     if (!order.id) { alert("주문 ID를 찾을 수 없습니다."); return; }
     setSending(true);
     try {
-      const msg = await addConversation(order.id, "admin", newMsg.trim());
+      let imageUrl: string | undefined;
+      if (attachedFile) {
+        imageUrl = await uploadImage(attachedFile);
+      }
+      const msg = await addConversation(order.id, "admin", newMsg.trim() || "이미지를 전송했습니다.", imageUrl);
       setMessages(prev => [...prev, msg]);
       setNewMsg("");
+      clearAttachment();
     } catch (e: any) {
       console.error("메시지 전송 실패:", e);
       alert(`메시지 전송 실패: ${e?.message ?? "알 수 없는 오류"}`);
@@ -563,9 +541,59 @@ function ConversationPanel({ order }: { order: Order }) {
     }
   };
 
+  // 시안 전달 (이미지 업로드 + 상태 변경 + 카카오 알림)
+  const handleProofSend = async () => {
+    if (!attachedFile || proofSending) return;
+    setProofSending(true);
+    try {
+      const imageUrl = await uploadImage(attachedFile);
+      await saveProof(order.id, imageUrl, newMsg.trim() || undefined);
+
+      // 카카오 알림 (실패해도 진행)
+      try {
+        await fetch("/api/kakao/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "proof_sent",
+            phone: order.userPhone,
+            orderNumber: order.orderNumber,
+            proofUrl: `${window.location.origin}/order/${order.id}/proof`,
+          }),
+        });
+      } catch {}
+
+      // 로컬 상태 업데이트
+      const proofMsg: ConversationMessage = {
+        id: `msg-${Date.now()}`,
+        sender: "admin",
+        type: "proof",
+        content: newMsg.trim() || "시안을 전달합니다. 확인 후 승인 또는 수정 요청 부탁드립니다.",
+        imageUrl,
+        createdAt: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, proofMsg]);
+      setNewMsg("");
+      clearAttachment();
+
+      const updatedOrder: Order = {
+        ...order,
+        status: "proof_sent" as OrderStatus,
+        proof: { imageUrl, sentAt: new Date().toISOString() },
+        conversations: [...(order.conversations ?? []), proofMsg],
+      };
+      onProofSent?.(updatedOrder);
+    } catch (e: any) {
+      alert(`시안 전달 실패: ${e?.message ?? "알 수 없는 오류"}`);
+    } finally {
+      setProofSending(false);
+    }
+  };
+
   const msgCount = messages.length;
   const revisionCount = messages.filter(m => m.type === "revision").length;
   const proofCount = messages.filter(m => m.type === "proof").length;
+  const isBusy = sending || proofSending;
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -615,7 +643,7 @@ function ConversationPanel({ order }: { order: Order }) {
                     {msg.imageUrl && (
                       <img src={msg.imageUrl} alt="시안"
                         className="w-full rounded-lg mb-1.5 cursor-zoom-in max-h-32 object-contain bg-gray-50 border border-white/20"
-                        onClick={() => window.open(msg.imageUrl!, "_blank")} />
+                        onClick={() => onLightbox?.(msg.imageUrl!)} />
                     )}
                     <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
                     <p className={`text-[9px] mt-1 ${msg.sender === "admin" ? "text-primary-300" : "text-gray-400"}`}>
@@ -629,20 +657,60 @@ function ConversationPanel({ order }: { order: Order }) {
             )}
           </div>
 
-          {/* 메시지 입력 */}
-          <div className="flex gap-2 p-3 border-t border-gray-100 bg-white">
-            <input
-              type="text" value={newMsg}
-              onChange={e => setNewMsg(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
-              placeholder="메시지를 입력하세요..."
-              className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-400 bg-gray-50"
-            />
-            <button onClick={handleSend} disabled={sending || !newMsg.trim()}
-              className="flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors shrink-0">
-              {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
-              전송
-            </button>
+          {/* 첨부 이미지 미리보기 */}
+          {attachPreview && (
+            <div className="px-3 pt-2 bg-white border-t border-gray-100">
+              <div className="relative inline-block">
+                <img src={attachPreview} alt="첨부"
+                  className="h-20 rounded-lg border border-gray-200 object-contain bg-gray-50" />
+                <button onClick={clearAttachment}
+                  className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors">
+                  <X size={10} />
+                </button>
+              </div>
+              <p className="text-[10px] text-gray-400 mt-1">{attachedFile?.name}</p>
+            </div>
+          )}
+
+          {/* 메시지 입력 + 첨부 + 시안전달 */}
+          <div className="p-3 border-t border-gray-100 bg-white space-y-2">
+            <div className="flex gap-2">
+              <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleFileSelect} />
+              <button onClick={() => fileInputRef.current?.click()} disabled={isBusy}
+                className="p-2 border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-primary-600 transition-colors disabled:opacity-50 shrink-0"
+                title="이미지 첨부">
+                <Paperclip size={15} />
+              </button>
+              <input
+                type="text" value={newMsg}
+                onChange={e => setNewMsg(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && !e.shiftKey && !attachedFile && handleSend()}
+                placeholder={attachedFile ? "시안 메시지를 입력하세요..." : "메시지를 입력하세요..."}
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-400 bg-gray-50"
+              />
+              {!attachedFile ? (
+                <button onClick={handleSend} disabled={isBusy || !newMsg.trim()}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors shrink-0">
+                  {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
+                  전송
+                </button>
+              ) : (
+                <button onClick={handleSend} disabled={isBusy}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-xs font-semibold disabled:opacity-50 transition-colors shrink-0">
+                  {sending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
+                  메시지
+                </button>
+              )}
+            </div>
+
+            {/* 시안 전달 버튼 (이미지 첨부 시에만 표시) */}
+            {attachedFile && (
+              <button onClick={handleProofSend} disabled={isBusy}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold disabled:opacity-50 transition-colors shadow-sm">
+                {proofSending ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
+                {proofSending ? "시안 전달 중..." : "📤 시안으로 전달 (상태 변경 + 알림)"}
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -737,11 +805,7 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [loadingOrders, setLoadingOrders] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [modalOrder, setModalOrder] = useState<Order | null>(null);
-  const [proofFile, setProofFile] = useState<File | null>(null);
-  const [proofUrlInput, setProofUrlInput] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "amount">("date");
   const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
@@ -829,80 +893,6 @@ export default function AdminDashboard() {
     await updateOrderStatus(orderId, next, extra);
     showToast(`상태를 '${ORDER_STATUS_LABEL[next]}'로 변경했어요.`);
     loadOrders();
-  };
-
-  // ── 시안 업로드 (파일 또는 URL) ──
-  const handleProofUpload = async (targetOrder?: Order) => {
-    const order = targetOrder ?? selectedOrder;
-    if (!order) return;
-    if (!proofFile && !proofUrlInput.trim()) {
-      showToast("파일을 선택하거나 이미지 URL을 입력하세요.", "error"); return;
-    }
-    setUploading(true);
-    try {
-      let imageUrl = proofUrlInput.trim();
-
-      // 파일이 있으면 서버 API를 통해 Firebase Storage 업로드
-      if (proofFile) {
-        const formData = new FormData();
-        formData.append("file", proofFile);
-        formData.append("orderId", order.id);
-        const uploadRes = await fetch("/api/upload/proof", { method: "POST", body: formData });
-        if (!uploadRes.ok) {
-          const errData = await uploadRes.json().catch(() => ({}));
-          showToast(`업로드 실패: ${errData.error ?? uploadRes.statusText}`, "error");
-          return;
-        }
-        const { url } = await uploadRes.json();
-        imageUrl = url;
-      }
-
-      if (!imageUrl) { showToast("업로드 실패: 이미지 URL 없음", "error"); return; }
-
-      await saveProof(order.id, imageUrl);
-
-      // 카카오 알림은 실패해도 시안 전달은 유지
-      let kakaoOk = false;
-      try {
-        await fetch("/api/kakao/notify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "proof_sent",
-            phone: order.userPhone,
-            orderNumber: order.orderNumber,
-            proofUrl: `${window.location.origin}/order/${order.id}/proof`,
-          }),
-        });
-        kakaoOk = true;
-      } catch {}
-      showToast(kakaoOk
-        ? "시안 전달 완료! 카카오 알림이 발송됐어요."
-        : "시안 전달 완료! (카카오 알림 발송 실패)");
-      // 모달 내 order 즉시 반영 (시안 이미지 + 상태 + 대화 기록)
-      const proofMsg: ConversationMessage = {
-        id: `msg-${Date.now()}`,
-        sender: "admin",
-        type: "proof",
-        content: "시안을 전달합니다. 확인 후 승인 또는 수정 요청 부탁드립니다.",
-        imageUrl,
-        createdAt: new Date().toISOString(),
-      };
-      const updatedOrder = {
-        ...order,
-        status: "proof_sent" as const,
-        proof: { imageUrl, sentAt: new Date().toISOString() },
-        conversations: [...(order.conversations ?? []), proofMsg],
-      };
-      setModalOrder(prev => prev?.id === order.id ? updatedOrder : prev);
-      setOrders(prev => prev.map(o => o.id === order.id ? updatedOrder : o));
-      setProofFile(null);
-      setProofUrlInput("");
-    } catch (e: any) {
-      showToast(`시안 업로드 오류: ${e?.message ?? "알 수 없는 오류"}`, "error");
-    } finally {
-      setUploading(false);
-    }
   };
 
   // ── [테스트] 더미 주문 생성 ──
@@ -1118,7 +1108,7 @@ export default function AdminDashboard() {
                 <tbody className="divide-y divide-gray-50">
                   {orders.slice(0, 7).map(order => (
                     <tr key={order.id} className="hover:bg-gray-50 cursor-pointer transition-colors"
-                      onClick={() => { setModalOrder(order); setProofFile(null); setProofUrlInput(""); }}>
+                      onClick={() => setModalOrder(order)}>
                       <td className="px-5 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
                       <td className="px-5 py-3 font-medium text-gray-900">{order.userName}</td>
                       <td className="px-5 py-3 font-semibold text-gray-800">{order.pricing.totalPrice.toLocaleString()}원</td>
@@ -1216,7 +1206,7 @@ export default function AdminDashboard() {
                   {filteredOrders.map(order => (
                     <tr key={order.id}
                       className="hover:bg-blue-50/30 transition-colors cursor-pointer group"
-                      onClick={() => { setModalOrder(order); setProofFile(null); setProofUrlInput(""); }}>
+                      onClick={() => setModalOrder(order)}>
                       <td className="px-4 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
                       <td className="px-4 py-3">
                         <div className="font-semibold text-gray-900">{order.userName}</div>
@@ -1487,18 +1477,15 @@ export default function AdminDashboard() {
       {modalOrder && (
         <OrderManageModal
           order={modalOrder}
-          proofFile={proofFile}
-          proofUrlInput={proofUrlInput}
-          uploading={uploading}
           onStatusChange={async (id, next, extra) => {
             await handleStatusChange(id, next, extra);
-            // 모달 내 order 상태도 업데이트
             setModalOrder(prev => prev ? { ...prev, status: next, ...extra } : null);
           }}
-          onProofFileChange={setProofFile}
-          onProofUrlChange={setProofUrlInput}
-          onProofUpload={() => handleProofUpload(modalOrder)}
-          onClose={() => { setModalOrder(null); setProofFile(null); setProofUrlInput(""); }}
+          onOrderUpdate={(updated) => {
+            setModalOrder(updated);
+            setOrders(prev => prev.map(o => o.id === updated.id ? updated : o));
+          }}
+          onClose={() => setModalOrder(null)}
         />
       )}
     </div>

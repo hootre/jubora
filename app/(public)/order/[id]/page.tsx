@@ -14,6 +14,7 @@ import {
   CheckCircle2, Edit3, ThumbsUp, Send, AlertTriangle,
   Copy, Building2, Printer,
 } from "lucide-react";
+import ImageLightbox from "@/components/ImageLightbox";
 
 // ── 계좌 정보 ──
 const BANK_INFO = {
@@ -699,23 +700,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </Link>
       </div>
 
-      {/* ══ 이미지 확대 모달 ══ */}
-      {zoomImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setZoomImage(null)} />
-          <div className="relative max-w-3xl max-h-[90vh]">
-            <button onClick={() => setZoomImage(null)}
-              className="absolute -top-3 -right-3 z-10 bg-white hover:bg-gray-100 text-gray-700 rounded-full p-2 shadow-lg transition-colors">
-              <X size={20} />
-            </button>
-            <img
-              src={zoomImage}
-              alt="시안 확대"
-              className="max-w-full max-h-[80vh] rounded-lg shadow-2xl object-contain bg-white"
-            />
-          </div>
-        </div>
-      )}
+      {/* ══ 이미지 라이트박스 ══ */}
+      {zoomImage && <ImageLightbox src={zoomImage} onClose={() => setZoomImage(null)} />}
 
     </div>
   );

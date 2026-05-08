@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { getOrder, respondToProof } from "@/lib/firestore";
 import type { ConversationMessage } from "@/types/order";
 import { CheckCircle, XCircle, Loader2, MessageSquare, Send, ThumbsUp } from "lucide-react";
+import ImageLightbox from "@/components/ImageLightbox";
 
 export default function ProofPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -12,6 +13,7 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
   const [loading, setLoading] = useState(false);
   const [revisionNote, setRevisionNote] = useState("");
   const [showRevision, setShowRevision] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { getOrder(id).then(setOrder); }, [id]);
@@ -66,7 +68,9 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
         <>
           {/* 현재 시안 이미지 */}
           <div className="bg-gray-100 rounded-lg p-2 mb-6 shadow-sm">
-            <img src={order.proof.imageUrl} alt="시안" className="w-full rounded-xl object-contain max-h-96" />
+            <img src={order.proof.imageUrl} alt="시안"
+              className="w-full rounded-xl object-contain max-h-96 cursor-zoom-in"
+              onClick={() => setLightbox(order.proof.imageUrl)} />
           </div>
 
           {/* 주문 내역 요약 */}
@@ -109,7 +113,8 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
                       </p>
                       {msg.imageUrl && (
                         <img src={msg.imageUrl} alt="시안"
-                          className="w-full rounded-lg mb-2 max-h-48 object-contain bg-white border border-white/20" />
+                          className="w-full rounded-lg mb-2 max-h-48 object-contain bg-white border border-white/20 cursor-zoom-in"
+                          onClick={() => setLightbox(msg.imageUrl!)} />
                       )}
                       <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                       <p className={`text-[10px] mt-1 ${
@@ -175,6 +180,9 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
           <p>시안 제작 중입니다. 완료되면 카카오톡으로 알림을 보내드릴게요.</p>
         </div>
       )}
+
+      {/* 이미지 라이트박스 */}
+      {lightbox && <ImageLightbox src={lightbox} onClose={() => setLightbox(null)} />}
     </div>
   );
 }

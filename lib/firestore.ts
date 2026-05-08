@@ -6,6 +6,11 @@ import {
 import { db } from "./firebase";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 
+// ── undefined 필드 제거 (Firestore는 undefined를 허용하지 않음) ──
+function clean<T extends Record<string, any>>(obj: T): T {
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as T;
+}
+
 // ── 주문번호 생성 ──────────────────────────────
 function generateOrderNumber(): string {
   const now = new Date();
@@ -95,7 +100,7 @@ export async function saveProof(orderId: string, imageUrl: string, adminNote?: s
   await updateDoc(doc(db, "orders", orderId), {
     status: "proof_sent",
     proof: { imageUrl, sentAt: now },
-    conversations: arrayUnion(msg),
+    conversations: arrayUnion(clean(msg)),
     updatedAt: serverTimestamp(),
   });
 }
@@ -114,7 +119,7 @@ export async function respondToProof(orderId: string, approved: boolean, revisio
     await updateDoc(doc(db, "orders", orderId), {
       status: "proof_approved",
       "proof.approvedAt": now,
-      conversations: arrayUnion(msg),
+      conversations: arrayUnion(clean(msg)),
       updatedAt: serverTimestamp(),
     });
   } else {
@@ -128,7 +133,7 @@ export async function respondToProof(orderId: string, approved: boolean, revisio
     await updateDoc(doc(db, "orders", orderId), {
       status: "proof_revision",
       "proof.revisionNote": revisionNote,
-      conversations: arrayUnion(msg),
+      conversations: arrayUnion(clean(msg)),
       updatedAt: serverTimestamp(),
     });
   }
@@ -150,7 +155,7 @@ export async function addConversation(
     createdAt: new Date().toISOString(),
   };
   await updateDoc(doc(db, "orders", orderId), {
-    conversations: arrayUnion(msg),
+    conversations: arrayUnion(clean(msg)),
     updatedAt: serverTimestamp(),
   });
   return msg;

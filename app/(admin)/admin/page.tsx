@@ -80,7 +80,8 @@ function StatCard({ icon, label, value, sub, color }: {
 const FLOW_STEPS: { key: OrderStatus; label: string; emoji: string }[] = [
   { key: "pending",        label: "주문 접수",   emoji: "📥" },
   { key: "designing",      label: "시안 제작중", emoji: "🎨" },
-  { key: "proof_revision", label: "시안 확인",   emoji: "👁️" },
+  { key: "proof_sent",     label: "시안 전달",   emoji: "📤" },
+  { key: "proof_revision", label: "수정요청",    emoji: "✏️" },
   { key: "proof_approved", label: "결제 대기",   emoji: "💰" },
   { key: "paid",           label: "입금 확인",   emoji: "✅" },
   { key: "producing",      label: "출력 중",     emoji: "🖨️" },
@@ -94,7 +95,6 @@ function getFlowIdx(status: OrderStatus): number {
   const direct = FLOW_STEP_KEYS.indexOf(status);
   if (direct !== -1) return direct;
   if (status === "confirming") return FLOW_STEP_KEYS.indexOf("designing");
-  if (status === "proof_sent") return FLOW_STEP_KEYS.indexOf("proof_revision");
   return -1;
 }
 
@@ -290,6 +290,27 @@ function OrderManageModal({
               <MessageSquare size={13} /> 관리자 메시지
             </p>
             <p className="text-sm text-purple-900 whitespace-pre-wrap">{order.adminMessage}</p>
+          </div>
+        )}
+
+        {/* ── 수정요청 내용 표시 (proof_revision 상태) ── */}
+        {order.status === "proof_revision" && order.proof?.revisionNote && (
+          <div className="bg-orange-50 border-2 border-orange-300 rounded-xl p-4">
+            <p className="text-sm font-bold text-orange-800 mb-2 flex items-center gap-2">
+              ✏️ 고객 수정요청 메시지
+            </p>
+            <div className="bg-white rounded-lg border border-orange-200 p-3 mb-3">
+              <p className="text-sm text-gray-800 whitespace-pre-wrap">{order.proof.revisionNote}</p>
+            </div>
+            <p className="text-xs text-orange-600 mb-3">수정 내용을 반영한 시안을 아래에서 다시 업로드하거나, 바로 시안 제작 단계로 이동하세요.</p>
+            <button
+              onClick={() => {
+                setPendingStatus("designing");
+              }}
+              className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
+            >
+              <RotateCcw size={14} /> 수정 확인 → 시안 재제작 시작
+            </button>
           </div>
         )}
 

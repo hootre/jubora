@@ -284,20 +284,8 @@ function OrderManageModal({
           </div>
         )}
 
-        {/* 기존 관리자 메시지 표시 */}
-        {order.adminMessage && !needsMessage && (
-          <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
-            <p className="text-xs font-bold text-purple-700 mb-2 flex items-center gap-2">
-              <MessageSquare size={13} /> 관리자 메시지
-            </p>
-            <p className="text-sm text-purple-900 whitespace-pre-wrap">{order.adminMessage}</p>
-          </div>
-        )}
-
         {/* ── 대화 히스토리 (시안 수정 대화) ── */}
-        <ConversationPanel order={order} onOrderUpdate={(updated) => {
-          // 부모 상태 업데이트는 모달이 닫힐 때 reload로 처리
-        }} />
+        <ConversationPanel order={order} />
 
         {/* ── 수정요청 빠른 액션 (proof_revision 상태) ── */}
         {order.status === "proof_revision" && (
@@ -538,7 +526,7 @@ function OrderManageModal({
 }
 
 // ── 대화 히스토리 패널 (관리자용) ──
-function ConversationPanel({ order, onOrderUpdate }: { order: Order; onOrderUpdate: (o: Order) => void }) {
+function ConversationPanel({ order }: { order: Order }) {
   const [messages, setMessages] = useState<ConversationMessage[]>(order.conversations ?? []);
   const [newMsg, setNewMsg] = useState("");
   const [sending, setSending] = useState(false);
@@ -546,6 +534,11 @@ function ConversationPanel({ order, onOrderUpdate }: { order: Order; onOrderUpda
     order.status === "proof_revision" || order.status === "proof_sent" || (order.conversations?.length ?? 0) > 0
   );
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // order prop이 바뀌면 메시지 동기화
+  useEffect(() => {
+    setMessages(order.conversations ?? []);
+  }, [order.conversations]);
 
   // 스크롤 하단 고정
   useEffect(() => {
@@ -556,13 +549,15 @@ function ConversationPanel({ order, onOrderUpdate }: { order: Order; onOrderUpda
 
   const handleSend = async () => {
     if (!newMsg.trim() || sending) return;
+    if (!order.id) { alert("주문 ID를 찾을 수 없습니다."); return; }
     setSending(true);
     try {
       const msg = await addConversation(order.id, "admin", newMsg.trim());
       setMessages(prev => [...prev, msg]);
       setNewMsg("");
-    } catch {
-      alert("메시지 전송 실패");
+    } catch (e: any) {
+      console.error("메시지 전송 실패:", e);
+      alert(`메시지 전송 실패: ${e?.message ?? "알 수 없는 오류"}`);
     } finally {
       setSending(false);
     }

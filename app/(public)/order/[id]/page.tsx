@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { getOrder, respondToProof, savePayment, addConversation, markAsRead } from "@/lib/firestore";
+import { subscribeOrder, respondToProof, savePayment, addConversation, markAsRead } from "@/lib/firestore";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import { MATERIALS, OPTIONS, PRODUCT_TYPES } from "@/constants/pricing";
@@ -12,7 +12,7 @@ import {
   Loader2, ArrowLeft, Package, MapPin, CreditCard,
   MessageSquare, ImageIcon, Clock, Truck, X,
   CheckCircle2, Edit3, ThumbsUp, Send, AlertTriangle,
-  Copy, Building2, Printer,
+  Copy, Building2, Printer, Paperclip, FileText,
 } from "lucide-react";
 import ImageLightbox from "@/components/ImageLightbox";
 
@@ -44,12 +44,18 @@ function getFlowIdx(status: OrderStatus): number {
   return -1;
 }
 
+// ── 채팅 가능 상태 ──
+const CHAT_ENABLED_STATUSES: OrderStatus[] = [
+  "designing", "proof_sent", "proof_revision", "proof_approved", "paid", "producing", "shipping",
+];
+
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
 
   // 수정 요청 관련
   const [revisionNote, setRevisionNote] = useState("");
@@ -66,27 +72,29 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   // 이미지 확대 모달
   const [zoomImage, setZoomImage] = useState<string | null>(null);
 
-  const loadOrder = async (uid: string) => {
-    try {
-      const o = await getOrder(id);
-      if (!o) { setError("주문을 찾을 수 없어요."); return; }
-      if (o.userId !== uid) { setError("접근 권한이 없어요."); return; }
-      setOrder(o);
-      if ((o.unreadByCustomer ?? 0) > 0) markAsRead(id, "customer").catch(() => {});
-      if (o.proof?.revisionNote) setRevisionNote(o.proof.revisionNote);
-    } catch (e: any) {
-      setError(`불러오기 실패: ${e?.message ?? "알 수 없는 오류"}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // ── 실시간 구독 ──
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
+    let unsubOrder: (() => void) | null = null;
+
+    const unsubAuth = onAuthStateChanged(auth, (u) => {
       if (!u) { router.push(`/login?redirect=/order/${id}`); return; }
-      await loadOrder(u.uid);
+      setUserId(u.uid);
+
+      // 이전 구독 해제 후 새 구독
+      if (unsubOrder) unsubOrder();
+      unsubOrder = subscribeOrder(id, (o) => {
+        setLoading(false);
+        if (!o) { setError("주문을 찾을 수 없어요."); return; }
+        if (o.userId !== u.uid) { setError("접근 권한이 없어요."); return; }
+        setOrder(o);
+        if ((o.unreadByCustomer ?? 0) > 0) markAsRead(id, "customer").catch(() => {});
+      });
     });
-    return () => unsub();
+
+    return () => {
+      unsubAuth();
+      if (unsubOrder) unsubOrder();
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -97,22 +105,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     try {
       await respondToProof(order.id, false, revisionNote.trim());
       setRevisionDone(true);
-      // 로컬 대화 히스토리에도 즉시 반영
-      const newMsg: ConversationMessage = {
-        id: `msg-${Date.now()}`,
-        sender: "customer",
-        type: "revision",
-        content: revisionNote.trim(),
-        createdAt: new Date().toISOString(),
-      };
-      setOrder((prev) => prev ? {
-        ...prev,
-        status: "proof_revision",
-        conversations: [...(prev.conversations ?? []), newMsg],
-        proof: prev.proof
-          ? { ...prev.proof, revisionNote: revisionNote.trim() }
-          : { imageUrl: "", sentAt: "", revisionNote: revisionNote.trim() },
-      } : prev);
       setRevisionNote("");
     } catch (e: any) {
       alert(`저장 실패: ${e?.message ?? "오류"}`);
@@ -128,18 +120,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     setApproving(true);
     try {
       await respondToProof(order.id, true);
-      const approveMsg: ConversationMessage = {
-        id: `msg-${Date.now()}`,
-        sender: "customer",
-        type: "approve",
-        content: "시안을 승인합니다.",
-        createdAt: new Date().toISOString(),
-      };
-      setOrder((prev) => prev ? {
-        ...prev,
-        status: "proof_approved",
-        conversations: [...(prev.conversations ?? []), approveMsg],
-      } : prev);
       setRevisionDone(false);
     } catch (e: any) {
       alert(`승인 실패: ${e?.message ?? "오류"}`);
@@ -160,7 +140,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         amount: order.pricing.totalPrice,
         pgProvider: "BANK_TRANSFER",
       });
-      setOrder(prev => prev ? { ...prev, status: "paid" } : prev);
       alert("입금확인 요청이 완료되었어요!\n담당자가 확인 후 출력을 시작합니다.");
     } catch (e: any) {
       alert(`입금확인 요청 중 오류가 발생했습니다.\n${e?.message ?? "알 수 없는 오류"}`);
@@ -199,7 +178,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     .filter(Boolean);
 
   const canRespondToProof = order.status === "proof_sent" || order.status === "proof_revision";
+  const canChat = CHAT_ENABLED_STATUSES.includes(order.status);
   const hasPaid = !!order.payment;
+
+  // 첨부파일 분리: 이미지 vs 기타
+  const attachedFiles = order.design.attachedImages ?? [];
+  const templateImage = order.design.previewImageUrl;
+  const proofImage = order.proof?.imageUrl;
 
   // ── 영수증 팝업 ──
   const openReceipt = () => {
@@ -391,50 +376,78 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-      {/* ── 시안 이미지 ── */}
-      {(order.design.previewImageUrl || order.proof?.imageUrl) && (
+      {/* ── 시안 이미지 (크게 표시) ── */}
+      {proofImage && (
         <div className="card mb-6">
           <h2 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
             <ImageIcon size={16} className="text-primary-500" /> 시안 이미지
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {order.design.previewImageUrl && (
-              <div>
-                <p className="text-xs text-gray-400 mb-1.5">주문 시 첨부 이미지</p>
-                <img src={order.design.previewImageUrl} alt="주문 이미지"
-                  className="w-full rounded-lg border border-gray-200 object-contain max-h-48 bg-gray-50 cursor-zoom-in"
-                  onClick={() => setZoomImage(order.design.previewImageUrl!)} />
-              </div>
-            )}
-            {order.proof?.imageUrl && (
-              <div>
-                <p className="text-xs text-gray-400 mb-1.5">담당자 제작 시안</p>
-                <img src={order.proof.imageUrl} alt="담당자 시안"
-                  className="w-full rounded-lg border border-gray-200 object-contain max-h-48 bg-gray-50 cursor-zoom-in"
-                  onClick={() => setZoomImage(order.proof!.imageUrl)} />
-              </div>
-            )}
-          </div>
+          <img src={proofImage} alt="담당자 제작 시안"
+            className="w-full rounded-lg border border-gray-200 object-contain max-h-96 bg-gray-50 cursor-zoom-in"
+            onClick={() => setZoomImage(proofImage)} />
+          <p className="text-xs text-gray-400 mt-2 text-center">클릭하면 크게 볼 수 있어요</p>
         </div>
       )}
 
-      {/* ── 시안 대화 섹션 (conversations) ── */}
-      {(order.conversations?.length > 0 || canRespondToProof) && (
+      {/* ── 주문 시 선택 이미지 + 첨부 파일 ── */}
+      {(templateImage || attachedFiles.length > 0) && (
+        <div className="card mb-6">
+          <h2 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <Paperclip size={16} className="text-gray-500" /> 주문 시 첨부 내역
+          </h2>
+
+          {/* 선택한 시안 이미지 */}
+          {templateImage && (
+            <div className="mb-3">
+              <p className="text-xs text-gray-400 mb-1.5">선택 시안</p>
+              <img src={templateImage} alt="선택 시안 이미지"
+                className="h-32 w-auto rounded-lg border border-gray-200 object-contain bg-gray-50 cursor-zoom-in"
+                onClick={() => setZoomImage(templateImage)} />
+            </div>
+          )}
+
+          {/* 첨부 파일 */}
+          {attachedFiles.length > 0 && (
+            <div>
+              <p className="text-xs text-gray-400 mb-1.5">첨부 파일 ({attachedFiles.length}개)</p>
+              <div className="flex flex-wrap gap-2">
+                {attachedFiles.map((file, idx) => {
+                  const isImage = file.startsWith("data:image");
+                  return isImage ? (
+                    <img key={idx} src={file} alt={`첨부 ${idx + 1}`}
+                      className="h-20 w-auto rounded border border-gray-200 object-contain bg-gray-50 cursor-zoom-in"
+                      onClick={() => setZoomImage(file)} />
+                  ) : (
+                    <a key={idx} href={file} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-100">
+                      <FileText size={14} />
+                      첨부파일 {idx + 1}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── 채팅 섹션 (특정 상태에서만) ── */}
+      {canChat && ((order.conversations ?? []).length > 0 || canRespondToProof) && (
         <div className="card mb-6 border-2 border-primary-100">
           <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
             <MessageSquare size={16} className="text-primary-500" />
             시안 수정 대화
-            {order.conversations?.length > 0 && (
+            {(order.conversations ?? []).length > 0 && (
               <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                {order.conversations.length}개 메시지
+                {(order.conversations ?? []).length}개 메시지
               </span>
             )}
           </h2>
 
           {/* 대화 히스토리 */}
-          {order.conversations?.length > 0 && (
+          {(order.conversations ?? []).length > 0 && (
             <div className="space-y-3 mb-4 max-h-96 overflow-y-auto pr-1">
-              {order.conversations.map((msg: ConversationMessage) => (
+              {(order.conversations ?? []).map((msg: ConversationMessage) => (
                 <div key={msg.id} className={`flex ${msg.sender === "customer" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                     msg.sender === "customer"
@@ -443,7 +456,6 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                       ? "bg-gray-100 text-gray-500 text-center w-full text-xs py-2"
                       : "bg-gray-100 text-gray-800 rounded-bl-md"
                   }`}>
-                    {/* 발신자 표시 */}
                     <p className={`text-[10px] font-bold mb-1 ${
                       msg.sender === "customer" ? "text-primary-200" : "text-gray-400"
                     }`}>
@@ -453,19 +465,16 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                       {msg.type === "approve" && " · 시안 승인"}
                     </p>
 
-                    {/* 이미지 (시안) */}
                     {msg.imageUrl && (
                       <img src={msg.imageUrl} alt="시안"
                         className="w-full rounded-lg mb-2 cursor-zoom-in border border-white/20 max-h-48 object-contain bg-white"
                         onClick={() => setZoomImage(msg.imageUrl!)} />
                     )}
 
-                    {/* 텍스트 */}
                     <p className={`text-sm whitespace-pre-wrap ${
                       msg.type === "approve" ? "font-semibold" : ""
                     }`}>{msg.content}</p>
 
-                    {/* 시간 */}
                     <p className={`text-[10px] mt-1 ${
                       msg.sender === "customer" ? "text-primary-300" : "text-gray-400"
                     }`}>
@@ -528,21 +537,54 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           )}
 
           {/* 시안 승인 완료 후에는 대화 히스토리만 보여줌 */}
-          {!canRespondToProof && order.conversations?.length > 0 && (
+          {!canRespondToProof && (order.conversations ?? []).length > 0 && (
             <p className="text-xs text-gray-400 text-center mt-2">
-              {order.status === "proof_approved" ? "✅ 시안 승인 완료" : "대화가 종료되었습니다."}
+              {order.status === "proof_approved" ? "✅ 시안 승인 완료" : ""}
             </p>
           )}
         </div>
       )}
 
-      {/* ── 입금 정보 + 입금확인요청 (proof_approved 상태 — 별도 페이지 없이 인라인) ── */}
+      {/* ── 채팅 불가 상태에서 대화 히스토리만 읽기 전용으로 ── */}
+      {!canChat && (order.conversations ?? []).length > 0 && (
+        <div className="card mb-6 opacity-70">
+          <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <MessageSquare size={16} className="text-gray-400" />
+            대화 기록
+            <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+              {(order.conversations ?? []).length}개 메시지
+            </span>
+          </h2>
+          <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+            {(order.conversations ?? []).map((msg: ConversationMessage) => (
+              <div key={msg.id} className={`flex ${msg.sender === "customer" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                  msg.sender === "customer"
+                    ? "bg-gray-300 text-gray-700 rounded-br-md"
+                    : "bg-gray-100 text-gray-600 rounded-bl-md"
+                }`}>
+                  <p className="text-[10px] font-bold mb-1 text-gray-400">
+                    {msg.sender === "admin" ? "🏢 주보라" : "👤 나"}
+                  </p>
+                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  <p className="text-[10px] mt-1 text-gray-400">
+                    {new Date(msg.createdAt).toLocaleString("ko-KR", {
+                      month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── 입금 정보 + 입금확인요청 (proof_approved 상태) ── */}
       {order.status === "proof_approved" && (
         <div className="card mb-6 border-2 border-green-200 bg-green-50">
           <p className="font-bold text-green-800 mb-1">시안이 승인되었어요!</p>
           <p className="text-xs text-green-600 mb-4">아래 계좌로 입금 후 입금확인요청 버튼을 눌러주세요.</p>
 
-          {/* 계좌 정보 */}
           <div className="bg-white rounded-lg p-4 border border-green-200 space-y-2 text-sm mb-4">
             <div className="flex justify-between">
               <span className="text-gray-500 flex items-center gap-1.5"><Building2 size={13} /> 은행</span>

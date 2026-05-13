@@ -1,7 +1,7 @@
 import {
   collection, doc, addDoc, updateDoc, getDoc, getDocs, deleteDoc,
   query, where, orderBy, limit, serverTimestamp, Timestamp,
-  arrayUnion, increment,
+  arrayUnion, increment, onSnapshot,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
@@ -52,6 +52,23 @@ export async function getOrder(orderId: string): Promise<Order | null> {
     createdAt: toISO(data.createdAt),
     updatedAt: toISO(data.updatedAt),
   } as Order;
+}
+
+// ── 주문 실시간 구독 ──────────────────────────
+export function subscribeOrder(
+  orderId: string,
+  callback: (order: Order | null) => void
+): () => void {
+  return onSnapshot(doc(db, "orders", orderId), (snap) => {
+    if (!snap.exists()) { callback(null); return; }
+    const data = snap.data();
+    callback({
+      ...data,
+      id: snap.id,
+      createdAt: toISO(data.createdAt),
+      updatedAt: toISO(data.updatedAt),
+    } as Order);
+  });
 }
 
 // ── 내 주문 목록 ───────────────────────────────

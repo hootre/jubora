@@ -28,6 +28,7 @@ export interface ProductItem {
   badge?: "BEST" | "NEW" | "HOT";
   startPrice?: number;         // "~원부터" 표시
   orderType: OrderType;        // 주문 폼 타입
+  galleryLink?: string;        // 시안 갤러리 링크 (있으면 주문 대신 갤러리로 이동)
 }
 
 export interface SubCategory {
@@ -351,53 +352,81 @@ export const PRODUCT_CATEGORIES: Category[] = [
     bannerColor: "from-blue-600 to-indigo-800",
     subs: [
       {
-        id: "horizontal",
-        title: "현수막",
+        id: "bg",
+        title: "배경",
         items: [
-          { id: "banner-basic", name: "기본 현수막", description: "가성비 좋은 천 현수막, 실내외 모두 사용 가능", thumbnail: null, color: "from-blue-400 to-indigo-500", badge: "BEST", startPrice: 5000, orderType: "banner" },
-          { id: "banner-large", name: "대형 현수막", description: "건물 외벽, 행사장 등 대형 사이즈 전문", thumbnail: null, color: "from-sky-400 to-blue-500", startPrice: 8000, orderType: "banner" },
-          { id: "banner-display", name: "게시대 현수막", description: "게시대 규격에 맞춘 현수막", thumbnail: null, color: "from-indigo-400 to-blue-500", startPrice: 6000, orderType: "banner" },
-          { id: "banner-mesh", name: "통풍 현수막", description: "바람이 통하는 메쉬 소재, 야외 대형에 적합", thumbnail: null, color: "from-cyan-400 to-blue-500", startPrice: 8000, orderType: "banner" },
-          { id: "banner-durable", name: "더 오래 가는 현수막", description: "타폴린 소재, 내구성 최고", thumbnail: null, color: "from-blue-500 to-indigo-600", startPrice: 10000, orderType: "banner" },
-          { id: "banner-handle", name: "손잡이 현수막", description: "이동 집회, 거리 홍보용 손잡이 부착", thumbnail: null, color: "from-violet-400 to-indigo-500", startPrice: 7000, orderType: "banner" },
-          { id: "banner-scroll", name: "족자형 현수막", description: "실내 장식용 족자 형태", thumbnail: null, color: "from-purple-400 to-indigo-500", startPrice: 12000, orderType: "banner" },
+          { id: "bg-banner", name: "현수막 배경", description: "교회 예배실 현수막 배경", thumbnail: null, color: "from-amber-400 to-yellow-500", orderType: "banner", galleryLink: "/templates?cat=bg" },
+          { id: "bg-simple", name: "간단배경 모음", description: "간결한 배경 디자인 모음", thumbnail: null, color: "from-sky-400 to-blue-500", orderType: "banner", galleryLink: "/templates?cat=bg&filter=간단배경" },
+          { id: "bg-motto", name: "표어", description: "교회 연간 표어 현수막", thumbnail: null, color: "from-emerald-400 to-green-500", orderType: "banner", galleryLink: "/templates?cat=bg&filter=표어" },
+          { id: "bg-art", name: "성화·환영", description: "성화 일러스트·환영 문구", thumbnail: null, color: "from-rose-400 to-pink-500", orderType: "banner", galleryLink: "/templates?cat=bg&filter=성화" },
+          { id: "bg-timetable", name: "시간표", description: "예배 시간표 안내 현수막", thumbnail: null, color: "from-orange-400 to-amber-500", orderType: "banner", galleryLink: "/templates?cat=bg&filter=시간표" },
         ],
       },
       {
-        id: "stand-banner",
-        title: "배너",
+        id: "season",
+        title: "절기현수막",
         items: [
-          { id: "xbanner", name: "X배너", description: "가벼운 거치대 + 배너 세트, 실내 행사 필수", thumbnail: null, color: "from-emerald-400 to-teal-500", badge: "BEST", startPrice: 15000, orderType: "banner" },
-          { id: "stand-banner", name: "스탠드 배너", description: "롤업/거치형 배너, 전시회·세미나에 적합", thumbnail: null, color: "from-teal-400 to-cyan-500", startPrice: 25000, orderType: "banner" },
+          { id: "season-lent", name: "고난(사순절)", description: "사순절·고난주간 현수막", thumbnail: null, color: "from-violet-500 to-purple-700", orderType: "banner", galleryLink: "/templates?cat=season&filter=사순절" },
+          { id: "season-easter", name: "부활절", description: "부활절 축하 현수막", thumbnail: null, color: "from-rose-400 to-pink-500", badge: "HOT", orderType: "banner", galleryLink: "/templates?cat=season&filter=부활절" },
+          { id: "season-harvest-summer", name: "맥추감사절", description: "맥추감사절 현수막", thumbnail: null, color: "from-yellow-400 to-amber-500", orderType: "banner", galleryLink: "/templates?cat=season&filter=맥추감사절" },
+          { id: "season-thanks", name: "추수감사절", description: "추수감사절 현수막", thumbnail: null, color: "from-orange-400 to-amber-500", orderType: "banner", galleryLink: "/templates?cat=season&filter=추수감사절" },
+          { id: "season-christmas", name: "성탄절", description: "성탄절·크리스마스 현수막", thumbnail: null, color: "from-red-500 to-green-600", badge: "HOT", orderType: "banner", galleryLink: "/templates?cat=season&filter=성탄절" },
+          { id: "season-newyear", name: "송구영신", description: "송구영신 예배 현수막", thumbnail: null, color: "from-amber-400 to-yellow-500", orderType: "banner", galleryLink: "/templates?cat=season&filter=송구영신" },
+          { id: "season-newyear-thanks", name: "신년감사", description: "신년감사 예배 현수막", thumbnail: null, color: "from-sky-400 to-blue-500", orderType: "banner", galleryLink: "/templates?cat=season&filter=신년감사" },
+          { id: "season-children", name: "어린이주일", description: "어린이주일 현수막", thumbnail: null, color: "from-pink-400 to-rose-400", orderType: "banner", galleryLink: "/templates?cat=season&filter=어린이주일" },
+          { id: "season-teachers", name: "스승·어버이주일", description: "스승의날·어버이날 현수막", thumbnail: null, color: "from-emerald-400 to-green-500", orderType: "banner", galleryLink: "/templates?cat=season&filter=스승어버이주일" },
+        ],
+      },
+      {
+        id: "worship-banner",
+        title: "예배현수막",
+        items: [
+          { id: "worship-grad", name: "입학·졸업예배", description: "입학·졸업·수료 축하 현수막", thumbnail: null, color: "from-blue-400 to-indigo-500", orderType: "banner", galleryLink: "/templates?cat=worship&filter=입학졸업" },
+          { id: "worship-lead", name: "주도예배", description: "주도예배 현수막", thumbnail: null, color: "from-sky-400 to-blue-500", orderType: "banner", galleryLink: "/templates?cat=worship&filter=주도예배" },
+          { id: "worship-family", name: "가정의달", description: "가정의달 예배 현수막", thumbnail: null, color: "from-pink-400 to-rose-400", orderType: "banner", galleryLink: "/templates?cat=worship&filter=가정의달" },
+          { id: "worship-dedicate", name: "헌신예배", description: "헌신·봉헌 예배 현수막", thumbnail: null, color: "from-amber-400 to-yellow-500", orderType: "banner", galleryLink: "/templates?cat=worship&filter=헌신예배" },
+          { id: "worship-founding", name: "입당·창립·이전", description: "입당·창립기념·이전 현수막", thumbnail: null, color: "from-yellow-500 to-amber-600", orderType: "banner", galleryLink: "/templates?cat=worship&filter=입당창립" },
+          { id: "worship-ordain", name: "임직·취임", description: "임직·취임 예배 현수막", thumbnail: null, color: "from-violet-400 to-purple-500", orderType: "banner", galleryLink: "/templates?cat=worship&filter=임직취임" },
+          { id: "worship-presbytery", name: "노회·총회", description: "노회·총회 현수막", thumbnail: null, color: "from-indigo-400 to-blue-500", orderType: "banner", galleryLink: "/templates?cat=worship&filter=노회총회" },
+          { id: "worship-mission", name: "선교·파송", description: "선교·파송 예배 현수막", thumbnail: null, color: "from-emerald-400 to-teal-500", orderType: "banner", galleryLink: "/templates?cat=worship&filter=선교파송" },
+        ],
+      },
+      {
+        id: "event-banner",
+        title: "행사현수막",
+        items: [
+          { id: "event-prayer", name: "기도회", description: "기도회 현수막", thumbnail: null, color: "from-blue-500 to-indigo-600", orderType: "banner", galleryLink: "/templates?cat=event&filter=기도회" },
+          { id: "event-revival", name: "부흥회·성회", description: "부흥회·성회 현수막", thumbnail: null, color: "from-red-500 to-orange-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=부흥회" },
+          { id: "event-seminar", name: "세미나·수련회", description: "세미나·수련회·캠프 현수막", thumbnail: null, color: "from-teal-400 to-cyan-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=세미나수련회" },
+          { id: "event-evangel", name: "전도", description: "전도 행사 현수막", thumbnail: null, color: "from-green-400 to-emerald-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=전도" },
+          { id: "event-seasonal", name: "여름·겨울행사", description: "여름·겨울 시즌 행사 현수막", thumbnail: null, color: "from-cyan-400 to-blue-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=여름겨울" },
+          { id: "event-vbs", name: "성경학교", description: "여름/겨울 성경학교 현수막", thumbnail: null, color: "from-sky-400 to-blue-500", badge: "HOT", orderType: "banner", galleryLink: "/templates?cat=event&filter=성경학교" },
+          { id: "event-bazaar", name: "바자회", description: "바자회 현수막", thumbnail: null, color: "from-pink-400 to-rose-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=바자회" },
+          { id: "event-praise", name: "찬양", description: "찬양예배·찬양대회 현수막", thumbnail: null, color: "from-violet-400 to-purple-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=찬양" },
+          { id: "event-sports", name: "체육대회", description: "체육대회 현수막", thumbnail: null, color: "from-emerald-400 to-green-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=체육대회" },
+          { id: "event-nurture", name: "양육", description: "양육·제자훈련 현수막", thumbnail: null, color: "from-amber-400 to-orange-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=양육" },
+          { id: "event-invite", name: "초청", description: "초청 행사 현수막", thumbnail: null, color: "from-rose-400 to-pink-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=초청" },
+          { id: "event-seniors", name: "효도잔치", description: "효도잔치·경로잔치 현수막", thumbnail: null, color: "from-orange-400 to-amber-500", orderType: "banner", galleryLink: "/templates?cat=event&filter=효도잔치" },
+        ],
+      },
+      {
+        id: "banner-sample",
+        title: "배너샘플",
+        items: [
+          { id: "xbanner", name: "X배너", description: "가벼운 거치대 + 배너 세트, 실내 행사 필수", thumbnail: null, color: "from-emerald-400 to-teal-500", badge: "BEST", startPrice: 15000, orderType: "banner", galleryLink: "/templates?cat=banner" },
+          { id: "stand-banner", name: "스탠드 배너", description: "롤업/거치형 배너, 전시회·세미나에 적합", thumbnail: null, color: "from-teal-400 to-cyan-500", startPrice: 25000, orderType: "banner", galleryLink: "/templates?cat=rollup" },
           { id: "fabric-banner", name: "패브릭 배너", description: "고급 원단 느낌, 실내 인테리어용", thumbnail: null, color: "from-green-400 to-emerald-500", startPrice: 20000, orderType: "banner" },
           { id: "photowall", name: "포토월 배너", description: "기념촬영용 대형 배경 배너", thumbnail: null, color: "from-pink-400 to-rose-500", startPrice: 35000, orderType: "banner" },
           { id: "mini-banner", name: "미니 배너", description: "탁상용/데스크 미니 배너", thumbnail: null, color: "from-amber-400 to-orange-500", startPrice: 10000, orderType: "banner" },
         ],
       },
       {
-        id: "season",
-        title: "절기 현수막",
+        id: "banner-stand",
+        title: "배너거치대",
         items: [
-          { id: "season-lent", name: "고난(사순절)", description: "사순절·고난주간 현수막", thumbnail: null, color: "from-violet-500 to-purple-700", orderType: "banner" },
-          { id: "season-easter", name: "부활절", description: "부활절 축하 현수막", thumbnail: null, color: "from-rose-400 to-pink-500", badge: "HOT", orderType: "banner" },
-          { id: "season-harvest", name: "맥추감사절", description: "맥추감사절 현수막", thumbnail: null, color: "from-yellow-400 to-amber-500", orderType: "banner" },
-          { id: "season-thanks", name: "추수감사절", description: "추수감사절 현수막", thumbnail: null, color: "from-orange-400 to-amber-500", orderType: "banner" },
-          { id: "season-christmas", name: "성탄절", description: "성탄절·크리스마스 현수막", thumbnail: null, color: "from-red-500 to-green-600", badge: "HOT", orderType: "banner" },
-          { id: "season-newyear", name: "송구영신", description: "송구영신·신년감사 현수막", thumbnail: null, color: "from-amber-400 to-yellow-500", orderType: "banner" },
-          { id: "season-family", name: "어린이·어버이주일", description: "어린이주일·어버이주일 현수막", thumbnail: null, color: "from-pink-400 to-rose-400", orderType: "banner" },
-        ],
-      },
-      {
-        id: "worship",
-        title: "예배·행사 현수막",
-        items: [
-          { id: "worship-grad", name: "입학·졸업예배", description: "입학·졸업·수료 축하 현수막", thumbnail: null, color: "from-blue-400 to-indigo-500", orderType: "banner" },
-          { id: "worship-dedicate", name: "헌신·임직예배", description: "헌신·임직·안수 예배 현수막", thumbnail: null, color: "from-amber-400 to-yellow-500", orderType: "banner" },
-          { id: "worship-revival", name: "부흥회·성회", description: "부흥회·성회 현수막", thumbnail: null, color: "from-red-500 to-orange-500", orderType: "banner" },
-          { id: "worship-seminar", name: "세미나·수련회", description: "세미나·수련회·캠프 현수막", thumbnail: null, color: "from-teal-400 to-cyan-500", orderType: "banner" },
-          { id: "worship-vbs", name: "성경학교", description: "여름/겨울 성경학교 현수막", thumbnail: null, color: "from-cyan-400 to-blue-500", badge: "HOT", orderType: "banner" },
-          { id: "worship-bazaar", name: "바자회·초청", description: "바자회·초청행사 현수막", thumbnail: null, color: "from-pink-400 to-rose-500", orderType: "banner" },
-          { id: "worship-event", name: "찬양·체육대회", description: "찬양예배·체육대회 현수막", thumbnail: null, color: "from-emerald-400 to-green-500", orderType: "banner" },
+          { id: "stand-indoor", name: "실내형 거치대", description: "실내 배너 거치대", thumbnail: null, color: "from-teal-400 to-cyan-500", startPrice: 15000, orderType: "inquiry" },
+          { id: "stand-outdoor", name: "실외형 거치대", description: "야외용 배너 거치대", thumbnail: null, color: "from-cyan-400 to-blue-500", startPrice: 25000, orderType: "inquiry" },
+          { id: "stand-large", name: "대형 거치대", description: "대형 배너/현수막 거치대", thumbnail: null, color: "from-blue-400 to-indigo-500", startPrice: 40000, orderType: "inquiry" },
         ],
       },
     ],
@@ -538,26 +567,6 @@ export const PRODUCT_CATEGORIES: Category[] = [
         items: [
           { id: "sash", name: "부직포 어깨띠", description: "행사·환영 어깨띠", thumbnail: null, color: "from-red-400 to-rose-500", startPrice: 3000, orderType: "inquiry" },
           { id: "flag", name: "근조 깃발", description: "근조기·조기 제작", thumbnail: null, color: "from-gray-500 to-slate-600", startPrice: 15000, orderType: "inquiry" },
-        ],
-      },
-      {
-        id: "stand",
-        title: "배너 거치대",
-        items: [
-          { id: "stand-indoor", name: "실내형 거치대", description: "실내 배너 거치대", thumbnail: null, color: "from-teal-400 to-cyan-500", startPrice: 15000, orderType: "inquiry" },
-          { id: "stand-outdoor", name: "실외형 거치대", description: "야외용 배너 거치대", thumbnail: null, color: "from-cyan-400 to-blue-500", startPrice: 25000, orderType: "inquiry" },
-          { id: "stand-large", name: "대형 거치대", description: "대형 배너/현수막 거치대", thumbnail: null, color: "from-blue-400 to-indigo-500", startPrice: 40000, orderType: "inquiry" },
-        ],
-      },
-      {
-        id: "bg",
-        title: "배경",
-        items: [
-          { id: "bg-banner", name: "현수막 배경", description: "교회 예배실 현수막 배경", thumbnail: null, color: "from-amber-400 to-yellow-500", orderType: "banner" },
-          { id: "bg-simple", name: "간단배경 모음", description: "간결한 배경 디자인 모음", thumbnail: null, color: "from-sky-400 to-blue-500", orderType: "banner" },
-          { id: "bg-motto", name: "표어", description: "교회 연간 표어 현수막", thumbnail: null, color: "from-emerald-400 to-green-500", orderType: "banner" },
-          { id: "bg-art", name: "성화·환영", description: "성화 일러스트·환영 문구", thumbnail: null, color: "from-rose-400 to-pink-500", orderType: "banner" },
-          { id: "bg-timetable", name: "시간표", description: "예배 시간표 안내 현수막", thumbnail: null, color: "from-orange-400 to-amber-500", orderType: "banner" },
         ],
       },
     ],

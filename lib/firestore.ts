@@ -1,7 +1,7 @@
 import {
   collection, doc, addDoc, updateDoc, getDoc, getDocs,
   query, where, orderBy, limit, serverTimestamp, Timestamp,
-  arrayUnion,
+  arrayUnion, increment,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
@@ -101,6 +101,7 @@ export async function saveProof(orderId: string, imageUrl: string, adminNote?: s
     status: "proof_sent",
     proof: { imageUrl, sentAt: now },
     conversations: arrayUnion(clean(msg)),
+    unreadByCustomer: increment(1),
     updatedAt: serverTimestamp(),
   });
 }
@@ -120,6 +121,7 @@ export async function respondToProof(orderId: string, approved: boolean, revisio
       status: "proof_approved",
       "proof.approvedAt": now,
       conversations: arrayUnion(clean(msg)),
+      unreadByAdmin: increment(1),
       updatedAt: serverTimestamp(),
     });
   } else {
@@ -134,6 +136,7 @@ export async function respondToProof(orderId: string, approved: boolean, revisio
       status: "proof_revision",
       "proof.revisionNote": revisionNote,
       conversations: arrayUnion(clean(msg)),
+      unreadByAdmin: increment(1),
       updatedAt: serverTimestamp(),
     });
   }
@@ -154,11 +157,71 @@ export async function addConversation(
     imageUrl,
     createdAt: new Date().toISOString(),
   };
+  const unreadField = sender === "admin" ? "unreadByCustomer" : "unreadByAdmin";
   await updateDoc(doc(db, "orders", orderId), {
     conversations: arrayUnion(clean(msg)),
+    [unreadField]: increment(1),
     updatedAt: serverTimestamp(),
   });
   return msg;
+}
+
+
+// ── 알림: 읽지 않은 메시지 수 증가 ──────────────
+export async function incrementUnread(orderId: string, target: "customer" | "admin") {
+  const field = target === "customer" ? "unreadByCustomer" : "unreadByAdmin";
+  await updateDoc(doc(db, "orders", orderId), {
+    [field]: increment(1),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// ── 알림: 읽음 처리 ───────────────────────────────
+export async function markAsRead(orderId: string, role: "customer" | "admin") {
+  const field = role === "customer" ? "unreadByCustomer" : "unreadByAdmin";
+  await updateDoc(doc(db, "orders", orderId), {
+    [field]: 0,
+  });
+}
+
+// ── 알림: 읽지 않은 주문 목록 (고객용) ────────────
+export async function getUnreadOrders(userId: string): Promise<Order[]> {
+  const q = query(
+    collection(db, "orders"),
+    where("userId", "==", userId),
+    limit(50)
+  );
+  const snap = await getDocs(q);
+  const docs = snap.docs
+    .map((d) => ({
+      ...(d.data()),
+      id: d.id,
+      createdAt: (d.data().createdAt as Timestamp)?.toDate().toISOString() ?? "",
+      updatedAt: (d.data().updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+    })) as Order[];
+  return docs
+    .filter((o) => (o.unreadByCustomer ?? 0) > 0)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
+// ── 알림: 읽지 않은 주문 목록 (관리자용) ──────────
+export async function getUnreadOrdersForAdmin(): Promise<Order[]> {
+  const q = query(
+    collection(db, "orders"),
+    orderBy("updatedAt", "desc"),
+    limit(200)
+  );
+  const snap = await getDocs(q);
+  const docs = snap.docs
+    .map((d) => ({
+      ...(d.data()),
+      id: d.id,
+      createdAt: (d.data().createdAt as Timestamp)?.toDate().toISOString() ?? "",
+      updatedAt: (d.data().updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+    })) as Order[];
+  return docs
+    .filter((o) => (o.unreadByAdmin ?? 0) > 0)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 // ── 테스트용 더미 주문 생성 ────────────────────

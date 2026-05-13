@@ -100,6 +100,10 @@ export interface Order {
 
   adminMessage?: string;     // 관리자 메시지 (시안제작중 등 상태 변경 시)
 
+  // 읽지 않은 메시지 수
+  unreadByCustomer?: number;  // 고객이 아직 안 읽은 메시지 수
+  unreadByAdmin?: number;     // 관리자가 아직 안 읽은 메시지 수
+
   shipping?: {
     courier: string;         // 택배사 (CJ대한통운, 한진택배 등)
     trackingNumber: string;  // 송장번호

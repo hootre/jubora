@@ -6,6 +6,7 @@ import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { Menu, X, Search, ShoppingCart, User as UserIcon, ShieldCheck, ChevronDown, ChevronRight, LayoutGrid } from "lucide-react";
 import { PRODUCT_CATEGORIES } from "@/constants/products";
+import NotificationBell from "@/components/NotificationBell";
 
 const ADMIN_EMAIL = "mm1895@naver.com";
 
@@ -20,9 +21,11 @@ const MEGA_MENU = PRODUCT_CATEGORIES.map((cat) => ({
     title: sub.title,
     items: sub.items.map((item) => ({
       label: item.name,
-      href: item.orderType === "inquiry"
-        ? `/order?product=${item.id}&mode=inquiry`
-        : `/order?product=${item.id}`,
+      href: item.galleryLink
+        ? item.galleryLink
+        : item.orderType === "inquiry"
+          ? `/order?product=${item.id}&mode=inquiry`
+          : `/order?product=${item.id}`,
       badge: item.badge,
     })),
   })),
@@ -135,6 +138,7 @@ export default function Header() {
               <ShieldCheck size={20} /><span className="text-[10px] font-medium">관리자</span>
             </Link>
           )}
+          <NotificationBell />
           <Link href={user ? "/mypage" : "/login"} className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500 hover:text-primary-600 transition-colors">
             <UserIcon size={20} /><span className="text-[10px]">마이페이지</span>
           </Link>
@@ -143,7 +147,8 @@ export default function Header() {
           </Link>
         </div>
 
-        <button className="lg:hidden ml-auto p-2 text-gray-600" onClick={() => setMobileOpen(!mobileOpen)}>
+        <div className="md:hidden ml-auto"><NotificationBell /></div>
+        <button className="lg:hidden p-2 text-gray-600" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>

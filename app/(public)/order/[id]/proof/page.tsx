@@ -1,7 +1,7 @@
 "use client";
 import { use, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { getOrder, respondToProof } from "@/lib/firestore";
+import { getOrder, respondToProof, markAsRead } from "@/lib/firestore";
 import type { ConversationMessage } from "@/types/order";
 import { CheckCircle, XCircle, Loader2, MessageSquare, Send, ThumbsUp } from "lucide-react";
 import ImageLightbox from "@/components/ImageLightbox";
@@ -16,7 +16,7 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
   const [lightbox, setLightbox] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { getOrder(id).then(setOrder); }, [id]);
+  useEffect(() => { getOrder(id).then((o) => { setOrder(o); if (o && (o.unreadByCustomer ?? 0) > 0) markAsRead(id, "customer").catch(() => {}); }); }, [id]);
 
   // 대화 하단 스크롤
   useEffect(() => {

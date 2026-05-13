@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { getOrder, respondToProof, savePayment, addConversation } from "@/lib/firestore";
+import { getOrder, respondToProof, savePayment, addConversation, markAsRead } from "@/lib/firestore";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import { MATERIALS, OPTIONS, PRODUCT_TYPES } from "@/constants/pricing";
@@ -72,6 +72,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       if (!o) { setError("주문을 찾을 수 없어요."); return; }
       if (o.userId !== uid) { setError("접근 권한이 없어요."); return; }
       setOrder(o);
+      if ((o.unreadByCustomer ?? 0) > 0) markAsRead(id, "customer").catch(() => {});
       if (o.proof?.revisionNote) setRevisionNote(o.proof.revisionNote);
     } catch (e: any) {
       setError(`불러오기 실패: ${e?.message ?? "알 수 없는 오류"}`);

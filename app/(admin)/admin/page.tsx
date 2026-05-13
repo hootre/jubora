@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import {
-  getAllOrders, updateOrderStatus, saveProof, createTestOrder, addConversation
+  getAllOrders, updateOrderStatus, saveProof, createTestOrder, addConversation, markAsRead
 } from "@/lib/firestore";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
@@ -806,6 +806,13 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [modalOrder, setModalOrder] = useState<Order | null>(null);
+
+  // 관리자가 주문 모달 열면 읽음 처리
+  useEffect(() => {
+    if (modalOrder && (modalOrder.unreadByAdmin ?? 0) > 0) {
+      markAsRead(modalOrder.id, "admin").catch(() => {});
+    }
+  }, [modalOrder?.id]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "amount">("date");
   const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
@@ -1109,7 +1116,16 @@ export default function AdminDashboard() {
                   {orders.slice(0, 7).map(order => (
                     <tr key={order.id} className="hover:bg-gray-50 cursor-pointer transition-colors"
                       onClick={() => setModalOrder(order)}>
-                      <td className="px-5 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
+                      <td className="px-5 py-3 font-mono text-xs text-gray-500">
+                        <span className="flex items-center gap-1.5">
+                          {order.orderNumber}
+                          {(order.unreadByAdmin ?? 0) > 0 && (
+                            <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full px-1 animate-pulse">
+                              {order.unreadByAdmin}
+                            </span>
+                          )}
+                        </span>
+                      </td>
                       <td className="px-5 py-3 font-medium text-gray-900">{order.userName}</td>
                       <td className="px-5 py-3 font-semibold text-gray-800">{order.pricing.totalPrice.toLocaleString()}원</td>
                       <td className="px-5 py-3"><StatusBadge status={order.status} /></td>
@@ -1207,7 +1223,16 @@ export default function AdminDashboard() {
                     <tr key={order.id}
                       className="hover:bg-blue-50/30 transition-colors cursor-pointer group"
                       onClick={() => setModalOrder(order)}>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-500">
+                        <span className="flex items-center gap-1.5">
+                          {order.orderNumber}
+                          {(order.unreadByAdmin ?? 0) > 0 && (
+                            <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full px-1 animate-pulse">
+                              {order.unreadByAdmin}
+                            </span>
+                          )}
+                        </span>
+                      </td>
                       <td className="px-4 py-3">
                         <div className="font-semibold text-gray-900">{order.userName}</div>
                         <div className="text-xs text-gray-400">{order.userPhone}</div>

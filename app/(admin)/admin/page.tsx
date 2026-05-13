@@ -64,11 +64,11 @@ function StatusBadge({ status }: { status: OrderStatus }) {
 }
 
 // ── 통계 카드 ─────────────────────────────────────
-function StatCard({ icon, label, value, sub, color }: {
-  icon: React.ReactNode; label: string; value: string | number; sub?: string; color: string;
+function StatCard({ icon, label, value, sub, color, onClick }: {
+  icon: React.ReactNode; label: string; value: string | number; sub?: string; color: string; onClick?: () => void;
 }) {
   return (
-    <div className="bg-white rounded-lg p-3 sm:p-5 shadow-sm border border-gray-100 flex items-center gap-3 sm:gap-4">
+    <div onClick={onClick} className={`bg-white rounded-lg p-3 sm:p-5 shadow-sm border border-gray-100 flex items-center gap-3 sm:gap-4${onClick ? " cursor-pointer hover:shadow-md hover:border-primary-200 transition-all" : ""}`}>
       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 ${color}`}>
         {icon}
       </div>
@@ -1177,16 +1177,20 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8">
               <StatCard icon={<Banknote size={22} className="text-emerald-600" />}
                 label="총 매출" value={`${(stats.totalRevenue / 10000).toFixed(1)}만원`}
-                sub={`결제완료 ${stats.paid}건`} color="bg-emerald-100" />
+                sub={`결제완료 ${stats.paid}건`} color="bg-emerald-100"
+                onClick={() => setTab("payments")} />
               <StatCard icon={<Package size={22} className="text-blue-600" />}
                 label="전체 주문" value={stats.total}
-                sub={`이번 주 +${stats.thisWeek}건`} color="bg-blue-100" />
+                sub={`이번 주 +${stats.thisWeek}건`} color="bg-blue-100"
+                onClick={() => { setFilter("all"); setTab("orders"); }} />
               <StatCard icon={<Clock size={22} className="text-amber-600" />}
                 label="신규 접수" value={stats.pending}
-                sub="처리 대기 중" color="bg-amber-100" />
+                sub="처리 대기 중" color="bg-amber-100"
+                onClick={() => { setFilter("pending"); setTab("orders"); }} />
               <StatCard icon={<Truck size={22} className="text-purple-600" />}
                 label="배송 완료" value={stats.delivered}
-                sub={`총 ${stats.total}건 중`} color="bg-purple-100" />
+                sub={`총 ${stats.total}건 중`} color="bg-purple-100"
+                onClick={() => { setFilter("delivered"); setTab("orders"); }} />
             </div>
 
             {/* 파이프라인 현황 */}

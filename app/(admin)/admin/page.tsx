@@ -8,7 +8,7 @@ import {
   deleteOrders, getAllCustomers
 } from "@/lib/firestore";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
-import type { CustomerInfo } from "@/lib/firestore";
+import type { CustomerInfo, CustomerAddress } from "@/lib/firestore";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import * as PortOne from "@portone/browser-sdk/v2";
 import {
@@ -19,7 +19,7 @@ import {
   BarChart2, Search, ArrowUpDown, Truck, Banknote,
   CalendarDays, User, Phone, MapPin, ClipboardList,
   ShieldCheck, X, ChevronDown, ChevronUp, Paperclip, ImagePlus,
-  Trash2, Users
+  Trash2, Users, Mail, FileText, BookOpen, Map, ChevronLeft, Filter, Calendar, DollarSign, Hash
 } from "lucide-react";
 import ProductManager from "@/components/admin/ProductManager";
 import ImageLightbox from "@/components/ImageLightbox";
@@ -848,6 +848,11 @@ export default function AdminDashboard() {
   const [customers, setCustomers] = useState<CustomerInfo[]>([]);
   const [loadingCustomers, setLoadingCustomers] = useState(false);
   const [customerSearch, setCustomerSearch] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerInfo | null>(null);
+  const [customerOrderDetail, setCustomerOrderDetail] = useState<Order | null>(null);
+  const [customerFilter, setCustomerFilter] = useState<"all" | "recent" | "vip" | "single">("all");
+  const [paymentSearch, setPaymentSearch] = useState("");
+  const [paymentDateFilter, setPaymentDateFilter] = useState<"all" | "today" | "week" | "month">("all");
   const showToast = useCallback((msg: string, type: "success" | "error" | "info" = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3500);
@@ -962,6 +967,60 @@ export default function AdminDashboard() {
       setLoadingCustomers(false);
     }
   }, []);
+
+  // 고객 탭 전환 시 자동 로드
+  useEffect(() => {
+    if (tab === "customers" && customers.length === 0 && !loadingCustomers) loadCustomers();
+  }, [tab, customers.length, loadingCustomers, loadCustomers]);
+
+  // 필터된 고객 목록
+  const filteredCustomers = useMemo(() => {
+    let list = customers;
+    // 검색
+    if (customerSearch.trim()) {
+      const q = customerSearch.toLowerCase();
+      list = list.filter(c =>
+        c.userName.toLowerCase().includes(q) ||
+        c.userEmail.toLowerCase().includes(q) ||
+        c.userPhone.includes(q) ||
+        c.addresses.some(a => a.address.toLowerCase().includes(q))
+      );
+    }
+    // 필터
+    if (customerFilter === "recent") {
+      const d = new Date(); d.setDate(d.getDate() - 30);
+      list = list.filter(c => new Date(c.lastOrderDate) >= d);
+    } else if (customerFilter === "vip") {
+      list = list.filter(c => c.orderCount >= 3 || c.totalSpent >= 100000);
+    } else if (customerFilter === "single") {
+      list = list.filter(c => c.orderCount === 1);
+    }
+    return list;
+  }, [customers, customerSearch, customerFilter]);
+
+  // 필터된 결제 내역
+  const filteredPayments = useMemo(() => {
+    let list = orders.filter(o => o.payment);
+    if (paymentSearch.trim()) {
+      const q = paymentSearch.toLowerCase();
+      list = list.filter(o =>
+        o.orderNumber?.toLowerCase().includes(q) ||
+        o.userName?.toLowerCase().includes(q) ||
+        o.payment?.paymentId?.toLowerCase().includes(q)
+      );
+    }
+    if (paymentDateFilter === "today") {
+      const today = new Date().toISOString().slice(0, 10);
+      list = list.filter(o => o.payment?.paidAt?.slice(0, 10) === today);
+    } else if (paymentDateFilter === "week") {
+      const d = new Date(); d.setDate(d.getDate() - 7);
+      list = list.filter(o => o.payment?.paidAt && new Date(o.payment.paidAt) >= d);
+    } else if (paymentDateFilter === "month") {
+      const d = new Date(); d.setMonth(d.getMonth() - 1);
+      list = list.filter(o => o.payment?.paidAt && new Date(o.payment.paidAt) >= d);
+    }
+    return list;
+  }, [orders, paymentSearch, paymentDateFilter]);
 
   // ── [테스트] 더미 주문 생성 ──
   const handleCreateTestOrder = async () => {
@@ -1372,70 +1431,113 @@ export default function AdminDashboard() {
         {tab === "payments" && (
           <>
             {/* 결제 요약 카드 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <StatCard icon={<Banknote size={22} className="text-emerald-600" />}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <StatCard icon={<Banknote size={20} className="text-emerald-600" />}
                 label="총 매출 합계"
                 value={`${stats.totalRevenue.toLocaleString()}원`}
                 sub={`${orders.filter(o => o.payment).length}건 결제 완료`}
                 color="bg-emerald-100" />
-              <StatCard icon={<CreditCard size={22} className="text-blue-600" />}
+              <StatCard icon={<CreditCard size={20} className="text-blue-600" />}
                 label="평균 결제 금액"
                 value={orders.filter(o => o.payment).length > 0
                   ? `${Math.round(stats.totalRevenue / orders.filter(o => o.payment).length).toLocaleString()}원`
                   : "—"}
                 color="bg-blue-100" />
-              <StatCard icon={<TrendingUp size={22} className="text-purple-600" />}
+              <StatCard icon={<TrendingUp size={20} className="text-purple-600" />}
                 label="이번 주 결제"
                 value={`${orders.filter(o => o.payment && new Date(o.createdAt) >= new Date(Date.now() - 7*86400000)).length}건`}
                 color="bg-purple-100" />
+              <StatCard icon={<DollarSign size={20} className="text-amber-600" />}
+                label="이번 달 매출"
+                value={`${orders.filter(o => o.payment && new Date(o.payment.paidAt ?? o.createdAt) >= new Date(new Date().getFullYear(), new Date().getMonth(), 1)).reduce((s, o) => s + (o.payment?.amount ?? 0), 0).toLocaleString()}원`}
+                color="bg-amber-100" />
+            </div>
+
+            {/* 필터 + 검색 */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {([
+                { id: "all", label: `전체 (${orders.filter(o => o.payment).length})` },
+                { id: "today", label: "오늘" },
+                { id: "week", label: "이번 주" },
+                { id: "month", label: "이번 달" },
+              ] as const).map(f => (
+                <button key={f.id} onClick={() => setPaymentDateFilter(f.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${paymentDateFilter === f.id ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-3 mb-4">
+              <div className="relative flex-1 min-w-0">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input type="text" value={paymentSearch} onChange={e => setPaymentSearch(e.target.value)}
+                  placeholder="주문번호·고객명·결제ID 검색"
+                  className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 bg-white" />
+                {paymentSearch && (
+                  <button onClick={() => setPaymentSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><X size={14} /></button>
+                )}
+              </div>
             </div>
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-gray-50 flex items-center justify-between">
                 <h2 className="font-bold text-gray-800 flex items-center gap-2 text-sm sm:text-base">
-                  <CreditCard size={16} className="text-primary-500" /> 결제 완료 목록
+                  <CreditCard size={16} className="text-emerald-500" /> 결제 완료 목록
                 </h2>
-                <span className="text-xs text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-1">
-                  {orders.filter(o => o.payment).length}건
-                </span>
+                <div className="flex items-center gap-2">
+                  {(paymentSearch || paymentDateFilter !== "all") && (
+                    <span className="text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-2.5 py-1 font-semibold">
+                      {filteredPayments.length}건 검색
+                    </span>
+                  )}
+                  <span className="text-xs text-gray-400 bg-white border border-gray-200 rounded-lg px-3 py-1">
+                    총 {orders.filter(o => o.payment).length}건
+                  </span>
+                </div>
               </div>
               <div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[800px]">
                 <thead>
                   <tr className="border-b bg-gray-50/50">
-                    {["주문번호","고객","금액","결제수단","PG사","결제 ID","결제일"].map(h => (
-                      <th key={h} className="text-left text-xs font-semibold text-gray-500 px-5 py-3 whitespace-nowrap">{h}</th>
+                    {["주문번호","고객","상태","금액","결제수단","PG사","결제 ID","결제일"].map(h => (
+                      <th key={h} className="text-left text-xs font-semibold text-gray-500 px-4 py-3 whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {orders.filter(o => o.payment).map(order => (
-                    <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-5 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
-                      <td className="px-5 py-3">
+                  {filteredPayments.map(order => (
+                    <tr key={order.id} onClick={() => setModalOrder(order)}
+                      className="hover:bg-emerald-50/50 cursor-pointer transition-colors">
+                      <td className="px-4 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
+                      <td className="px-4 py-3">
                         <div className="font-medium text-gray-900">{order.userName}</div>
                         <div className="text-xs text-gray-400">{order.userPhone}</div>
                       </td>
-                      <td className="px-5 py-3 font-bold text-emerald-600">{order.payment?.amount?.toLocaleString()}원</td>
-                      <td className="px-5 py-3">
-                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-lg font-medium">
-                          {order.payment?.method}
+                      <td className="px-4 py-3">
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-lg ${ORDER_STATUS_COLOR[order.status]}`}>
+                          {ORDER_STATUS_LABEL[order.status]}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-xs text-gray-500">{order.payment?.pgProvider ?? "-"}</td>
-                      <td className="px-5 py-3 font-mono text-xs text-gray-400 max-w-[180px] truncate" title={order.payment?.paymentId}>
-                        {order.payment?.paymentId}
+                      <td className="px-4 py-3 font-bold text-emerald-600">{order.payment?.amount?.toLocaleString()}원</td>
+                      <td className="px-4 py-3">
+                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-lg font-medium">
+                          {order.payment?.method || "—"}
+                        </span>
                       </td>
-                      <td className="px-5 py-3 text-xs text-gray-500">{order.payment?.paidAt?.slice(0,16).replace("T"," ")}</td>
+                      <td className="px-4 py-3 text-xs text-gray-500">{order.payment?.pgProvider ?? "—"}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-400 max-w-[160px] truncate" title={order.payment?.paymentId}>
+                        {order.payment?.paymentId || "—"}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-500">{order.payment?.paidAt?.slice(0,16).replace("T"," ") || "—"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               </div>
-              {orders.filter(o => o.payment).length === 0 && (
+              {filteredPayments.length === 0 && (
                 <div className="py-16 text-center text-gray-400">
                   <CreditCard size={36} className="mx-auto mb-3 opacity-40" />
-                  <p>결제 완료된 주문이 없습니다.</p>
+                  <p>{paymentSearch || paymentDateFilter !== "all" ? "검색 결과가 없습니다." : "결제 완료된 주문이 없습니다."}</p>
                 </div>
               )}
             </div>
@@ -1447,21 +1549,200 @@ export default function AdminDashboard() {
         ══════════════════════════════════════════ */}
         {tab === "customers" && (
           <>
-            {/* 로드 트리거 */}
-            {customers.length === 0 && !loadingCustomers && (
-              <div className="text-center py-12">
-                <Users size={40} className="mx-auto mb-3 text-gray-300" />
-                <p className="text-gray-500 mb-4">주문 데이터를 기반으로 고객 목록을 불러옵니다.</p>
-                <button onClick={loadCustomers}
-                  className="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold transition-colors">
-                  고객 목록 불러오기
-                </button>
+            {loadingCustomers && customers.length === 0 && (
+              <div className="py-16 flex justify-center"><Loader2 size={28} className="animate-spin text-primary-400" /></div>
+            )}
+
+            {/* ── 고객 상세 팝업 ── */}
+            {selectedCustomer && !customerOrderDetail && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setSelectedCustomer(null)}>
+                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                  {/* 헤더 */}
+                  <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">{selectedCustomer.userName || "이름 없음"}</h2>
+                      <p className="text-xs text-gray-500">고객 상세 정보</p>
+                    </div>
+                    <button onClick={() => setSelectedCustomer(null)} className="p-2 hover:bg-gray-100 rounded-xl"><X size={18} /></button>
+                  </div>
+
+                  <div className="p-6 space-y-6">
+                    {/* 기본 정보 */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">연락처</p>
+                        <p className="text-sm font-semibold text-gray-900 flex items-center gap-1.5"><Phone size={13} /> {selectedCustomer.userPhone || "—"}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">이메일</p>
+                        <p className="text-sm font-semibold text-gray-900 flex items-center gap-1.5 break-all"><Mail size={13} /> {selectedCustomer.userEmail || "—"}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">총 주문</p>
+                        <p className="text-sm font-bold text-blue-600">{selectedCustomer.orderCount}건</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">총 결제</p>
+                        <p className="text-sm font-bold text-emerald-600">{selectedCustomer.totalSpent > 0 ? `${selectedCustomer.totalSpent.toLocaleString()}원` : "—"}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">첫 주문</p>
+                        <p className="text-sm text-gray-700">{selectedCustomer.firstOrderDate?.slice(0, 10) || "—"}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">최근 주문</p>
+                        <p className="text-sm text-gray-700">{selectedCustomer.lastOrderDate?.slice(0, 10) || "—"}</p>
+                      </div>
+                    </div>
+
+                    {/* 주소 목록 */}
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5"><Map size={14} /> 배송 주소 목록 ({selectedCustomer.addresses.length})</h3>
+                      {selectedCustomer.addresses.length > 0 ? (
+                        <div className="space-y-2">
+                          {selectedCustomer.addresses.map((addr, i) => (
+                            <div key={i} className="bg-blue-50/50 border border-blue-100 rounded-xl px-4 py-3">
+                              <span className="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">{addr.label}</span>
+                              <p className="text-sm text-gray-800 mt-1.5">{addr.address} {addr.addressDetail}</p>
+                              {addr.zipCode && <p className="text-xs text-gray-400 mt-0.5">우편번호: {addr.zipCode}</p>}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-gray-400 py-4 text-center">등록된 주소가 없습니다.</p>
+                      )}
+                    </div>
+
+                    {/* 주문 상태 분포 */}
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5"><BarChart2 size={14} /> 주문 상태 분포</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(selectedCustomer.statuses).map(([status, count]) => (
+                          <span key={status} className={`text-xs font-semibold px-3 py-1.5 rounded-lg ${ORDER_STATUS_COLOR[status as OrderStatus] ?? "bg-gray-100 text-gray-600"}`}>
+                            {ORDER_STATUS_LABEL[status as OrderStatus] ?? status} {count as number}건
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 주문 내역 */}
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5"><ClipboardList size={14} /> 주문 내역 ({selectedCustomer.orders.length}건)</h3>
+                      <div className="space-y-2">
+                        {selectedCustomer.orders.map(order => (
+                          <div key={order.id}
+                            onClick={() => setCustomerOrderDetail(order)}
+                            className="bg-white border border-gray-200 rounded-xl px-4 py-3 hover:border-primary-300 hover:shadow-sm cursor-pointer transition-all flex items-center justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-mono text-xs text-gray-500">{order.orderNumber}</span>
+                                <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${ORDER_STATUS_COLOR[order.status]}`}>
+                                  {ORDER_STATUS_LABEL[order.status]}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-800 truncate">{order.product?.productName || order.product?.orderType || "—"}</p>
+                              <p className="text-xs text-gray-400 mt-0.5">{order.createdAt?.slice(0, 10)}</p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="text-sm font-bold text-gray-900">{order.pricing?.totalPrice > 0 ? `${order.pricing.totalPrice.toLocaleString()}원` : "—"}</p>
+                              <ChevronRight size={14} className="text-gray-300 ml-auto mt-1" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
-            {loadingCustomers && (
-              <div className="py-16 flex justify-center">
-                <Loader2 size={28} className="animate-spin text-primary-400" />
+            {/* ── 주문 상세 팝업 (고객 상세 안에서) ── */}
+            {customerOrderDetail && (
+              <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4" onClick={() => setCustomerOrderDetail(null)}>
+                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                  <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center gap-3 rounded-t-2xl z-10">
+                    <button onClick={() => setCustomerOrderDetail(null)} className="p-1.5 hover:bg-gray-100 rounded-lg"><ChevronLeft size={18} /></button>
+                    <div>
+                      <h2 className="text-base font-bold text-gray-900">{customerOrderDetail.orderNumber}</h2>
+                      <p className="text-xs text-gray-500">{customerOrderDetail.userName} · {customerOrderDetail.createdAt?.slice(0, 10)}</p>
+                    </div>
+                    <span className={`ml-auto text-xs font-semibold px-2.5 py-1 rounded-lg ${ORDER_STATUS_COLOR[customerOrderDetail.status]}`}>
+                      {ORDER_STATUS_LABEL[customerOrderDetail.status]}
+                    </span>
+                  </div>
+                  <div className="p-6 space-y-5">
+                    {/* 제품 정보 */}
+                    <div>
+                      <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">제품 정보</h4>
+                      <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
+                        <p><span className="text-gray-500">제품:</span> <span className="font-semibold">{customerOrderDetail.product?.productName || customerOrderDetail.product?.orderType || "—"}</span></p>
+                        {customerOrderDetail.product?.material && <p><span className="text-gray-500">소재:</span> {customerOrderDetail.product.material}</p>}
+                        {(customerOrderDetail.product?.width || customerOrderDetail.product?.height) && (
+                          <p><span className="text-gray-500">크기:</span> {customerOrderDetail.product.width}×{customerOrderDetail.product.height}cm</p>
+                        )}
+                        <p><span className="text-gray-500">수량:</span> {customerOrderDetail.product?.quantity}개</p>
+                        {customerOrderDetail.product?.options && customerOrderDetail.product.options.length > 0 && (
+                          <p><span className="text-gray-500">옵션:</span> {customerOrderDetail.product.options.join(", ")}</p>
+                        )}
+                      </div>
+                    </div>
+                    {/* 요구사항 */}
+                    {customerOrderDetail.design?.userRequirements && (
+                      <div>
+                        <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">고객 요구사항</h4>
+                        <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-gray-700 whitespace-pre-wrap">
+                          {customerOrderDetail.design.userRequirements}
+                        </div>
+                      </div>
+                    )}
+                    {/* 배송 정보 */}
+                    {customerOrderDetail.delivery?.address && (
+                      <div>
+                        <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">배송 정보</h4>
+                        <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-1">
+                          <p>{customerOrderDetail.delivery.address} {customerOrderDetail.delivery.addressDetail}</p>
+                          {customerOrderDetail.delivery.zipCode && <p className="text-xs text-gray-400">우편번호: {customerOrderDetail.delivery.zipCode}</p>}
+                          {customerOrderDetail.delivery.memo && <p className="text-xs text-gray-500 mt-2">메모: {customerOrderDetail.delivery.memo}</p>}
+                        </div>
+                      </div>
+                    )}
+                    {/* 결제 정보 */}
+                    {customerOrderDetail.payment && (
+                      <div>
+                        <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">결제 정보</h4>
+                        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-sm space-y-1">
+                          <p className="font-bold text-emerald-700">{customerOrderDetail.payment.amount?.toLocaleString()}원</p>
+                          <p className="text-gray-600">{customerOrderDetail.payment.method} · {customerOrderDetail.payment.pgProvider ?? ""}</p>
+                          <p className="text-xs text-gray-400">{customerOrderDetail.payment.paidAt?.slice(0, 16).replace("T", " ")}</p>
+                        </div>
+                      </div>
+                    )}
+                    {/* 대화 기록 */}
+                    {customerOrderDetail.conversations && customerOrderDetail.conversations.length > 0 && (
+                      <div>
+                        <h4 className="text-xs font-bold text-gray-400 uppercase mb-2">대화 기록 ({customerOrderDetail.conversations.length})</h4>
+                        <div className="space-y-2 max-h-60 overflow-y-auto">
+                          {customerOrderDetail.conversations.map(msg => (
+                            <div key={msg.id} className={`rounded-xl px-3 py-2 text-sm ${msg.sender === "admin" ? "bg-blue-50 text-blue-900 ml-8" : "bg-gray-50 text-gray-800 mr-8"}`}>
+                              <p className="text-[10px] font-bold text-gray-400 mb-0.5">{msg.sender === "admin" ? "관리자" : "고객"} · {msg.createdAt?.slice(0, 16).replace("T", " ")}</p>
+                              <p className="whitespace-pre-wrap">{msg.content}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {/* 금액 */}
+                    <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center">
+                      <span className="text-sm text-gray-600">합계 금액</span>
+                      <span className="text-lg font-bold text-gray-900">{customerOrderDetail.pricing?.totalPrice > 0 ? `${customerOrderDetail.pricing.totalPrice.toLocaleString()}원` : "—"}</span>
+                    </div>
+                    {/* 주문관리 모달 열기 */}
+                    <button onClick={() => { setCustomerOrderDetail(null); setSelectedCustomer(null); setModalOrder(customerOrderDetail); }}
+                      className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2">
+                      <ExternalLink size={14} /> 주문관리 모달에서 열기
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -1479,17 +1760,28 @@ export default function AdminDashboard() {
                     label="평균 주문 수" value={`${(customers.reduce((s, c) => s + c.orderCount, 0) / customers.length).toFixed(1)}건`} color="bg-amber-100" />
                 </div>
 
-                {/* 검색 + 새로고침 */}
+                {/* 필터 + 검색 + 새로고침 */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {([
+                    { id: "all", label: `전체 (${customers.length})` },
+                    { id: "recent", label: "최근 30일" },
+                    { id: "vip", label: "VIP (3건+ / 10만+)" },
+                    { id: "single", label: "1회 주문" },
+                  ] as const).map(f => (
+                    <button key={f.id} onClick={() => setCustomerFilter(f.id)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${customerFilter === f.id ? "bg-primary-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
                 <div className="flex gap-3 mb-4">
                   <div className="relative flex-1 min-w-0">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input type="text" value={customerSearch} onChange={e => setCustomerSearch(e.target.value)}
-                      placeholder="이름·이메일·전화번호 검색"
+                      placeholder="이름·이메일·전화번호·주소 검색"
                       className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary-500 bg-white" />
                     {customerSearch && (
-                      <button onClick={() => setCustomerSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                        <X size={14} />
-                      </button>
+                      <button onClick={() => setCustomerSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"><X size={14} /></button>
                     )}
                   </div>
                   <button onClick={loadCustomers} disabled={loadingCustomers}
@@ -1501,27 +1793,22 @@ export default function AdminDashboard() {
                 {/* 고객 테이블 */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm min-w-[700px]">
+                    <table className="w-full text-sm min-w-[800px]">
                       <thead className="bg-gray-50 border-b">
                         <tr>
-                          {["고객명","이메일","전화번호","주문 수","결제 총액","최근 주문","주문 상태"].map(h => (
+                          {["고객명","연락처","주문 수","결제 총액","배송지","최근 주문","상태 분포"].map(h => (
                             <th key={h} className="text-left text-xs font-semibold text-gray-500 px-4 py-3 whitespace-nowrap">{h}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-50">
-                        {customers
-                          .filter(c => {
-                            if (!customerSearch.trim()) return true;
-                            const q = customerSearch.toLowerCase();
-                            return c.userName.toLowerCase().includes(q) ||
-                              c.userEmail.toLowerCase().includes(q) ||
-                              c.userPhone.includes(q);
-                          })
-                          .map(c => (
-                          <tr key={c.userId} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-4 py-3 font-semibold text-gray-900">{c.userName || "—"}</td>
-                            <td className="px-4 py-3 text-xs text-gray-600">{c.userEmail || "—"}</td>
+                        {filteredCustomers.map(c => (
+                          <tr key={c.userId} onClick={() => setSelectedCustomer(c)}
+                            className="hover:bg-blue-50/50 cursor-pointer transition-colors">
+                            <td className="px-4 py-3">
+                              <p className="font-semibold text-gray-900">{c.userName || "—"}</p>
+                              <p className="text-[11px] text-gray-400 truncate max-w-[150px]">{c.userEmail || ""}</p>
+                            </td>
                             <td className="px-4 py-3 text-xs text-gray-600">{c.userPhone || "—"}</td>
                             <td className="px-4 py-3">
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{c.orderCount}건</span>
@@ -1529,14 +1816,23 @@ export default function AdminDashboard() {
                             <td className="px-4 py-3 font-bold text-gray-900">
                               {c.totalSpent > 0 ? `${c.totalSpent.toLocaleString()}원` : "—"}
                             </td>
+                            <td className="px-4 py-3">
+                              {c.addresses.length > 0 ? (
+                                <p className="text-xs text-gray-600 truncate max-w-[180px]" title={c.addresses[0].address}>
+                                  📍 {c.addresses[0].address}
+                                  {c.addresses.length > 1 && <span className="text-primary-500 ml-1">+{c.addresses.length - 1}</span>}
+                                </p>
+                              ) : <span className="text-xs text-gray-300">—</span>}
+                            </td>
                             <td className="px-4 py-3 text-xs text-gray-400">{c.lastOrderDate?.slice(0, 10) || "—"}</td>
                             <td className="px-4 py-3">
                               <div className="flex flex-wrap gap-1">
-                                {Object.entries(c.statuses).map(([status, count]) => (
+                                {Object.entries(c.statuses).slice(0, 3).map(([status, count]) => (
                                   <span key={status} className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${ORDER_STATUS_COLOR[status as OrderStatus] ?? "bg-gray-100 text-gray-600"}`}>
                                     {ORDER_STATUS_LABEL[status as OrderStatus] ?? status} {count as number}
                                   </span>
                                 ))}
+                                {Object.keys(c.statuses).length > 3 && <span className="text-[10px] text-gray-400">+{Object.keys(c.statuses).length - 3}</span>}
                               </div>
                             </td>
                           </tr>
@@ -1544,14 +1840,10 @@ export default function AdminDashboard() {
                       </tbody>
                     </table>
                   </div>
-                  {customers.filter(c => {
-                    if (!customerSearch.trim()) return true;
-                    const q = customerSearch.toLowerCase();
-                    return c.userName.toLowerCase().includes(q) || c.userEmail.toLowerCase().includes(q) || c.userPhone.includes(q);
-                  }).length === 0 && (
+                  {filteredCustomers.length === 0 && (
                     <div className="py-16 text-center text-gray-400">
                       <Users size={40} className="mx-auto mb-3 opacity-40" />
-                      <p>{customerSearch ? `'${customerSearch}'에 해당하는 고객이 없습니다.` : "고객 데이터가 없습니다."}</p>
+                      <p>{customerSearch ? `'${customerSearch}'에 해당하는 고객이 없습니다.` : "해당 조건의 고객이 없습니다."}</p>
                     </div>
                   )}
                 </div>

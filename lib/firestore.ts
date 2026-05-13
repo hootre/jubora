@@ -306,6 +306,13 @@ export async function deleteOrders(orderIds: string[]) {
 }
 
 // ── 전체 사용자 목록 (관리자용 — 주문 기반) ─────────
+export interface CustomerAddress {
+  label: string;       // "기본", "교회", "자택" 등
+  address: string;
+  addressDetail: string;
+  zipCode: string;
+}
+
 export interface CustomerInfo {
   userId: string;
   userName: string;
@@ -314,7 +321,10 @@ export interface CustomerInfo {
   orderCount: number;
   totalSpent: number;
   lastOrderDate: string;
+  firstOrderDate: string;
   statuses: Record<string, number>;
+  addresses: CustomerAddress[];
+  orders: Order[];     // 해당 고객의 전체 주문 목록
 }
 
 export async function getAllCustomers(): Promise<CustomerInfo[]> {
@@ -327,12 +337,35 @@ export async function getAllCustomers(): Promise<CustomerInfo[]> {
     const existing = map.get(uid);
     const createdAt = toISO(data.createdAt);
     const paid = data.payment?.amount ?? 0;
+    const order = {
+      ...data,
+      id: d.id,
+      createdAt: toISO(data.createdAt),
+      updatedAt: toISO(data.updatedAt),
+    } as Order;
+
+    // 주소 수집
+    const addr = data.delivery?.address;
+    const addrDetail = data.delivery?.addressDetail ?? "";
+    const zipCode = data.delivery?.zipCode ?? "";
+
     if (existing) {
       existing.orderCount++;
       existing.totalSpent += paid;
       if (createdAt > existing.lastOrderDate) existing.lastOrderDate = createdAt;
+      if (createdAt < existing.firstOrderDate) existing.firstOrderDate = createdAt;
       existing.statuses[data.status] = (existing.statuses[data.status] ?? 0) + 1;
+      existing.orders.push(order);
+      // 중복 아닌 주소만 추가
+      if (addr && !existing.addresses.some(a => a.address === addr && a.addressDetail === addrDetail)) {
+        existing.addresses.push({ label: `배송지 ${existing.addresses.length + 1}`, address: addr, addressDetail: addrDetail, zipCode });
+      }
+      // 연락처/이메일 업데이트 (빈 값이면 최신으로)
+      if (!existing.userPhone && data.userPhone) existing.userPhone = data.userPhone;
+      if (!existing.userEmail && data.userEmail) existing.userEmail = data.userEmail;
     } else {
+      const addresses: CustomerAddress[] = [];
+      if (addr) addresses.push({ label: "기본 배송지", address: addr, addressDetail: addrDetail, zipCode });
       map.set(uid, {
         userId: uid,
         userName: data.userName ?? "",
@@ -341,7 +374,10 @@ export async function getAllCustomers(): Promise<CustomerInfo[]> {
         orderCount: 1,
         totalSpent: paid,
         lastOrderDate: createdAt,
+        firstOrderDate: createdAt,
         statuses: { [data.status]: 1 },
+        addresses,
+        orders: [order],
       });
     }
   }

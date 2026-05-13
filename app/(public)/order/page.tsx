@@ -766,6 +766,15 @@ function OrderForm() {
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-yellow-800 mb-4">
                     최종 금액은 시안 확인 후 결제가 진행됩니다. 지금은 주문만 접수돼요.
                   </div>
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 text-xs text-gray-700 mb-4 space-y-1">
+                    <p className="font-bold text-gray-900 mb-2">★확인사항★</p>
+                    <p>1. 오타를 꼭 확인하여주세요.</p>
+                    <p>2. 시안 수정은 2회로 제한되어있습니다.</p>
+                    <p>3. 최종 출력물과 모니터에서 확인하신 색상간의 차이가 있을 수 있습니다. (모니터는 RGB 칼라이고, 출력물은 CMYK 칼라입니다.)</p>
+                    <p>4. 최종 교정 후의 출력물에 대해서는 책임을 지지 않습니다.</p>
+                    <p>5. 시안확인 후 출력요청을 하여야만 인쇄가 진행됩니다.</p>
+                    <p>6. 시안작업후 취소시에는 소정의 편집비가 부과됩니다.</p>
+                  </div>
                 </>
               ) : (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700 mb-4">

@@ -61,7 +61,7 @@ export default function NotificationBell() {
 
   const totalUnread = notifications.reduce((sum, o) => {
     if (isAdmin) {
-      return sum + (o.unreadByAdmin ?? 0) + (o.unreadByCustomer ?? 0);
+      return sum + (o.unreadByAdmin ?? 0) + (o.status === "pending" ? 1 : 0);
     }
     return sum + (o.unreadByCustomer ?? 0);
   }, 0);
@@ -106,9 +106,9 @@ export default function NotificationBell() {
     const convs = order.conversations ?? [];
     if (convs.length === 0) return "새로운 알림이 있습니다.";
     const last = convs[convs.length - 1];
-    // 관리자: 고객이 보낸 메시지 vs 고객이 안 읽은 메시지 구분
-    if (isAdmin && (order.unreadByCustomer ?? 0) > 0 && (order.unreadByAdmin ?? 0) === 0) {
-      return "📨 고객이 아직 메시지를 확인하지 않았습니다.";
+    // 관리자: 신규주문 or 고객 메시지
+    if (isAdmin && order.status === "pending" && (order.unreadByAdmin ?? 0) === 0) {
+      return "🆕 신규 주문이 접수되었습니다.";
     }
     if (last.type === "proof") return "📎 시안이 전달되었습니다.";
     if (last.type === "revision") return "✏️ 수정 요청이 있습니다.";
@@ -178,7 +178,7 @@ export default function NotificationBell() {
             ) : (
               notifications.map((order) => {
                 const unreadCount = isAdmin
-                  ? (order.unreadByAdmin ?? 0) + (order.unreadByCustomer ?? 0)
+                  ? (order.unreadByAdmin ?? 0) + (order.status === "pending" ? 1 : 0)
                   : (order.unreadByCustomer ?? 0);
                 return (
                   <button
@@ -197,11 +197,7 @@ export default function NotificationBell() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
                         <span className="text-xs font-bold text-gray-800 truncate">
-                          {isAdmin
-                          ? ((order.unreadByAdmin ?? 0) > 0
-                            ? order.userName
-                            : `→ ${order.userName}`)
-                          : "주보라"}
+                          {isAdmin ? order.userName : "주보라"}
                         </span>
                         <span className="text-[10px] text-gray-400 shrink-0">
                           {getTimeAgo(order.updatedAt)}

@@ -244,7 +244,7 @@ export async function getUnreadOrdersForAdmin(): Promise<Order[]> {
       updatedAt: toISO(d.data().updatedAt),
     })) as Order[];
   return docs
-    .filter((o) => (o.unreadByAdmin ?? 0) > 0 || (o.unreadByCustomer ?? 0) > 0)
+    .filter((o) => (o.unreadByAdmin ?? 0) > 0 || o.status === "pending")
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 

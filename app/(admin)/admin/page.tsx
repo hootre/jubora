@@ -828,7 +828,7 @@ export default function AdminDashboard() {
     }
   }, [modalOrder?.id]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"date" | "amount">("date");
+  const [sortBy, setSortBy] = useState<"date" | "amount" | "status">("status");
   const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
 
   // ── 테스트 도구 상태 ──
@@ -908,6 +908,13 @@ export default function AdminDashboard() {
       );
     }
     return [...list].sort((a, b) => {
+      if (sortBy === "status") {
+        const pi = STATUS_PIPELINE.indexOf(a.status);
+        const pj = STATUS_PIPELINE.indexOf(b.status);
+        if (pi !== pj) return sortDir === "asc" ? pi - pj : pj - pi;
+        // 같은 상태면 최신순
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
       if (sortBy === "amount") {
         const diff = a.pricing.totalPrice - b.pricing.totalPrice;
         return sortDir === "desc" ? -diff : diff;
@@ -1295,6 +1302,12 @@ export default function AdminDashboard() {
                 )}
               </div>
               <div className="flex gap-2">
+                <button onClick={() => { setSortBy("status"); setSortDir(d => d === "asc" ? "desc" : "asc"); }}
+                  className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors
+                    ${sortBy === "status" ? "bg-primary-50 border-primary-300 text-primary-700" : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
+                  <Truck size={13} /> 진행상태
+                  {sortBy === "status" && (sortDir === "asc" ? <ChevronDown size={12} /> : <ChevronUp size={12} />)}
+                </button>
                 <button onClick={() => { setSortBy("date"); setSortDir(d => d === "desc" ? "asc" : "desc"); }}
                   className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors
                     ${sortBy === "date" ? "bg-primary-50 border-primary-300 text-primary-700" : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"}`}>

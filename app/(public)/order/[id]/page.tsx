@@ -361,20 +361,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      {/* ── 관리자 메시지 ── */}
-      {order.adminMessage && (
-        <div className="card mb-6 border border-purple-200 bg-purple-50">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center shrink-0">
-              <MessageSquare size={16} className="text-purple-600" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-purple-700 mb-1">담당자 메시지</p>
-              <p className="text-sm text-purple-900 whitespace-pre-wrap">{order.adminMessage}</p>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* ── 시안 이미지 (크게 표시) ── */}
       {proofImage && (

@@ -57,7 +57,7 @@ function Toast({ msg, type }: { msg: string; type: "success" | "error" | "info" 
 // ── 상태 배지 컴포넌트 ─────────────────────────────
 function StatusBadge({ status }: { status: OrderStatus }) {
   return (
-    <span className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${ORDER_STATUS_COLOR[status]}`}>
+    <span className={`text-xs font-semibold px-2.5 py-1 rounded-lg whitespace-nowrap ${ORDER_STATUS_COLOR[status]}`}>
       {ORDER_STATUS_LABEL[status]}
     </span>
   );
@@ -1227,7 +1227,7 @@ export default function AdminDashboard() {
                   {orders.slice(0, 7).map(order => (
                     <tr key={order.id} className="hover:bg-gray-50 cursor-pointer transition-colors"
                       onClick={() => setModalOrder(order)}>
-                      <td className="px-5 py-3 font-mono text-xs text-gray-500">
+                      <td className="px-5 py-3 font-mono text-xs text-gray-500 whitespace-nowrap">
                         <span className="flex items-center gap-1.5">
                           {order.orderNumber}
                           {(order.unreadByAdmin ?? 0) > 0 && (
@@ -1240,7 +1240,7 @@ export default function AdminDashboard() {
                       <td className="px-5 py-3 font-medium text-gray-900">{order.userName}</td>
                       <td className="px-5 py-3 font-semibold text-gray-800">{order.pricing.totalPrice.toLocaleString()}원</td>
                       <td className="px-5 py-3"><StatusBadge status={order.status} /></td>
-                      <td className="px-5 py-3 text-xs text-gray-400">{order.createdAt.slice(0,10)}</td>
+                      <td className="px-5 py-3 text-xs text-gray-400 whitespace-nowrap">{order.createdAt.slice(0,10)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1263,10 +1263,14 @@ export default function AdminDashboard() {
           <>
             {/* 요약 수치 */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <StatCard icon={<Package size={20} className="text-blue-600" />}    label="전체 주문"    value={stats.total}          color="bg-blue-100" />
-              <StatCard icon={<Clock size={20} className="text-amber-600" />}     label="신규 접수"    value={stats.pending}         color="bg-amber-100" />
-              <StatCard icon={<TrendingUp size={20} className="text-purple-600" />} label="시안 진행"  value={stats.designing}       color="bg-purple-100" />
-              <StatCard icon={<CheckCircle size={20} className="text-emerald-600" />} label="결제 완료" value={stats.paid}           color="bg-emerald-100" />
+              <StatCard icon={<Package size={20} className="text-blue-600" />}    label="전체 주문"    value={stats.total}          color="bg-blue-100"
+                onClick={() => setFilter("all")} />
+              <StatCard icon={<Clock size={20} className="text-amber-600" />}     label="신규 접수"    value={stats.pending}         color="bg-amber-100"
+                onClick={() => setFilter("pending")} />
+              <StatCard icon={<TrendingUp size={20} className="text-purple-600" />} label="시안 진행"  value={stats.designing}       color="bg-purple-100"
+                onClick={() => setFilter("designing")} />
+              <StatCard icon={<CheckCircle size={20} className="text-emerald-600" />} label="결제 완료" value={stats.paid}           color="bg-emerald-100"
+                onClick={() => setFilter("paid")} />
             </div>
 
             {/* 검색 + 정렬 툴바 */}
@@ -1368,7 +1372,7 @@ export default function AdminDashboard() {
                           onChange={() => toggleSelectOrder(order.id)}
                           className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer" />
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">
+                      <td className="px-4 py-3 font-mono text-xs text-gray-500 whitespace-nowrap">
                         <span className="flex items-center gap-1.5">
                           {order.orderNumber}
                           {(order.unreadByAdmin ?? 0) > 0 && (
@@ -1378,17 +1382,17 @@ export default function AdminDashboard() {
                           )}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="font-semibold text-gray-900">{order.userName}</div>
-                        <div className="text-xs text-gray-400">{order.userPhone}</div>
+                      <td className="px-4 py-3 max-w-[120px]">
+                        <div className="font-semibold text-gray-900 truncate">{order.userName}</div>
+                        <div className="text-xs text-gray-400 truncate">{order.userPhone}</div>
                       </td>
-                      <td className="px-4 py-3 text-gray-600 text-xs">
-                        <div>{order.product.productName ?? order.product.type ?? order.product.orderType}</div>
+                      <td className="px-4 py-3 text-gray-600 text-xs max-w-[140px]">
+                        <div className="truncate">{order.product.productName ?? order.product.type ?? order.product.orderType}</div>
                         <div className="text-gray-400">{order.product.width && order.product.height ? `${order.product.width}×${order.product.height}cm × ` : ""}{order.product.quantity}개</div>
                       </td>
-                      <td className="px-4 py-3 font-bold text-gray-900">{order.pricing.totalPrice.toLocaleString()}원</td>
+                      <td className="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">{order.pricing.totalPrice.toLocaleString()}원</td>
                       <td className="px-4 py-3"><StatusBadge status={order.status} /></td>
-                      <td className="px-4 py-3 text-xs text-gray-400">{order.createdAt.slice(0,10)}</td>
+                      <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{order.createdAt.slice(0,10)}</td>
                       <td className="px-4 py-3">
                         <span className="flex items-center gap-1 text-xs text-primary-600 opacity-0 group-hover:opacity-100 transition-opacity font-medium">
                           <Eye size={13} /> 관리
@@ -1504,7 +1508,7 @@ export default function AdminDashboard() {
                   {filteredPayments.map(order => (
                     <tr key={order.id} onClick={() => setModalOrder(order)}
                       className="hover:bg-emerald-50/50 cursor-pointer transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">{order.orderNumber}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-500 whitespace-nowrap">{order.orderNumber}</td>
                       <td className="px-4 py-3">
                         <div className="font-medium text-gray-900">{order.userName}</div>
                         <div className="text-xs text-gray-400">{order.userPhone}</div>

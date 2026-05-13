@@ -1,5 +1,5 @@
 import {
-  collection, doc, addDoc, updateDoc, getDoc, getDocs,
+  collection, doc, addDoc, updateDoc, getDoc, getDocs, deleteDoc,
   query, where, orderBy, limit, serverTimestamp, Timestamp,
   arrayUnion, increment,
 } from "firebase/firestore";
@@ -9,6 +9,16 @@ import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
 // ── undefined 필드 제거 (Firestore는 undefined를 허용하지 않음) ──
 function clean<T extends Record<string, any>>(obj: T): T {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined)) as T;
+}
+
+
+// ── Firestore Timestamp → ISO 문자열 (문자열도 안전하게 처리) ──
+function toISO(val: any): string {
+  if (!val) return "";
+  if (typeof val === "string") return val;
+  if (typeof val?.toDate === "function") return val.toDate().toISOString();
+  if (val.seconds) return new Date(val.seconds * 1000).toISOString();
+  return "";
 }
 
 // ── 주문번호 생성 ──────────────────────────────
@@ -39,8 +49,8 @@ export async function getOrder(orderId: string): Promise<Order | null> {
   return {
     ...data,
     id: snap.id,
-    createdAt: (data.createdAt as Timestamp)?.toDate().toISOString() ?? "",
-    updatedAt: (data.updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+    createdAt: toISO(data.createdAt),
+    updatedAt: toISO(data.updatedAt),
   } as Order;
 }
 
@@ -56,8 +66,8 @@ export async function getMyOrders(userId: string): Promise<Order[]> {
   const docs = snap.docs.map((d) => ({
     ...(d.data()),
     id: d.id,
-    createdAt: (d.data().createdAt as Timestamp)?.toDate().toISOString() ?? "",
-    updatedAt: (d.data().updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+    createdAt: toISO(d.data().createdAt),
+    updatedAt: toISO(d.data().updatedAt),
   })) as Order[];
   // 최신순 정렬 (클라이언트)
   return docs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -72,8 +82,8 @@ export async function getAllOrders(statusFilter?: OrderStatus): Promise<Order[]>
   return snap.docs.map((d) => ({
     ...(d.data()),
     id: d.id,
-    createdAt: (d.data().createdAt as Timestamp)?.toDate().toISOString() ?? "",
-    updatedAt: (d.data().updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+    createdAt: toISO(d.data().createdAt),
+    updatedAt: toISO(d.data().updatedAt),
   })) as Order[];
 }
 
@@ -210,8 +220,8 @@ export async function getUnreadOrders(userId: string): Promise<Order[]> {
     .map((d) => ({
       ...(d.data()),
       id: d.id,
-      createdAt: (d.data().createdAt as Timestamp)?.toDate().toISOString() ?? "",
-      updatedAt: (d.data().updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+      createdAt: toISO(d.data().createdAt),
+      updatedAt: toISO(d.data().updatedAt),
     })) as Order[];
   return docs
     .filter((o) => (o.unreadByCustomer ?? 0) > 0)
@@ -230,11 +240,11 @@ export async function getUnreadOrdersForAdmin(): Promise<Order[]> {
     .map((d) => ({
       ...(d.data()),
       id: d.id,
-      createdAt: (d.data().createdAt as Timestamp)?.toDate().toISOString() ?? "",
-      updatedAt: (d.data().updatedAt as Timestamp)?.toDate().toISOString() ?? "",
+      createdAt: toISO(d.data().createdAt),
+      updatedAt: toISO(d.data().updatedAt),
     })) as Order[];
   return docs
-    .filter((o) => (o.unreadByAdmin ?? 0) > 0)
+    .filter((o) => (o.unreadByAdmin ?? 0) > 0 || (o.unreadByCustomer ?? 0) > 0)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
@@ -283,4 +293,57 @@ export async function savePayment(orderId: string, paymentData: Order["payment"]
     payment: paymentData,
     updatedAt: serverTimestamp(),
   });
+}
+
+// ── 주문 삭제 (단건) ─────────────────────────────
+export async function deleteOrder(orderId: string) {
+  await deleteDoc(doc(db, "orders", orderId));
+}
+
+// ── 주문 삭제 (일괄) ─────────────────────────────
+export async function deleteOrders(orderIds: string[]) {
+  await Promise.all(orderIds.map((id) => deleteDoc(doc(db, "orders", id))));
+}
+
+// ── 전체 사용자 목록 (관리자용 — 주문 기반) ─────────
+export interface CustomerInfo {
+  userId: string;
+  userName: string;
+  userEmail: string;
+  userPhone: string;
+  orderCount: number;
+  totalSpent: number;
+  lastOrderDate: string;
+  statuses: Record<string, number>;
+}
+
+export async function getAllCustomers(): Promise<CustomerInfo[]> {
+  const q = query(collection(db, "orders"), orderBy("createdAt", "desc"), limit(500));
+  const snap = await getDocs(q);
+  const map = new Map<string, CustomerInfo>();
+  for (const d of snap.docs) {
+    const data = d.data();
+    const uid = data.userId ?? data.userEmail ?? "unknown";
+    const existing = map.get(uid);
+    const createdAt = toISO(data.createdAt);
+    const paid = data.payment?.amount ?? 0;
+    if (existing) {
+      existing.orderCount++;
+      existing.totalSpent += paid;
+      if (createdAt > existing.lastOrderDate) existing.lastOrderDate = createdAt;
+      existing.statuses[data.status] = (existing.statuses[data.status] ?? 0) + 1;
+    } else {
+      map.set(uid, {
+        userId: uid,
+        userName: data.userName ?? "",
+        userEmail: data.userEmail ?? "",
+        userPhone: data.userPhone ?? "",
+        orderCount: 1,
+        totalSpent: paid,
+        lastOrderDate: createdAt,
+        statuses: { [data.status]: 1 },
+      });
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => b.lastOrderDate.localeCompare(a.lastOrderDate));
 }

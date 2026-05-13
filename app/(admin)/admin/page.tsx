@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/firebase";
 import {
-  getAllOrders, updateOrderStatus, saveProof, createTestOrder, addConversation, markAsRead
+  getAllOrders, updateOrderStatus, saveProof, createTestOrder, addConversation, markAsRead,
+  deleteOrders, getAllCustomers
 } from "@/lib/firestore";
 import type { Order, OrderStatus, ConversationMessage } from "@/types/order";
+import type { CustomerInfo } from "@/lib/firestore";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_COLOR } from "@/types/order";
 import * as PortOne from "@portone/browser-sdk/v2";
 import {
@@ -16,13 +18,14 @@ import {
   Send, Loader2, CircleCheck, AlertCircle, Home,
   BarChart2, Search, ArrowUpDown, Truck, Banknote,
   CalendarDays, User, Phone, MapPin, ClipboardList,
-  ShieldCheck, X, ChevronDown, ChevronUp, Paperclip, ImagePlus
+  ShieldCheck, X, ChevronDown, ChevronUp, Paperclip, ImagePlus,
+  Trash2, Users
 } from "lucide-react";
 import ProductManager from "@/components/admin/ProductManager";
 import ImageLightbox from "@/components/ImageLightbox";
 
 // ── 탭 타입 ──────────────────────────────────────
-type Tab = "dashboard" | "orders" | "products" | "payments" | "test";
+type Tab = "dashboard" | "orders" | "products" | "payments" | "customers" | "test";
 
 // ── 상태별 다음 액션 ──────────────────────────────
 const STATUS_ACTIONS: Partial<Record<OrderStatus, { label: string; next: OrderStatus; color: string }[]>> = {
@@ -815,6 +818,8 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [modalOrder, setModalOrder] = useState<Order | null>(null);
+  const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
 
   // 관리자가 주문 모달 열면 읽음 처리
   useEffect(() => {
@@ -840,6 +845,9 @@ export default function AdminDashboard() {
 
   // ── 토스트 ──
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" | "info" } | null>(null);
+  const [customers, setCustomers] = useState<CustomerInfo[]>([]);
+  const [loadingCustomers, setLoadingCustomers] = useState(false);
+  const [customerSearch, setCustomerSearch] = useState("");
   const showToast = useCallback((msg: string, type: "success" | "error" | "info" = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3500);
@@ -910,6 +918,50 @@ export default function AdminDashboard() {
     showToast(`상태를 '${ORDER_STATUS_LABEL[next]}'로 변경했어요.`);
     loadOrders();
   };
+
+  // ── 주문 일괄 삭제 ──
+  const handleDeleteOrders = async () => {
+    if (selectedOrders.size === 0) return;
+    if (!confirm(`선택한 ${selectedOrders.size}건의 주문을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    setDeleting(true);
+    try {
+      await deleteOrders(Array.from(selectedOrders));
+      showToast(`${selectedOrders.size}건의 주문이 삭제되었습니다.`);
+      setSelectedOrders(new Set());
+      loadOrders();
+    } catch (e: any) {
+      showToast(`삭제 실패: ${e?.message ?? "알 수 없는 오류"}`, "error");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const toggleSelectOrder = (id: string) => {
+    setSelectedOrders(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedOrders.size === filteredOrders.length) {
+      setSelectedOrders(new Set());
+    } else {
+      setSelectedOrders(new Set(filteredOrders.map(o => o.id)));
+    }
+  };
+
+  // ── 고객 목록 불러오기 ──
+  const loadCustomers = useCallback(async () => {
+    setLoadingCustomers(true);
+    try {
+      const data = await getAllCustomers();
+      setCustomers(data);
+    } finally {
+      setLoadingCustomers(false);
+    }
+  }, []);
 
   // ── [테스트] 더미 주문 생성 ──
   const handleCreateTestOrder = async () => {
@@ -1031,6 +1083,7 @@ export default function AdminDashboard() {
             { id: "orders",    label: "주문관리",   icon: "📋", badge: stats.pending > 0 ? stats.pending : null },
             { id: "products",  label: "제품관리",   icon: "📦", badge: null },
             { id: "payments",  label: "결제내역",   icon: "💳", badge: null },
+            { id: "customers", label: "고객관리",   icon: "👥", badge: null },
             { id: "test",      label: "테스트",     icon: "🧪", badge: null },
           ] as const).map(({ id, label, icon, badge }) => (
             <button key={id} onClick={() => setTab(id)}
@@ -1198,6 +1251,22 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            {/* 선택 삭제 툴바 */}
+            {selectedOrders.size > 0 && (
+              <div className="flex items-center gap-3 mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
+                <span className="text-sm font-semibold text-red-700">{selectedOrders.size}건 선택됨</span>
+                <button onClick={handleDeleteOrders} disabled={deleting}
+                  className="flex items-center gap-1.5 px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold transition-colors disabled:opacity-60">
+                  {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                  {deleting ? "삭제 중..." : "선택 삭제"}
+                </button>
+                <button onClick={() => setSelectedOrders(new Set())}
+                  className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded transition-colors">
+                  선택 해제
+                </button>
+              </div>
+            )}
+
             {/* 상태 필터 */}
             <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
               {(["all","pending","confirming","designing","proof_sent","proof_approved","proof_revision","paid","producing","shipping","delivered"] as const).map((s) => (
@@ -1222,6 +1291,12 @@ export default function AdminDashboard() {
               <table className="w-full text-sm min-w-[700px]">
                 <thead className="bg-gray-50 border-b">
                   <tr>
+                    <th className="px-2 py-3 w-10">
+                        <input type="checkbox"
+                          checked={selectedOrders.size === filteredOrders.length && filteredOrders.length > 0}
+                          onChange={toggleSelectAll}
+                          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer" />
+                      </th>
                     {["주문번호","고객","제품","금액","상태","접수일","액션"].map(h => (
                       <th key={h} className="text-left text-xs font-semibold text-gray-500 px-4 py-3 whitespace-nowrap">{h}</th>
                     ))}
@@ -1232,6 +1307,12 @@ export default function AdminDashboard() {
                     <tr key={order.id}
                       className="hover:bg-blue-50/30 transition-colors cursor-pointer group"
                       onClick={() => setModalOrder(order)}>
+                      <td className="px-2 py-3" onClick={e => e.stopPropagation()}>
+                        <input type="checkbox"
+                          checked={selectedOrders.has(order.id)}
+                          onChange={() => toggleSelectOrder(order.id)}
+                          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer" />
+                      </td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-500">
                         <span className="flex items-center gap-1.5">
                           {order.orderNumber}
@@ -1358,6 +1439,124 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
+          </>
+        )}
+
+        {/* ══════════════════════════════════════════
+            탭: 고객관리
+        ══════════════════════════════════════════ */}
+        {tab === "customers" && (
+          <>
+            {/* 로드 트리거 */}
+            {customers.length === 0 && !loadingCustomers && (
+              <div className="text-center py-12">
+                <Users size={40} className="mx-auto mb-3 text-gray-300" />
+                <p className="text-gray-500 mb-4">주문 데이터를 기반으로 고객 목록을 불러옵니다.</p>
+                <button onClick={loadCustomers}
+                  className="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold transition-colors">
+                  고객 목록 불러오기
+                </button>
+              </div>
+            )}
+
+            {loadingCustomers && (
+              <div className="py-16 flex justify-center">
+                <Loader2 size={28} className="animate-spin text-primary-400" />
+              </div>
+            )}
+
+            {customers.length > 0 && (
+              <>
+                {/* 요약 카드 */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <StatCard icon={<Users size={20} className="text-blue-600" />}
+                    label="전체 고객" value={customers.length} color="bg-blue-100" />
+                  <StatCard icon={<Package size={20} className="text-purple-600" />}
+                    label="총 주문 수" value={customers.reduce((s, c) => s + c.orderCount, 0)} color="bg-purple-100" />
+                  <StatCard icon={<Banknote size={20} className="text-emerald-600" />}
+                    label="총 결제 금액" value={`${(customers.reduce((s, c) => s + c.totalSpent, 0) / 10000).toFixed(1)}만원`} color="bg-emerald-100" />
+                  <StatCard icon={<TrendingUp size={20} className="text-amber-600" />}
+                    label="평균 주문 수" value={`${(customers.reduce((s, c) => s + c.orderCount, 0) / customers.length).toFixed(1)}건`} color="bg-amber-100" />
+                </div>
+
+                {/* 검색 + 새로고침 */}
+                <div className="flex gap-3 mb-4">
+                  <div className="relative flex-1 min-w-0">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input type="text" value={customerSearch} onChange={e => setCustomerSearch(e.target.value)}
+                      placeholder="이름·이메일·전화번호 검색"
+                      className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-primary-500 bg-white" />
+                    {customerSearch && (
+                      <button onClick={() => setCustomerSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                  <button onClick={loadCustomers} disabled={loadingCustomers}
+                    className="flex items-center gap-1.5 px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+                    <RefreshCw size={14} className={loadingCustomers ? "animate-spin" : ""} /> 새로고침
+                  </button>
+                </div>
+
+                {/* 고객 테이블 */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm min-w-[700px]">
+                      <thead className="bg-gray-50 border-b">
+                        <tr>
+                          {["고객명","이메일","전화번호","주문 수","결제 총액","최근 주문","주문 상태"].map(h => (
+                            <th key={h} className="text-left text-xs font-semibold text-gray-500 px-4 py-3 whitespace-nowrap">{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {customers
+                          .filter(c => {
+                            if (!customerSearch.trim()) return true;
+                            const q = customerSearch.toLowerCase();
+                            return c.userName.toLowerCase().includes(q) ||
+                              c.userEmail.toLowerCase().includes(q) ||
+                              c.userPhone.includes(q);
+                          })
+                          .map(c => (
+                          <tr key={c.userId} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-4 py-3 font-semibold text-gray-900">{c.userName || "—"}</td>
+                            <td className="px-4 py-3 text-xs text-gray-600">{c.userEmail || "—"}</td>
+                            <td className="px-4 py-3 text-xs text-gray-600">{c.userPhone || "—"}</td>
+                            <td className="px-4 py-3">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{c.orderCount}건</span>
+                            </td>
+                            <td className="px-4 py-3 font-bold text-gray-900">
+                              {c.totalSpent > 0 ? `${c.totalSpent.toLocaleString()}원` : "—"}
+                            </td>
+                            <td className="px-4 py-3 text-xs text-gray-400">{c.lastOrderDate?.slice(0, 10) || "—"}</td>
+                            <td className="px-4 py-3">
+                              <div className="flex flex-wrap gap-1">
+                                {Object.entries(c.statuses).map(([status, count]) => (
+                                  <span key={status} className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${ORDER_STATUS_COLOR[status as OrderStatus] ?? "bg-gray-100 text-gray-600"}`}>
+                                    {ORDER_STATUS_LABEL[status as OrderStatus] ?? status} {count as number}
+                                  </span>
+                                ))}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {customers.filter(c => {
+                    if (!customerSearch.trim()) return true;
+                    const q = customerSearch.toLowerCase();
+                    return c.userName.toLowerCase().includes(q) || c.userEmail.toLowerCase().includes(q) || c.userPhone.includes(q);
+                  }).length === 0 && (
+                    <div className="py-16 text-center text-gray-400">
+                      <Users size={40} className="mx-auto mb-3 opacity-40" />
+                      <p>{customerSearch ? `'${customerSearch}'에 해당하는 고객이 없습니다.` : "고객 데이터가 없습니다."}</p>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </>
         )}
 

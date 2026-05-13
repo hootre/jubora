@@ -175,7 +175,7 @@ function OrderForm() {
     if (!document.getElementById("daum-postcode-script")) {
       const script = document.createElement("script");
       script.id = "daum-postcode-script";
-      script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+      script.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
       script.async = true;
       document.head.appendChild(script);
     }
@@ -205,7 +205,14 @@ function OrderForm() {
   // ── 다음 주소검색 ──
   const openAddressSearch = () => {
     const daum = (window as any).daum;
-    if (!daum?.Postcode) { alert("주소 검색을 불러오는 중입니다. 잠시 후 다시 시도해주세요."); return; }
+    if (!daum?.Postcode) {
+      // 스크립트 아직 로딩 안됐으면 동적 로드 후 재시도
+      const script = document.createElement("script");
+      script.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+      script.onload = () => openAddressSearch();
+      document.head.appendChild(script);
+      return;
+    }
     new daum.Postcode({
       oncomplete: (data: any) => {
         const addr = data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
@@ -390,11 +397,11 @@ function OrderForm() {
                 {/* 추가 참고 이미지 */}
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-medium text-gray-700">참고 이미지 첨부 <span className="text-gray-400 font-normal">(최대 5장)</span></p>
+                    <p className="text-sm font-medium text-gray-700">첨부 파일 <span className="text-gray-400 font-normal">(최대 5장)</span></p>
                     {attachedFiles.length < 5 && (
                       <button type="button" onClick={() => attachInputRef.current?.click()}
                         className="text-xs px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors">
-                        + 이미지 추가
+                        + 파일 추가
                       </button>
                     )}
                   </div>
@@ -412,7 +419,7 @@ function OrderForm() {
                       ))}
                     </div>
                   )}
-                  <input ref={attachInputRef} type="file" accept="image/png,image/jpeg,image/webp" multiple className="hidden" onChange={handleAttachFiles} />
+                  <input ref={attachInputRef} type="file" accept="image/png,image/jpeg,image/webp,application/pdf,.ai,.psd,.eps,.zip" multiple className="hidden" onChange={handleAttachFiles} />
                 </div>
                 <p className="text-xs text-gray-400 mt-2">* 실제 시안은 담당자가 검토 후 카카오톡으로 전달됩니다.</p>
               </div>
@@ -507,11 +514,11 @@ function OrderForm() {
                 {/* 참고 이미지 업로드 */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-medium text-gray-700">참고 이미지 <span className="text-gray-400 font-normal">(선택, 최대 5장)</span></p>
+                    <p className="text-sm font-medium text-gray-700">첨부 파일 <span className="text-gray-400 font-normal">(선택, 최대 5장)</span></p>
                     {attachedFiles.length < 5 && (
                       <button type="button" onClick={() => attachInputRef.current?.click()}
                         className="text-xs px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors">
-                        + 이미지 추가
+                        + 파일 추가
                       </button>
                     )}
                   </div>
@@ -528,7 +535,7 @@ function OrderForm() {
                       ))}
                     </div>
                   )}
-                  <input ref={attachInputRef} type="file" accept="image/png,image/jpeg,image/webp" multiple className="hidden" onChange={handleAttachFiles} />
+                  <input ref={attachInputRef} type="file" accept="image/png,image/jpeg,image/webp,application/pdf,.ai,.psd,.eps,.zip" multiple className="hidden" onChange={handleAttachFiles} />
                 </div>
 
                 <div>

@@ -829,7 +829,7 @@ export default function AdminDashboard() {
   }, [modalOrder?.id]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "amount" | "status">("status");
-  const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
+  const [sortDir, setSortDir] = useState<"desc" | "asc">("asc");
 
   // ── 테스트 도구 상태 ──
   const [testAmount, setTestAmount] = useState("30000");

@@ -2,26 +2,24 @@
 import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShoppingCart, MessageSquare, X } from "lucide-react";
+import { ShoppingCart, MessageSquare, X, ChevronDown } from "lucide-react";
 import {
   SAMPLE_TEMPLATES,
   TEMPLATE_CATEGORIES as CATEGORIES,
   TEMPLATE_FILTERS,
   TEMPLATE_PARENT_MAP,
 } from "@/lib/templates";
-import type { SampleTemplate, TemplateOrientation } from "@/lib/templates";
+import { PRODUCT_CATEGORIES } from "@/constants/products";
+import type { SampleTemplate } from "@/lib/templates";
 
-const FALLBACK_RATIO: Record<TemplateOrientation, string> = {
-  wide:     "h-36",
-  portrait: "h-56",
-  square:   "h-44",
-};
+// 카테고리 아이콘 매핑 (헤더와 동일)
+const CAT_ICON: Record<string, string> = { all: "📋" };
+for (const c of PRODUCT_CATEGORIES) CAT_ICON[c.id] = c.icon;
 
 function TemplateCard({ tmpl }: { tmpl: SampleTemplate }) {
   const hasImg = tmpl.img !== null;
   const fallbackColor = tmpl.color ?? "from-gray-300 to-gray-400";
 
-  // 주문 링크: productId가 있으면 product 기반, 없으면 template 기반
   const href = tmpl.productId
     ? (tmpl.isInquiry
         ? `/order?product=${tmpl.productId}&mode=inquiry`
@@ -31,15 +29,16 @@ function TemplateCard({ tmpl }: { tmpl: SampleTemplate }) {
         : `/order?template=${tmpl.id}`);
 
   return (
-    <div className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-primary-400 hover:shadow-lg transition-all duration-200 relative">
+    <div className="group flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-primary-400 hover:shadow-lg transition-all duration-200">
+      {/* 이미지 영역 — 고정 높이 */}
       {hasImg ? (
-        <div className={`${FALLBACK_RATIO[tmpl.orientation]} relative overflow-hidden bg-gray-50 flex items-center justify-center`}>
+        <div className="h-44 relative overflow-hidden bg-gray-50 flex items-center justify-center">
           <img src={tmpl.img!} alt={tmpl.name}
             className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-300"
             loading="lazy" />
         </div>
       ) : (
-        <div className={`${FALLBACK_RATIO[tmpl.orientation]} bg-gradient-to-br ${fallbackColor} relative overflow-hidden flex items-center justify-center`}>
+        <div className={`h-44 bg-gradient-to-br ${fallbackColor} relative overflow-hidden flex items-center justify-center`}>
           <div className="text-center text-white/90 px-3">
             <p className="font-bold text-sm sm:text-base drop-shadow">{tmpl.name}</p>
             <p className="text-xs mt-1 opacity-70">{tmpl.tags.join(" · ")}</p>
@@ -49,7 +48,8 @@ function TemplateCard({ tmpl }: { tmpl: SampleTemplate }) {
         </div>
       )}
 
-      <div className="p-3">
+      {/* 하단 — mt-auto로 항상 바닥 고정 */}
+      <div className="p-3 mt-auto">
         <p className="text-sm font-medium text-gray-800 mb-2 truncate">{tmpl.name}</p>
         <Link href={href}
           className="w-full flex items-center justify-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-lg text-xs font-semibold transition-colors">
@@ -81,26 +81,17 @@ function TemplatesContent() {
 
   const availableFilters = TEMPLATE_FILTERS[cat] ?? [];
 
-  // ── 필터링 ──
   const filtered = SAMPLE_TEMPLATES.filter((t) => {
     const parent = TEMPLATE_PARENT_MAP[t.category] ?? t.category;
-
-    // 카테고리 필터
     if (cat !== "all" && parent !== cat) return false;
-
-    // 서브 필터
     if (filter && t.category !== filter) return false;
-
-    // 검색
     if (q.trim()) {
       const lower = q.toLowerCase();
       if (![t.name, ...t.tags].some((s) => s.toLowerCase().includes(lower))) return false;
     }
-
     return true;
   });
 
-  // URL 빌더
   const buildUrl = (params: { cat?: string; filter?: string; q?: string }) => {
     const p = new URLSearchParams();
     const newCat = params.cat ?? cat;
@@ -115,12 +106,7 @@ function TemplatesContent() {
   const handleCatChange = (id: string) => router.push(buildUrl({ cat: id, filter: "" }));
   const handleFilterChange = (fid: string) => router.push(buildUrl({ filter: filter === fid ? "" : fid }));
 
-  // 그리드 — 가로형(현수막) 카테고리는 넓게
-  const isWide = cat === "banner" && (!filter || ["bg", "season", "worship", "event"].includes(filter));
-  const gridCols = isWide
-    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-    : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
-
+  const gridCols = "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
   const filterLabel = availableFilters.find((f) => f.id === filter)?.label ?? "";
 
   return (
@@ -146,16 +132,17 @@ function TemplatesContent() {
         )}
       </div>
 
-      {/* 카테고리 탭 */}
-      <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+      {/* 카테고리 탭 — 헤더 메뉴바와 동일 스타일 */}
+      <div className="flex items-center gap-0 mb-4 overflow-x-auto border-b border-gray-200 scrollbar-hide">
         {CATEGORIES.map(({ id, label }) => {
           const isActive = cat === id || (id === "all" && !searchParams.get("cat"));
           return (
             <button key={id} onClick={() => handleCatChange(id)}
-              className={`shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              className={`shrink-0 flex items-center gap-1 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap border-b-2
                 ${isActive
-                  ? "bg-primary-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                  ? "text-primary-600 border-primary-600 bg-primary-50"
+                  : "text-gray-600 border-transparent hover:text-primary-600 hover:bg-gray-50"}`}>
+              <span className="text-xs">{CAT_ICON[id] ?? ""}</span>
               {label}
             </button>
           );

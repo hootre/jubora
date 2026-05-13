@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Bell } from "lucide-react";
+import { Bell, ChevronDown } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getUnreadOrders, getUnreadOrdersForAdmin, markAsRead } from "@/lib/firestore";
@@ -9,7 +9,8 @@ import type { Order } from "@/types/order";
 import { ORDER_STATUS_LABEL } from "@/types/order";
 
 const ADMIN_EMAIL = "mm1895@naver.com";
-const POLL_INTERVAL = 30_000; // 30초마다 폴링
+const POLL_INTERVAL = 30_000;
+const DEFAULT_SHOW_COUNT = 4;
 
 export default function NotificationBell() {
   const router = useRouter();
@@ -17,17 +18,17 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [showAll, setShowAll] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const isAdmin = user?.email === ADMIN_EMAIL;
 
-  // 인증 상태 감지
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, setUser);
     return unsub;
   }, []);
 
-  // 알림 데이터 로드
   const fetchNotifications = async () => {
     if (!user) return;
     try {
@@ -35,20 +36,24 @@ export default function NotificationBell() {
         ? await getUnreadOrdersForAdmin()
         : await getUnreadOrders(user.uid);
       setNotifications(orders);
+      setReadIds((prev) => {
+        const ids = new Set(orders.map((o) => o.id));
+        const next = new Set<string>();
+        prev.forEach((id) => { if (ids.has(id)) next.add(id); });
+        return next;
+      });
     } catch (e) {
       console.error("알림 로드 실패:", e);
     }
   };
 
-  // 로그인 후 & 주기적 폴링
   useEffect(() => {
-    if (!user) { setNotifications([]); return; }
+    if (!user) { setNotifications([]); setReadIds(new Set()); return; }
     fetchNotifications();
     const timer = setInterval(fetchNotifications, POLL_INTERVAL);
     return () => clearInterval(timer);
   }, [user?.uid]);
 
-  // 바깥 클릭 시 닫기
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
@@ -60,6 +65,7 @@ export default function NotificationBell() {
   }, [open]);
 
   const totalUnread = notifications.reduce((sum, o) => {
+    if (readIds.has(o.id)) return sum;
     if (isAdmin) {
       return sum + (o.unreadByAdmin ?? 0) + (o.status === "pending" ? 1 : 0);
     }
@@ -67,18 +73,13 @@ export default function NotificationBell() {
   }, 0);
 
   const handleItemClick = async (order: Order) => {
-    // 읽음 처리
+    setReadIds((prev) => new Set(prev).add(order.id));
     try {
       await markAsRead(order.id, isAdmin ? "admin" : "customer");
-      setNotifications((prev) =>
-        prev.filter((o) => o.id !== order.id)
-      );
     } catch (e) {
       console.error("읽음 처리 실패:", e);
     }
     setOpen(false);
-
-    // 해당 주문으로 이동
     if (isAdmin) {
       router.push("/admin");
     } else {
@@ -88,11 +89,11 @@ export default function NotificationBell() {
 
   const handleMarkAllRead = async () => {
     setLoading(true);
+    setReadIds(new Set(notifications.map((o) => o.id)));
     try {
       await Promise.all(
         notifications.map((o) => markAsRead(o.id, isAdmin ? "admin" : "customer"))
       );
-      setNotifications([]);
     } catch (e) {
       console.error("전체 읽음 처리 실패:", e);
     }
@@ -101,12 +102,10 @@ export default function NotificationBell() {
 
   if (!user) return null;
 
-  // 마지막 메시지 내용 가져오기
   const getLastMessage = (order: Order): string => {
     const convs = order.conversations ?? [];
     if (convs.length === 0) return "새로운 알림이 있습니다.";
     const last = convs[convs.length - 1];
-    // 관리자: 신규주문 or 고객 메시지
     if (isAdmin && order.status === "pending" && (order.unreadByAdmin ?? 0) === 0) {
       return "🆕 신규 주문이 접수되었습니다.";
     }
@@ -128,11 +127,13 @@ export default function NotificationBell() {
     return `${days}일 전`;
   };
 
+  const visibleNotifications = showAll ? notifications : notifications.slice(0, DEFAULT_SHOW_COUNT);
+  const hasMore = notifications.length > DEFAULT_SHOW_COUNT;
+
   return (
     <div className="relative" ref={panelRef}>
-      {/* 벨 아이콘 */}
       <button
-        onClick={() => { setOpen(!open); if (!open) fetchNotifications(); }}
+        onClick={() => { setOpen(!open); if (!open) { fetchNotifications(); setShowAll(false); } }}
         className="relative flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500 hover:text-primary-600 transition-colors"
       >
         <Bell size={20} />
@@ -144,10 +145,8 @@ export default function NotificationBell() {
         )}
       </button>
 
-      {/* 드롭다운 패널 */}
       {open && (
         <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
-          {/* 헤더 */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
             <h3 className="font-bold text-sm text-gray-800">
               알림
@@ -168,74 +167,80 @@ export default function NotificationBell() {
             )}
           </div>
 
-          {/* 알림 목록 */}
-          <div className="max-h-80 overflow-y-auto">
+          <div className={showAll ? "max-h-96 overflow-y-auto" : ""}>
             {notifications.length === 0 ? (
               <div className="py-12 text-center text-gray-400">
                 <Bell size={32} className="mx-auto mb-3 opacity-30" />
                 <p className="text-sm">새로운 알림이 없습니다.</p>
               </div>
             ) : (
-              notifications.map((order) => {
-                const unreadCount = isAdmin
-                  ? (order.unreadByAdmin ?? 0) + (order.status === "pending" ? 1 : 0)
-                  : (order.unreadByCustomer ?? 0);
-                return (
-                  <button
-                    key={order.id}
-                    onClick={() => handleItemClick(order)}
-                    className="w-full flex items-start gap-3 px-4 py-3 hover:bg-primary-50 transition-colors border-b border-gray-50 text-left"
-                  >
-                    {/* 뱃지 */}
-                    <div className="shrink-0 mt-0.5">
-                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-600 text-xs font-bold">
-                        {unreadCount}
-                      </span>
-                    </div>
+              <>
+                {visibleNotifications.map((order) => {
+                  const isRead = readIds.has(order.id);
+                  const unreadCount = isAdmin
+                    ? (order.unreadByAdmin ?? 0) + (order.status === "pending" ? 1 : 0)
+                    : (order.unreadByCustomer ?? 0);
+                  return (
+                    <button
+                      key={order.id}
+                      onClick={() => handleItemClick(order)}
+                      className={`w-full flex items-start gap-3 px-4 py-3 transition-colors border-b border-gray-50 text-left ${
+                        isRead
+                          ? "bg-gray-50 opacity-60 hover:opacity-80"
+                          : "hover:bg-primary-50"
+                      }`}
+                    >
+                      <div className="shrink-0 mt-0.5 w-8">
+                        {!isRead && (
+                          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-600 text-xs font-bold">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </div>
 
-                    {/* 내용 */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-xs font-bold text-gray-800 truncate">
-                          {isAdmin ? order.userName : "주보라"}
-                        </span>
-                        <span className="text-[10px] text-gray-400 shrink-0">
-                          {getTimeAgo(order.updatedAt)}
-                        </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className={`text-xs font-bold truncate ${isRead ? "text-gray-400" : "text-gray-800"}`}>
+                            {isAdmin ? order.userName : "주보라"}
+                          </span>
+                          <span className="text-[10px] text-gray-400 shrink-0">
+                            {getTimeAgo(order.updatedAt)}
+                          </span>
+                        </div>
+                        <p className={`text-xs mb-1 truncate ${isRead ? "text-gray-400" : "text-gray-600"}`}>
+                          {getLastMessage(order)}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-gray-400 font-mono">
+                            {order.orderNumber}
+                          </span>
+                          {!isRead && (
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                              order.status === "proof_sent" ? "bg-indigo-50 text-indigo-600" :
+                              order.status === "proof_revision" ? "bg-orange-50 text-orange-600" :
+                              "bg-gray-100 text-gray-500"
+                            }`}>
+                              {ORDER_STATUS_LABEL[order.status]}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 mb-1 truncate">
-                        {getLastMessage(order)}
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-gray-400 font-mono">
-                          {order.orderNumber}
-                        </span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded ${
-                          order.status === "proof_sent" ? "bg-indigo-50 text-indigo-600" :
-                          order.status === "proof_revision" ? "bg-orange-50 text-orange-600" :
-                          "bg-gray-100 text-gray-500"
-                        }`}>
-                          {ORDER_STATUS_LABEL[order.status]}
-                        </span>
-                      </div>
-                    </div>
+                    </button>
+                  );
+                })}
+
+                {hasMore && !showAll && (
+                  <button
+                    onClick={() => setShowAll(true)}
+                    className="w-full flex items-center justify-center gap-1 py-3 text-xs text-primary-600 font-semibold hover:bg-primary-50 transition-colors border-t border-gray-100"
+                  >
+                    더보기+
+                    <ChevronDown size={14} />
                   </button>
-                );
-              })
+                )}
+              </>
             )}
           </div>
-
-          {/* 하단 링크 */}
-          {notifications.length > 0 && (
-            <div className="px-4 py-2.5 border-t border-gray-100 bg-gray-50">
-              <button
-                onClick={() => { setOpen(false); router.push(isAdmin ? "/admin" : "/mypage"); }}
-                className="w-full text-center text-xs text-primary-600 font-semibold hover:underline"
-              >
-                {isAdmin ? "관리자 페이지에서 확인" : "마이페이지에서 확인"}
-              </button>
-            </div>
-          )}
         </div>
       )}
     </div>

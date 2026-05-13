@@ -57,7 +57,7 @@ function Toast({ msg, type }: { msg: string; type: "success" | "error" | "info" 
 // ── 상태 배지 컴포넌트 ─────────────────────────────
 function StatusBadge({ status }: { status: OrderStatus }) {
   return (
-    <span className={`text-xs font-semibold px-2.5 py-1 rounded-lg whitespace-nowrap ${ORDER_STATUS_COLOR[status]}`}>
+    <span className={`text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap ${ORDER_STATUS_COLOR[status]}`}>
       {ORDER_STATUS_LABEL[status]}
     </span>
   );
@@ -1356,7 +1356,7 @@ export default function AdminDashboard() {
                           onChange={toggleSelectAll}
                           className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer" />
                       </th>
-                    {["주문번호","고객","제품","금액","상태","접수일","액션"].map(h => (
+                    {["주문번호","고객","제품","금액","상태","접수일"].map(h => (
                       <th key={h} className="text-left text-xs font-semibold text-gray-500 px-4 py-3 whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -1393,11 +1393,6 @@ export default function AdminDashboard() {
                       <td className="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">{order.pricing.totalPrice.toLocaleString()}원</td>
                       <td className="px-4 py-3"><StatusBadge status={order.status} /></td>
                       <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{order.createdAt.slice(0,10)}</td>
-                      <td className="px-4 py-3">
-                        <span className="flex items-center gap-1 text-xs text-primary-600 opacity-0 group-hover:opacity-100 transition-opacity font-medium">
-                          <Eye size={13} /> 관리
-                        </span>
-                      </td>
                     </tr>
                   ))}
                 </tbody>

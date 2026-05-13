@@ -97,7 +97,17 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
               </h2>
               <div ref={scrollRef} className="space-y-3 max-h-72 overflow-y-auto pr-1">
                 {conversations.map((msg) => (
-                  <div key={msg.id} className={`flex ${msg.sender === "customer" ? "justify-end" : "justify-start"}`}>
+                  <div key={msg.id} className={`flex ${
+                      msg.type === "system" ? "justify-center" : msg.sender === "customer" ? "justify-end" : "justify-start"
+                    }`}>
+                    {msg.type === "system" ? (
+                      <div className="bg-gray-200 text-gray-500 text-center text-[10px] py-1.5 px-4 rounded-full">
+                        {msg.content}
+                        <span className="ml-2 text-gray-400">
+                          {new Date(msg.createdAt).toLocaleString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                        </span>
+                      </div>
+                    ) : (
                     <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                       msg.sender === "customer"
                         ? "bg-primary-600 text-white rounded-br-md"
@@ -125,6 +135,7 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
                         })}
                       </p>
                     </div>
+                    )}
                   </div>
                 ))}
               </div>

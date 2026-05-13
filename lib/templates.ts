@@ -1,60 +1,54 @@
 const BASE = "https://jubora.co.kr/data/file/sp01_01";
 
 export const TEMPLATE_CATEGORIES = [
-  { id: "all",        label: "전체" },
-  { id: "bg",         label: "배경" },
-  { id: "season",     label: "절기현수막" },
-  { id: "worship",    label: "예배현수막" },
-  { id: "event",      label: "행사현수막" },
-  { id: "banner",     label: "X배너" },
-  { id: "rollup",     label: "롤업배너" },
-  { id: "vertical",   label: "세로형 배너" },
-  { id: "print",      label: "인쇄물" },
+  { id: "all",       label: "전체" },
+  { id: "banner",    label: "현수막/배너" },
+  { id: "print",     label: "포스터/전단지/리플렛" },
+  { id: "sticker",   label: "스티커" },
+  { id: "namecard",  label: "명함/쿠폰" },
+  { id: "church",    label: "교회용품" },
+  { id: "promo",     label: "판촉물" },
 ];
 
-// 카테고리별 필터 목록
+// 시안 템플릿의 category → 상위 카테고리 매핑
+export const TEMPLATE_PARENT_MAP: Record<string, string> = {
+  bg: "banner", season: "banner", worship: "banner", event: "banner",
+  vertical: "banner", xbanner: "banner", rollup: "banner",
+};
+
+// 카테고리별 서브 필터 목록
 export const TEMPLATE_FILTERS: Record<string, { id: string; label: string }[]> = {
-  bg: [
-    { id: "현수막배경", label: "현수막 배경" },
-    { id: "간단배경",   label: "간단배경" },
-    { id: "표어",       label: "표어" },
-    { id: "성화",       label: "성화·환영" },
-    { id: "시간표",     label: "시간표" },
+  banner: [
+    { id: "bg",       label: "배경" },
+    { id: "season",   label: "절기현수막" },
+    { id: "worship",  label: "예배현수막" },
+    { id: "event",    label: "행사현수막" },
+    { id: "xbanner",  label: "X배너" },
+    { id: "rollup",   label: "롤업배너" },
+    { id: "vertical", label: "세로형 배너" },
   ],
-  season: [
-    { id: "사순절",       label: "고난(사순절)" },
-    { id: "부활절",       label: "부활절" },
-    { id: "맥추감사절",   label: "맥추감사절" },
-    { id: "추수감사절",   label: "추수감사절" },
-    { id: "성탄절",       label: "성탄절" },
-    { id: "송구영신",     label: "송구영신" },
-    { id: "신년감사",     label: "신년감사" },
-    { id: "어린이주일",   label: "어린이주일" },
-    { id: "스승어버이주일", label: "스승·어버이주일" },
+  print: [
+    { id: "flyer",   label: "전단지" },
+    { id: "poster",  label: "포스터" },
+    { id: "leaflet", label: "리플렛/팜플렛" },
+    { id: "card",    label: "엽서/카드" },
   ],
-  worship: [
-    { id: "입학졸업",   label: "입학·졸업예배" },
-    { id: "주도예배",   label: "주도예배" },
-    { id: "가정의달",   label: "가정의달" },
-    { id: "헌신예배",   label: "헌신예배" },
-    { id: "입당창립",   label: "입당·창립·이전" },
-    { id: "임직취임",   label: "임직·취임" },
-    { id: "노회총회",   label: "노회·총회" },
-    { id: "선교파송",   label: "선교·파송" },
+  sticker: [
+    { id: "sticker-type", label: "스티커" },
+    { id: "signage",      label: "실사·광고물" },
   ],
-  event: [
-    { id: "기도회",       label: "기도회" },
-    { id: "부흥회",       label: "부흥회·성회" },
-    { id: "세미나수련회", label: "세미나·수련회" },
-    { id: "전도",         label: "전도" },
-    { id: "여름겨울",     label: "여름·겨울행사" },
-    { id: "성경학교",     label: "성경학교" },
-    { id: "바자회",       label: "바자회" },
-    { id: "찬양",         label: "찬양" },
-    { id: "체육대회",     label: "체육대회" },
-    { id: "양육",         label: "양육" },
-    { id: "초청",         label: "초청" },
-    { id: "효도잔치",     label: "효도잔치" },
+  namecard: [
+    { id: "namecard-type", label: "명함" },
+    { id: "coupon-type",   label: "쿠폰/도장" },
+    { id: "envelope-type", label: "봉투" },
+  ],
+  church: [
+    { id: "church-item", label: "교회용품" },
+    { id: "sash-flag",   label: "어깨띠·깃발" },
+  ],
+  promo: [
+    { id: "evangel",    label: "전도용품" },
+    { id: "promo-item", label: "판촉물" },
   ],
 };
 
@@ -136,16 +130,16 @@ export const SAMPLE_TEMPLATES: SampleTemplate[] = [
   { id: "t77", name: "축복 세로배너",         category: "vertical", orientation: "portrait", img: null, color: "from-pink-400 to-rose-500",      tags: ["세로형","축복"] },
 
   // ── X배너 ─────────────────────────────────────────────────────────
-  { id: "t18", name: "X배너 기본형",          category: "banner", orientation: "portrait", img: null, color: "from-cyan-400 to-blue-500",        tags: ["X배너","기본"] },
-  { id: "t80", name: "X배너 예배안내",        category: "banner", orientation: "portrait", img: null, color: "from-blue-500 to-indigo-600",      tags: ["X배너","예배"] },
-  { id: "t81", name: "X배너 행사안내",        category: "banner", orientation: "portrait", img: null, color: "from-red-400 to-rose-500",         tags: ["X배너","행사"] },
-  { id: "t82", name: "X배너 환영",            category: "banner", orientation: "portrait", img: null, color: "from-amber-400 to-orange-500",     tags: ["X배너","환영"] },
-  { id: "t83", name: "X배너 절기",            category: "banner", orientation: "portrait", img: null, color: "from-emerald-400 to-teal-500",     tags: ["X배너","절기"] },
-  { id: "t84", name: "X배너 부흥회",          category: "banner", orientation: "portrait", img: null, color: "from-orange-500 to-red-600",       tags: ["X배너","부흥회"] },
-  { id: "t85", name: "X배너 성경학교",        category: "banner", orientation: "portrait", img: null, color: "from-sky-400 to-blue-500",         tags: ["X배너","성경학교"] },
-  { id: "t86", name: "X배너 수련회",          category: "banner", orientation: "portrait", img: null, color: "from-teal-400 to-cyan-500",        tags: ["X배너","수련회"] },
-  { id: "t87", name: "X배너 선교대회",        category: "banner", orientation: "portrait", img: null, color: "from-violet-400 to-purple-500",    tags: ["X배너","선교"] },
-  { id: "t88", name: "X배너 카페안내",        category: "banner", orientation: "portrait", img: null, color: "from-yellow-600 to-amber-700",     tags: ["X배너","카페"] },
+  { id: "t18", name: "X배너 기본형",          category: "xbanner", orientation: "portrait", img: null, color: "from-cyan-400 to-blue-500",        tags: ["X배너","기본"] },
+  { id: "t80", name: "X배너 예배안내",        category: "xbanner", orientation: "portrait", img: null, color: "from-blue-500 to-indigo-600",      tags: ["X배너","예배"] },
+  { id: "t81", name: "X배너 행사안내",        category: "xbanner", orientation: "portrait", img: null, color: "from-red-400 to-rose-500",         tags: ["X배너","행사"] },
+  { id: "t82", name: "X배너 환영",            category: "xbanner", orientation: "portrait", img: null, color: "from-amber-400 to-orange-500",     tags: ["X배너","환영"] },
+  { id: "t83", name: "X배너 절기",            category: "xbanner", orientation: "portrait", img: null, color: "from-emerald-400 to-teal-500",     tags: ["X배너","절기"] },
+  { id: "t84", name: "X배너 부흥회",          category: "xbanner", orientation: "portrait", img: null, color: "from-orange-500 to-red-600",       tags: ["X배너","부흥회"] },
+  { id: "t85", name: "X배너 성경학교",        category: "xbanner", orientation: "portrait", img: null, color: "from-sky-400 to-blue-500",         tags: ["X배너","성경학교"] },
+  { id: "t86", name: "X배너 수련회",          category: "xbanner", orientation: "portrait", img: null, color: "from-teal-400 to-cyan-500",        tags: ["X배너","수련회"] },
+  { id: "t87", name: "X배너 선교대회",        category: "xbanner", orientation: "portrait", img: null, color: "from-violet-400 to-purple-500",    tags: ["X배너","선교"] },
+  { id: "t88", name: "X배너 카페안내",        category: "xbanner", orientation: "portrait", img: null, color: "from-yellow-600 to-amber-700",     tags: ["X배너","카페"] },
 
   // ── 롤업배너 ──────────────────────────────────────────────────────
   { id: "t19", name: "롤업배너 기본형",       category: "rollup", orientation: "portrait", img: null, color: "from-teal-400 to-green-500",       tags: ["롤업","기본"] },

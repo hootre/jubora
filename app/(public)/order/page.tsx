@@ -326,7 +326,7 @@ function OrderForm() {
             <ChevronRight size={12} />
             {productInfo && (
               <>
-                <Link href={`/products/${productInfo.category.id}`} className="hover:text-white/80">{productInfo.category.label}</Link>
+                <Link href={`/templates?cat=${productInfo.category.id}`} className="hover:text-white/80">{productInfo.category.label}</Link>
                 <ChevronRight size={12} />
               </>
             )}

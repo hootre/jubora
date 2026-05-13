@@ -165,7 +165,7 @@ export default function Header() {
             {MEGA_MENU.map((cat) => (
               <div key={cat.id} className="relative"
                 onMouseEnter={() => openMenu(cat.id)} onMouseLeave={scheduleClose}>
-                <Link href={`/products/${cat.id}`}
+                <Link href={`/templates?cat=${cat.id}`}
                   className={`flex items-center gap-1 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap
                     ${activeMenu === cat.id
                       ? "text-primary-600 bg-primary-50 border-b-2 border-primary-600"
@@ -226,7 +226,7 @@ export default function Header() {
                     </div>
                     {/* 카테고리 전체보기 링크 */}
                     <div className="mt-5 pt-4 border-t border-gray-100">
-                      <Link href={`/products/${activeMenu}`}
+                      <Link href={`/templates?cat=${activeMenu}`}
                         className="inline-flex items-center gap-1 text-sm text-primary-600 font-semibold hover:underline"
                         onClick={() => setActiveMenu(null)}>
                         {catData?.label} 전체보기 <ChevronRight size={14} />
@@ -264,7 +264,7 @@ export default function Header() {
             {MEGA_MENU.map((cat) => (
               <div key={cat.id}>
                 <div className="flex items-center">
-                  <Link href={`/products/${cat.id}`}
+                  <Link href={`/templates?cat=${cat.id}`}
                     className="flex-1 flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50"
                     onClick={() => setMobileOpen(false)}>
                     <span>{cat.icon}</span> {cat.label}

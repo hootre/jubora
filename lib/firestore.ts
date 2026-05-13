@@ -79,9 +79,23 @@ export async function getAllOrders(statusFilter?: OrderStatus): Promise<Order[]>
 
 // ── 주문 상태 변경 ─────────────────────────────
 export async function updateOrderStatus(orderId: string, status: OrderStatus, extra?: Partial<Order>) {
+  const statusLabel: Record<string, string> = {
+    pending: "주문 접수", confirming: "주문 확인 중", designing: "시안 제작 중",
+    proof_sent: "시안 전달", proof_approved: "시안 승인", proof_revision: "수정 요청",
+    paid: "결제 완료", producing: "출력 중", shipping: "배송 중", delivered: "배송 완료",
+  };
+  const msg: ConversationMessage = {
+    id: `sys-${Date.now()}`,
+    sender: "admin",
+    type: "system",
+    content: `주문 상태가 '${statusLabel[status] ?? status}'(으)로 변경되었습니다.`,
+    createdAt: new Date().toISOString(),
+  };
   await updateDoc(doc(db, "orders", orderId), {
     status,
     ...extra,
+    conversations: arrayUnion(clean(msg)),
+    unreadByCustomer: increment(1),
     updatedAt: serverTimestamp(),
   });
 }

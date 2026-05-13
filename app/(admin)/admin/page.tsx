@@ -624,12 +624,20 @@ function ConversationPanel({ order, onProofSent, onLightbox }: {
               <p className="text-xs text-gray-400 text-center py-6">아직 대화가 없습니다.</p>
             ) : (
               messages.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}>
+                <div key={msg.id} className={`flex ${
+                    msg.type === "system" ? "justify-center" : msg.sender === "admin" ? "justify-end" : "justify-start"
+                  }`}>
+                  {msg.type === "system" ? (
+                    <div className="bg-gray-200 text-gray-500 text-center text-[10px] py-1.5 px-4 rounded-full">
+                      {msg.content}
+                      <span className="ml-2 text-gray-400">
+                        {new Date(msg.createdAt).toLocaleString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                  ) : (
                   <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 ${
                     msg.sender === "admin"
                       ? "bg-primary-600 text-white rounded-br-sm"
-                      : msg.type === "system"
-                      ? "bg-gray-200 text-gray-500 text-center w-full text-[10px] py-1.5 rounded-lg"
                       : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm shadow-sm"
                   }`}>
                     <p className={`text-[10px] font-bold mb-0.5 ${
@@ -652,6 +660,7 @@ function ConversationPanel({ order, onProofSent, onLightbox }: {
                       })}
                     </p>
                   </div>
+                  )}
                 </div>
               ))
             )}

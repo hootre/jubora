@@ -12,8 +12,19 @@ export const TEMPLATE_CATEGORIES = [
 
 // 시안 템플릿의 category → 상위 카테고리 매핑
 export const TEMPLATE_PARENT_MAP: Record<string, string> = {
+  // 현수막/배너
   bg: "banner", season: "banner", worship: "banner", event: "banner",
   vertical: "banner", xbanner: "banner", rollup: "banner",
+  // 포스터/전단지/리플렛
+  flyer: "print", poster: "print", leaflet: "print", card: "print",
+  // 스티커
+  "sticker-type": "sticker", signage: "sticker",
+  // 명함/쿠폰
+  "namecard-type": "namecard", "coupon-type": "namecard", "envelope-type": "namecard",
+  // 교회용품
+  "church-item": "church", "sash-flag": "church",
+  // 판촉물
+  evangel: "promo", "promo-item": "promo",
 };
 
 // 카테고리별 서브 필터 목록
@@ -62,6 +73,8 @@ export interface SampleTemplate {
   img: string | null;
   color?: string;
   tags: string[];
+  productId?: string;    // 주문 시 연결할 제품 ID (없으면 template 기반 주문)
+  isInquiry?: boolean;   // 견적문의 여부
 }
 
 export const SAMPLE_TEMPLATES: SampleTemplate[] = [
@@ -153,15 +166,61 @@ export const SAMPLE_TEMPLATES: SampleTemplate[] = [
   { id: "t97", name: "롤업배너 선교대회",     category: "rollup", orientation: "portrait", img: null, color: "from-cyan-500 to-blue-600",        tags: ["롤업","선교"] },
   { id: "t98", name: "롤업배너 부흥회",       category: "rollup", orientation: "portrait", img: null, color: "from-red-500 to-orange-600",       tags: ["롤업","부흥회"] },
 
-  // ── 인쇄물 ────────────────────────────────────────────────────────
-  { id: "t20",  name: "전도지 기본형",        category: "print", orientation: "square", img: null, color: "from-gray-400 to-slate-500",         tags: ["인쇄","전도지"] },
-  { id: "t100", name: "주보 기본형",          category: "print", orientation: "square", img: null, color: "from-blue-400 to-indigo-500",        tags: ["인쇄","주보"] },
-  { id: "t101", name: "주보 컬러형",          category: "print", orientation: "square", img: null, color: "from-sky-400 to-blue-500",           tags: ["인쇄","주보"] },
-  { id: "t102", name: "행사 초대장",          category: "print", orientation: "square", img: null, color: "from-amber-400 to-yellow-500",       tags: ["인쇄","초대장"] },
-  { id: "t103", name: "봉투 (헌금봉투)",      category: "print", orientation: "square", img: null, color: "from-emerald-400 to-teal-500",       tags: ["인쇄","봉투"] },
-  { id: "t104", name: "명함 기본형",          category: "print", orientation: "square", img: null, color: "from-gray-500 to-gray-700",          tags: ["인쇄","명함"] },
-  { id: "t105", name: "스티커 원형",          category: "print", orientation: "square", img: null, color: "from-pink-400 to-rose-500",          tags: ["인쇄","스티커"] },
-  { id: "t106", name: "리플렛 A4 3단",       category: "print", orientation: "square", img: null, color: "from-violet-400 to-purple-500",      tags: ["인쇄","리플렛"] },
-  { id: "t107", name: "포스터 A3",            category: "print", orientation: "square", img: null, color: "from-orange-400 to-red-500",         tags: ["인쇄","포스터"] },
-  { id: "t108", name: "전단지 A4 양면",       category: "print", orientation: "square", img: null, color: "from-cyan-400 to-teal-500",          tags: ["인쇄","전단지"] },
+  // ── 포스터/전단지 ─────────────────────────────────────────────────
+  { id: "p01", name: "대량 단면 전단지",     category: "flyer",   orientation: "square", img: null, color: "from-emerald-400 to-green-500",  tags: ["전단지","단면"], productId: "flyer-single" },
+  { id: "p02", name: "양면 풀컬러 전단지",   category: "flyer",   orientation: "square", img: null, color: "from-teal-400 to-emerald-500",   tags: ["전단지","양면"], productId: "flyer-double" },
+  { id: "p03", name: "소량 양면 전단지",     category: "flyer",   orientation: "square", img: null, color: "from-green-400 to-teal-500",     tags: ["전단지","소량"], productId: "flyer-small" },
+  { id: "p04", name: "A3 단면 포스터",       category: "poster",  orientation: "portrait", img: null, color: "from-orange-400 to-red-500",   tags: ["포스터","A3"], productId: "poster-a3" },
+  { id: "p05", name: "A1 대형 포스터",       category: "poster",  orientation: "portrait", img: null, color: "from-red-400 to-rose-500",     tags: ["포스터","대형"], productId: "poster-large" },
+  { id: "p06", name: "2단 리플렛",           category: "leaflet", orientation: "square", img: null, color: "from-violet-400 to-purple-500",  tags: ["리플렛","2단"], productId: "leaflet-2" },
+  { id: "p07", name: "3단 리플렛",           category: "leaflet", orientation: "square", img: null, color: "from-purple-400 to-indigo-500",  tags: ["리플렛","3단"], productId: "leaflet-3" },
+  { id: "p08", name: "팜플렛(소책자)",       category: "leaflet", orientation: "square", img: null, color: "from-indigo-400 to-blue-500",    tags: ["리플렛","소책자"], productId: "pamphlet" },
+  { id: "p09", name: "감사 엽서",            category: "card",    orientation: "square", img: null, color: "from-pink-400 to-rose-500",      tags: ["엽서","감사"], productId: "postcard" },
+  { id: "p10", name: "행사 초대장",          category: "card",    orientation: "square", img: null, color: "from-rose-400 to-pink-500",      tags: ["카드","초대장"], productId: "invitation" },
+  { id: "p11", name: "주보 디자인",          category: "card",    orientation: "square", img: null, color: "from-blue-400 to-indigo-500",    tags: ["카드","주보"], productId: "bulletin" },
+  { id: "p12", name: "예배 순서지",          category: "card",    orientation: "square", img: null, color: "from-amber-400 to-yellow-500",   tags: ["카드","순서지"], productId: "program" },
+
+  // ── 스티커 ────────────────────────────────────────────────────────
+  { id: "s01", name: "원형 규격 스티커",      category: "sticker-type", orientation: "square", img: null, color: "from-pink-400 to-rose-500",     tags: ["스티커","원형"], productId: "sticker-single" },
+  { id: "s02", name: "사각 규격 스티커",      category: "sticker-type", orientation: "square", img: null, color: "from-rose-400 to-pink-500",     tags: ["스티커","사각"], productId: "sticker-single" },
+  { id: "s03", name: "자유형 칼선 스티커",    category: "sticker-type", orientation: "square", img: null, color: "from-fuchsia-400 to-pink-500",  tags: ["스티커","칼선"], productId: "sticker-custom" },
+  { id: "s04", name: "판스티커",              category: "sticker-type", orientation: "square", img: null, color: "from-violet-400 to-fuchsia-500",tags: ["스티커","판"], productId: "sticker-sheet" },
+  { id: "s05", name: "롤스티커",              category: "sticker-type", orientation: "square", img: null, color: "from-purple-400 to-violet-500", tags: ["스티커","롤"], productId: "sticker-roll" },
+  { id: "s06", name: "투명 PET 스티커",       category: "sticker-type", orientation: "square", img: null, color: "from-sky-400 to-cyan-500",     tags: ["스티커","투명"], productId: "sticker-clear" },
+  { id: "s07", name: "바닥 부착용 스티커",    category: "sticker-type", orientation: "square", img: null, color: "from-amber-400 to-orange-500",  tags: ["스티커","바닥"], productId: "sticker-floor" },
+  { id: "s08", name: "레터링 스티커",         category: "sticker-type", orientation: "square", img: null, color: "from-emerald-400 to-green-500", tags: ["스티커","레터링"], productId: "sticker-lettering" },
+  { id: "s09", name: "유리창 썬팅·광고",      category: "signage",      orientation: "square", img: null, color: "from-gray-400 to-slate-500",    tags: ["실사","썬팅"], productId: "tinting", isInquiry: true },
+  { id: "s10", name: "인테리어 시트지",       category: "signage",      orientation: "square", img: null, color: "from-slate-400 to-gray-500",    tags: ["실사","시트지"], productId: "sheet-vinyl", isInquiry: true },
+  { id: "s11", name: "차량용 자석 스티커",    category: "signage",      orientation: "square", img: null, color: "from-zinc-400 to-gray-500",     tags: ["실사","자석"], productId: "magnet-sticker", isInquiry: true },
+
+  // ── 명함/쿠폰 ────────────────────────────────────────────────────
+  { id: "n01", name: "기본 명함",             category: "namecard-type", orientation: "square", img: null, color: "from-amber-400 to-orange-500",  tags: ["명함","기본"], productId: "namecard-basic" },
+  { id: "n02", name: "전도 명함",             category: "namecard-type", orientation: "square", img: null, color: "from-orange-400 to-red-500",    tags: ["명함","전도"], productId: "namecard-evangel" },
+  { id: "n03", name: "고급 명함 (펄지·박)",   category: "namecard-type", orientation: "square", img: null, color: "from-yellow-500 to-amber-600",  tags: ["명함","고급"], productId: "namecard-premium" },
+  { id: "n04", name: "할인·이벤트 쿠폰",     category: "coupon-type",   orientation: "square", img: null, color: "from-red-400 to-rose-500",      tags: ["쿠폰","할인"], productId: "coupon" },
+  { id: "n05", name: "도장 적립 카드",        category: "coupon-type",   orientation: "square", img: null, color: "from-rose-400 to-pink-500",     tags: ["쿠폰","도장"], productId: "stamp-card" },
+  { id: "n06", name: "교회 헌금봉투",         category: "envelope-type", orientation: "square", img: null, color: "from-blue-400 to-indigo-500",   tags: ["봉투","헌금"], productId: "env-church" },
+  { id: "n07", name: "감사 봉투",             category: "envelope-type", orientation: "square", img: null, color: "from-emerald-400 to-teal-500",  tags: ["봉투","감사"], productId: "env-thanks" },
+  { id: "n08", name: "십일조 봉투",           category: "envelope-type", orientation: "square", img: null, color: "from-violet-400 to-purple-500", tags: ["봉투","십일조"], productId: "env-tithe" },
+  { id: "n09", name: "각대 봉투 (일반)",      category: "envelope-type", orientation: "square", img: null, color: "from-gray-400 to-slate-500",    tags: ["봉투","각대"], productId: "env-standard" },
+
+  // ── 교회용품 ──────────────────────────────────────────────────────
+  { id: "c01", name: "교회 교패",             category: "church-item", orientation: "square", img: null, color: "from-violet-400 to-purple-500",  tags: ["교회용품","교패"], productId: "church-plaque", isInquiry: true },
+  { id: "c02", name: "직분자 명찰",           category: "church-item", orientation: "square", img: null, color: "from-purple-400 to-indigo-500",  tags: ["교회용품","명찰"], productId: "church-nametag", isInquiry: true },
+  { id: "c03", name: "교회 외부 표찰",        category: "church-item", orientation: "square", img: null, color: "from-indigo-400 to-blue-500",    tags: ["교회용품","표찰"], productId: "church-sign", isInquiry: true },
+  { id: "c04", name: "기타 교회용품",         category: "church-item", orientation: "square", img: null, color: "from-blue-400 to-violet-500",    tags: ["교회용품","기타"], productId: "church-etc", isInquiry: true },
+  { id: "c05", name: "부직포 어깨띠",         category: "sash-flag",   orientation: "square", img: null, color: "from-red-400 to-rose-500",       tags: ["어깨띠","행사"], productId: "sash", isInquiry: true },
+  { id: "c06", name: "근조 깃발",             category: "sash-flag",   orientation: "square", img: null, color: "from-gray-500 to-slate-600",     tags: ["깃발","근조"], productId: "flag", isInquiry: true },
+
+  // ── 판촉물 ────────────────────────────────────────────────────────
+  { id: "r01", name: "교회 포켓 티슈",        category: "evangel",    orientation: "square", img: null, color: "from-sky-400 to-blue-500",       tags: ["전도용품","티슈"], productId: "tissue-paper", isInquiry: true },
+  { id: "r02", name: "교회 물티슈",           category: "evangel",    orientation: "square", img: null, color: "from-cyan-400 to-teal-500",      tags: ["전도용품","물티슈"], productId: "tissue-wet", isInquiry: true },
+  { id: "r03", name: "교회 각티슈",           category: "evangel",    orientation: "square", img: null, color: "from-blue-400 to-indigo-500",    tags: ["전도용품","각티슈"], productId: "tissue-box", isInquiry: true },
+  { id: "r04", name: "다용도 클리너",         category: "evangel",    orientation: "square", img: null, color: "from-emerald-400 to-green-500",  tags: ["전도용품","클리너"], productId: "cleaner", isInquiry: true },
+  { id: "r05", name: "기타 전도용품",         category: "evangel",    orientation: "square", img: null, color: "from-violet-400 to-purple-500",  tags: ["전도용품","기타"], productId: "promo-etc", isInquiry: true },
+  { id: "r06", name: "단체 티셔츠",           category: "promo-item", orientation: "square", img: null, color: "from-red-400 to-rose-500",       tags: ["판촉물","티셔츠"], productId: "tshirt", isInquiry: true },
+  { id: "r07", name: "여름 홍보/판촉물",      category: "promo-item", orientation: "square", img: null, color: "from-orange-400 to-amber-500",   tags: ["판촉물","여름"], productId: "summer-promo", isInquiry: true },
+  { id: "r08", name: "에코백·텀블러",         category: "promo-item", orientation: "square", img: null, color: "from-amber-400 to-yellow-500",   tags: ["판촉물","생활용품"], productId: "home-item", isInquiry: true },
+  { id: "r09", name: "보틀·머그컵",           category: "promo-item", orientation: "square", img: null, color: "from-green-400 to-teal-500",     tags: ["판촉물","주방"], productId: "kitchen-item", isInquiry: true },
+  { id: "r10", name: "볼펜·노트·문구",        category: "promo-item", orientation: "square", img: null, color: "from-gray-400 to-slate-500",     tags: ["판촉물","문구"], productId: "stationery", isInquiry: true },
 ];
